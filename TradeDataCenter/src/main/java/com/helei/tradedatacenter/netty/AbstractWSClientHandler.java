@@ -11,12 +11,12 @@ import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class WebSocketClientHandler extends SimpleChannelInboundHandler<WebSocketFrame> {
+public class AbstractWSClientHandler extends SimpleChannelInboundHandler<WebSocketFrame> {
 
     private final WebSocketClientHandshaker handshaker;
     private ChannelFuture handshakeFuture;
 
-    public WebSocketClientHandler(WebSocketClientHandshaker handshaker) {
+    public AbstractWSClientHandler(WebSocketClientHandshaker handshaker) {
         this.handshaker = handshaker;
     }
 

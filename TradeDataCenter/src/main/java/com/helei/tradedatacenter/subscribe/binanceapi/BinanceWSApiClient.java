@@ -1,4 +1,4 @@
-package com.helei.tradedatacenter.netty;
+package com.helei.tradedatacenter.subscribe.binanceapi;
 
 import com.helei.tradedatacenter.netty.base.AbstractNettyClient;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +12,7 @@ import java.util.List;
 public class BinanceWSApiClient extends AbstractNettyClient {
 
     public BinanceWSApiClient(String baseUrl, List<String> subscribeList) {
-        super(null);
+        super(null, 3 * 60, nettyProcessorAdaptor);
         super.uri = generalUri(baseUrl, subscribeList);
 
     }
