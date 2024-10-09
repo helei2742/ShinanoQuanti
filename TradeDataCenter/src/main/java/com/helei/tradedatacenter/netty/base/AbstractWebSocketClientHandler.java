@@ -14,7 +14,9 @@ import io.netty.channel.*;
 
 
 @Slf4j
-public abstract class AbstractWebSocketClientHandler<P,T> extends SimpleChannelInboundHandler<Object> {
+public abstract class AbstractWebSocketClientHandler<P, T> extends SimpleChannelInboundHandler<Object> {
+
+    private WebSocketClientHandshaker handshaker;
 
     private ChannelPromise handshakeFuture;
 
@@ -52,15 +54,19 @@ public abstract class AbstractWebSocketClientHandler<P,T> extends SimpleChannelI
      */
     protected abstract P getPong();
 
+    public void init(WebSocketClientHandshaker handshaker) {
+        this.handshaker = handshaker;
+    }
+
     @Override
     public void handlerAdded(ChannelHandlerContext ctx) {
-
         handshakeFuture = ctx.newPromise();
     }
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
         log.info("WebSocket Client connected!");
+        handshaker.handshake(ctx.channel());
     }
 
     @Override
@@ -71,12 +77,27 @@ public abstract class AbstractWebSocketClientHandler<P,T> extends SimpleChannelI
     @Override
     public void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
         Channel ch = ctx.channel();
+// 如果握手未完成，处理 FullHttpResponse
+        if (!handshaker.isHandshakeComplete()) {
+            if (msg instanceof FullHttpResponse response) {
+                try {
+                    handshaker.finishHandshake(ch, response);
+                    System.out.println("WebSocket Handshake complete!");
+                    handshakeFuture.setSuccess();
+                } catch (WebSocketHandshakeException e) {
+                    System.out.println("WebSocket Handshake failed!");
+                    handshakeFuture.setFailure(e);
+                }
+                return;
+            }
+        }
 
         if (msg instanceof FullHttpResponse response) {
             throw new IllegalStateException(
                     "Unexpected FullHttpResponse (getStatus=" + response.status() +
                             ", content=" + response.content().toString(CharsetUtil.UTF_8) + ')');
         }  else if (msg instanceof WebSocketFrame frame) {
+
             if (frame instanceof TextWebSocketFrame textFrame) {
 
                 log.info("websocket client 接收到的消息：{}",textFrame.text());

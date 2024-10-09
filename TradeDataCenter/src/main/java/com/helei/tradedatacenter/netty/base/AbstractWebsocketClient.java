@@ -66,7 +66,10 @@ public abstract class AbstractWebsocketClient<P,T> {
 
     public void connect() throws Exception {
         log.info("websocket client 连接中....");
-
+        WebSocketClientHandshaker handshaker = WebSocketClientHandshakerFactory.newHandshaker(
+                uri, WebSocketVersion.V13, null, true, new DefaultHttpHeaders()
+        );
+        handler.init(handshaker);
         final SslContext sslCtx;
         if (useSSL) {
             sslCtx = SslContextBuilder.forClient()
@@ -80,26 +83,23 @@ public abstract class AbstractWebsocketClient<P,T> {
             Bootstrap b = new Bootstrap();
             b.group(group)
                     .channel(NioSocketChannel.class)
+                    .option(ChannelOption.TCP_NODELAY, true)
+                    .option(ChannelOption.SO_BROADCAST, true)
                     .option(ChannelOption.SO_KEEPALIVE, true)
-                    .handler(new ChannelInitializer<SocketChannel>() {
+                    .handler(new ChannelInitializer<NioSocketChannel>() {
                         @Override
-                        protected void initChannel(SocketChannel ch) {
+                        protected void initChannel(NioSocketChannel ch) {
                             ChannelPipeline p = ch.pipeline();
-//                            p.addLast(new Socks5ProxyHandler(new InetSocketAddress("127.0.0.1", 7890)));
+                            p.addLast(new Socks5ProxyHandler(new InetSocketAddress("127.0.0.1", 7890)));
 
                             if (sslCtx != null) {
                                 p.addLast(sslCtx.newHandler(ch.alloc(), uri.getHost(), port));
                             }
-                            p.addLast(new HttpProxyHandler(new InetSocketAddress("127.0.0.1", 7890)));
 
                             p.addLast(new HttpClientCodec());
                             p.addLast(new HttpObjectAggregator(8192));
                             p.addLast(new ChunkedWriteHandler());
-                            p.addLast(new WebSocketClientProtocolHandler(
-                                    WebSocketClientHandshakerFactory.newHandshaker(
-                                            uri, WebSocketVersion.V13, null, true, new DefaultHttpHeaders()
-                                    )
-                            ));
+                            p.addLast(new WebSocketFrameAggregator(8192));
 
                             p.addLast(handler);
                         }
@@ -108,8 +108,6 @@ public abstract class AbstractWebsocketClient<P,T> {
             channel = b.connect(host, port).sync().channel();
 
             // 8. 等待 WebSocket 握手完成
-            AbstractWebSocketClientHandler<P,T> handler = channel.pipeline().get(AbstractWebSocketClientHandler.class);
-
             handler.handshakeFuture().sync();
 
             // 发送 WebSocket 帧
