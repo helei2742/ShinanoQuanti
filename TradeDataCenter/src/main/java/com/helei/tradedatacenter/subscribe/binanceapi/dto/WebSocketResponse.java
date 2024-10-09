@@ -18,7 +18,7 @@ public class WebSocketResponse {
     /**
      * 请求的id
      */
-    private Integer id;
+    private String id;
 
     /**
      * 相应状态

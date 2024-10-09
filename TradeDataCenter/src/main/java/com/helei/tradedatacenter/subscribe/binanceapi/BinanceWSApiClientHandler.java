@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.helei.tradedatacenter.subscribe.binanceapi.dto.WebSocketCommand;
 import com.helei.tradedatacenter.subscribe.binanceapi.dto.WebSocketResponse;
 import com.helei.tradedatacenter.netty.base.AbstractWebSocketClientHandler;
-import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -12,31 +11,32 @@ import lombok.extern.slf4j.Slf4j;
  * BinanceWSApiClient的消息处理器
  */
 @Slf4j
-public class BinanceWSApiClientHandler extends AbstractWebSocketClientHandler {
+public class BinanceWSApiClientHandler extends AbstractWebSocketClientHandler<WebSocketCommand, WebSocketResponse> {
+
     @Override
-    protected void receiveMessage(String text) {
-        WebSocketResponse response = JSONObject.parseObject(text, WebSocketResponse.class);
+    protected WebSocketResponse messageConvert(String text) {
+        return JSONObject.parseObject(text, WebSocketResponse.class);
+    }
 
-        Integer status = response.getStatus();
+    @Override
+    protected String getIdFromMessage(WebSocketResponse response) {
+        return response.getId();
+    }
 
-        switch (status) {
-            case 200:
-
-                break;
-            default:
-                log.error("response error, status code [{}}", status);
-                break;
-        }
+    @Override
+    protected String getIdFromCommand(WebSocketCommand command) {
+        return command.getId();
     }
 
 
     @Override
-    protected void sendPing(ChannelHandlerContext ctx) {
-        websocketClient.sendMessage((WebSocketCommand.builder().buildPing()));
+    protected WebSocketCommand getPing() {
+        return WebSocketCommand.builder().buildPing();
     }
 
     @Override
-    protected void sendPong(ChannelHandlerContext ctx, String id) {
-
+    protected WebSocketCommand getPong() {
+        return WebSocketCommand.builder().buildPong();
     }
+
 }

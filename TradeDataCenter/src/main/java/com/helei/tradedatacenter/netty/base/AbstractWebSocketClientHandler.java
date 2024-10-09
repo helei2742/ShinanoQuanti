@@ -1,8 +1,5 @@
-
-
 package com.helei.tradedatacenter.netty.base;
 
-import com.alibaba.fastjson.JSON;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPromise;
@@ -17,46 +14,53 @@ import io.netty.channel.*;
 
 
 @Slf4j
-public abstract class AbstractWebSocketClientHandler extends SimpleChannelInboundHandler<Object> {
-
-    private WebSocketClientHandshaker handshaker;
+public abstract class AbstractWebSocketClientHandler<P,T> extends SimpleChannelInboundHandler<Object> {
 
     private ChannelPromise handshakeFuture;
 
-    protected AbstractWebsocketClient websocketClient;
+    protected AbstractWebsocketClient<P, T> websocketClient;
 
     /**
-     * 收到消息处理
+     * 收到消息处理,转换为对象
      * @param text 消息字符串
      */
-    protected abstract void receiveMessage(String text);
+    protected abstract T messageConvert(String text);
 
     /**
-     * 发送ping
-     * @param ctx
+     * 从response里取id
+     * @param message message
+     * @return id
      */
-    protected abstract void sendPing(ChannelHandlerContext ctx);
+    protected abstract String getIdFromMessage(T message);
 
     /**
-     * 发送pong
-     * @param ctx
-     * @param id
+     * 从response里取id
+     * @param command command
+     * @return id
      */
-    protected abstract void sendPong(ChannelHandlerContext ctx, String id);
+    protected abstract String getIdFromCommand(P command);
 
+    /**
+     * 获取ping
+     * @return ping
+     */
+    protected abstract P getPing();
 
-    public void init(WebSocketClientHandshaker handshaker) {
-        this.handshaker = handshaker;
-    }
+    /**
+     * 获取pong
+     * @return pong
+     */
+    protected abstract P getPong();
 
     @Override
     public void handlerAdded(ChannelHandlerContext ctx) {
+
         handshakeFuture = ctx.newPromise();
     }
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
-        handshaker.handshake(ctx.channel());
+        log.info("WebSocket Client connected!");
     }
 
     @Override
@@ -67,34 +71,32 @@ public abstract class AbstractWebSocketClientHandler extends SimpleChannelInboun
     @Override
     public void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
         Channel ch = ctx.channel();
-        if (!handshaker.isHandshakeComplete()) {
-            try {
-                handshaker.finishHandshake(ch, (FullHttpResponse) msg);
-                log.info("websocket client 连接成功");
-                handshakeFuture.setSuccess();
-            } catch (WebSocketHandshakeException e) {
-                log.info("websocket client 连接失败");
-                handshakeFuture.setFailure(e);
-            }
-            return;
-        }
 
         if (msg instanceof FullHttpResponse response) {
             throw new IllegalStateException(
                     "Unexpected FullHttpResponse (getStatus=" + response.status() +
                             ", content=" + response.content().toString(CharsetUtil.UTF_8) + ')');
-        }
+        }  else if (msg instanceof WebSocketFrame frame) {
+            if (frame instanceof TextWebSocketFrame textFrame) {
 
-        WebSocketFrame frame = (WebSocketFrame) msg;
-        if (frame instanceof TextWebSocketFrame) {
-            TextWebSocketFrame textFrame = (TextWebSocketFrame) frame;
-            log.info("websocket client 接收到的消息：{}",textFrame.text());
-            receiveMessage(textFrame.text());
-        } else if (frame instanceof PongWebSocketFrame) {
-            log.info("WebSocket Client received pong");
-        } else if (frame instanceof CloseWebSocketFrame) {
-            log.info("websocket client关闭");
-            ch.close();
+                log.info("websocket client 接收到的消息：{}",textFrame.text());
+                T message = messageConvert(textFrame.text());
+
+                String id = getIdFromMessage(message);
+
+                /**
+                 * 尝试提交失败，回过去一个pong
+                 */
+                if (!websocketClient.submitResponse(id, message)) {
+                    websocketClient.sendRequest(getPong());
+                }
+
+            } else if (frame instanceof PongWebSocketFrame) {
+                log.info("WebSocket Client received pong");
+            } else if (frame instanceof CloseWebSocketFrame) {
+                log.info("websocket client关闭");
+                ch.close();
+            }
         }
     }
 
@@ -151,7 +153,16 @@ public abstract class AbstractWebSocketClientHandler extends SimpleChannelInboun
      * @param ctx ctx
      */
     protected void handleAllIdle(ChannelHandlerContext ctx) {
-        sendPing(ctx);
+        sendPing();
+    }
+
+    private void sendPing() {
+        P ping = getPing();
+        String id = getIdFromCommand(ping);
+        log.info("send ping, request id[{}}", id);
+        websocketClient.sendRequest(id, ping, response -> {
+            log.info("get pong, request id[{}}", id);
+        });
     }
 
     public ChannelFuture handshakeFuture() {
