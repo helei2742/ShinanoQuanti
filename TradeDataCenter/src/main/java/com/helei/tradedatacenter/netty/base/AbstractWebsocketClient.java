@@ -1,14 +1,19 @@
-package com.helei.tradedatacenter;
+
+package com.helei.tradedatacenter.netty.base;
 
 
+import com.helei.tradedatacenter.netty.serializer.Serializer;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.http.DefaultHttpHeaders;
 import io.netty.handler.codec.http.HttpClientCodec;
 import io.netty.handler.codec.http.HttpObjectAggregator;
-import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
+import io.netty.handler.codec.http.websocketx.WebSocketClientHandshaker;
+import io.netty.handler.codec.http.websocketx.WebSocketClientHandshakerFactory;
+import io.netty.handler.codec.http.websocketx.WebSocketVersion;
 import io.netty.handler.codec.http.websocketx.extensions.compression.WebSocketClientCompressionHandler;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
@@ -17,23 +22,9 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.concurrent.TimeUnit;
 
-/**
- * This is an example of a WebSocket client.
- * <p>
- * In order to run this example you need a compatible WebSocket server.
- * Therefore you can either start the WebSocket server from the examples
- * by running { io.netty.example.http.websocketx.server.WebSocketServer}
- * or connect to an existing WebSocket server such as
- * <a href="https://www.websocket.org/echo.html">ws://echo.websocket.org</a>.
- * <p>
- * The client will attempt to connect to the URI passed to it as the first argument.
- * You don't have to specify any arguments if you want to connect to the example WebSocket server,
- * as this is the default.
- */
 @Slf4j
-public class AbstractWebsocketClient {
+public abstract class AbstractWebsocketClient {
 
     private final String url;
 
@@ -55,11 +46,12 @@ public class AbstractWebsocketClient {
     ) throws URISyntaxException {
         this.url = url;
         this.handler = handler;
+        this.handler.websocketClient = this;
+
         resolveParamFromUrl();
     }
 
-
-    public void startClient() throws Exception {
+    public void connect() throws Exception {
         log.info("websocket client 连接中....");
 
         final SslContext sslCtx;
@@ -72,9 +64,10 @@ public class AbstractWebsocketClient {
 
         EventLoopGroup group = new NioEventLoopGroup();
         try {
-            // Connect with V13 (RFC 6455 aka HyBi-17). You can change it to V08 or V00.
-            // If you change it to V00, ping is not supported and remember to change
-            // HttpResponseDecoder to WebSocketHttpResponseDecoder in the pipeline.
+            WebSocketClientHandshaker handshake = WebSocketClientHandshakerFactory.newHandshaker(uri, WebSocketVersion.V13, null, true, new DefaultHttpHeaders());
+
+            handler.init(handshake);
+
             Bootstrap b = new Bootstrap();
             b.group(group)
                     .channel(NioSocketChannel.class)
@@ -85,26 +78,22 @@ public class AbstractWebsocketClient {
                             if (sslCtx != null) {
                                 p.addLast(sslCtx.newHandler(ch.alloc(), host, port));
                             }
-                            p.addLast(
-                                    new HttpClientCodec(),
-                                    new HttpObjectAggregator(8192),
-                                    WebSocketClientCompressionHandler.INSTANCE,
-                                    handler
-                            );
+                            p.addLast(new HttpClientCodec());
+                            p.addLast(new HttpObjectAggregator(8192));
+                            p.addLast(WebSocketClientCompressionHandler.INSTANCE);
+                            p.addLast(handler);
                         }
                     });
 
             channel = b.connect(uri.getHost(), port).sync().channel();
 
             handler.handshakeFuture().sync();
-            // 进行注册
-            channel.writeAndFlush("发送的第一条消息");
-            // 在这里可以添加一个默认心跳 15s发一次
-            channel.eventLoop().scheduleAtFixedRate(() -> {
-                channel.writeAndFlush(new TextWebSocketFrame("pong"));
-            }, 0, 15, TimeUnit.SECONDS);
 
-            //如果下面代码，则main方法所在的线程，即主线程会在执行完bind().sync()方法后，会进入finally 代码块，之前的启动的nettyserver也会随之关闭掉，整个程序都结束了
+//            // 在这里可以添加一个默认心跳 15s发一次
+//            channel.eventLoop().scheduleAtFixedRate(() -> {
+//                channel.writeAndFlush(new TextWebSocketFrame("pong"));
+//            }, 0, 15, TimeUnit.SECONDS);
+
             channel.closeFuture().sync();
         } catch (Exception e) {
 //            channel.close();
@@ -113,6 +102,15 @@ public class AbstractWebsocketClient {
             group.shutdownGracefully();
         }
     }
+
+    /**
+     * 发送消息
+     * @param message message
+     */
+    public void sendMessage(Object message) {
+        channel.writeAndFlush(Serializer.Algorithm.JSON.serialize(message));
+    }
+
 
 
     /**

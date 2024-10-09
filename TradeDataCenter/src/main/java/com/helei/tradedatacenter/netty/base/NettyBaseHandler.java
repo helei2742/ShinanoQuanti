@@ -1,6 +1,6 @@
 package com.helei.tradedatacenter.netty.base;
 
-import com.helei.tradedatacenter.entity.WebSocketCommand;
+import com.helei.tradedatacenter.subscribe.binanceapi.dto.WebSocketCommand;
 import io.netty.channel.ChannelHandlerContext;
 
 /**

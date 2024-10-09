@@ -1,12 +1,5 @@
 package com.helei.tradedatacenter.support;
 
-import com.helei.tradedatacenter.AbstractWebSocketClientHandler;
-import com.helei.tradedatacenter.AbstractWebsocketClient;
-import com.helei.tradedatacenter.subscribe.binanceapi.BinanceWSApiClient;
-import com.helei.tradedatacenter.netty.base.AbstractNettyClient;
-import io.netty.handler.codec.http.DefaultHttpHeaders;
-import io.netty.handler.codec.http.websocketx.WebSocketClientHandshakerFactory;
-import io.netty.handler.codec.http.websocketx.WebSocketVersion;
 import jakarta.annotation.PreDestroy;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,7 +13,6 @@ import java.util.List;
 @SpringBootTest
 class NettyWebSocketClientTest {
 
-    private AbstractNettyClient client;
 
     @Test
     public void start() throws InterruptedException, URISyntaxException {
@@ -30,8 +22,6 @@ class NettyWebSocketClientTest {
 
         String url ="wss://dstream.binance.com";
         URI uri = new URI(url);
-        AbstractWebsocketClient client = new AbstractWebsocketClient(url,
-                new AbstractWebSocketClientHandler(WebSocketClientHandshakerFactory.newHandshaker(uri, WebSocketVersion.V13, null, true, new DefaultHttpHeaders())));
 
         try {
             client.startClient();
@@ -59,11 +49,5 @@ class NettyWebSocketClientTest {
 
         return uri.toString();
     }
-
-    @PreDestroy
-    public void stop() {
-        client.close();
-    }
-
 
 }
