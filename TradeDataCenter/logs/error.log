@@ -202,3 +202,5 @@ Caused by: java.net.ConnectException: Connection timed out: getsockopt
 	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
 	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
 	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ ERROR] [2024-10-09 12:34:56,674] [main] c.h.t.AbstractWebsocketClient -websocket client 启动失败，失败原因：Connection refused: dstream.binance.com/122.10.85.4:443
+[ ERROR] [2024-10-09 12:36:02,948] [main] c.h.t.AbstractWebsocketClient -websocket client 启动失败，失败原因：connection timed out: dstream.binance.com/128.242.240.125:443
