@@ -892,7 +892,7 @@ Unconditional classes:
 [ DEBUG] [2024-10-08 22:59:13,785] [main] i.n.c.n.NioEventLoop --Dio.netty.selectorAutoRebuildThreshold: 512
 [ DEBUG] [2024-10-08 22:59:13,787] [main] i.n.u.i.PlatformDependent -org.jctools-core.MpscChunkedArrayQueue: available
 [ DEBUG] [2024-10-08 22:59:13,803] [main] i.n.h.s.OpenSsl -netty-tcnative not in the classpath; OpenSslEngine will be unavailable.
-[ DEBUG] [2024-10-08 22:59:13,899] [main] i.n.h.s.JdkSslContext -Default protocols (JDK): [TLSv1.3, TLSv1.2] 
+[ DEBUG] [2024-10-08 22:59:13,899] [main] i.n.h.s.JdkSslContext -Default protocols (JDK): [TLSv1.3, TLSv1.2]
 [ DEBUG] [2024-10-08 22:59:13,899] [main] i.n.h.s.JdkSslContext -Default cipher suites (JDK): [TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384, TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256, TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256, TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384, TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA, TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA, TLS_RSA_WITH_AES_128_GCM_SHA256, TLS_RSA_WITH_AES_128_CBC_SHA, TLS_RSA_WITH_AES_256_CBC_SHA, TLS_AES_128_GCM_SHA256, TLS_AES_256_GCM_SHA384]
 [ DEBUG] [2024-10-08 22:59:13,916] [main] i.n.c.DefaultChannelId --Dio.netty.processId: 9685 (auto-detected)
 [ DEBUG] [2024-10-08 22:59:13,917] [main] i.n.u.NetUtil --Djava.net.preferIPv4Stack: false
@@ -919,8 +919,8 @@ Unconditional classes:
 [ DEBUG] [2024-10-08 22:59:13,940] [main] i.n.b.ByteBufUtil --Dio.netty.maxThreadLocalCharBufferSize: 16384
 [ WARN ] [2024-10-08 22:59:13,947] [nioEventLoopGroup-2-1] i.n.c.ChannelInitializer -Failed to initialize a channel. Closing: [id: 0x51e795d9]
 java.lang.NullPointerException: Cannot invoke "java.lang.Integer.intValue()" because "this.this$0.idleTimeSeconds" is null
-	at com.helei.tradedatacenter.netty.base.AbstractNettyClient$1.initChannel(AbstractNettyClient.java:83)
-	at com.helei.tradedatacenter.netty.base.AbstractNettyClient$1.initChannel(AbstractNettyClient.java:80)
+	at com.helei.cexapi.netty.base.AbstractNettyClient$1.initChannel(AbstractNettyClient.java:83)
+	at com.helei.cexapi.netty.base.AbstractNettyClient$1.initChannel(AbstractNettyClient.java:80)
 	at io.netty.channel.ChannelInitializer.initChannel(ChannelInitializer.java:129)
 	at io.netty.channel.ChannelInitializer.handlerAdded(ChannelInitializer.java:112)
 	at io.netty.channel.AbstractChannelHandlerContext.callHandlerAdded(AbstractChannelHandlerContext.java:938)

@@ -207,13 +207,13 @@ Caused by: java.lang.IllegalStateException: unexpected message type: PooledUnsaf
 	... 46 common frames omitted
 [ WARN ] [2024-10-10 00:11:39,202] [main] i.n.b.Bootstrap -Unknown channel option 'SO_BROADCAST' for channel '[id: 0xfd4596f7]'
 [ WARN ] [2024-10-10 00:11:39,232] [nioEventLoopGroup-2-1] i.n.c.ChannelInitializer -Failed to initialize a channel. Closing: [id: 0xfd4596f7]
-io.netty.channel.ChannelPipelineException: com.helei.tradedatacenter.subscribe.binanceapi.BinanceWSApiClientHandler is not a @Sharable handler, so can't be added or removed multiple times.
+io.netty.channel.ChannelPipelineException: com.helei.cexapi.subscribe.binanceapi.BinanceWSApiClientHandler is not a @Sharable handler, so can't be added or removed multiple times.
 	at io.netty.channel.DefaultChannelPipeline.checkMultiplicity(DefaultChannelPipeline.java:600)
 	at io.netty.channel.DefaultChannelPipeline.addLast(DefaultChannelPipeline.java:202)
 	at io.netty.channel.DefaultChannelPipeline.addLast(DefaultChannelPipeline.java:381)
 	at io.netty.channel.DefaultChannelPipeline.addLast(DefaultChannelPipeline.java:370)
-	at com.helei.tradedatacenter.netty.base.AbstractWebsocketClient$1.initChannel(AbstractWebsocketClient.java:108)
-	at com.helei.tradedatacenter.netty.base.AbstractWebsocketClient$1.initChannel(AbstractWebsocketClient.java:91)
+	at com.helei.cexapi.netty.base.AbstractWebsocketClient$1.initChannel(AbstractWebsocketClient.java:108)
+	at com.helei.cexapi.netty.base.AbstractWebsocketClient$1.initChannel(AbstractWebsocketClient.java:91)
 	at io.netty.channel.ChannelInitializer.initChannel(ChannelInitializer.java:129)
 	at io.netty.channel.ChannelInitializer.handlerAdded(ChannelInitializer.java:112)
 	at io.netty.channel.AbstractChannelHandlerContext.callHandlerAdded(AbstractChannelHandlerContext.java:938)
@@ -535,7 +535,7 @@ Caused by: java.nio.channels.ClosedChannelException: null
 [ WARN ] [2024-10-10 00:15:39,423] [main] i.n.b.Bootstrap -Unknown channel option 'SO_BROADCAST' for channel '[id: 0xeff38c2a]'
 [ ERROR] [2024-10-10 00:16:08,637] [nioEventLoopGroup-2-1] c.h.t.n.b.AbstractWebSocketClientHandler -业务处理错误，websocket client关闭
 java.lang.IllegalStateException: Unexpected FullHttpResponse (getStatus=101 Switching Protocols, content=)
-	at com.helei.tradedatacenter.netty.base.AbstractWebSocketClientHandler.channelRead0(AbstractWebSocketClientHandler.java:84)
+	at com.helei.cexapi.netty.base.AbstractWebSocketClientHandler.channelRead0(AbstractWebSocketClientHandler.java:84)
 	at io.netty.channel.SimpleChannelInboundHandler.channelRead(SimpleChannelInboundHandler.java:99)
 	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
 	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
@@ -587,9 +587,9 @@ java.lang.IllegalStateException: Unexpected FullHttpResponse (getStatus=101 Swit
 [ ERROR] [2024-10-10 00:19:37,010] [nioEventLoopGroup-2-1] c.h.t.n.b.AbstractWebSocketClientHandler -业务处理错误，websocket client关闭
 java.lang.NullPointerException: Cannot invoke "Object.hashCode()" because "key" is null
 	at java.base/java.util.concurrent.ConcurrentHashMap.get(ConcurrentHashMap.java:936)
-	at com.helei.tradedatacenter.netty.handler.RequestResponseHandler.submitResponse(RequestResponseHandler.java:47)
-	at com.helei.tradedatacenter.netty.base.AbstractWebsocketClient.submitResponse(AbstractWebsocketClient.java:186)
-	at com.helei.tradedatacenter.netty.base.AbstractWebSocketClientHandler.channelRead0(AbstractWebSocketClientHandler.java:111)
+	at com.helei.cexapi.netty.handler.RequestResponseHandler.submitResponse(RequestResponseHandler.java:47)
+	at com.helei.cexapi.netty.base.AbstractWebsocketClient.submitResponse(AbstractWebsocketClient.java:186)
+	at com.helei.cexapi.netty.base.AbstractWebSocketClientHandler.channelRead0(AbstractWebSocketClientHandler.java:111)
 	at io.netty.channel.SimpleChannelInboundHandler.channelRead(SimpleChannelInboundHandler.java:99)
 	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
 	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
@@ -629,3 +629,102 @@ java.lang.NullPointerException: Cannot invoke "Object.hashCode()" because "key" 
 	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
 	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
 	at java.base/java.lang.Thread.run(Thread.java:833)
+[ WARN ] [2024-10-10 19:06:02,911] [main] i.n.b.Bootstrap -Unknown channel option 'SO_BROADCAST' for channel '[id: 0x877f6999]'
+[ WARN ] [2024-10-10 19:06:30,642] [main] i.n.b.Bootstrap -Unknown channel option 'SO_BROADCAST' for channel '[id: 0xb1f01631]'
+[ WARN ] [2024-10-10 19:10:04,979] [main] i.n.b.Bootstrap -Unknown channel option 'SO_BROADCAST' for channel '[id: 0xcfc5b4bc]'
+[ WARN ] [2024-10-10 19:10:43,341] [main] i.n.b.Bootstrap -Unknown channel option 'SO_BROADCAST' for channel '[id: 0x1b0bca23]'
+[ WARN ] [2024-10-10 19:28:51,368] [main] i.n.b.Bootstrap -Unknown channel option 'SO_BROADCAST' for channel '[id: 0x2ba83619]'
+[ WARN ] [2024-10-10 19:28:59,631] [main] c.h.t.s.b.s.BinanceWSStreamSupporter -No handler for stream type AGG_TRADE
+[ WARN ] [2024-10-10 19:29:29,442] [nioEventLoopGroup-2-1] c.h.t.n.h.RequestResponseHandler -request id[489f7719-4866-4482-909e-a1fbaf6de241] expired, cancel invoke callback
+[ WARN ] [2024-10-10 19:34:01,044] [main] i.n.b.Bootstrap -Unknown channel option 'SO_BROADCAST' for channel '[id: 0xc4cb9cd9]'
+[ WARN ] [2024-10-10 19:35:43,395] [nioEventLoopGroup-2-1] c.h.t.n.h.RequestResponseHandler -request id[e7d71a0b-2936-41f8-b363-99730988c03c] expired, cancel invoke callback
+[ WARN ] [2024-10-10 19:35:48,608] [main] i.n.b.Bootstrap -Unknown channel option 'SO_BROADCAST' for channel '[id: 0xbe017c51]'
+[ WARN ] [2024-10-10 19:36:26,398] [nioEventLoopGroup-2-1] c.h.t.n.h.RequestResponseHandler -request id[4ec460c0-3bd1-4116-a787-9610c39705cb] expired, cancel invoke callback
+[ ERROR] [2024-10-10 19:36:32,846] [nioEventLoopGroup-2-1] c.h.t.s.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type null-null
+[ ERROR] [2024-10-10 19:36:34,533] [nioEventLoopGroup-2-1] c.h.t.s.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type null-null
+[ ERROR] [2024-10-10 20:03:04,041] [nioEventLoopGroup-2-1] c.h.t.s.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type null-null
+[ ERROR] [2024-10-10 20:03:04,045] [nioEventLoopGroup-2-1] c.h.t.s.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type null-null
+[ ERROR] [2024-10-10 20:03:04,046] [nioEventLoopGroup-2-1] c.h.t.s.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type null-null
+[ ERROR] [2024-10-10 20:03:04,046] [nioEventLoopGroup-2-1] c.h.t.s.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type null-null
+[ ERROR] [2024-10-10 20:03:04,046] [nioEventLoopGroup-2-1] c.h.t.s.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type null-null
+[ ERROR] [2024-10-10 20:03:04,047] [nioEventLoopGroup-2-1] c.h.t.s.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type null-null
+[ ERROR] [2024-10-10 20:03:04,049] [nioEventLoopGroup-2-1] c.h.t.s.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type null-null
+[ ERROR] [2024-10-10 20:03:04,050] [nioEventLoopGroup-2-1] c.h.t.s.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type null-null
+[ ERROR] [2024-10-10 20:03:04,050] [nioEventLoopGroup-2-1] c.h.t.s.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type null-null
+[ ERROR] [2024-10-10 20:03:04,051] [nioEventLoopGroup-2-1] c.h.t.s.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type null-null
+[ ERROR] [2024-10-10 20:03:04,051] [nioEventLoopGroup-2-1] c.h.t.s.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type null-null
+[ ERROR] [2024-10-10 20:03:04,052] [nioEventLoopGroup-2-1] c.h.t.s.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type null-null
+[ ERROR] [2024-10-10 20:03:04,052] [nioEventLoopGroup-2-1] c.h.t.s.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type null-null
+[ ERROR] [2024-10-10 20:03:04,053] [nioEventLoopGroup-2-1] c.h.t.s.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type null-null
+[ ERROR] [2024-10-10 20:03:04,053] [nioEventLoopGroup-2-1] c.h.t.s.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type null-null
+[ ERROR] [2024-10-10 20:03:04,053] [nioEventLoopGroup-2-1] c.h.t.s.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type null-null
+[ ERROR] [2024-10-10 20:03:04,054] [nioEventLoopGroup-2-1] c.h.t.s.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type null-null
+[ ERROR] [2024-10-10 20:03:04,056] [nioEventLoopGroup-2-1] c.h.t.s.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type null-null
+[ ERROR] [2024-10-10 20:03:04,059] [nioEventLoopGroup-2-1] c.h.t.s.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type null-null
+[ ERROR] [2024-10-10 20:03:04,059] [nioEventLoopGroup-2-1] c.h.t.s.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type null-null
+[ ERROR] [2024-10-10 20:03:04,060] [nioEventLoopGroup-2-1] c.h.t.s.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type null-null
+[ ERROR] [2024-10-10 20:03:04,061] [nioEventLoopGroup-2-1] c.h.t.s.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type null-null
+[ ERROR] [2024-10-10 20:03:04,062] [nioEventLoopGroup-2-1] c.h.t.s.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type null-null
+[ ERROR] [2024-10-10 20:03:04,062] [nioEventLoopGroup-2-1] c.h.t.s.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type null-null
+[ ERROR] [2024-10-10 20:03:04,063] [nioEventLoopGroup-2-1] c.h.t.s.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type null-null
+[ ERROR] [2024-10-10 20:03:04,063] [nioEventLoopGroup-2-1] c.h.t.s.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type null-null
+[ ERROR] [2024-10-10 20:03:04,064] [nioEventLoopGroup-2-1] c.h.t.s.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type null-null
+[ ERROR] [2024-10-10 20:03:04,065] [nioEventLoopGroup-2-1] c.h.t.s.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type null-null
+[ ERROR] [2024-10-10 20:03:04,065] [nioEventLoopGroup-2-1] c.h.t.s.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type null-null
+[ ERROR] [2024-10-10 20:03:04,066] [nioEventLoopGroup-2-1] c.h.t.s.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type null-null
+[ ERROR] [2024-10-10 20:03:04,066] [nioEventLoopGroup-2-1] c.h.t.s.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type null-null
+[ ERROR] [2024-10-10 20:03:04,067] [nioEventLoopGroup-2-1] c.h.t.s.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type null-null
+[ ERROR] [2024-10-10 20:03:04,067] [nioEventLoopGroup-2-1] c.h.t.s.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type null-null
+[ ERROR] [2024-10-10 20:03:04,068] [nioEventLoopGroup-2-1] c.h.t.s.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type null-null
+[ ERROR] [2024-10-10 20:03:04,068] [nioEventLoopGroup-2-1] c.h.t.s.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type null-null
+[ ERROR] [2024-10-10 20:03:04,068] [nioEventLoopGroup-2-1] c.h.t.s.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type null-null
+[ ERROR] [2024-10-10 20:03:04,069] [nioEventLoopGroup-2-1] c.h.t.s.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type null-null
+[ ERROR] [2024-10-10 20:03:04,069] [nioEventLoopGroup-2-1] c.h.t.s.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type null-null
+[ ERROR] [2024-10-10 20:03:04,069] [nioEventLoopGroup-2-1] c.h.t.s.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type null-null
+[ ERROR] [2024-10-10 20:03:04,070] [nioEventLoopGroup-2-1] c.h.t.s.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type null-null
+[ ERROR] [2024-10-10 20:03:04,070] [nioEventLoopGroup-2-1] c.h.t.s.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type null-null
+[ ERROR] [2024-10-10 20:03:04,070] [nioEventLoopGroup-2-1] c.h.t.s.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type null-null
+[ ERROR] [2024-10-10 20:03:04,070] [nioEventLoopGroup-2-1] c.h.t.s.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type null-null
+[ ERROR] [2024-10-10 20:03:04,071] [nioEventLoopGroup-2-1] c.h.t.s.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type null-null
+[ ERROR] [2024-10-10 20:03:04,071] [nioEventLoopGroup-2-1] c.h.t.s.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type null-null
+[ ERROR] [2024-10-10 20:03:04,071] [nioEventLoopGroup-2-1] c.h.t.s.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type null-null
+[ ERROR] [2024-10-10 20:03:04,071] [nioEventLoopGroup-2-1] c.h.t.s.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type null-null
+[ ERROR] [2024-10-10 20:03:04,072] [nioEventLoopGroup-2-1] c.h.t.s.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type null-null
+[ ERROR] [2024-10-10 20:03:04,072] [nioEventLoopGroup-2-1] c.h.t.s.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type null-null
+[ ERROR] [2024-10-10 20:03:04,072] [nioEventLoopGroup-2-1] c.h.t.s.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type null-null
+[ ERROR] [2024-10-10 20:03:04,072] [nioEventLoopGroup-2-1] c.h.t.s.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type null-null
+[ ERROR] [2024-10-10 20:03:04,073] [nioEventLoopGroup-2-1] c.h.t.s.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type null-null
+[ ERROR] [2024-10-10 20:03:04,073] [nioEventLoopGroup-2-1] c.h.t.s.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type null-null
+[ ERROR] [2024-10-10 20:03:04,073] [nioEventLoopGroup-2-1] c.h.t.s.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type null-null
+[ ERROR] [2024-10-10 20:03:04,073] [nioEventLoopGroup-2-1] c.h.t.s.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type null-null
+[ ERROR] [2024-10-10 20:03:04,073] [nioEventLoopGroup-2-1] c.h.t.s.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type null-null
+[ ERROR] [2024-10-10 20:03:04,074] [nioEventLoopGroup-2-1] c.h.t.s.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type null-null
+[ ERROR] [2024-10-10 20:03:04,074] [nioEventLoopGroup-2-1] c.h.t.s.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type null-null
+[ ERROR] [2024-10-10 20:03:04,074] [nioEventLoopGroup-2-1] c.h.t.s.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type null-null
+[ ERROR] [2024-10-10 20:03:04,074] [nioEventLoopGroup-2-1] c.h.t.s.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type null-null
+[ ERROR] [2024-10-10 20:03:04,075] [nioEventLoopGroup-2-1] c.h.t.s.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type null-null
+[ ERROR] [2024-10-10 20:03:04,075] [nioEventLoopGroup-2-1] c.h.t.s.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type null-null
+[ ERROR] [2024-10-10 20:03:04,075] [nioEventLoopGroup-2-1] c.h.t.s.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type null-null
+[ ERROR] [2024-10-10 20:03:04,075] [nioEventLoopGroup-2-1] c.h.t.s.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type null-null
+[ ERROR] [2024-10-10 20:03:04,076] [nioEventLoopGroup-2-1] c.h.t.s.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type null-null
+[ ERROR] [2024-10-10 20:03:04,076] [nioEventLoopGroup-2-1] c.h.t.s.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type null-null
+[ ERROR] [2024-10-10 20:03:04,076] [nioEventLoopGroup-2-1] c.h.t.s.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type null-null
+[ ERROR] [2024-10-10 20:03:04,077] [nioEventLoopGroup-2-1] c.h.t.s.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type null-null
+[ ERROR] [2024-10-10 20:03:04,077] [nioEventLoopGroup-2-1] c.h.t.s.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type null-null
+[ ERROR] [2024-10-10 20:03:04,077] [nioEventLoopGroup-2-1] c.h.t.s.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type null-null
+[ ERROR] [2024-10-10 20:03:04,077] [nioEventLoopGroup-2-1] c.h.t.s.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type null-null
+[ WARN ] [2024-10-10 21:41:44,473] [main] i.n.b.Bootstrap -Unknown channel option 'SO_BROADCAST' for channel '[id: 0xdb39167e]'
+[ WARN ] [2024-10-10 21:42:50,052] [main] i.n.b.Bootstrap -Unknown channel option 'SO_BROADCAST' for channel '[id: 0x8edcd17b]'
+[ WARN ] [2024-10-10 21:43:19,155] [nioEventLoopGroup-2-1] c.h.t.n.h.RequestResponseHandler -request id[0330f935-dbb1-4604-b658-603237cb9ec2] expired, cancel invoke callback
+[ WARN ] [2024-10-10 21:44:54,210] [main] i.n.b.Bootstrap -Unknown channel option 'SO_BROADCAST' for channel '[id: 0xcb620f5a]'
+[ WARN ] [2024-10-10 21:46:04,062] [nioEventLoopGroup-2-1] c.h.t.n.h.RequestResponseHandler -request id[520cd708-68f2-49e4-bd4e-e9abd962c47a] expired, cancel invoke callback
+[ WARN ] [2024-10-10 21:48:27,651] [main] i.n.b.Bootstrap -Unknown channel option 'SO_BROADCAST' for channel '[id: 0x86e12aac]'
+[ WARN ] [2024-10-10 21:48:36,694] [nioEventLoopGroup-2-1] c.h.t.n.h.RequestResponseHandler -request id[6c08fd56-2b22-4351-a0d8-fbee0d1e0975] expired, expire time[1728568410760], currentTime[1728568116694] cancel invoke callback
+[ WARN ] [2024-10-10 21:49:19,101] [main] i.n.b.Bootstrap -Unknown channel option 'SO_BROADCAST' for channel '[id: 0x46385455]'
+[ ERROR] [2024-10-10 21:49:25,998] [pool-1-thread-1] c.h.t.s.b.b.AbstractBinanceWSApiClient -get subscribe response error, requestId[ab9f35fd-aa31-4560-a8a5-c40b5869527d]
+[ WARN ] [2024-10-10 21:50:34,631] [main] i.n.b.Bootstrap -Unknown channel option 'SO_BROADCAST' for channel '[id: 0x5e8eae5c]'
+[ ERROR] [2024-10-10 21:50:48,792] [pool-1-thread-1] c.h.t.s.b.b.AbstractBinanceWSApiClient -get subscribe response error, requestId[55ab530a-3906-4f3d-9d77-f28051d45545]
+[ WARN ] [2024-10-10 21:53:27,040] [main] i.n.b.Bootstrap -Unknown channel option 'SO_BROADCAST' for channel '[id: 0xa4b18378]'
+[ WARN ] [2024-10-10 21:58:21,580] [main] i.n.b.Bootstrap -Unknown channel option 'SO_BROADCAST' for channel '[id: 0xa85005c7]'
+[ WARN ] [2024-10-10 21:59:48,938] [main] i.n.b.Bootstrap -Unknown channel option 'SO_BROADCAST' for channel '[id: 0xe21e2258]'
+[ WARN ] [2024-10-10 22:00:41,921] [main] i.n.b.Bootstrap -Unknown channel option 'SO_BROADCAST' for channel '[id: 0xaa0e96f7]'

@@ -1,7 +1,7 @@
 [ WARN ] [2024-10-08 22:59:13,947] [nioEventLoopGroup-2-1] i.n.c.ChannelInitializer -Failed to initialize a channel. Closing: [id: 0x51e795d9]
 java.lang.NullPointerException: Cannot invoke "java.lang.Integer.intValue()" because "this.this$0.idleTimeSeconds" is null
-	at com.helei.tradedatacenter.netty.base.AbstractNettyClient$1.initChannel(AbstractNettyClient.java:83)
-	at com.helei.tradedatacenter.netty.base.AbstractNettyClient$1.initChannel(AbstractNettyClient.java:80)
+	at com.helei.cexapi.netty.base.AbstractNettyClient$1.initChannel(AbstractNettyClient.java:83)
+	at com.helei.cexapi.netty.base.AbstractNettyClient$1.initChannel(AbstractNettyClient.java:80)
 	at io.netty.channel.ChannelInitializer.initChannel(ChannelInitializer.java:129)
 	at io.netty.channel.ChannelInitializer.handlerAdded(ChannelInitializer.java:112)
 	at io.netty.channel.AbstractChannelHandlerContext.callHandlerAdded(AbstractChannelHandlerContext.java:938)
