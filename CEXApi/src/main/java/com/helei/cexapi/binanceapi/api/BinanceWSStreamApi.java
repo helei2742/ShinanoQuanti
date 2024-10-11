@@ -92,9 +92,25 @@ public class BinanceWSStreamApi extends AbstractBinanceWSApi {
                 ExecutorService executorService,
                 Map<String, Object> params
         ) {
-            return addSubscribeEntity(new StreamSubscribeEntity(symbol, subscribeType, invocationHandler, executorService, params));
+            return addSubscribeEntity(subscribeType, invocationHandler, executorService, false, params);
         }
 
+        /**
+         * 添加订阅类型， 必须在设置symbol之后
+         * @param subscribeType subscribeType
+         * @param invocationHandler invocationHandler
+         * @param executorService 执行的线程池，如果设置了，在收到订阅的消息的时候会优先使用该线程池
+         * @return StreamCommandBuilder
+         */
+        public StreamCommandBuilder addSubscribeEntity(
+                WebSocketStreamType subscribeType,
+                SubscribeResultInvocationHandler invocationHandler,
+                ExecutorService executorService,
+                boolean signature,
+                Map<String, Object> params
+        ) {
+            return addSubscribeEntity(new StreamSubscribeEntity(symbol, subscribeType, invocationHandler, executorService, params, signature));
+        }
         /**
          * 添加订阅类型， 必须在设置symbol之后
          * @param subscribeEntity subscribeEntity

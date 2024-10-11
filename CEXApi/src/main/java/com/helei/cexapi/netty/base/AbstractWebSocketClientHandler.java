@@ -78,7 +78,7 @@ public abstract class AbstractWebSocketClientHandler<P, T> extends SimpleChannel
                             ", content=" + response.content().toString(CharsetUtil.UTF_8) + ')');
         }  else if (msg instanceof WebSocketFrame frame) {
             if (frame instanceof TextWebSocketFrame textFrame) {
-                log.info("websocket client 接收到的消息：{}",textFrame.text());
+                log.debug("websocket client 接收到的消息：{}",textFrame.text());
 
                 whenReceiveMessage(textFrame.text());
 

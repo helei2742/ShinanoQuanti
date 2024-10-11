@@ -7,6 +7,7 @@ import com.helei.cexapi.binanceapi.api.BinanceWSSpotApi;
 import com.helei.cexapi.binanceapi.api.BinanceWSStreamApi;
 import com.helei.cexapi.binanceapi.base.AbstractBinanceWSApiClient;
 import com.helei.cexapi.binanceapi.base.AbstractBinanceWSApiClientHandler;
+import com.helei.cexapi.binanceapi.dto.ASKey;
 import com.helei.cexapi.binanceapi.supporter.BinanceWSStreamSupporter;
 import com.helei.cexapi.binanceapi.supporter.IpWeightSupporter;
 import lombok.Getter;
@@ -50,5 +51,11 @@ public class BinanceWSApiClientClient extends AbstractBinanceWSApiClient {
         baseApi = new BinanceWSBaseApi(this);
         spotApi = new BinanceWSSpotApi(this);
         streamApi = new BinanceWSStreamApi(this);
+    }
+
+
+    public BinanceWSApiClientClient setSignature(ASKey asKey) {
+        super.asKey = asKey;
+        return this;
     }
 }

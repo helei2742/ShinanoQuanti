@@ -1,3 +1,6 @@
+
+
+
 package com.helei.cexapi.binanceapi.constants;
 
 /**
@@ -19,4 +22,15 @@ public class WebSocketStreamParamKey {
      * 合约类型
      */
     public static final String CONTRACT_TYPE = "contractType";
+
+    /**
+     * 签名需要的参数 apiKey
+     */
+    public static final String API_KEY = "apiKey";
+
+    /**
+     * 签名需要的参数 secretKey
+     */
+    public static final String SECRET_KEY = "secretKey";
+
 }

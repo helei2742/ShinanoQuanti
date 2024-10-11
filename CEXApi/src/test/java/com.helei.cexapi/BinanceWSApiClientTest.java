@@ -1,3 +1,5 @@
+
+
 package com.helei.cexapi;
 
 import com.alibaba.fastjson.JSONObject;
@@ -5,6 +7,7 @@ import com.helei.cexapi.binanceapi.BinanceWSApiClientClient;
 import com.helei.cexapi.binanceapi.base.SubscribeResultInvocationHandler;
 import com.helei.cexapi.binanceapi.constants.WebSocketStreamParamKey;
 import com.helei.cexapi.binanceapi.constants.WebSocketStreamType;
+import com.helei.cexapi.binanceapi.dto.ASKey;
 import com.helei.cexapi.binanceapi.dto.StreamSubscribeEntity;
 import com.helei.cexapi.constants.WebSocketUrl;
 import org.junit.jupiter.api.BeforeAll;
@@ -29,9 +32,12 @@ class BinanceWSApiClientTest {
 
     @Test
     public void testAGG_TRADE() throws InterruptedException {
-        binanceWSApiClient.getStreamApi()
+        binanceWSApiClient
+                .setSignature(new ASKey())
+                .getStreamApi()
                 .builder()
                 .symbol("btcusdt")
+
                 .addSubscribeEntity(
                         WebSocketStreamType.AGG_TRADE,
                         (streamName, result) -> {
@@ -46,6 +52,7 @@ class BinanceWSApiClientTest {
     @Test
     public void testKLine() throws InterruptedException {
         binanceWSApiClient
+                .setSignature(new ASKey())
                 .getStreamApi()
                 .builder()
                 .symbol("btcusdt")
@@ -54,17 +61,18 @@ class BinanceWSApiClientTest {
                                 .builder()
                                 .symbol("btcusdt")
                                 .subscribeType(WebSocketStreamType.KLINE)
-                                .invocationHandler(new SubscribeResultInvocationHandler() {
-                                    @Override
-                                    public void invoke(String streamName, JSONObject result) {
-                                        System.out.println("<<<<<<======================");
-                                        System.out.println(streamName);
-                                        System.out.println(result);
-                                        System.out.println("======================>>>>>>");
-                                    }
+                                .invocationHandler((streamName, result) -> {
+                                    System.out.println("<<<<<<======================");
+                                    System.out.println(streamName);
+                                    System.out.println(result);
+                                    System.out.println("======================>>>>>>");
                                 })
                                 .build()
-                        .addParam(WebSocketStreamParamKey.KLINE_INTERVAL, "1m")
+
+                                .addParam(WebSocketStreamParamKey.KLINE_INTERVAL, "1m")
+                                .addParam(WebSocketStreamParamKey.SECRET_KEY, "123")
+                                .addParam(WebSocketStreamParamKey.API_KEY, "123")
+                                .isSignature(false)
                 )
                 .subscribe();
 

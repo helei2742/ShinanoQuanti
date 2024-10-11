@@ -44,6 +44,13 @@ public class StreamSubscribeEntity {
      */
     private Map<String, Object> params;
 
+    private boolean signature;
+
+    public StreamSubscribeEntity isSignature(boolean f) {
+        signature = f;
+        return this;
+    }
+
     /**
      * 添加参数
      * @param key key
