@@ -14,6 +14,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 
+import java.net.InetSocketAddress;
 import java.net.URISyntaxException;
 
 
@@ -47,7 +48,20 @@ public class BinanceWSApiClientClient extends AbstractBinanceWSApiClient {
             AbstractBinanceWSApiClientHandler handler
     ) throws URISyntaxException {
         super(threadPoolSize, url, ipWeightSupporter, new BinanceWSStreamSupporter(), handler);
+        baseApi = new BinanceWSBaseApi(this);
+        spotApi = new BinanceWSSpotApi(this);
+        streamApi = new BinanceWSStreamApi(this);
+    }
 
+    public BinanceWSApiClientClient(
+            int threadPoolSize,
+            String url,
+            InetSocketAddress proxy,
+            IpWeightSupporter ipWeightSupporter,
+            AbstractBinanceWSApiClientHandler handler
+    ) throws URISyntaxException {
+        super(threadPoolSize, url, ipWeightSupporter, new BinanceWSStreamSupporter(), handler);
+        super.proxy = proxy;
         baseApi = new BinanceWSBaseApi(this);
         spotApi = new BinanceWSSpotApi(this);
         streamApi = new BinanceWSStreamApi(this);

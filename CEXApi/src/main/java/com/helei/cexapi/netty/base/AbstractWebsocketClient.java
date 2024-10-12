@@ -17,6 +17,8 @@ import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
 import io.netty.handler.stream.ChunkedWriteHandler;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.net.InetSocketAddress;
@@ -48,6 +50,12 @@ public abstract class AbstractWebsocketClient<P,T> {
      * 执行回调的线程池
      */
     protected final ExecutorService callbackInvoker;
+
+    /**
+     * 代理
+     */
+    @Setter
+    protected InetSocketAddress proxy = null;
 
     private URI uri;
 
@@ -107,7 +115,9 @@ public abstract class AbstractWebsocketClient<P,T> {
                         @Override
                         protected void initChannel(NioSocketChannel ch) {
                             ChannelPipeline p = ch.pipeline();
-                            p.addLast(new Socks5ProxyHandler(new InetSocketAddress("127.0.0.1", 7890)));
+                            if (proxy != null) {
+                                p.addLast(new Socks5ProxyHandler(proxy));
+                            }
 
                             if (sslCtx != null) {
                                 p.addLast(sslCtx.newHandler(ch.alloc(), uri.getHost(), port));

@@ -1,3 +1,4 @@
+
 package com.helei.cexapi.binanceapi.dto;
 
 import com.helei.cexapi.binanceapi.base.SubscribeResultInvocationHandler;
@@ -46,10 +47,6 @@ public class StreamSubscribeEntity {
 
     private boolean signature;
 
-    public StreamSubscribeEntity isSignature(boolean f) {
-        signature = f;
-        return this;
-    }
 
     /**
      * 添加参数
@@ -57,7 +54,7 @@ public class StreamSubscribeEntity {
      * @param value value
      * @return StreamSubscribeEntity
      */
-    public synchronized StreamSubscribeEntity addParam(String key, Object value) {
+    public synchronized StreamSubscribeEntity addParam(String key, java.lang.Object value) {
         if (params == null) params = new HashMap<>();
         params.put(key, value);
         return this;

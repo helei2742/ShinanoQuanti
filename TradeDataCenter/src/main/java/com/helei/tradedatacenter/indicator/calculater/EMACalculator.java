@@ -16,7 +16,8 @@ public class EMACalculator extends BaseIndicatorCalculator<EMA>{
 
     private ValueState<Double> emaState;
 
-    public EMACalculator(int period) {
+    public EMACalculator(String name, int period) {
+        super(name);
         this.period = period;
     }
 
@@ -25,10 +26,6 @@ public class EMACalculator extends BaseIndicatorCalculator<EMA>{
         emaState = getRuntimeContext().getState(new ValueStateDescriptor<>("emaState", Double.class));
     }
 
-    @Override
-    public String indicatorKey(EMA indicator) {
-        return "EMA-"+period;
-    }
 
     @Override
     public EMA calculateInKLine(KLine kLine) throws IOException {

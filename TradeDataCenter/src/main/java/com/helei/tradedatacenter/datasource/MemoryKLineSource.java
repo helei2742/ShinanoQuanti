@@ -1,48 +1,36 @@
+
 package com.helei.tradedatacenter.datasource;
 
-import com.alibaba.fastjson.JSONObject;
+import com.helei.tradedatacenter.constants.KLineInterval;
 import com.helei.tradedatacenter.conventor.KLineMapper;
+import com.helei.tradedatacenter.dto.SubscribeData;
 import com.helei.tradedatacenter.entity.KLine;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.flink.streaming.api.functions.source.SourceFunction;
 
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
 
 
 /**
  * 内存的k线数据源
  */
 @Slf4j
-public class MemoryKLineSource implements SourceFunction<KLine> {
-    private static final LinkedBlockingQueue<JSONObject> blockingQueue = new LinkedBlockingQueue<>();
-    private volatile boolean isRunning = true;
+public class MemoryKLineSource extends BaseKLineSource {
+    private final MemoryKLineDataPublisher memoryKLineDataPublisher;
 
-    public void append(JSONObject kline) throws InterruptedException {
-        blockingQueue.offer(kline);
+    private final SubscribeData subscribeData;
+
+    public MemoryKLineSource(
+            String symbol,
+            KLineInterval interval,
+            MemoryKLineDataPublisher memoryKLineDataPublisher
+    ) {
+        this.memoryKLineDataPublisher = memoryKLineDataPublisher;
+        this.subscribeData = memoryKLineDataPublisher.registry(symbol, interval);
     }
+
 
     @Override
-    public void run(SourceContext<KLine> ctx) throws Exception {
-        JSONObject originKLine = null;
-        while (isRunning) {
-            originKLine = blockingQueue.poll(100, TimeUnit.MILLISECONDS);
-
-            if (originKLine != null) {
-                KLine kLine = KLineMapper.mapJsonToKLine(originKLine);
-
-//                if (kLine.isEnd()) {
-                ctx.collect(kLine);
-//                    log.debug("append end kLine [{}]", kLine);
-//                }
-            } else {
-//                log.warn("origin kLine data warn, originKLine={}", originKLine);
-            }
-        }
+    protected KLine loadKLine() throws Exception {
+        return KLineMapper.mapJsonToKLine(subscribeData.getData());
     }
 
-    @Override
-    public void cancel() {
-        isRunning = false;
-    }
 }

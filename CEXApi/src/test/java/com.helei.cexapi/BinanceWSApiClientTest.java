@@ -67,12 +67,11 @@ class BinanceWSApiClientTest {
                                     System.out.println(result);
                                     System.out.println("======================>>>>>>");
                                 })
+                                .signature(false)
                                 .build()
-
                                 .addParam(WebSocketStreamParamKey.KLINE_INTERVAL, "1m")
                                 .addParam(WebSocketStreamParamKey.SECRET_KEY, "123")
                                 .addParam(WebSocketStreamParamKey.API_KEY, "123")
-                                .isSignature(false)
                 )
                 .subscribe();
 

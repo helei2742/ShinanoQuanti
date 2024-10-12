@@ -1,5 +1,7 @@
+
 package com.helei.tradedatacenter;
 
+import com.helei.tradedatacenter.datasource.BaseKLineSource;
 import com.helei.tradedatacenter.datasource.MemoryKLineSource;
 import com.helei.tradedatacenter.entity.KLine;
 import com.helei.tradedatacenter.indicator.Indicator;
@@ -20,7 +22,7 @@ public class AutoTradeTask {
 
     private final List<BaseIndicatorCalculator<? extends Indicator>> indicatorCalList;
 
-    private SourceFunction<KLine> memoryKLineSource;
+    private final BaseKLineSource memoryKLineSource;
 
     public AutoTradeTask(StreamExecutionEnvironment env, MemoryKLineSource memoryKLineSource) {
         // 设置 Flink 流环境

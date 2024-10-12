@@ -1,15 +1,13 @@
-
-
 package com.helei.tradedatacenter.indicator.calculater;
 
-        import com.helei.tradedatacenter.entity.KLine;
-        import com.helei.tradedatacenter.indicator.RSI;
-        import com.helei.tradedatacenter.util.CalculatorUtil;
-        import org.apache.flink.api.common.state.ValueState;
-        import org.apache.flink.api.common.state.ValueStateDescriptor;
-        import org.apache.flink.configuration.Configuration;
+import com.helei.tradedatacenter.entity.KLine;
+import com.helei.tradedatacenter.indicator.RSI;
+import com.helei.tradedatacenter.util.CalculatorUtil;
+import org.apache.flink.api.common.state.ValueState;
+import org.apache.flink.api.common.state.ValueStateDescriptor;
+import org.apache.flink.configuration.Configuration;
 
-        import java.io.IOException;
+import java.io.IOException;
 
 public class RSICalculator extends BaseIndicatorCalculator<RSI>{
 
@@ -17,7 +15,8 @@ public class RSICalculator extends BaseIndicatorCalculator<RSI>{
 
     private ValueState<Double> rsiState;
 
-    public RSICalculator(int period) {
+    public RSICalculator(String name, int period) {
+        super(name);
         this.period = period;
     }
 
@@ -26,10 +25,10 @@ public class RSICalculator extends BaseIndicatorCalculator<RSI>{
         rsiState = getRuntimeContext().getState(new ValueStateDescriptor<>("rsiState", Double.class));
     }
 
-    @Override
-    public String indicatorKey(RSI indicator) {
-        return "RSI-" + period;
-    }
+//    @Override
+//    public String indicatorKey(RSI indicator) {
+//        return "RSI-" + period;
+//    }
 
     @Override
     public RSI calculateInKLine(KLine kLine) throws IOException {

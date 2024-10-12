@@ -2059,3 +2059,45 @@ Caused by: java.lang.reflect.InaccessibleObjectException: Unable to make field p
 [ WARN ] [2024-10-11 22:44:04,757] [main] o.a.f.r.w.WebMonitorUtils -JobManager log files are unavailable in the web dashboard. Log file location not found in environment variable 'log.file' or configuration key 'web.log.path'.
 [ WARN ] [2024-10-11 22:44:04,828] [flink-pekko.actor.default-dispatcher-4] o.a.f.r.s.t.DefaultDelegationTokenManager -No tokens obtained so skipping notifications
 [ WARN ] [2024-10-11 22:44:04,828] [flink-pekko.actor.default-dispatcher-4] o.a.f.r.s.t.DefaultDelegationTokenManager -Tokens update task not started because either no tokens obtained or none of the tokens specified its renewal date
+[ WARN ] [2024-10-12 18:17:02,614] [main] i.n.b.Bootstrap -Unknown channel option 'SO_BROADCAST' for channel '[id: 0x5063666f]'
+[ ERROR] [2024-10-12 18:17:02,665] [main] c.h.c.n.b.AbstractWebsocketClient -websocket client 启动失败
+io.netty.channel.AbstractChannel$AnnotatedConnectException: Connection refused: getsockopt: /127.0.0.1:7890
+Caused by: java.net.ConnectException: Connection refused: getsockopt
+	at java.base/sun.nio.ch.Net.pollConnect(Native Method)
+	at java.base/sun.nio.ch.Net.pollConnectNow(Net.java:682)
+	at java.base/sun.nio.ch.SocketChannelImpl.finishConnect(SocketChannelImpl.java:973)
+	at io.netty.channel.socket.nio.NioSocketChannel.doFinishConnect(NioSocketChannel.java:337)
+	at io.netty.channel.nio.AbstractNioChannel$AbstractNioUnsafe.finishConnect(AbstractNioChannel.java:334)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:776)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:724)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:650)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:562)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:997)
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ WARN ] [2024-10-12 18:17:03,137] [main] i.n.b.Bootstrap -Unknown channel option 'SO_BROADCAST' for channel '[id: 0x3f2f2145]'
+[ ERROR] [2024-10-12 18:17:03,138] [main] c.h.c.n.b.AbstractWebsocketClient -websocket client 启动失败
+io.netty.channel.AbstractChannel$AnnotatedConnectException: Connection refused: getsockopt: /127.0.0.1:7890
+Caused by: java.net.ConnectException: Connection refused: getsockopt
+	at java.base/sun.nio.ch.Net.pollConnect(Native Method)
+	at java.base/sun.nio.ch.Net.pollConnectNow(Net.java:682)
+	at java.base/sun.nio.ch.SocketChannelImpl.finishConnect(SocketChannelImpl.java:973)
+	at io.netty.channel.socket.nio.NioSocketChannel.doFinishConnect(NioSocketChannel.java:337)
+	at io.netty.channel.nio.AbstractNioChannel$AbstractNioUnsafe.finishConnect(AbstractNioChannel.java:334)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:776)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:724)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:650)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:562)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:997)
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ WARN ] [2024-10-12 18:23:10,690] [main] i.n.b.Bootstrap -Unknown channel option 'SO_BROADCAST' for channel '[id: 0x3cdad985]'
+[ WARN ] [2024-10-12 18:25:36,012] [main] i.n.b.Bootstrap -Unknown channel option 'SO_BROADCAST' for channel '[id: 0x8157241e]'
+[ WARN ] [2024-10-12 18:25:53,884] [main] i.n.b.Bootstrap -Unknown channel option 'SO_BROADCAST' for channel '[id: 0x8d494b37]'
+[ WARN ] [2024-10-12 18:26:13,033] [main] i.n.b.Bootstrap -Unknown channel option 'SO_BROADCAST' for channel '[id: 0xabf5c3a3]'
+[ WARN ] [2024-10-12 18:26:26,111] [main] i.n.b.Bootstrap -Unknown channel option 'SO_BROADCAST' for channel '[id: 0x93e6028a]'
+[ WARN ] [2024-10-12 18:27:00,486] [main] i.n.b.Bootstrap -Unknown channel option 'SO_BROADCAST' for channel '[id: 0xd6ff8641]'
+[ WARN ] [2024-10-12 18:28:54,149] [main] i.n.b.Bootstrap -Unknown channel option 'SO_BROADCAST' for channel '[id: 0xb8a79ee8]'
+[ WARN ] [2024-10-12 18:29:33,849] [main] i.n.b.Bootstrap -Unknown channel option 'SO_BROADCAST' for channel '[id: 0x9fd0fbaf]'

@@ -2,6 +2,7 @@
 
 package com.helei.tradedatacenter.entity;
 
+import com.helei.tradedatacenter.constants.KLineInterval;
 import com.helei.tradedatacenter.indicator.Indicator;
 import lombok.*;
 
@@ -64,6 +65,11 @@ public class KLine {
      * 这根线是否执行完
      */
     private boolean end;
+
+    /**
+     * k线频率
+     */
+    private KLineInterval kLineInterval;
 
     /**
      * 存放各种指标以及他的值

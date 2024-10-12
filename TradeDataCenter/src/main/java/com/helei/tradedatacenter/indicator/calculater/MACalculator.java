@@ -1,7 +1,7 @@
 
 package com.helei.tradedatacenter.indicator.calculater;
 
-        import com.helei.tradedatacenter.entity.KLine;
+import com.helei.tradedatacenter.entity.KLine;
         import com.helei.tradedatacenter.indicator.MA;
         import com.helei.tradedatacenter.util.CalculatorUtil;
         import org.apache.flink.api.common.state.ValueState;
@@ -19,7 +19,8 @@ public class MACalculator extends BaseIndicatorCalculator<MA>{
 
     private transient ValueState<Double> maState;
 
-    public MACalculator(int period) {
+    public MACalculator(String name, int period) {
+        super(name);
         this.period = period;
     }
 
@@ -28,11 +29,6 @@ public class MACalculator extends BaseIndicatorCalculator<MA>{
         this.maState = getRuntimeContext().getState(new ValueStateDescriptor<>("maState", Double.class));
     }
 
-
-    @Override
-    public String indicatorKey(MA indicator) {
-        return "MA-" + period;
-    }
 
     @Override
     public MA calculateInKLine(KLine kLine) throws IOException {

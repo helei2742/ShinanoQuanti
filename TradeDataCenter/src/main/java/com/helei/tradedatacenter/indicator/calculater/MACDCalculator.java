@@ -1,14 +1,14 @@
 
 package com.helei.tradedatacenter.indicator.calculater;
 
-        import com.helei.tradedatacenter.entity.KLine;
-        import com.helei.tradedatacenter.indicator.MACD;
-        import com.helei.tradedatacenter.util.CalculatorUtil;
-        import org.apache.flink.api.common.state.ValueState;
-        import org.apache.flink.api.common.state.ValueStateDescriptor;
-        import org.apache.flink.api.common.typeinfo.TypeInformation;
+import com.helei.tradedatacenter.entity.KLine;
+import com.helei.tradedatacenter.indicator.MACD;
+import com.helei.tradedatacenter.util.CalculatorUtil;
+import org.apache.flink.api.common.state.ValueState;
+import org.apache.flink.api.common.state.ValueStateDescriptor;
+import org.apache.flink.api.common.typeinfo.TypeInformation;
 
-        import java.io.IOException;
+import java.io.IOException;
 
 public class MACDCalculator extends BaseIndicatorCalculator<MACD> {
 
@@ -21,7 +21,8 @@ public class MACDCalculator extends BaseIndicatorCalculator<MACD> {
     private transient ValueState<MACD> macdState;
 
 
-    public MACDCalculator(int ema1Period, int ema2Period, int deaPeriod) {
+    public MACDCalculator(String name, int ema1Period, int ema2Period, int deaPeriod) {
+        super(name);
         this.ema1Period = ema1Period;
         this.ema2Period = ema2Period;
         this.deaPeriod = deaPeriod;
@@ -34,10 +35,10 @@ public class MACDCalculator extends BaseIndicatorCalculator<MACD> {
         macdState = getRuntimeContext().getState(descriptor);
     }
 
-    @Override
-    public String indicatorKey(MACD indicator) {
-        return "MACE" +  ema1Period + "-"  + ema2Period + "-" + deaPeriod;
-    }
+//    @Override
+//    public String indicatorKey(MACD indicator) {
+//        return "MACE" +  ema1Period + "-"  + ema2Period + "-" + deaPeriod;
+//    }
 
     @Override
     public MACD calculateInKLine(KLine kLine) throws IOException {

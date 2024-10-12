@@ -14,7 +14,8 @@ public class BollCalculator extends BaseIndicatorCalculator<Boll> {
 
     private transient ListState<Double> priceListState;
 
-    public BollCalculator(int period) {
+    public BollCalculator(String name, int period) {
+        super(name);
         this.period = period;
     }
 
@@ -24,11 +25,10 @@ public class BollCalculator extends BaseIndicatorCalculator<Boll> {
         priceListState = getRuntimeContext().getListState(new ListStateDescriptor<>("priceListState", Double.class));
     }
 
-    @Override
-    public String indicatorKey(Boll indicator) throws Exception {
-
-        return "BOLL-" + period;
-    }
+//    @Override
+//    public String indicatorKey(Boll indicator) throws Exception {
+//        return "BOLL-" + period;
+//    }
 
     @Override
     public Boll calculateInKLine(KLine kLine) throws Exception {
@@ -79,4 +79,3 @@ public class BollCalculator extends BaseIndicatorCalculator<Boll> {
     }
 
 }
-
