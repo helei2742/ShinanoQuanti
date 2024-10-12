@@ -4,8 +4,11 @@ package com.helei.tradedatacenter;
 import com.helei.tradedatacenter.datasource.BaseKLineSource;
 import com.helei.tradedatacenter.datasource.MemoryKLineSource;
 import com.helei.tradedatacenter.entity.KLine;
+import com.helei.tradedatacenter.entity.TradeSignal;
 import com.helei.tradedatacenter.indicator.Indicator;
 import com.helei.tradedatacenter.indicator.calculater.BaseIndicatorCalculator;
+import com.helei.tradedatacenter.signal.AbstractSignalMaker;
+import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.KeyedStream;
 import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
@@ -14,6 +17,7 @@ import org.apache.flink.streaming.api.functions.source.SourceFunction;
 import org.apache.flink.util.Collector;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 
@@ -22,6 +26,7 @@ public class AutoTradeTask {
 
     private final List<BaseIndicatorCalculator<? extends Indicator>> indicatorCalList;
 
+    private final List<AbstractSignalMaker> signalMakers;
     private final BaseKLineSource memoryKLineSource;
 
     public AutoTradeTask(StreamExecutionEnvironment env, MemoryKLineSource memoryKLineSource) {
@@ -31,10 +36,16 @@ public class AutoTradeTask {
         this.memoryKLineSource = memoryKLineSource;
 
         this.indicatorCalList = new ArrayList<>();
+        this.signalMakers = new ArrayList<>();
     }
 
     public <T extends Indicator> AutoTradeTask addIndicator(BaseIndicatorCalculator<T> calculator) {
         indicatorCalList.add(calculator);
+        return this;
+    }
+
+    public AutoTradeTask addSignalMaker(AbstractSignalMaker signalMaker) {
+        this.signalMakers.add(signalMaker);
         return this;
     }
 
@@ -52,25 +63,25 @@ public class AutoTradeTask {
             }
         }
 
-        SingleOutputStreamOperator<String> finalResultStream = null;
+        if (signalMakers.size() == 0) {
+            throw new IllegalArgumentException("no signal maker");
+        }
+
+        KeyedStream<KLine, String> dataStream = null;
         if (process == null) {
-            finalResultStream = keyedStream.process(new KeyedProcessFunction<String, KLine, String>() {
-                @Override
-                public void processElement(KLine kLine, Context context, Collector<String> collector) throws Exception {
-                    collector.collect(kLine.toString());
-                }
-            });
+            dataStream = keyedStream;
         } else {
-            finalResultStream = process.keyBy(KLine::getSymbol).process(new KeyedProcessFunction<String, KLine, String>() {
-                @Override
-                public void processElement(KLine kLine, Context context, Collector<String> collector) throws Exception {
-                    collector.collect(kLine.toString());
-                }
-            });
+            dataStream = process.keyBy(KLine::getSymbol);
+        }
+
+        Iterator<AbstractSignalMaker> signalMakerIterator = signalMakers.iterator();
+        SingleOutputStreamOperator<TradeSignal> signal = dataStream.process(signalMakerIterator.next());
+        while (signalMakerIterator.hasNext()) {
+            signal.union(dataStream.process(signalMakerIterator.next()));
         }
 
         // 4. 输出最终结果
-        finalResultStream.print();
+        signal.print();
         env.execute("test1");
     }
 }

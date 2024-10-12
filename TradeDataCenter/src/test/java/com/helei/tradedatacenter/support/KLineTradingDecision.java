@@ -10,6 +10,7 @@ import com.helei.tradedatacenter.datasource.MemoryKLineDataPublisher;
 import com.helei.tradedatacenter.datasource.MemoryKLineSource;
 import com.helei.tradedatacenter.indicator.calculater.MACDCalculator;
 import com.helei.tradedatacenter.indicator.calculater.RSICalculator;
+import com.helei.tradedatacenter.signal.MACDSignal_V1;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -19,6 +20,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Arrays;
+import java.util.List;
 
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -44,14 +46,18 @@ public class KLineTradingDecision {
     public void testIndicator() throws Exception {
         MemoryKLineDataPublisher dataPublisher =
                 new MemoryKLineDataPublisher(4, WebSocketUrl.WS_STREAM_URL)
-                        .addListenKLine("btcusdt", Arrays.asList(KLineInterval.d_1, KLineInterval.h_1, KLineInterval.m_15));
+//                        .addListenKLine("btcusdt", Arrays.asList(KLineInterval.d_1, KLineInterval.h_1, KLineInterval.m_15));
+                        .addListenKLine("btcusdt", List.of(KLineInterval.m_1));
 
         MemoryKLineSource memoryKLineSource =
-                new MemoryKLineSource("btcusdt", KLineInterval.m_15,dataPublisher);
+                new MemoryKLineSource("btcusdt", KLineInterval.m_1,dataPublisher);
 
+        String macdName = "MACD-12-26-9";
+        String rsiName = "RSI";
         new AutoTradeTask(env, memoryKLineSource)
-                .addIndicator(new MACDCalculator("MACD-12-26-9", 12, 26, 9))
-                .addIndicator(new RSICalculator("RSI", 15))
+                .addIndicator(new MACDCalculator(macdName, 12, 26, 9))
+                .addIndicator(new RSICalculator(rsiName, 15))
+                .addSignalMaker(new MACDSignal_V1(macdName))
                 .execute();
 
     }

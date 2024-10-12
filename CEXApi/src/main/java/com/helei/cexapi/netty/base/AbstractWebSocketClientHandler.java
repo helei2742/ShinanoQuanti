@@ -85,7 +85,9 @@ public abstract class AbstractWebSocketClientHandler<P, T> extends SimpleChannel
             } else if (frame instanceof PongWebSocketFrame) {
                 log.info("WebSocket Client received pong");
             } else if (frame instanceof PingWebSocketFrame) {
+                log.info("WebSocket Client received ping");
                 websocketClient.sendPong();
+                log.info("send pong");
             } else if (frame instanceof CloseWebSocketFrame) {
                 log.info("websocket client关闭");
                 ch.close();

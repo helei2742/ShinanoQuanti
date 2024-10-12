@@ -25,7 +25,10 @@ public abstract class AbstractSignalMaker extends KeyedProcessFunction<String, K
             if (BooleanUtil.isTrue(kLine.isEnd())) {
                 stateUpdate(kLine);
             } else {
-                collector.collect(buildSignal(kLine));
+                TradeSignal signal = buildSignal(kLine);
+                if (signal != null) {
+                    collector.collect(signal);
+                }
             }
         } catch (Exception e) {
             log.error("build signal error", e);
