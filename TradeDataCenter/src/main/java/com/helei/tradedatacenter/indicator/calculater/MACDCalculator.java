@@ -42,14 +42,21 @@ public class MACDCalculator extends BaseIndicatorCalculator<MACD> {
 
     @Override
     public MACD calculateInKLine(KLine kLine) throws IOException {
+        Double close = kLine.getClose();
         MACD macd = macdState.value();
+
+        if (macd == null) {
+            macd = new MACD(close, close, close);
+        }
+
         double ema1 = macd.getEma1();
         double ema2 = macd.getEma2();
         double dea = macd.getDea();
 
         // 计算新的 EMA12 和 EMA26
-        ema1 = CalculatorUtil.calculateEMA(kLine.getClose(), ema1, ema1Period);
-        ema2 = CalculatorUtil.calculateEMA(kLine.getClose(), ema2, ema2Period);
+
+        ema1 = CalculatorUtil.calculateEMA(close, ema1, ema1Period);
+        ema2 = CalculatorUtil.calculateEMA(close, ema2, ema2Period);
 
         // 计算 DIF
         double dif = ema1 - ema2;

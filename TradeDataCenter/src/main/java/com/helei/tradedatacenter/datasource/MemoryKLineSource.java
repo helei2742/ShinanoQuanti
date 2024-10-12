@@ -1,6 +1,7 @@
 
 package com.helei.tradedatacenter.datasource;
 
+import com.alibaba.fastjson.JSONObject;
 import com.helei.tradedatacenter.constants.KLineInterval;
 import com.helei.tradedatacenter.conventor.KLineMapper;
 import com.helei.tradedatacenter.dto.SubscribeData;
@@ -14,7 +15,6 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class MemoryKLineSource extends BaseKLineSource {
-    private final MemoryKLineDataPublisher memoryKLineDataPublisher;
 
     private final SubscribeData subscribeData;
 
@@ -23,14 +23,14 @@ public class MemoryKLineSource extends BaseKLineSource {
             KLineInterval interval,
             MemoryKLineDataPublisher memoryKLineDataPublisher
     ) {
-        this.memoryKLineDataPublisher = memoryKLineDataPublisher;
         this.subscribeData = memoryKLineDataPublisher.registry(symbol, interval);
     }
 
 
     @Override
     protected KLine loadKLine() throws Exception {
-        return KLineMapper.mapJsonToKLine(subscribeData.getData());
-    }
+        JSONObject data = subscribeData.getData();
 
+        return data == null ? null: KLineMapper.mapJsonToKLine(data);
+    }
 }

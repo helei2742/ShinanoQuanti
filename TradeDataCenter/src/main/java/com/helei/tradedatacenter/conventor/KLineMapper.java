@@ -24,16 +24,18 @@ public class KLineMapper {
         if (jsonObject == null) {
             return null;
         }
+        JSONObject kjb = jsonObject.getJSONObject("data").getJSONObject("k");
+
         KLine kLine = new KLine();
-        kLine.setOpenTime(Instant.ofEpochMilli(jsonObject.getLong("t")).atZone(ZoneId.systemDefault()).toLocalDateTime());
-        kLine.setCloseTime(Instant.ofEpochMilli(jsonObject.getLong("T")).atZone(ZoneId.systemDefault()).toLocalDateTime());
-        kLine.setSymbol(jsonObject.getString("s"));
-        kLine.setHigh(jsonObject.getDouble("h"));
-        kLine.setLow(jsonObject.getDouble("l"));
-        kLine.setOpen(jsonObject.getDouble("o"));
-        kLine.setClose(jsonObject.getDouble("c"));
-        kLine.setVolume(jsonObject.getDouble("v"));
-        kLine.setEnd(jsonObject.getBoolean("x"));
+        kLine.setOpenTime(Instant.ofEpochMilli(kjb.getLong("t")).atZone(ZoneId.systemDefault()).toLocalDateTime());
+        kLine.setCloseTime(Instant.ofEpochMilli(kjb.getLong("T")).atZone(ZoneId.systemDefault()).toLocalDateTime());
+        kLine.setSymbol(kjb.getString("s"));
+        kLine.setHigh(kjb.getDouble("h"));
+        kLine.setLow(kjb.getDouble("l"));
+        kLine.setOpen(kjb.getDouble("o"));
+        kLine.setClose(kjb.getDouble("c"));
+        kLine.setVolume(kjb.getDouble("v"));
+        kLine.setEnd(kjb.getBoolean("x"));
         return kLine;
     }
 }
