@@ -6,6 +6,8 @@ import com.helei.cexapi.binanceapi.constants.KLineInterval;
 import com.helei.cexapi.constants.WebSocketUrl;
 import com.helei.tradedatacenter.AutoTradeTask;
 import com.helei.tradedatacenter.datasource.HistoryKLineSource;
+import com.helei.tradedatacenter.dto.SubscribeData;
+import com.helei.tradedatacenter.entity.KLine;
 import com.helei.tradedatacenter.indicator.calculater.PSTCalculator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.junit.jupiter.api.BeforeAll;
@@ -15,6 +17,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @SpringBootTest
 public class HistorySourceTest {
@@ -43,9 +47,21 @@ public class HistorySourceTest {
                 10,
                 binanceWSApiClient
         );
-        historyKLineSource.startLoad();
-        new AutoTradeTask(env, historyKLineSource)
-                .addIndicator(new PSTCalculator("PST", 60, 3,3))
-                .execute();
+
+        SubscribeData<List<KLine>> subscribeData = historyKLineSource.startLoadHistory();
+
+        new Thread(()->{
+            List<KLine> l = null;
+            while (true) {
+                try {
+                    if (!((l=subscribeData.getData()) != null && !l.isEmpty())) break;
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                System.out.println(l);
+            }
+        }).start();
+
+        TimeUnit.SECONDS.sleep(1000);
     }
 }

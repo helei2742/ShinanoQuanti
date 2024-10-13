@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class MemoryKLineSource extends BaseKLineSource {
 
-    private final SubscribeData subscribeData;
+    private final SubscribeData<JSONObject> subscribeData;
 
     public MemoryKLineSource(
             String symbol,

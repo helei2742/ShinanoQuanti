@@ -20,6 +20,8 @@ import java.util.Map;
 @Builder
 public class KLine {
 
+    public static final KLine HISTORY_END_KLINE = KLine.builder().symbol("HISTORY_END_KLINE").build();
+
     /**
      * symbol
      */

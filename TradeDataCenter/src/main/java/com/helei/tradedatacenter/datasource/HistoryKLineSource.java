@@ -4,22 +4,27 @@ import com.alibaba.fastjson.JSONArray;
 import com.helei.cexapi.binanceapi.BinanceWSApiClient;
 import com.helei.cexapi.binanceapi.constants.KLineInterval;
 import com.helei.tradedatacenter.conventor.KLineMapper;
+import com.helei.tradedatacenter.dto.SubscribeData;
 import com.helei.tradedatacenter.entity.KLine;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
+
+/**
+ * 历史k线数据源
+ */
 @Slf4j
-public class HistoryKLineSource extends BaseKLineSource {
+public class HistoryKLineSource {
+
     private transient Thread loadThread;
 
-    private volatile boolean isRunning = true;
-
-    static LinkedBlockingQueue<KLine> bq = new LinkedBlockingQueue<>();
+    private transient SubscribeData<List<KLine>> subscribeData;
 
     final transient BinanceWSApiClient binanceWSApiClient;
 
@@ -29,7 +34,7 @@ public class HistoryKLineSource extends BaseKLineSource {
 
     private long curTimeSecond;
 
-    private int limit;
+    private final int limit;
 
     public HistoryKLineSource(
             String symbol,
@@ -45,57 +50,48 @@ public class HistoryKLineSource extends BaseKLineSource {
         curTimeSecond = startTime.toInstant(ZoneOffset.UTC).getEpochSecond();
     }
 
-    public synchronized void startLoad() throws InterruptedException {
-        if (loadThread == null) {
-            loadThread = new Thread(()->{
-                while (curTimeSecond <= LocalDateTime.now().toInstant(ZoneOffset.UTC).getEpochSecond()) {
-                    CountDownLatch latch = new CountDownLatch(1);
+    public synchronized SubscribeData<List<KLine>> startLoadHistory() throws InterruptedException {
+        this.subscribeData = new SubscribeData<>();
 
-                    binanceWSApiClient
-                            .getSpotApi()
-                            .queryHistoryKLine(symbol, interval, curTimeSecond, limit, (result) -> {
-                                JSONArray jsonArray = result.getJSONArray("result");
+        loadThread = new Thread(()->{
+            while (curTimeSecond <= LocalDateTime.now().toInstant(ZoneOffset.UTC).getEpochSecond()) {
+                CountDownLatch latch = new CountDownLatch(1);
+                binanceWSApiClient
+                        .getSpotApi()
+                        .queryHistoryKLine(symbol, interval, curTimeSecond, limit, (result) -> {
+                            JSONArray jsonArray = result.getJSONArray("result");
 
-                                jsonArray.forEach(e->{
-                                    JSONArray kArr = (JSONArray)e;
-                                    KLine e1 = KLineMapper.mapJsonArrToKLine(kArr);
-                                    e1.setSymbol(symbol);
-                                    bq.offer(e1);
-                                });
-                                latch.countDown();
-                            });
-                    try {
-                        latch.await();
-                    } catch (InterruptedException e) {
-                        log.error("CountDownLatch error", e);
-                    }
-                    curTimeSecond += interval.getSecond() * limit;
+                            List<KLine> history = jsonArray.stream().map(e->{
+                                JSONArray kArr = (JSONArray)e;
+                                KLine e1 = KLineMapper.mapJsonArrToKLine(kArr);
+                                e1.setSymbol(symbol);
+                                return e1;
+                            }).collect(Collectors.toList());
+
+                            subscribeData.setData(history);
+                            latch.countDown();
+                        });
+
+                try {
+                    latch.await();
+                    Thread.sleep(50);
+                } catch (InterruptedException e) {
+                    log.error("CountDownLatch error", e);
+                    subscribeData.setData(Collections.emptyList());
+                    break;
                 }
-            });
-
-            loadThread.start();
-        }
-    }
-
-
-    @Override
-    public void run(SourceContext<KLine> sourceContext) throws Exception {
-        while (isRunning) {
-            KLine kLine = bq.poll(100, TimeUnit.MILLISECONDS);
-
-            if (kLine != null) {
-                sourceContext.collect(kLine);
+                curTimeSecond += interval.getSecond() * limit;
             }
-        }
+            subscribeData.setData(Collections.emptyList());
+        });
+        loadThread.start();
+        return subscribeData;
     }
 
-    @Override
-    protected KLine loadKLine() throws Exception {
-        return null;
-    }
 
-    @Override
     public void cancel() {
-        isRunning = false;
+        if (loadThread != null) {
+            loadThread.interrupt();
+        }
     }
 }

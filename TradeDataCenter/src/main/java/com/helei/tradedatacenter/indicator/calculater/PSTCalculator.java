@@ -4,11 +4,13 @@ import cn.hutool.core.util.BooleanUtil;
 import com.helei.tradedatacenter.dto.TrendLine;
 import com.helei.tradedatacenter.entity.KLine;
 import com.helei.tradedatacenter.indicator.PST;
+import com.helei.tradedatacenter.util.CalculatorUtil;
 import org.apache.flink.api.common.state.ListState;
 import org.apache.flink.api.common.state.ListStateDescriptor;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
 import org.apache.flink.configuration.Configuration;
 
+import java.time.ZoneOffset;
 import java.util.*;
 
 /**
@@ -80,39 +82,29 @@ public class PSTCalculator extends BaseIndicatorCalculator<PST> {
         int maxIdx = mmIdx[0];
         int minIdx = mmIdx[1];
 
-        int maxIdxInHigh = high.indexOf(priceList.get(maxIdx));
-        int minIdxInLow = low.indexOf(priceList.get(minIdx));
-
-        TrendLine upTrend = null;
-        if (maxIdxInHigh == 0 || maxIdxInHigh == high.size() - 1 || maxIdxInHigh == -1) {
-            //最高点是相对高点的第一个或，最后一个，说明相对高点依次变高或依次变低，整个窗口趋势一致
-            //趋势线取全部
-            upTrend = TrendLine.calculateTrend(high, KLine::getHigh);
-        } else  {
-            //最高点在相对高点中间，取最高点到末尾
-            List<KLine> kLines = high.subList(maxIdxInHigh, high.size() - 1);
-            upTrend = TrendLine.calculateTrend(kLines, KLine::getHigh);
-        }
-
-        TrendLine downTrend = null;
-        if (minIdxInLow == 0 || minIdxInLow == low.size() - 1 || minIdxInLow == -1) {
-            //最低点在相对低点的首尾，或者不在相对低点里，单一趋势
-            //趋势线取全部
-            downTrend = TrendLine.calculateTrend(low, KLine::getLow);
-        } else {
-            downTrend = TrendLine.calculateTrend(low.subList(minIdxInLow, low.size() - 1), KLine::getLow);
-        }
+        TrendLine upTrendLine = CalculatorUtil.calculateTrend(
+                CalculatorUtil.getLastMonotonicPart(high, KLine::getHigh),
+                k -> Double.valueOf(k.getOpenTime().toInstant(ZoneOffset.UTC).getEpochSecond()),
+                KLine::getHigh
+        );
+        TrendLine downTrendLine = CalculatorUtil.calculateTrend(
+                CalculatorUtil.getLastMonotonicPart(low, KLine::getLow),
+                k -> Double.valueOf(k.getOpenTime().toInstant(ZoneOffset.UTC).getEpochSecond()),
+                KLine::getLow
+        );
 
         return PST
                 .builder()
                 .pressure(new ArrayList<>(pList.subList(0, Math.max(0,  Math.min(pList.size()-1, pCount)))))
                 .support(new ArrayList<>(sList.subList(0, Math.max(0, Math.min(sList.size()-1, sCount)))))
-                .relativeUpTrendLine(upTrend)
-                .relativeDownTrendLine(downTrend)
+                .relativeUpTrendLine(upTrendLine)
+                .relativeDownTrendLine(downTrendLine)
                 .maxPrice(priceList.get(maxIdx).getHigh())
                 .minPrice(priceList.get(minIdx).getLow())
                 .build();
     }
+
+
 
     private int[] calRelativeHL(LinkedList<KLine> priceList, List<KLine> high, List<KLine> low, List<Double> pList, List<Double> sList) {
         int maxIdx = 0;

@@ -9,6 +9,7 @@ import com.helei.cexapi.binanceapi.constants.WebSocketStreamType;
 import com.helei.cexapi.binanceapi.dto.StreamSubscribeEntity;
 import com.helei.cexapi.binanceapi.constants.KLineInterval;
 import com.helei.tradedatacenter.dto.SubscribeData;
+import com.helei.tradedatacenter.entity.KLine;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +28,7 @@ public class MemoryKLineDataPublisher implements KLineDataPublisher{
 
     private final BinanceWSStreamApi.StreamCommandBuilder streamCommandBuilder;
 
-    private final ConcurrentMap<String, List<SubscribeData>> subscribeMap = new ConcurrentHashMap<>();
+    private final ConcurrentMap<String, List<SubscribeData<JSONObject>>> subscribeMap = new ConcurrentHashMap<>();
 
     public MemoryKLineDataPublisher(
             int threadPoolSize,
@@ -81,7 +82,7 @@ public class MemoryKLineDataPublisher implements KLineDataPublisher{
     private void dispatchKLineData(String key, JSONObject result) {
         PUBLISH_EXECUTOR.execute(()->{
             subscribeMap.computeIfPresent(key, (k,v)->{
-                for (SubscribeData subscribeData : v) {
+                for (SubscribeData<JSONObject> subscribeData : v) {
                     subscribeData.setData(result);
                 }
                 return v;
@@ -96,8 +97,8 @@ public class MemoryKLineDataPublisher implements KLineDataPublisher{
      * @param interval interval
      * @return SubscribeData
      */
-    public SubscribeData registry(String symbol, KLineInterval interval) {
-        SubscribeData subscribeData = new SubscribeData();
+    public SubscribeData<JSONObject> registry(String symbol, KLineInterval interval) {
+        SubscribeData<JSONObject> subscribeData = new SubscribeData<JSONObject>();
 
         subscribeMap.compute(getKLineMapKey(symbol, interval), (k, v) -> {
             if (v == null) { //没有获取这条k线的数据，抛出异常
