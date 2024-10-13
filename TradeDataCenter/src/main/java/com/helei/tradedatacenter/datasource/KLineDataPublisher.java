@@ -1,6 +1,6 @@
 package com.helei.tradedatacenter.datasource;
 
-import com.helei.tradedatacenter.constants.KLineInterval;
+import com.helei.cexapi.binanceapi.constants.KLineInterval;
 
 import java.util.List;
 

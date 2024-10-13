@@ -2,7 +2,7 @@
 
 package com.helei.tradedatacenter.entity;
 
-import com.helei.tradedatacenter.constants.KLineInterval;
+import com.helei.cexapi.binanceapi.constants.KLineInterval;
 import com.helei.tradedatacenter.indicator.Indicator;
 import lombok.*;
 

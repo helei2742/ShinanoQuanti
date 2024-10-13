@@ -2,7 +2,7 @@
 package com.helei.tradedatacenter.datasource;
 
 import com.alibaba.fastjson.JSONObject;
-import com.helei.tradedatacenter.constants.KLineInterval;
+import com.helei.cexapi.binanceapi.constants.KLineInterval;
 import com.helei.tradedatacenter.conventor.KLineMapper;
 import com.helei.tradedatacenter.dto.SubscribeData;
 import com.helei.tradedatacenter.entity.KLine;

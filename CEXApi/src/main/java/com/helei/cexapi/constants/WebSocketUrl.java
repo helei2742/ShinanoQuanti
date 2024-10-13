@@ -2,8 +2,14 @@ package com.helei.cexapi.constants;
 
 public class WebSocketUrl {
 
+
     /**
-     * web socket api 的url
+     * query - response类型的接口
+     */
+    public static final String WS_NORMAL_URL = "wss://ws-api.binance.com:443/ws-api/v3";
+
+    /**
+     * web socket api 的url, 实时推送
      */
     public static final String WS_STREAM_URL = "wss://fstream.binance.com/stream";
 

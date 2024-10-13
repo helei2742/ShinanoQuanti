@@ -2,7 +2,7 @@
 
 package com.helei.cexapi.binanceapi.api;
 
-import com.helei.cexapi.binanceapi.BinanceWSApiClientClient;
+import com.helei.cexapi.binanceapi.BinanceWSApiClient;
 import com.helei.cexapi.binanceapi.base.AbstractBinanceWSApi;
 import com.helei.cexapi.binanceapi.base.SubscribeResultInvocationHandler;
 import com.helei.cexapi.binanceapi.constants.WebSocketStreamType;
@@ -19,7 +19,7 @@ import java.util.concurrent.ExecutorService;
  */
 public class BinanceWSStreamApi extends AbstractBinanceWSApi {
 
-    public BinanceWSStreamApi(BinanceWSApiClientClient binanceWSApiClient) throws URISyntaxException {
+    public BinanceWSStreamApi(BinanceWSApiClient binanceWSApiClient) throws URISyntaxException {
         super(binanceWSApiClient);
     }
 
@@ -30,13 +30,13 @@ public class BinanceWSStreamApi extends AbstractBinanceWSApi {
 
 
     public static class StreamCommandBuilder{
-        private final BinanceWSApiClientClient binanceWSApiClient;
+        private final BinanceWSApiClient binanceWSApiClient;
 
         private String symbol = null;
 
         private List<StreamSubscribeEntity> subscribeList = null;
 
-        StreamCommandBuilder(BinanceWSApiClientClient binanceWSApiClient){
+        StreamCommandBuilder(BinanceWSApiClient binanceWSApiClient){
             this.binanceWSApiClient = binanceWSApiClient;
         }
 

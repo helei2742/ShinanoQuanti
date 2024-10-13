@@ -6,6 +6,7 @@ import com.helei.tradedatacenter.datasource.MemoryKLineSource;
 import com.helei.tradedatacenter.entity.KLine;
 import com.helei.tradedatacenter.entity.TradeSignal;
 import com.helei.tradedatacenter.indicator.Indicator;
+import com.helei.tradedatacenter.indicator.PST;
 import com.helei.tradedatacenter.indicator.calculater.BaseIndicatorCalculator;
 import com.helei.tradedatacenter.signal.AbstractSignalMaker;
 import org.apache.flink.streaming.api.datastream.DataStream;
@@ -29,7 +30,7 @@ public class AutoTradeTask {
     private final List<AbstractSignalMaker> signalMakers;
     private final BaseKLineSource memoryKLineSource;
 
-    public AutoTradeTask(StreamExecutionEnvironment env, MemoryKLineSource memoryKLineSource) {
+    public AutoTradeTask(StreamExecutionEnvironment env, BaseKLineSource memoryKLineSource) {
         // 设置 Flink 流环境
         this.env = env;
 
@@ -63,9 +64,9 @@ public class AutoTradeTask {
             }
         }
 
-        if (signalMakers.size() == 0) {
-            throw new IllegalArgumentException("no signal maker");
-        }
+//        if (signalMakers.size() == 0) {
+//            throw new IllegalArgumentException("no signal maker");
+//        }
 
         KeyedStream<KLine, String> dataStream = null;
         if (process == null) {
@@ -73,15 +74,23 @@ public class AutoTradeTask {
         } else {
             dataStream = process.keyBy(KLine::getSymbol);
         }
-
-        Iterator<AbstractSignalMaker> signalMakerIterator = signalMakers.iterator();
-        SingleOutputStreamOperator<TradeSignal> signal = dataStream.process(signalMakerIterator.next());
-        while (signalMakerIterator.hasNext()) {
-            signal.union(dataStream.process(signalMakerIterator.next()));
-        }
+//
+//        Iterator<AbstractSignalMaker> signalMakerIterator = signalMakers.iterator();
+//        SingleOutputStreamOperator<TradeSignal> signal = dataStream.process(signalMakerIterator.next());
+//        while (signalMakerIterator.hasNext()) {
+//            signal.union(dataStream.process(signalMakerIterator.next()));
+//        }
 
         // 4. 输出最终结果
-        signal.print();
+        dataStream.process(new KeyedProcessFunction<String, KLine, String>() {
+            @Override
+            public void processElement(KLine kLine, Context context, Collector<String> collector) throws Exception {
+                PST pst = (PST)kLine.getIndicators().get("PST");
+                if (pst != null) {
+                    collector.collect(kLine.toString() + "\npredict price - " + pst.getRelativeUpTrendLine().predictPrice(kLine.getOpenTime()));
+                }
+            }
+        }).print();
         env.execute("test1");
     }
 }

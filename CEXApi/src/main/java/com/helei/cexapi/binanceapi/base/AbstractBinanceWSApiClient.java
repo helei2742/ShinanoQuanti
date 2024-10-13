@@ -106,8 +106,7 @@ public class AbstractBinanceWSApiClient extends AbstractWebsocketClient<JSONObje
             super.sendRequest(id, request, response -> {
                 if (response != null) {
                     log.debug("send request id[{}] success, response[{}]", id, response);
-                    JSONObject result = response.getJSONObject("result");
-                    callback.accept(result == null ? new JSONObject(): result);
+                    callback.accept(response);
                 } else {
                     callback.accept(null);
                     log.error("send request id[{}] fail", id);

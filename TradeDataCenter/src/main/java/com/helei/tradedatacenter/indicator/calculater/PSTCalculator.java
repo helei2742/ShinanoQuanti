@@ -1,10 +1,12 @@
 package com.helei.tradedatacenter.indicator.calculater;
 
+import cn.hutool.core.util.BooleanUtil;
 import com.helei.tradedatacenter.dto.TrendLine;
 import com.helei.tradedatacenter.entity.KLine;
 import com.helei.tradedatacenter.indicator.PST;
 import org.apache.flink.api.common.state.ListState;
 import org.apache.flink.api.common.state.ListStateDescriptor;
+import org.apache.flink.api.common.typeinfo.TypeInformation;
 import org.apache.flink.configuration.Configuration;
 
 import java.util.*;
@@ -21,7 +23,7 @@ public class PSTCalculator extends BaseIndicatorCalculator<PST> {
 
     private ListState<KLine> windowDataState;
 
-    protected PSTCalculator(
+    public PSTCalculator(
             String name,
             int windowLength,
             int pCount,
@@ -35,26 +37,29 @@ public class PSTCalculator extends BaseIndicatorCalculator<PST> {
 
     @Override
     public void open(Configuration parameters) throws Exception {
-        this.windowDataState =  getRuntimeContext().getListState(new ListStateDescriptor<>("windowDataState", KLine.class));
+        this.windowDataState =  getRuntimeContext().getListState(new ListStateDescriptor<>("windowDataState", TypeInformation.of(KLine.class)));
     }
 
     @Override
     public PST calculateInKLine(KLine kLine) throws Exception {
+        if (BooleanUtil.isFalse(kLine.isEnd())) return null;
+
+
         LinkedList<KLine> priceList = new LinkedList<>();
-        Iterator<KLine> iterator = windowDataState.get().iterator();
 
-        if (!iterator.hasNext()) {
+        for (KLine line : windowDataState.get()) {
+            priceList.add(line);
+        }
+        priceList.add(kLine);
+        while (priceList.size() > windowLength) {
+            priceList.remove(0);
+        }
+
+        windowDataState.update(priceList);
+
+        if (priceList.size() < 3) {
             return null;
         }
-        KLine pre = iterator.next();
-        if (!iterator.hasNext()) {
-            return null;
-        }
-
-        KLine cur = iterator.next();
-
-        priceList.add(pre);
-        priceList.add(cur);
 
         // 相对高点
         List<KLine> high = new ArrayList<>();
@@ -65,48 +70,15 @@ public class PSTCalculator extends BaseIndicatorCalculator<PST> {
         //支持
         List<Double> sList = new ArrayList<>();
 
-        int maxIdx = 0;
-        int minIdx = 0;
 
-        //取趋势线,
-        boolean addCur = false;
-        while (iterator.hasNext() || !addCur) {
-            KLine next = null;
-            if (iterator.hasNext()) {
-                next = iterator.next();
-            } else {
-                next = kLine;
-                addCur = true;
-            }
+        int[] mmIdx = calRelativeHL(priceList, high, low, pList, sList);
 
-            priceList.add(next);
+        return calPST(priceList, high, low, pList, sList, mmIdx);
+    }
 
-            //相对低点
-            if (cur.getClose() < next.getClose() && pre.getClose() > cur.getClose()) {
-                low.add(cur);
-                //添加压力线，为前一个的相对高点
-                if (!high.isEmpty()) {
-                    pList.add(high.get(high.size() - 1).getHigh());
-                }
-            }
-
-            //相对高点
-            if (cur.getClose() > next.getClose() && pre.getClose() < cur.getClose()) {
-                high.add(cur);
-                //添加支撑线，为前一个的相对低点
-                if (!low.isEmpty()) {
-                    sList.add(low.get(low.size() - 1).getLow());
-                }
-            }
-
-            //最值点
-            if (priceList.get(maxIdx).getHigh() < next.getHigh()) {
-                maxIdx = priceList.size() - 1;
-            }
-            if (priceList.get(minIdx).getLow() > next.getLow()) {
-                minIdx = priceList.size() - 1;
-            }
-        }
+    private PST calPST(LinkedList<KLine> priceList, List<KLine> high, List<KLine> low, List<Double> pList, List<Double> sList, int[] mmIdx) {
+        int maxIdx = mmIdx[0];
+        int minIdx = mmIdx[1];
 
         int maxIdxInHigh = high.indexOf(priceList.get(maxIdx));
         int minIdxInLow = low.indexOf(priceList.get(minIdx));
@@ -131,20 +103,54 @@ public class PSTCalculator extends BaseIndicatorCalculator<PST> {
             downTrend = TrendLine.calculateTrend(low.subList(minIdxInLow, low.size() - 1), KLine::getLow);
         }
 
-
-        if (priceList.size() > windowLength) {
-            priceList.removeFirst();
-        }
-        windowDataState.update(priceList);
-
         return PST
                 .builder()
-                .pressure(pList.subList(Math.max(0, pList.size() - pCount), pList.size() - 1))
-                .support(sList.subList(Math.max(0, sList.size() - sCount), sList.size() - 1))
+                .pressure(new ArrayList<>(pList.subList(0, Math.max(0,  Math.min(pList.size()-1, pCount)))))
+                .support(new ArrayList<>(sList.subList(0, Math.max(0, Math.min(sList.size()-1, sCount)))))
                 .relativeUpTrendLine(upTrend)
                 .relativeDownTrendLine(downTrend)
                 .maxPrice(priceList.get(maxIdx).getHigh())
                 .minPrice(priceList.get(minIdx).getLow())
                 .build();
+    }
+
+    private int[] calRelativeHL(LinkedList<KLine> priceList, List<KLine> high, List<KLine> low, List<Double> pList, List<Double> sList) {
+        int maxIdx = 0;
+        int minIdx = 0;
+
+        KLine pre = priceList.get(0);
+        KLine cur = priceList.get(1);
+        //取趋势线,
+        for (int i = 3; i < priceList.size(); i++) {
+             KLine next = priceList.get(i);
+             //相对低点
+             if (cur.getLow() < next.getLow() && pre.getLow() > cur.getLow()) {
+                 low.add(cur);
+                 //添加压力线，为前一个的相对高点
+                 if (!high.isEmpty()) {
+                     pList.add(high.get(high.size() - 1).getHigh());
+                 }
+             }
+
+             //相对高点
+             if (cur.getHigh() > next.getClose() && pre.getHigh() < cur.getHigh()) {
+                 high.add(cur);
+                 //添加支撑线，为前一个的相对低点
+                 if (!low.isEmpty()) {
+                     sList.add(low.get(low.size() - 1).getLow());
+                 }
+             }
+
+//             最值点
+             if (priceList.get(maxIdx).getHigh() < next.getHigh()) {
+                 maxIdx = priceList.size() - 1;
+             }
+             if (priceList.get(minIdx).getLow() > next.getLow()) {
+                 minIdx = priceList.size() - 1;
+             }
+             pre = cur;
+             cur = next;
+         }
+        return new int[]{maxIdx, minIdx};
     }
 }

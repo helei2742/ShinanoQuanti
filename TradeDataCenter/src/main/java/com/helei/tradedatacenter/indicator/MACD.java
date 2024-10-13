@@ -1,8 +1,6 @@
-
-
 package com.helei.tradedatacenter.indicator;
 
-        import lombok.*;
+import lombok.*;
 
 @Data
 @AllArgsConstructor

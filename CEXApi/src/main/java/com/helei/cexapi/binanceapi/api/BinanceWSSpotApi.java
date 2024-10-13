@@ -1,12 +1,9 @@
-
-
-
-
 package com.helei.cexapi.binanceapi.api;
 
 import com.alibaba.fastjson.JSONObject;
-import com.helei.cexapi.binanceapi.BinanceWSApiClientClient;
+import com.helei.cexapi.binanceapi.BinanceWSApiClient;
 import com.helei.cexapi.binanceapi.base.AbstractBinanceWSApi;
+import com.helei.cexapi.binanceapi.constants.KLineInterval;
 import com.helei.cexapi.binanceapi.constants.WebSocketCommandType;
 import com.helei.cexapi.binanceapi.dto.WebSocketCommandBuilder;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +19,7 @@ import java.util.function.Consumer;
 public class BinanceWSSpotApi extends AbstractBinanceWSApi {
 
 
-    public BinanceWSSpotApi(BinanceWSApiClientClient binanceWSApiClient) throws URISyntaxException {
+    public BinanceWSSpotApi(BinanceWSApiClient binanceWSApiClient) throws URISyntaxException {
         super(binanceWSApiClient);
     }
 
@@ -120,7 +117,34 @@ public class BinanceWSSpotApi extends AbstractBinanceWSApi {
                 .addParam("limit", limit)
                 .build();
 
-
         binanceWSApiClient.sendRequest(20, command.getString("id"), command, callback);
+    }
+
+
+    /**
+     * 查询历史k线数据
+     * @param symbol symbol
+     * @param interval interval
+     * @param startTimeSecond startTimeSecond
+     * @param limit limit
+     * @param callback callback
+     */
+    public void queryHistoryKLine(
+            String symbol,
+            KLineInterval interval,
+            long startTimeSecond,
+            int limit,
+            Consumer<JSONObject> callback
+    ){
+        JSONObject command = WebSocketCommandBuilder
+                .builder()
+                .setCommandType(WebSocketCommandType.KLINES)
+                .addParam("symbol", symbol)
+                .addParam("interval", interval.getDescribe())
+                .addParam("startTime", startTimeSecond*1000)
+                .addParam("limit", limit)
+                .build();
+
+        binanceWSApiClient.sendRequest(2, command.getString("id"), command, callback);
     }
 }

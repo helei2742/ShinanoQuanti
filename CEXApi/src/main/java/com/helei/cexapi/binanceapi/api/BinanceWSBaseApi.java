@@ -5,7 +5,7 @@ package com.helei.cexapi.binanceapi.api;
 
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
-import com.helei.cexapi.binanceapi.BinanceWSApiClientClient;
+import com.helei.cexapi.binanceapi.BinanceWSApiClient;
 import com.helei.cexapi.binanceapi.base.AbstractBinanceWSApi;
 import com.helei.cexapi.binanceapi.constants.WebSocketCommandType;
 import com.helei.cexapi.binanceapi.dto.WebSocketCommandBuilder;
@@ -18,7 +18,7 @@ import java.util.function.Consumer;
 
 @Slf4j
 public class BinanceWSBaseApi extends AbstractBinanceWSApi {
-    public BinanceWSBaseApi(BinanceWSApiClientClient binanceWSApiClient) throws URISyntaxException {
+    public BinanceWSBaseApi(BinanceWSApiClient binanceWSApiClient) throws URISyntaxException {
         super(binanceWSApiClient);
     }
 

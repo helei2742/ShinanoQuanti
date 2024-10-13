@@ -1,7 +1,7 @@
 package com.helei.cexapi;
 
-import com.helei.cexapi.binanceapi.BinanceWSApiClientClient;
-import com.helei.cexapi.binanceapi.BinanceWSApiClientClientHandler;
+import com.helei.cexapi.binanceapi.BinanceWSApiClient;
+import com.helei.cexapi.binanceapi.BinanceWSApiClientHandler;
 import com.helei.cexapi.binanceapi.supporter.IpWeightSupporter;
 
 import java.net.InetSocketAddress;
@@ -11,16 +11,16 @@ public class CEXApiFactory {
 
     //TODO 配置化
 //    private static InetSocketAddress proxy = new InetSocketAddress("127.0.0.1", 7897);
-    private static InetSocketAddress proxy = new InetSocketAddress("127.0.0.1", 7897);
+    private static InetSocketAddress proxy = new InetSocketAddress("127.0.0.1", 7890);
 //    private static InetSocketAddress proxy = null;
 
-    public static BinanceWSApiClientClient binanceApiClient(
+    public static BinanceWSApiClient binanceApiClient(
             int threadPoolSize,
             String url
     ) throws URISyntaxException {
-        BinanceWSApiClientClientHandler handler = new BinanceWSApiClientClientHandler();
+        BinanceWSApiClientHandler handler = new BinanceWSApiClientHandler();
 
-        return new BinanceWSApiClientClient(
+        return new BinanceWSApiClient(
                 threadPoolSize,
                 url,
                 proxy,

@@ -1,14 +1,12 @@
-
-
 package com.helei.tradedatacenter.indicator;
 
 import com.helei.tradedatacenter.dto.TrendLine;
-import com.helei.tradedatacenter.entity.KLine;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -18,7 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class PST implements Indicator {
+public class PST implements Indicator , Serializable {
 
     /**
      * 压力线
@@ -54,7 +52,6 @@ public class PST implements Indicator {
     public Indicator clone() {
         return new PST(pressure, support, relativeUpTrendLine, relativeDownTrendLine, maxPrice, minPrice);
     }
-
 
 }
 

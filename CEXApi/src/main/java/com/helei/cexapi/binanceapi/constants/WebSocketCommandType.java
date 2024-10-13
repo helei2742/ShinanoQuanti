@@ -45,6 +45,11 @@ public enum WebSocketCommandType {
      */
     DEPTH("depth"),
     TRADES_RECENT("trades.recent"),
+
+    /**
+     * 历史k线数据
+     */
+    KLINES("klines")
     ;
 
     WebSocketCommandType(String description) {
