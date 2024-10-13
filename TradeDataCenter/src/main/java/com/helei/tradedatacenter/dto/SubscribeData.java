@@ -30,6 +30,7 @@ public class SubscribeData<T> implements Serializable {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         } finally {
+            data = null;
             lock.unlock();
         }
     }

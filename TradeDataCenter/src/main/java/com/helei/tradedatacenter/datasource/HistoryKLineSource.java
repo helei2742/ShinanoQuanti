@@ -67,7 +67,7 @@ public class HistoryKLineSource {
                                 e1.setSymbol(symbol);
                                 return e1;
                             }).collect(Collectors.toList());
-
+//                            System.out.println(history);
                             subscribeData.setData(history);
                             latch.countDown();
                         });

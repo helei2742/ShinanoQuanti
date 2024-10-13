@@ -51,15 +51,15 @@ public class HistorySourceTest {
         SubscribeData<List<KLine>> subscribeData = historyKLineSource.startLoadHistory();
 
         new Thread(()->{
-            List<KLine> l = null;
-            while (true) {
-                try {
-                    if (!((l=subscribeData.getData()) != null && !l.isEmpty())) break;
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+            try {
+                List<KLine> l = null;
+                while ((l=subscribeData.getData()) != null && !l.isEmpty()) {
+                    System.out.println(l);
                 }
-                System.out.println(l);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
+
         }).start();
 
         TimeUnit.SECONDS.sleep(1000);
