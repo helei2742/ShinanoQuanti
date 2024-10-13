@@ -85,10 +85,11 @@ public class AutoTradeTask {
         dataStream.process(new KeyedProcessFunction<String, KLine, String>() {
             @Override
             public void processElement(KLine kLine, Context context, Collector<String> collector) throws Exception {
-                PST pst = (PST)kLine.getIndicators().get("PST");
-                if (pst != null) {
-                    collector.collect(kLine.toString() + "\npredict price - " + pst.getRelativeUpTrendLine().predictPrice(kLine.getOpenTime()));
-                }
+                collector.collect(kLine.toString());
+//                PST pst = (PST)kLine.getIndicators().get("PST");
+//                if (pst != null) {
+//                    collector.collect(kLine.toString() + "\npredict price - " + pst.getRelativeUpTrendLine().predictPrice(kLine.getOpenTime()));
+//                }
             }
         }).print();
         env.execute("test1");

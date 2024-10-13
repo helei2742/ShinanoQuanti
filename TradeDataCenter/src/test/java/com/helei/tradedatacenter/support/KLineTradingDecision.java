@@ -1,16 +1,22 @@
 package com.helei.tradedatacenter.support;
 
 
+import com.helei.cexapi.CEXApiFactory;
+import com.helei.cexapi.binanceapi.BinanceWSApiClient;
 import com.helei.cexapi.constants.WebSocketUrl;
 import com.helei.tradedatacenter.AutoTradeTask;
 import com.helei.cexapi.binanceapi.constants.KLineInterval;
+import com.helei.tradedatacenter.datasource.HistoryKLineLoader;
 import com.helei.tradedatacenter.datasource.MemoryKLineDataPublisher;
 import com.helei.tradedatacenter.datasource.MemoryKLineSource;
+import com.helei.tradedatacenter.entity.KLine;
 import com.helei.tradedatacenter.indicator.calculater.MACDCalculator;
 import com.helei.tradedatacenter.indicator.calculater.PSTCalculator;
 import com.helei.tradedatacenter.indicator.calculater.RSICalculator;
 import com.helei.tradedatacenter.signal.MACDSignal_V1;
+import com.helei.tradedatacenter.util.KLineBuffer;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -19,8 +25,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
+
+@Slf4j
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class KLineTradingDecision {
@@ -29,16 +43,22 @@ public class KLineTradingDecision {
     private MemoryKLineSource memoryKLineSource;
 
     private String btcusdt = "btcusdt";
-
+    BinanceWSApiClient streamClient;
+    BinanceWSApiClient normalClient;
     @BeforeAll
     public void before() {
         try {
-            dataPublisher =
-            new MemoryKLineDataPublisher(4, WebSocketUrl.WS_STREAM_URL)
-//                        .addListenKLine("btcusdt", Arrays.asList(KLineInterval.d_1, KLineInterval.h_1, KLineInterval.m_15));
-                    .addListenKLine(btcusdt, List.of(KLineInterval.m_1));
+            streamClient = CEXApiFactory.binanceApiClient(4, WebSocketUrl.WS_STREAM_URL);
+            normalClient = CEXApiFactory.binanceApiClient(4, WebSocketUrl.WS_NORMAL_URL);
 
-            memoryKLineSource = new MemoryKLineSource(btcusdt, KLineInterval.m_1,dataPublisher);
+            streamClient.connect();
+            normalClient.connect();
+
+            dataPublisher = new MemoryKLineDataPublisher(streamClient, normalClient, 100, 200, 3)
+                    .addListenKLine(btcusdt, Arrays.asList(KLineInterval.M_1, KLineInterval.d_1, KLineInterval.m_1));
+
+            memoryKLineSource = new MemoryKLineSource(btcusdt, KLineInterval.M_1, LocalDateTime.of(2020, 1, 1, 0, 0), dataPublisher);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -56,7 +76,7 @@ public class KLineTradingDecision {
         new AutoTradeTask(env, memoryKLineSource)
                 .addIndicator(new MACDCalculator(macdName, 12, 26, 9))
                 .addIndicator(new RSICalculator(rsiName, 15))
-                .addSignalMaker(new MACDSignal_V1(macdName))
+//                .addSignalMaker(new MACDSignal_V1(macdName))
                 .execute();
 
     }
@@ -67,6 +87,41 @@ public class KLineTradingDecision {
         new AutoTradeTask(env, memoryKLineSource)
                 .addIndicator(new PSTCalculator("PST", 60, 3,3))
                 .execute();
+    }
+
+    @Test
+    public void testHistoryKLineLoader() throws InterruptedException {
+
+        KLineBuffer kb = new KLineBuffer(10);
+
+//        ArrayBlockingQueue<KLine> abq = new ArrayBlockingQueue<>(10);
+        AtomicInteger counter = new AtomicInteger();
+
+        new HistoryKLineLoader(200, normalClient, Executors.newFixedThreadPool(2))
+                .startLoad("btcusdt", KLineInterval.m_15, LocalDateTime.of(2020, 1, 1, 0, 0), kLines -> {
+                    System.out.println("get klines count " + kLines.size());
+                    for (KLine kLine : kLines) {
+                        try {
+                            kb.put(kLine);
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
+                        System.out.println("add kline " + counter.incrementAndGet() + ", buffer size " + kb.size());
+                    }
+                }).thenRun(()->{
+                    System.out.println("end of history");
+                });
+
+        KLine aline = null;
+        while (true) {
+
+            aline = kb.take();
+            System.out.println(aline);
+            TimeUnit.SECONDS.sleep(1);
+            log.info("get line [{}]", aline);
+        }
+
+//        TimeUnit.SECONDS.sleep(1000);
     }
 
 }

@@ -6,6 +6,7 @@ import com.helei.cexapi.binanceapi.constants.KLineInterval;
 import com.helei.tradedatacenter.indicator.Indicator;
 import lombok.*;
 
+import java.io.Serial;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,7 +21,12 @@ import java.util.Map;
 @Builder
 public class KLine {
 
-    public static final KLine HISTORY_END_KLINE = KLine.builder().symbol("HISTORY_END_KLINE").build();
+    @Serial
+    private static final long serialVersionUID = 8888L; // 显式声明 serialVersionUID
+
+    public  static final KLine HISTORY_END_KLINE = KLine.builder().symbol("HISTORY_END_KLINE").build();
+
+    public  static final KLine STREAM_END_KLINE = KLine.builder().symbol("STREAM_END_KLINE").build();
 
     /**
      * symbol
@@ -30,27 +36,27 @@ public class KLine {
     /**
      * 开盘价格
      */
-    private Double open;
+    private double open;
 
     /**
      * 收盘价格
      */
-    private Double close;
+    private double close;
 
     /**
      * 最高价格
      */
-    private Double high;
+    private double high;
 
     /**
      * 最低价格
      */
-    private Double low;
+    private double low;
 
     /**
      * 成交量
      */
-    private Double volume;
+    private double volume;
 
     /**
      * 开盘时间
@@ -76,7 +82,7 @@ public class KLine {
     /**
      * 存放各种指标以及他的值
      */
-    private Map<String, Indicator> indicators = new HashMap<>();
+    private HashMap<String, Indicator> indicators = new HashMap<>();
 
     @Override
     public String toString() {

@@ -1166,3 +1166,1643 @@ io.netty.handler.codec.http.websocketx.WebSocketClientHandshakeException: Invali
 	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
 	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
 	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ ERROR] [2024-10-13 19:39:18,788] [nioEventLoopGroup-3-1] c.h.c.n.b.AbstractWebSocketClientHandler -业务处理错误，websocket client关闭
+io.netty.handler.codec.http.websocketx.CorruptedWebSocketFrameException: Max frame length of 65536 has been exceeded.
+	at io.netty.handler.codec.http.websocketx.WebSocket08FrameDecoder.protocolViolation(WebSocket08FrameDecoder.java:435)
+	at io.netty.handler.codec.http.websocketx.WebSocket08FrameDecoder.decode(WebSocket08FrameDecoder.java:288)
+	at io.netty.handler.codec.ByteToMessageDecoder.decodeRemovalReentryProtection(ByteToMessageDecoder.java:519)
+	at io.netty.handler.codec.ByteToMessageDecoder.callDecode(ByteToMessageDecoder.java:458)
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:280)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.handler.ssl.SslHandler.unwrap(SslHandler.java:1373)
+	at io.netty.handler.ssl.SslHandler.decodeJdkCompatible(SslHandler.java:1236)
+	at io.netty.handler.ssl.SslHandler.decode(SslHandler.java:1285)
+	at io.netty.handler.codec.ByteToMessageDecoder.decodeRemovalReentryProtection(ByteToMessageDecoder.java:519)
+	at io.netty.handler.codec.ByteToMessageDecoder.callDecode(ByteToMessageDecoder.java:458)
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:280)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.handler.proxy.ProxyHandler.channelRead(ProxyHandler.java:252)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.channel.DefaultChannelPipeline$HeadContext.channelRead(DefaultChannelPipeline.java:1410)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.DefaultChannelPipeline.fireChannelRead(DefaultChannelPipeline.java:919)
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:166)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:788)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:724)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:650)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:562)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:997)
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ ERROR] [2024-10-13 19:41:30,695] [main] c.h.c.n.b.AbstractWebsocketClient -websocket client 启动失败
+java.lang.ClassCastException: class io.netty.buffer.PooledUnsafeDirectByteBuf cannot be cast to class io.netty.handler.codec.http.HttpObject (io.netty.buffer.PooledUnsafeDirectByteBuf and io.netty.handler.codec.http.HttpObject are in unnamed module of loader 'app')
+	at io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandshakeHandler.channelRead(WebSocketServerProtocolHandshakeHandler.java:65)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.handler.ssl.SslHandler.unwrap(SslHandler.java:1373)
+	at io.netty.handler.ssl.SslHandler.decodeJdkCompatible(SslHandler.java:1236)
+	at io.netty.handler.ssl.SslHandler.decode(SslHandler.java:1285)
+	at io.netty.handler.codec.ByteToMessageDecoder.decodeRemovalReentryProtection(ByteToMessageDecoder.java:519)
+	at io.netty.handler.codec.ByteToMessageDecoder.callDecode(ByteToMessageDecoder.java:458)
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:280)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.handler.proxy.ProxyHandler.channelRead(ProxyHandler.java:252)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.channel.DefaultChannelPipeline$HeadContext.channelRead(DefaultChannelPipeline.java:1410)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.DefaultChannelPipeline.fireChannelRead(DefaultChannelPipeline.java:919)
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:166)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:788)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:724)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:650)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:562)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:997)
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ ERROR] [2024-10-13 19:41:30,699] [nioEventLoopGroup-2-1] c.h.c.n.b.AbstractWebSocketClientHandler -业务处理错误，websocket client关闭
+java.lang.ClassCastException: class io.netty.buffer.PooledUnsafeDirectByteBuf cannot be cast to class io.netty.handler.codec.http.HttpObject (io.netty.buffer.PooledUnsafeDirectByteBuf and io.netty.handler.codec.http.HttpObject are in unnamed module of loader 'app')
+	at io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandshakeHandler.channelRead(WebSocketServerProtocolHandshakeHandler.java:65)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.handler.ssl.SslHandler.unwrap(SslHandler.java:1373)
+	at io.netty.handler.ssl.SslHandler.decodeJdkCompatible(SslHandler.java:1236)
+	at io.netty.handler.ssl.SslHandler.decode(SslHandler.java:1285)
+	at io.netty.handler.codec.ByteToMessageDecoder.decodeRemovalReentryProtection(ByteToMessageDecoder.java:519)
+	at io.netty.handler.codec.ByteToMessageDecoder.callDecode(ByteToMessageDecoder.java:458)
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:280)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.handler.proxy.ProxyHandler.channelRead(ProxyHandler.java:252)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.channel.DefaultChannelPipeline$HeadContext.channelRead(DefaultChannelPipeline.java:1410)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.DefaultChannelPipeline.fireChannelRead(DefaultChannelPipeline.java:919)
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:166)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:788)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:724)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:650)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:562)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:997)
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ ERROR] [2024-10-13 19:41:32,573] [main] c.h.c.n.b.AbstractWebsocketClient -websocket client 启动失败
+java.lang.ClassCastException: class io.netty.buffer.PooledUnsafeDirectByteBuf cannot be cast to class io.netty.handler.codec.http.HttpObject (io.netty.buffer.PooledUnsafeDirectByteBuf and io.netty.handler.codec.http.HttpObject are in unnamed module of loader 'app')
+	at io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandshakeHandler.channelRead(WebSocketServerProtocolHandshakeHandler.java:65)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.handler.ssl.SslHandler.unwrap(SslHandler.java:1373)
+	at io.netty.handler.ssl.SslHandler.decodeJdkCompatible(SslHandler.java:1236)
+	at io.netty.handler.ssl.SslHandler.decode(SslHandler.java:1285)
+	at io.netty.handler.codec.ByteToMessageDecoder.decodeRemovalReentryProtection(ByteToMessageDecoder.java:519)
+	at io.netty.handler.codec.ByteToMessageDecoder.callDecode(ByteToMessageDecoder.java:458)
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:280)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.handler.proxy.ProxyHandler.channelRead(ProxyHandler.java:252)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.channel.DefaultChannelPipeline$HeadContext.channelRead(DefaultChannelPipeline.java:1410)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.DefaultChannelPipeline.fireChannelRead(DefaultChannelPipeline.java:919)
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:166)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:788)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:724)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:650)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:562)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:997)
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ ERROR] [2024-10-13 19:41:32,574] [nioEventLoopGroup-3-1] c.h.c.n.b.AbstractWebSocketClientHandler -业务处理错误，websocket client关闭
+java.lang.ClassCastException: class io.netty.buffer.PooledUnsafeDirectByteBuf cannot be cast to class io.netty.handler.codec.http.HttpObject (io.netty.buffer.PooledUnsafeDirectByteBuf and io.netty.handler.codec.http.HttpObject are in unnamed module of loader 'app')
+	at io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandshakeHandler.channelRead(WebSocketServerProtocolHandshakeHandler.java:65)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.handler.ssl.SslHandler.unwrap(SslHandler.java:1373)
+	at io.netty.handler.ssl.SslHandler.decodeJdkCompatible(SslHandler.java:1236)
+	at io.netty.handler.ssl.SslHandler.decode(SslHandler.java:1285)
+	at io.netty.handler.codec.ByteToMessageDecoder.decodeRemovalReentryProtection(ByteToMessageDecoder.java:519)
+	at io.netty.handler.codec.ByteToMessageDecoder.callDecode(ByteToMessageDecoder.java:458)
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:280)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.handler.proxy.ProxyHandler.channelRead(ProxyHandler.java:252)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.channel.DefaultChannelPipeline$HeadContext.channelRead(DefaultChannelPipeline.java:1410)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.DefaultChannelPipeline.fireChannelRead(DefaultChannelPipeline.java:919)
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:166)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:788)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:724)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:650)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:562)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:997)
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ ERROR] [2024-10-13 19:42:56,320] [main] c.h.c.n.b.AbstractWebsocketClient -websocket client 启动失败
+java.lang.ClassCastException: class io.netty.buffer.PooledUnsafeDirectByteBuf cannot be cast to class io.netty.handler.codec.http.HttpObject (io.netty.buffer.PooledUnsafeDirectByteBuf and io.netty.handler.codec.http.HttpObject are in unnamed module of loader 'app')
+	at io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandshakeHandler.channelRead(WebSocketServerProtocolHandshakeHandler.java:65)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.handler.ssl.SslHandler.unwrap(SslHandler.java:1373)
+	at io.netty.handler.ssl.SslHandler.decodeJdkCompatible(SslHandler.java:1236)
+	at io.netty.handler.ssl.SslHandler.decode(SslHandler.java:1285)
+	at io.netty.handler.codec.ByteToMessageDecoder.decodeRemovalReentryProtection(ByteToMessageDecoder.java:519)
+	at io.netty.handler.codec.ByteToMessageDecoder.callDecode(ByteToMessageDecoder.java:458)
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:280)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.handler.proxy.ProxyHandler.channelRead(ProxyHandler.java:252)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.channel.DefaultChannelPipeline$HeadContext.channelRead(DefaultChannelPipeline.java:1410)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.DefaultChannelPipeline.fireChannelRead(DefaultChannelPipeline.java:919)
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:166)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:788)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:724)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:650)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:562)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:997)
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ ERROR] [2024-10-13 19:42:56,325] [nioEventLoopGroup-2-1] c.h.c.n.b.AbstractWebSocketClientHandler -业务处理错误，websocket client关闭
+java.lang.ClassCastException: class io.netty.buffer.PooledUnsafeDirectByteBuf cannot be cast to class io.netty.handler.codec.http.HttpObject (io.netty.buffer.PooledUnsafeDirectByteBuf and io.netty.handler.codec.http.HttpObject are in unnamed module of loader 'app')
+	at io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandshakeHandler.channelRead(WebSocketServerProtocolHandshakeHandler.java:65)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.handler.ssl.SslHandler.unwrap(SslHandler.java:1373)
+	at io.netty.handler.ssl.SslHandler.decodeJdkCompatible(SslHandler.java:1236)
+	at io.netty.handler.ssl.SslHandler.decode(SslHandler.java:1285)
+	at io.netty.handler.codec.ByteToMessageDecoder.decodeRemovalReentryProtection(ByteToMessageDecoder.java:519)
+	at io.netty.handler.codec.ByteToMessageDecoder.callDecode(ByteToMessageDecoder.java:458)
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:280)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.handler.proxy.ProxyHandler.channelRead(ProxyHandler.java:252)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.channel.DefaultChannelPipeline$HeadContext.channelRead(DefaultChannelPipeline.java:1410)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.DefaultChannelPipeline.fireChannelRead(DefaultChannelPipeline.java:919)
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:166)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:788)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:724)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:650)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:562)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:997)
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ ERROR] [2024-10-13 19:42:57,848] [main] c.h.c.n.b.AbstractWebsocketClient -websocket client 启动失败
+java.lang.ClassCastException: class io.netty.buffer.PooledUnsafeDirectByteBuf cannot be cast to class io.netty.handler.codec.http.HttpObject (io.netty.buffer.PooledUnsafeDirectByteBuf and io.netty.handler.codec.http.HttpObject are in unnamed module of loader 'app')
+	at io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandshakeHandler.channelRead(WebSocketServerProtocolHandshakeHandler.java:65)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.handler.ssl.SslHandler.unwrap(SslHandler.java:1373)
+	at io.netty.handler.ssl.SslHandler.decodeJdkCompatible(SslHandler.java:1236)
+	at io.netty.handler.ssl.SslHandler.decode(SslHandler.java:1285)
+	at io.netty.handler.codec.ByteToMessageDecoder.decodeRemovalReentryProtection(ByteToMessageDecoder.java:519)
+	at io.netty.handler.codec.ByteToMessageDecoder.callDecode(ByteToMessageDecoder.java:458)
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:280)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.handler.proxy.ProxyHandler.channelRead(ProxyHandler.java:252)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.channel.DefaultChannelPipeline$HeadContext.channelRead(DefaultChannelPipeline.java:1410)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.DefaultChannelPipeline.fireChannelRead(DefaultChannelPipeline.java:919)
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:166)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:788)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:724)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:650)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:562)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:997)
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ ERROR] [2024-10-13 19:42:57,849] [nioEventLoopGroup-3-1] c.h.c.n.b.AbstractWebSocketClientHandler -业务处理错误，websocket client关闭
+java.lang.ClassCastException: class io.netty.buffer.PooledUnsafeDirectByteBuf cannot be cast to class io.netty.handler.codec.http.HttpObject (io.netty.buffer.PooledUnsafeDirectByteBuf and io.netty.handler.codec.http.HttpObject are in unnamed module of loader 'app')
+	at io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandshakeHandler.channelRead(WebSocketServerProtocolHandshakeHandler.java:65)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.handler.ssl.SslHandler.unwrap(SslHandler.java:1373)
+	at io.netty.handler.ssl.SslHandler.decodeJdkCompatible(SslHandler.java:1236)
+	at io.netty.handler.ssl.SslHandler.decode(SslHandler.java:1285)
+	at io.netty.handler.codec.ByteToMessageDecoder.decodeRemovalReentryProtection(ByteToMessageDecoder.java:519)
+	at io.netty.handler.codec.ByteToMessageDecoder.callDecode(ByteToMessageDecoder.java:458)
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:280)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.handler.proxy.ProxyHandler.channelRead(ProxyHandler.java:252)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.channel.DefaultChannelPipeline$HeadContext.channelRead(DefaultChannelPipeline.java:1410)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.DefaultChannelPipeline.fireChannelRead(DefaultChannelPipeline.java:919)
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:166)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:788)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:724)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:650)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:562)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:997)
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ ERROR] [2024-10-13 19:44:07,160] [nioEventLoopGroup-3-1] c.h.c.n.b.AbstractWebSocketClientHandler -业务处理错误，websocket client关闭
+io.netty.handler.codec.http.websocketx.CorruptedWebSocketFrameException: Max frame length of 65536 has been exceeded.
+	at io.netty.handler.codec.http.websocketx.WebSocket08FrameDecoder.protocolViolation(WebSocket08FrameDecoder.java:435)
+	at io.netty.handler.codec.http.websocketx.WebSocket08FrameDecoder.decode(WebSocket08FrameDecoder.java:288)
+	at io.netty.handler.codec.ByteToMessageDecoder.decodeRemovalReentryProtection(ByteToMessageDecoder.java:519)
+	at io.netty.handler.codec.ByteToMessageDecoder.callDecode(ByteToMessageDecoder.java:458)
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:280)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.handler.ssl.SslHandler.unwrap(SslHandler.java:1373)
+	at io.netty.handler.ssl.SslHandler.decodeJdkCompatible(SslHandler.java:1236)
+	at io.netty.handler.ssl.SslHandler.decode(SslHandler.java:1285)
+	at io.netty.handler.codec.ByteToMessageDecoder.decodeRemovalReentryProtection(ByteToMessageDecoder.java:519)
+	at io.netty.handler.codec.ByteToMessageDecoder.callDecode(ByteToMessageDecoder.java:458)
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:280)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.handler.proxy.ProxyHandler.channelRead(ProxyHandler.java:252)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.channel.DefaultChannelPipeline$HeadContext.channelRead(DefaultChannelPipeline.java:1410)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.DefaultChannelPipeline.fireChannelRead(DefaultChannelPipeline.java:919)
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:166)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:788)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:724)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:650)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:562)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:997)
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ ERROR] [2024-10-13 20:10:20,944] [nioEventLoopGroup-3-1] c.h.c.n.b.AbstractWebSocketClientHandler -业务处理错误，websocket client关闭
+io.netty.handler.codec.http.websocketx.CorruptedWebSocketFrameException: Max frame length of 65536 has been exceeded.
+	at io.netty.handler.codec.http.websocketx.WebSocket08FrameDecoder.protocolViolation(WebSocket08FrameDecoder.java:435)
+	at io.netty.handler.codec.http.websocketx.WebSocket08FrameDecoder.decode(WebSocket08FrameDecoder.java:288)
+	at io.netty.handler.codec.ByteToMessageDecoder.decodeRemovalReentryProtection(ByteToMessageDecoder.java:519)
+	at io.netty.handler.codec.ByteToMessageDecoder.callDecode(ByteToMessageDecoder.java:458)
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:280)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.handler.ssl.SslHandler.unwrap(SslHandler.java:1373)
+	at io.netty.handler.ssl.SslHandler.decodeJdkCompatible(SslHandler.java:1236)
+	at io.netty.handler.ssl.SslHandler.decode(SslHandler.java:1285)
+	at io.netty.handler.codec.ByteToMessageDecoder.decodeRemovalReentryProtection(ByteToMessageDecoder.java:519)
+	at io.netty.handler.codec.ByteToMessageDecoder.callDecode(ByteToMessageDecoder.java:458)
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:280)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.handler.proxy.ProxyHandler.channelRead(ProxyHandler.java:252)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.channel.DefaultChannelPipeline$HeadContext.channelRead(DefaultChannelPipeline.java:1410)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.DefaultChannelPipeline.fireChannelRead(DefaultChannelPipeline.java:919)
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:166)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:788)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:724)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:650)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:562)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:997)
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ ERROR] [2024-10-13 20:11:05,096] [nioEventLoopGroup-3-1] c.h.c.n.b.AbstractWebSocketClientHandler -业务处理错误，websocket client关闭
+io.netty.handler.codec.http.websocketx.CorruptedWebSocketFrameException: Max frame length of 65536 has been exceeded.
+	at io.netty.handler.codec.http.websocketx.WebSocket08FrameDecoder.protocolViolation(WebSocket08FrameDecoder.java:435)
+	at io.netty.handler.codec.http.websocketx.WebSocket08FrameDecoder.decode(WebSocket08FrameDecoder.java:288)
+	at io.netty.handler.codec.ByteToMessageDecoder.decodeRemovalReentryProtection(ByteToMessageDecoder.java:519)
+	at io.netty.handler.codec.ByteToMessageDecoder.callDecode(ByteToMessageDecoder.java:458)
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:280)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.handler.ssl.SslHandler.unwrap(SslHandler.java:1373)
+	at io.netty.handler.ssl.SslHandler.decodeJdkCompatible(SslHandler.java:1236)
+	at io.netty.handler.ssl.SslHandler.decode(SslHandler.java:1285)
+	at io.netty.handler.codec.ByteToMessageDecoder.decodeRemovalReentryProtection(ByteToMessageDecoder.java:519)
+	at io.netty.handler.codec.ByteToMessageDecoder.callDecode(ByteToMessageDecoder.java:458)
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:280)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.handler.proxy.ProxyHandler.channelRead(ProxyHandler.java:252)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.channel.DefaultChannelPipeline$HeadContext.channelRead(DefaultChannelPipeline.java:1410)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.DefaultChannelPipeline.fireChannelRead(DefaultChannelPipeline.java:919)
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:166)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:788)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:724)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:650)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:562)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:997)
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ ERROR] [2024-10-13 20:13:00,814] [nioEventLoopGroup-3-1] c.h.c.n.b.AbstractWebSocketClientHandler -业务处理错误，websocket client关闭
+io.netty.handler.codec.http.websocketx.CorruptedWebSocketFrameException: Max frame length of 65536 has been exceeded.
+	at io.netty.handler.codec.http.websocketx.WebSocket08FrameDecoder.protocolViolation(WebSocket08FrameDecoder.java:435)
+	at io.netty.handler.codec.http.websocketx.WebSocket08FrameDecoder.decode(WebSocket08FrameDecoder.java:288)
+	at io.netty.handler.codec.ByteToMessageDecoder.decodeRemovalReentryProtection(ByteToMessageDecoder.java:519)
+	at io.netty.handler.codec.ByteToMessageDecoder.callDecode(ByteToMessageDecoder.java:458)
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:280)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.handler.ssl.SslHandler.unwrap(SslHandler.java:1373)
+	at io.netty.handler.ssl.SslHandler.decodeJdkCompatible(SslHandler.java:1236)
+	at io.netty.handler.ssl.SslHandler.decode(SslHandler.java:1285)
+	at io.netty.handler.codec.ByteToMessageDecoder.decodeRemovalReentryProtection(ByteToMessageDecoder.java:519)
+	at io.netty.handler.codec.ByteToMessageDecoder.callDecode(ByteToMessageDecoder.java:458)
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:280)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.handler.proxy.ProxyHandler.channelRead(ProxyHandler.java:252)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.channel.DefaultChannelPipeline$HeadContext.channelRead(DefaultChannelPipeline.java:1410)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.DefaultChannelPipeline.fireChannelRead(DefaultChannelPipeline.java:919)
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:166)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:788)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:724)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:650)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:562)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:997)
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ ERROR] [2024-10-13 20:15:00,011] [nioEventLoopGroup-3-1] c.h.c.n.b.AbstractWebSocketClientHandler -业务处理错误，websocket client关闭
+io.netty.handler.codec.http.websocketx.CorruptedWebSocketFrameException: Max frame length of 65536 has been exceeded.
+	at io.netty.handler.codec.http.websocketx.WebSocket08FrameDecoder.protocolViolation(WebSocket08FrameDecoder.java:435)
+	at io.netty.handler.codec.http.websocketx.WebSocket08FrameDecoder.decode(WebSocket08FrameDecoder.java:288)
+	at io.netty.handler.codec.ByteToMessageDecoder.decodeRemovalReentryProtection(ByteToMessageDecoder.java:519)
+	at io.netty.handler.codec.ByteToMessageDecoder.callDecode(ByteToMessageDecoder.java:458)
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:280)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.handler.ssl.SslHandler.unwrap(SslHandler.java:1373)
+	at io.netty.handler.ssl.SslHandler.decodeJdkCompatible(SslHandler.java:1236)
+	at io.netty.handler.ssl.SslHandler.decode(SslHandler.java:1285)
+	at io.netty.handler.codec.ByteToMessageDecoder.decodeRemovalReentryProtection(ByteToMessageDecoder.java:519)
+	at io.netty.handler.codec.ByteToMessageDecoder.callDecode(ByteToMessageDecoder.java:458)
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:280)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.handler.proxy.ProxyHandler.channelRead(ProxyHandler.java:252)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.channel.DefaultChannelPipeline$HeadContext.channelRead(DefaultChannelPipeline.java:1410)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.DefaultChannelPipeline.fireChannelRead(DefaultChannelPipeline.java:919)
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:166)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:788)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:724)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:650)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:562)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:997)
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ ERROR] [2024-10-13 20:18:23,906] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:18:23,907] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:18:23,907] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:18:24,134] [nioEventLoopGroup-3-1] c.h.c.n.b.AbstractWebSocketClientHandler -业务处理错误，websocket client关闭
+io.netty.handler.codec.http.websocketx.CorruptedWebSocketFrameException: Max frame length of 65536 has been exceeded.
+	at io.netty.handler.codec.http.websocketx.WebSocket08FrameDecoder.protocolViolation(WebSocket08FrameDecoder.java:435)
+	at io.netty.handler.codec.http.websocketx.WebSocket08FrameDecoder.decode(WebSocket08FrameDecoder.java:288)
+	at io.netty.handler.codec.ByteToMessageDecoder.decodeRemovalReentryProtection(ByteToMessageDecoder.java:519)
+	at io.netty.handler.codec.ByteToMessageDecoder.callDecode(ByteToMessageDecoder.java:458)
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:280)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.handler.ssl.SslHandler.unwrap(SslHandler.java:1373)
+	at io.netty.handler.ssl.SslHandler.decodeJdkCompatible(SslHandler.java:1236)
+	at io.netty.handler.ssl.SslHandler.decode(SslHandler.java:1285)
+	at io.netty.handler.codec.ByteToMessageDecoder.decodeRemovalReentryProtection(ByteToMessageDecoder.java:519)
+	at io.netty.handler.codec.ByteToMessageDecoder.callDecode(ByteToMessageDecoder.java:458)
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:280)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.handler.proxy.ProxyHandler.channelRead(ProxyHandler.java:252)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.channel.DefaultChannelPipeline$HeadContext.channelRead(DefaultChannelPipeline.java:1410)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.DefaultChannelPipeline.fireChannelRead(DefaultChannelPipeline.java:919)
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:166)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:788)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:724)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:650)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:562)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:997)
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ ERROR] [2024-10-13 20:18:24,221] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:18:24,221] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:18:24,221] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:18:24,949] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:18:24,949] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:18:24,950] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:18:25,480] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:18:25,480] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:18:25,480] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:18:25,787] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:18:25,787] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:18:25,788] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:18:26,040] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:18:26,040] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:18:26,040] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:18:26,319] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:18:26,319] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:18:26,319] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:18:26,889] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:18:26,889] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:18:26,889] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:18:27,447] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:18:27,449] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:18:27,449] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:18:27,716] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:18:27,716] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:18:27,716] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:18:28,162] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:18:28,163] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:18:28,163] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:18:28,460] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:18:28,460] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:18:28,461] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:18:29,483] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:18:29,484] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:18:29,484] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:18:29,485] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:18:29,485] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:18:29,485] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:18:29,804] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:18:29,804] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:18:29,805] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:18:30,045] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:18:30,045] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:18:30,045] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:18:30,987] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:18:30,987] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:18:30,987] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:18:31,469] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:18:31,469] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:18:31,469] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:18:31,941] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:18:31,941] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:18:31,941] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:18:32,848] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:18:32,848] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:18:32,848] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:18:32,886] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:18:32,887] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:18:32,887] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:18:33,305] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:18:33,306] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:18:33,306] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:18:33,656] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:18:33,657] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:18:33,657] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:18:34,043] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:18:34,044] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:18:34,044] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:18:34,427] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:18:34,427] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:18:34,427] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:18:35,112] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:18:35,112] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:18:35,112] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:18:36,047] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:18:36,047] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:18:36,047] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:18:36,500] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:18:36,500] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:18:36,500] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:21:17,463] [nioEventLoopGroup-3-1] c.h.c.n.b.AbstractWebSocketClientHandler -业务处理错误，websocket client关闭
+io.netty.handler.codec.http.websocketx.CorruptedWebSocketFrameException: Max frame length of 65536 has been exceeded.
+	at io.netty.handler.codec.http.websocketx.WebSocket08FrameDecoder.protocolViolation(WebSocket08FrameDecoder.java:435)
+	at io.netty.handler.codec.http.websocketx.WebSocket08FrameDecoder.decode(WebSocket08FrameDecoder.java:288)
+	at io.netty.handler.codec.ByteToMessageDecoder.decodeRemovalReentryProtection(ByteToMessageDecoder.java:519)
+	at io.netty.handler.codec.ByteToMessageDecoder.callDecode(ByteToMessageDecoder.java:458)
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:280)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.handler.ssl.SslHandler.unwrap(SslHandler.java:1373)
+	at io.netty.handler.ssl.SslHandler.decodeJdkCompatible(SslHandler.java:1236)
+	at io.netty.handler.ssl.SslHandler.decode(SslHandler.java:1285)
+	at io.netty.handler.codec.ByteToMessageDecoder.decodeRemovalReentryProtection(ByteToMessageDecoder.java:519)
+	at io.netty.handler.codec.ByteToMessageDecoder.callDecode(ByteToMessageDecoder.java:458)
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:280)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.handler.proxy.ProxyHandler.channelRead(ProxyHandler.java:252)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.channel.DefaultChannelPipeline$HeadContext.channelRead(DefaultChannelPipeline.java:1410)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.DefaultChannelPipeline.fireChannelRead(DefaultChannelPipeline.java:919)
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:166)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:788)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:724)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:650)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:562)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:997)
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ ERROR] [2024-10-13 20:21:36,764] [nioEventLoopGroup-3-1] c.h.c.n.b.AbstractWebSocketClientHandler -业务处理错误，websocket client关闭
+io.netty.handler.codec.http.websocketx.CorruptedWebSocketFrameException: Max frame length of 65536 has been exceeded.
+	at io.netty.handler.codec.http.websocketx.WebSocket08FrameDecoder.protocolViolation(WebSocket08FrameDecoder.java:435)
+	at io.netty.handler.codec.http.websocketx.WebSocket08FrameDecoder.decode(WebSocket08FrameDecoder.java:288)
+	at io.netty.handler.codec.ByteToMessageDecoder.decodeRemovalReentryProtection(ByteToMessageDecoder.java:519)
+	at io.netty.handler.codec.ByteToMessageDecoder.callDecode(ByteToMessageDecoder.java:458)
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:280)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.handler.ssl.SslHandler.unwrap(SslHandler.java:1373)
+	at io.netty.handler.ssl.SslHandler.decodeJdkCompatible(SslHandler.java:1236)
+	at io.netty.handler.ssl.SslHandler.decode(SslHandler.java:1285)
+	at io.netty.handler.codec.ByteToMessageDecoder.decodeRemovalReentryProtection(ByteToMessageDecoder.java:519)
+	at io.netty.handler.codec.ByteToMessageDecoder.callDecode(ByteToMessageDecoder.java:458)
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:280)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.handler.proxy.ProxyHandler.channelRead(ProxyHandler.java:252)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.channel.DefaultChannelPipeline$HeadContext.channelRead(DefaultChannelPipeline.java:1410)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.DefaultChannelPipeline.fireChannelRead(DefaultChannelPipeline.java:919)
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:166)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:788)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:724)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:650)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:562)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:997)
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ ERROR] [2024-10-13 20:21:52,534] [nioEventLoopGroup-3-1] c.h.c.n.b.AbstractWebSocketClientHandler -业务处理错误，websocket client关闭
+io.netty.handler.codec.http.websocketx.CorruptedWebSocketFrameException: Max frame length of 65536 has been exceeded.
+	at io.netty.handler.codec.http.websocketx.WebSocket08FrameDecoder.protocolViolation(WebSocket08FrameDecoder.java:435)
+	at io.netty.handler.codec.http.websocketx.WebSocket08FrameDecoder.decode(WebSocket08FrameDecoder.java:288)
+	at io.netty.handler.codec.ByteToMessageDecoder.decodeRemovalReentryProtection(ByteToMessageDecoder.java:519)
+	at io.netty.handler.codec.ByteToMessageDecoder.callDecode(ByteToMessageDecoder.java:458)
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:280)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.handler.ssl.SslHandler.unwrap(SslHandler.java:1373)
+	at io.netty.handler.ssl.SslHandler.decodeJdkCompatible(SslHandler.java:1236)
+	at io.netty.handler.ssl.SslHandler.decode(SslHandler.java:1285)
+	at io.netty.handler.codec.ByteToMessageDecoder.decodeRemovalReentryProtection(ByteToMessageDecoder.java:519)
+	at io.netty.handler.codec.ByteToMessageDecoder.callDecode(ByteToMessageDecoder.java:458)
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:280)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.handler.proxy.ProxyHandler.channelRead(ProxyHandler.java:252)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.channel.DefaultChannelPipeline$HeadContext.channelRead(DefaultChannelPipeline.java:1410)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.DefaultChannelPipeline.fireChannelRead(DefaultChannelPipeline.java:919)
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:166)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:788)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:724)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:650)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:562)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:997)
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ ERROR] [2024-10-13 20:23:22,898] [nioEventLoopGroup-3-1] c.h.c.n.b.AbstractWebSocketClientHandler -业务处理错误，websocket client关闭
+io.netty.handler.codec.http.websocketx.CorruptedWebSocketFrameException: Max frame length of 65536 has been exceeded.
+	at io.netty.handler.codec.http.websocketx.WebSocket08FrameDecoder.protocolViolation(WebSocket08FrameDecoder.java:435)
+	at io.netty.handler.codec.http.websocketx.WebSocket08FrameDecoder.decode(WebSocket08FrameDecoder.java:288)
+	at io.netty.handler.codec.ByteToMessageDecoder.decodeRemovalReentryProtection(ByteToMessageDecoder.java:519)
+	at io.netty.handler.codec.ByteToMessageDecoder.callDecode(ByteToMessageDecoder.java:458)
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:280)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.handler.ssl.SslHandler.unwrap(SslHandler.java:1373)
+	at io.netty.handler.ssl.SslHandler.decodeJdkCompatible(SslHandler.java:1236)
+	at io.netty.handler.ssl.SslHandler.decode(SslHandler.java:1285)
+	at io.netty.handler.codec.ByteToMessageDecoder.decodeRemovalReentryProtection(ByteToMessageDecoder.java:519)
+	at io.netty.handler.codec.ByteToMessageDecoder.callDecode(ByteToMessageDecoder.java:458)
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:280)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.handler.proxy.ProxyHandler.channelRead(ProxyHandler.java:252)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.channel.DefaultChannelPipeline$HeadContext.channelRead(DefaultChannelPipeline.java:1410)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.DefaultChannelPipeline.fireChannelRead(DefaultChannelPipeline.java:919)
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:166)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:788)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:724)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:650)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:562)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:997)
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ ERROR] [2024-10-13 20:27:03,627] [nioEventLoopGroup-3-1] c.h.c.n.b.AbstractWebSocketClientHandler -业务处理错误，websocket client关闭
+io.netty.handler.codec.http.websocketx.CorruptedWebSocketFrameException: Max frame length of 65536 has been exceeded.
+	at io.netty.handler.codec.http.websocketx.WebSocket08FrameDecoder.protocolViolation(WebSocket08FrameDecoder.java:435)
+	at io.netty.handler.codec.http.websocketx.WebSocket08FrameDecoder.decode(WebSocket08FrameDecoder.java:288)
+	at io.netty.handler.codec.ByteToMessageDecoder.decodeRemovalReentryProtection(ByteToMessageDecoder.java:519)
+	at io.netty.handler.codec.ByteToMessageDecoder.callDecode(ByteToMessageDecoder.java:458)
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:280)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.handler.ssl.SslHandler.unwrap(SslHandler.java:1373)
+	at io.netty.handler.ssl.SslHandler.decodeJdkCompatible(SslHandler.java:1236)
+	at io.netty.handler.ssl.SslHandler.decode(SslHandler.java:1285)
+	at io.netty.handler.codec.ByteToMessageDecoder.decodeRemovalReentryProtection(ByteToMessageDecoder.java:519)
+	at io.netty.handler.codec.ByteToMessageDecoder.callDecode(ByteToMessageDecoder.java:458)
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:280)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.handler.proxy.ProxyHandler.channelRead(ProxyHandler.java:252)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.channel.DefaultChannelPipeline$HeadContext.channelRead(DefaultChannelPipeline.java:1410)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.DefaultChannelPipeline.fireChannelRead(DefaultChannelPipeline.java:919)
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:166)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:788)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:724)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:650)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:562)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:997)
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ ERROR] [2024-10-13 20:51:16,449] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:51:16,450] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:51:16,450] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:52:29,837] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:52:29,837] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:52:29,837] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:53:16,531] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:53:16,531] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:53:16,531] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:53:16,771] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:53:16,771] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:53:16,772] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:53:17,596] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:53:17,596] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:53:17,596] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:53:18,357] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:53:18,357] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:53:18,358] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:53:18,867] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:53:18,867] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:53:18,867] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:53:19,566] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:53:19,566] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:53:19,566] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:53:19,834] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:53:19,834] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:53:19,834] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:53:21,136] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:53:21,137] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:53:21,137] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:53:21,483] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:53:21,484] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:53:21,485] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:53:22,383] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:53:22,384] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:53:22,384] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:53:22,463] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:53:22,463] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:53:22,463] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:53:23,434] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:53:23,435] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:53:23,435] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:53:24,067] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:53:24,067] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:53:24,067] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:53:24,793] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:53:24,793] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:53:24,793] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:53:24,795] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:53:24,795] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:53:24,795] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:53:25,187] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:53:25,187] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:53:25,187] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:53:25,250] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:53:25,250] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:53:25,251] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:53:26,573] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:53:26,573] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:53:26,573] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:53:27,078] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:53:27,078] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:53:27,078] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:53:27,338] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:53:27,339] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:53:27,339] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:53:28,099] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:53:28,099] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:53:28,099] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:53:28,392] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:53:28,392] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:53:28,392] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:53:28,684] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:53:28,684] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:53:28,684] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:53:28,930] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:53:28,930] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:53:28,930] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:53:29,381] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:53:29,381] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:53:29,381] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:53:30,284] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:53:30,284] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:53:30,284] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:56:36,175] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:56:36,176] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:56:36,176] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:56:36,177] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:56:36,177] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:56:36,177] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:56:36,177] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:56:36,177] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:56:36,179] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:56:36,179] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:56:36,179] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:56:36,179] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:56:36,180] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:56:36,180] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:56:36,180] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:56:36,180] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:56:36,180] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:56:36,181] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:56:36,181] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:56:36,181] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:56:36,182] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:56:36,182] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:56:36,182] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:56:36,182] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:56:36,182] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:56:36,182] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:56:36,182] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:56:36,182] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:56:36,183] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:56:36,183] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:56:36,184] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:56:36,184] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:56:36,184] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:56:36,184] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:56:36,184] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:56:36,184] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:56:36,185] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:56:36,185] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:56:36,185] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:56:36,186] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:56:36,186] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:56:36,186] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:56:36,186] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:56:36,186] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:56:36,186] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:56:36,187] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:56:36,187] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:56:36,187] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:56:36,187] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:56:36,187] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:56:36,188] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:56:36,188] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:56:36,188] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:56:36,188] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:56:36,188] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:56:36,188] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:56:36,188] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:56:36,189] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:56:36,189] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:56:36,189] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:56:36,189] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:56:36,189] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:56:36,189] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:56:36,189] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:56:36,189] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:56:36,191] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:56:36,191] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:56:36,191] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:56:36,191] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:56:36,191] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:56:36,191] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:56:36,191] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:56:36,191] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:56:36,191] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:56:36,191] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:56:36,192] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:56:36,192] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:56:36,192] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:56:36,192] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:56:36,193] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:56:36,193] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:56:36,193] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:56:36,193] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:56:36,193] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:56:36,193] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:56:36,193] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:56:36,193] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:56:36,193] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:56:36,194] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:56:36,194] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:56:36,194] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:56:36,195] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:56:36,195] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:56:36,195] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:56:36,195] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:56:36,195] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:56:36,195] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:56:36,195] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:56:36,195] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:56:36,195] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:56:36,196] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:56:36,196] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:56:36,196] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:56:36,196] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:56:36,196] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:56:36,197] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:56:36,197] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:56:36,197] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:56:36,197] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:56:36,197] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:56:36,197] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:56:36,197] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:56:36,197] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:56:36,197] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:56:36,198] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:57:41,884] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:57:42,545] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:57:43,064] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:57:43,392] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:57:43,638] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:57:44,320] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:57:46,739] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:57:47,457] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:57:48,124] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:57:48,448] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:57:48,736] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:57:49,335] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:57:56,954] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:57:56,955] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:57:56,956] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:57:56,956] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:57:56,956] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:57:56,956] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:57:56,956] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:57:56,956] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:57:56,956] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:57:56,956] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:57:56,956] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:57:56,956] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:57:56,956] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:57:56,957] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:57:56,957] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:57:56,957] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:57:56,957] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:57:56,958] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:57:56,959] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:57:56,959] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:57:56,959] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:57:56,960] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:57:56,960] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:57:56,960] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:57:56,960] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:57:56,960] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:57:56,960] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:57:56,960] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:57:56,961] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:57:56,961] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:57:56,961] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:57:56,961] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:57:56,961] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:57:56,962] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:57:56,962] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:57:56,962] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:57:56,962] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:57:56,962] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:57:56,962] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:57:56,962] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:57:56,962] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:57:56,962] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:57:56,962] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:57:56,962] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:57:56,962] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:57:56,963] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:57:56,963] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:57:56,963] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:57:56,963] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:57:56,963] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:57:56,964] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:57:56,964] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:57:56,964] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:57:56,964] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:57:56,964] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:57:56,964] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:57:56,964] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:57:56,964] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:57:56,964] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:57:56,964] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:57:56,964] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 20:57:56,964] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 20:57:56,965] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 20:57:56,965] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:01:39,697] [main] c.h.c.n.b.AbstractWebsocketClient -websocket client 启动失败
+io.netty.handler.codec.http.websocketx.WebSocketClientHandshakeException: Invalid handshake response getStatus: 451 
+	at io.netty.handler.codec.http.websocketx.WebSocketClientHandshaker13.verify(WebSocketClientHandshaker13.java:272)
+	at io.netty.handler.codec.http.websocketx.WebSocketClientHandshaker.finishHandshake(WebSocketClientHandshaker.java:309)
+	at com.helei.cexapi.netty.base.AbstractWebSocketClientHandler.channelRead0(AbstractWebSocketClientHandler.java:64)
+	at io.netty.channel.SimpleChannelInboundHandler.channelRead(SimpleChannelInboundHandler.java:99)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.handler.codec.MessageToMessageDecoder.channelRead(MessageToMessageDecoder.java:103)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.handler.codec.MessageToMessageDecoder.channelRead(MessageToMessageDecoder.java:103)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.channel.CombinedChannelDuplexHandler$DelegatingChannelHandlerContext.fireChannelRead(CombinedChannelDuplexHandler.java:436)
+	at io.netty.handler.codec.ByteToMessageDecoder.fireChannelRead(ByteToMessageDecoder.java:336)
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:308)
+	at io.netty.channel.CombinedChannelDuplexHandler.channelRead(CombinedChannelDuplexHandler.java:251)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.handler.ssl.SslHandler.unwrap(SslHandler.java:1373)
+	at io.netty.handler.ssl.SslHandler.decodeJdkCompatible(SslHandler.java:1236)
+	at io.netty.handler.ssl.SslHandler.decode(SslHandler.java:1285)
+	at io.netty.handler.codec.ByteToMessageDecoder.decodeRemovalReentryProtection(ByteToMessageDecoder.java:519)
+	at io.netty.handler.codec.ByteToMessageDecoder.callDecode(ByteToMessageDecoder.java:458)
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:280)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.handler.proxy.ProxyHandler.channelRead(ProxyHandler.java:252)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.channel.DefaultChannelPipeline$HeadContext.channelRead(DefaultChannelPipeline.java:1410)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.DefaultChannelPipeline.fireChannelRead(DefaultChannelPipeline.java:919)
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:166)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:788)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:724)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:650)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:562)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:997)
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ ERROR] [2024-10-13 21:01:40,483] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:01:40,484] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:01:40,484] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:01:40,975] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:01:40,975] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:01:40,975] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:01:41,333] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:01:41,333] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:01:41,334] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:01:41,742] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:01:41,742] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:01:41,742] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:01:42,191] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:01:42,191] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:01:42,192] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:01:42,673] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:01:42,673] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:01:42,673] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:01:43,326] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:01:43,326] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:01:43,326] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:01:43,603] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:01:43,604] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:01:43,604] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:01:44,727] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:01:44,727] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:01:44,727] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:01:44,997] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:01:44,997] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:01:44,997] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:01:45,497] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:01:45,497] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:01:45,498] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:01:45,964] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:01:45,964] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:01:45,964] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:01:46,405] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:01:46,405] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:01:46,405] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:01:47,009] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:01:47,009] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:01:47,009] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:01:47,843] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:01:47,843] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:01:47,843] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:01:48,248] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:01:48,249] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:01:48,249] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:01:48,770] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:01:48,770] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:01:48,770] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:01:49,453] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:01:49,453] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:01:49,453] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:01:49,917] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:01:49,918] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:01:49,918] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:01:50,169] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:01:50,169] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:01:50,169] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:02:41,682] [main] c.h.c.n.b.AbstractWebsocketClient -websocket client 启动失败
+io.netty.handler.codec.http.websocketx.WebSocketClientHandshakeException: Invalid handshake response getStatus: 451 
+	at io.netty.handler.codec.http.websocketx.WebSocketClientHandshaker13.verify(WebSocketClientHandshaker13.java:272)
+	at io.netty.handler.codec.http.websocketx.WebSocketClientHandshaker.finishHandshake(WebSocketClientHandshaker.java:309)
+	at com.helei.cexapi.netty.base.AbstractWebSocketClientHandler.channelRead0(AbstractWebSocketClientHandler.java:64)
+	at io.netty.channel.SimpleChannelInboundHandler.channelRead(SimpleChannelInboundHandler.java:99)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.handler.codec.MessageToMessageDecoder.channelRead(MessageToMessageDecoder.java:103)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.handler.codec.MessageToMessageDecoder.channelRead(MessageToMessageDecoder.java:103)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.channel.CombinedChannelDuplexHandler$DelegatingChannelHandlerContext.fireChannelRead(CombinedChannelDuplexHandler.java:436)
+	at io.netty.handler.codec.ByteToMessageDecoder.fireChannelRead(ByteToMessageDecoder.java:336)
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:308)
+	at io.netty.channel.CombinedChannelDuplexHandler.channelRead(CombinedChannelDuplexHandler.java:251)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.handler.ssl.SslHandler.unwrap(SslHandler.java:1373)
+	at io.netty.handler.ssl.SslHandler.decodeJdkCompatible(SslHandler.java:1236)
+	at io.netty.handler.ssl.SslHandler.decode(SslHandler.java:1285)
+	at io.netty.handler.codec.ByteToMessageDecoder.decodeRemovalReentryProtection(ByteToMessageDecoder.java:519)
+	at io.netty.handler.codec.ByteToMessageDecoder.callDecode(ByteToMessageDecoder.java:458)
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:280)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.handler.proxy.ProxyHandler.channelRead(ProxyHandler.java:252)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.channel.DefaultChannelPipeline$HeadContext.channelRead(DefaultChannelPipeline.java:1410)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.DefaultChannelPipeline.fireChannelRead(DefaultChannelPipeline.java:919)
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:166)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:788)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:724)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:650)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:562)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:997)
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ ERROR] [2024-10-13 21:03:39,484] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,485] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,486] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,487] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,488] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,488] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,488] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,488] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,488] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,490] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,490] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,490] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,490] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,490] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,490] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,491] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,491] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,491] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,492] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,492] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,493] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,493] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,493] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,493] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,494] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,494] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,494] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,495] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,495] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,495] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,495] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,495] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,495] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,495] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,496] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,496] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,497] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,497] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,497] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,498] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,498] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,498] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,498] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,498] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,498] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,499] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,500] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,500] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,500] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,500] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,500] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,500] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,501] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,501] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,501] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,501] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,501] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,502] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,502] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,502] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,503] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,503] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,503] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,503] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,503] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,503] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,504] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,504] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,504] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,505] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,505] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,505] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,505] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,505] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,505] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,505] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,505] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,505] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,505] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,505] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,505] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,505] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,507] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,507] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,507] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,507] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,507] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,508] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,508] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,508] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,508] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,509] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,509] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,509] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,509] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,509] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,509] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,510] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,510] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,510] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,511] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,511] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,511] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,511] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,511] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,513] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,514] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,514] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,514] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,514] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,514] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,514] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,514] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,514] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,515] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,515] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,515] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,516] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,516] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,516] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,516] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,516] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,516] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,516] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,516] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,516] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,517] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,517] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,517] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,517] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,517] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,518] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,518] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,518] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,518] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,518] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,518] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,518] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,518] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,518] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,518] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,520] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,520] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,520] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,520] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,520] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,520] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,520] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,520] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,520] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,521] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,521] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,521] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,521] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,521] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,521] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,522] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,522] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,522] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,522] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,522] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,522] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,522] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,522] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,522] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,523] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,523] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,523] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,523] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,524] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,524] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,524] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,524] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,524] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,524] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,524] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,525] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,525] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,525] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,525] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,525] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,525] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,525] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,525] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,525] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,526] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,526] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,526] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,526] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,526] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,526] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,526] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,526] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,526] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,526] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,526] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,526] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,526] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,526] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,526] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,526] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,526] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,526] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,526] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,526] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,526] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,526] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,528] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,528] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,528] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,528] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,528] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,528] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,528] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,528] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,528] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,528] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,528] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,528] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,528] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,528] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,528] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,528] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,529] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,529] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,529] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,529] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,529] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,529] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,529] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,529] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,530] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,530] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,530] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,530] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,530] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,530] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,530] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,530] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,530] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,530] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,530] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,530] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,530] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,531] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,531] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,531] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,531] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,531] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,531] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,531] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,531] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,531] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,531] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,531] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,532] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,533] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,533] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,533] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,533] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,533] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,533] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,533] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,533] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,533] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,533] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,533] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,533] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,533] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,533] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,533] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,533] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,534] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,534] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,534] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,534] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:39,789] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:39,789] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:39,789] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:40,234] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:40,234] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:40,235] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:41,104] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:41,104] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:41,104] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:41,786] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:41,786] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:41,786] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:42,220] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:42,220] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:42,220] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:42,525] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:42,525] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:42,525] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:42,865] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:42,866] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:42,866] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:43,547] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:43,548] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:43,548] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:03:44,385] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:03:44,385] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:03:44,385] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:04:09,500] [main] c.h.c.n.b.AbstractWebsocketClient -websocket client 启动失败
+io.netty.handler.codec.http.websocketx.WebSocketClientHandshakeException: Invalid handshake response getStatus: 451 
+	at io.netty.handler.codec.http.websocketx.WebSocketClientHandshaker13.verify(WebSocketClientHandshaker13.java:272)
+	at io.netty.handler.codec.http.websocketx.WebSocketClientHandshaker.finishHandshake(WebSocketClientHandshaker.java:309)
+	at com.helei.cexapi.netty.base.AbstractWebSocketClientHandler.channelRead0(AbstractWebSocketClientHandler.java:64)
+	at io.netty.channel.SimpleChannelInboundHandler.channelRead(SimpleChannelInboundHandler.java:99)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.handler.codec.MessageToMessageDecoder.channelRead(MessageToMessageDecoder.java:103)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.handler.codec.MessageToMessageDecoder.channelRead(MessageToMessageDecoder.java:103)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.channel.CombinedChannelDuplexHandler$DelegatingChannelHandlerContext.fireChannelRead(CombinedChannelDuplexHandler.java:436)
+	at io.netty.handler.codec.ByteToMessageDecoder.fireChannelRead(ByteToMessageDecoder.java:336)
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:308)
+	at io.netty.channel.CombinedChannelDuplexHandler.channelRead(CombinedChannelDuplexHandler.java:251)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.handler.ssl.SslHandler.unwrap(SslHandler.java:1373)
+	at io.netty.handler.ssl.SslHandler.decodeJdkCompatible(SslHandler.java:1236)
+	at io.netty.handler.ssl.SslHandler.decode(SslHandler.java:1285)
+	at io.netty.handler.codec.ByteToMessageDecoder.decodeRemovalReentryProtection(ByteToMessageDecoder.java:519)
+	at io.netty.handler.codec.ByteToMessageDecoder.callDecode(ByteToMessageDecoder.java:458)
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:280)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.handler.proxy.ProxyHandler.channelRead(ProxyHandler.java:252)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.channel.DefaultChannelPipeline$HeadContext.channelRead(DefaultChannelPipeline.java:1410)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.DefaultChannelPipeline.fireChannelRead(DefaultChannelPipeline.java:919)
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:166)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:788)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:724)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:650)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:562)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:997)
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ ERROR] [2024-10-13 21:06:45,437] [main] c.h.c.n.b.AbstractWebsocketClient -websocket client 启动失败
+io.netty.handler.codec.http.websocketx.WebSocketClientHandshakeException: Invalid handshake response getStatus: 451 
+	at io.netty.handler.codec.http.websocketx.WebSocketClientHandshaker13.verify(WebSocketClientHandshaker13.java:272)
+	at io.netty.handler.codec.http.websocketx.WebSocketClientHandshaker.finishHandshake(WebSocketClientHandshaker.java:309)
+	at com.helei.cexapi.netty.base.AbstractWebSocketClientHandler.channelRead0(AbstractWebSocketClientHandler.java:64)
+	at io.netty.channel.SimpleChannelInboundHandler.channelRead(SimpleChannelInboundHandler.java:99)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.handler.codec.MessageToMessageDecoder.channelRead(MessageToMessageDecoder.java:103)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.handler.codec.MessageToMessageDecoder.channelRead(MessageToMessageDecoder.java:103)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.channel.CombinedChannelDuplexHandler$DelegatingChannelHandlerContext.fireChannelRead(CombinedChannelDuplexHandler.java:436)
+	at io.netty.handler.codec.ByteToMessageDecoder.fireChannelRead(ByteToMessageDecoder.java:336)
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:308)
+	at io.netty.channel.CombinedChannelDuplexHandler.channelRead(CombinedChannelDuplexHandler.java:251)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.handler.ssl.SslHandler.unwrap(SslHandler.java:1373)
+	at io.netty.handler.ssl.SslHandler.decodeJdkCompatible(SslHandler.java:1236)
+	at io.netty.handler.ssl.SslHandler.decode(SslHandler.java:1285)
+	at io.netty.handler.codec.ByteToMessageDecoder.decodeRemovalReentryProtection(ByteToMessageDecoder.java:519)
+	at io.netty.handler.codec.ByteToMessageDecoder.callDecode(ByteToMessageDecoder.java:458)
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:280)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.handler.proxy.ProxyHandler.channelRead(ProxyHandler.java:252)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357)
+	at io.netty.channel.DefaultChannelPipeline$HeadContext.channelRead(DefaultChannelPipeline.java:1410)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365)
+	at io.netty.channel.DefaultChannelPipeline.fireChannelRead(DefaultChannelPipeline.java:919)
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:166)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:788)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:724)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:650)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:562)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:997)
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ ERROR] [2024-10-13 21:09:31,205] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:09:31,205] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:09:34,716] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:09:35,771] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1h
+[ ERROR] [2024-10-13 21:09:35,771] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1m
+[ ERROR] [2024-10-13 21:09:39,990] [nioEventLoopGroup-2-1] c.h.c.b.s.BinanceWSStreamSupporter -No subscribe entity for stream type btcusdt@kline_1d
+[ ERROR] [2024-10-13 21:24:51,094] [KeyedProcess (1/20)#0] c.h.t.i.c.BaseIndicatorCalculator -calculate indicator error
+java.lang.NullPointerException: Cannot invoke "java.time.LocalDateTime.toInstant(java.time.ZoneOffset)" because the return value of "com.helei.tradedatacenter.entity.KLine.getOpenTime()" is null
+	at com.helei.tradedatacenter.indicator.calculater.PSTCalculator.lambda$calPST$1(PSTCalculator.java:92)
+	at com.helei.tradedatacenter.util.CalculatorUtil.calculateTrend(CalculatorUtil.java:75)
+	at com.helei.tradedatacenter.indicator.calculater.PSTCalculator.calPST(PSTCalculator.java:90)
+	at com.helei.tradedatacenter.indicator.calculater.PSTCalculator.calculateInKLine(PSTCalculator.java:78)
+	at com.helei.tradedatacenter.indicator.calculater.PSTCalculator.calculateInKLine(PSTCalculator.java:19)
+	at com.helei.tradedatacenter.indicator.calculater.BaseIndicatorCalculator.processElement(BaseIndicatorCalculator.java:24)
+	at com.helei.tradedatacenter.indicator.calculater.BaseIndicatorCalculator.processElement(BaseIndicatorCalculator.java:12)
+	at org.apache.flink.streaming.api.operators.KeyedProcessOperator.processElement(KeyedProcessOperator.java:83)
+	at org.apache.flink.streaming.runtime.io.RecordProcessorUtils.lambda$getRecordProcessor$0(RecordProcessorUtils.java:64)
+	at org.apache.flink.streaming.runtime.tasks.OneInputStreamTask$StreamTaskNetworkOutput.emitRecord(OneInputStreamTask.java:238)
+	at org.apache.flink.streaming.runtime.io.AbstractStreamTaskNetworkInput.processElement(AbstractStreamTaskNetworkInput.java:157)
+	at org.apache.flink.streaming.runtime.io.AbstractStreamTaskNetworkInput.emitNext(AbstractStreamTaskNetworkInput.java:114)
+	at org.apache.flink.streaming.runtime.io.StreamOneInputProcessor.processInput(StreamOneInputProcessor.java:65)
+	at org.apache.flink.streaming.runtime.tasks.StreamTask.processInput(StreamTask.java:638)
+	at org.apache.flink.streaming.runtime.tasks.mailbox.MailboxProcessor.runMailboxLoop(MailboxProcessor.java:231)
+	at org.apache.flink.streaming.runtime.tasks.StreamTask.runMailboxLoop(StreamTask.java:973)
+	at org.apache.flink.streaming.runtime.tasks.StreamTask.invoke(StreamTask.java:917)
+	at org.apache.flink.runtime.taskmanager.Task.runWithSystemExitMonitoring(Task.java:970)
+	at org.apache.flink.runtime.taskmanager.Task.restoreAndInvoke(Task.java:949)
+	at org.apache.flink.runtime.taskmanager.Task.doRun(Task.java:763)
+	at org.apache.flink.runtime.taskmanager.Task.run(Task.java:575)
+	at java.base/java.lang.Thread.run(Thread.java:1583)

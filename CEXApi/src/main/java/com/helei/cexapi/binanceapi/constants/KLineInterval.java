@@ -3,7 +3,12 @@ package com.helei.cexapi.binanceapi.constants;
 
 import lombok.Getter;
 
-public enum KLineInterval {
+import java.io.Serial;
+import java.io.Serializable;
+
+public enum KLineInterval implements Serializable {
+
+
     m_1("1m", 60),
     m_3("3m", 3 * 60),
     m_5("5m", 5 * 60),
@@ -20,6 +25,9 @@ public enum KLineInterval {
     w_1("1w", 7 * 24 * 60 * 60),
     M_1("1M", 30 * 24 * 60 * 60),
     ;
+
+    @Serial
+    private static final long serialVersionUID = 8882388L; // 显式声明 serialVersionUID
 
     @Getter
     private final String describe;

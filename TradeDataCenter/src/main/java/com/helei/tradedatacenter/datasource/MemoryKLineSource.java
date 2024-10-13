@@ -1,13 +1,15 @@
 
 package com.helei.tradedatacenter.datasource;
 
-import com.alibaba.fastjson.JSONObject;
 import com.helei.cexapi.binanceapi.constants.KLineInterval;
-import com.helei.tradedatacenter.conventor.KLineMapper;
-import com.helei.tradedatacenter.dto.SubscribeData;
 import com.helei.tradedatacenter.entity.KLine;
+import com.helei.tradedatacenter.util.KLineBuffer;
 import lombok.extern.slf4j.Slf4j;
 
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 
 /**
@@ -15,22 +17,23 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class MemoryKLineSource extends BaseKLineSource {
+    private final String id = UUID.randomUUID().toString();
 
-    private final SubscribeData<JSONObject> subscribeData;
+    private static final Map<String, KLineBuffer> kLineBufferMap = new HashMap<>();
 
     public MemoryKLineSource(
             String symbol,
             KLineInterval interval,
+            LocalDateTime startTime,
             MemoryKLineDataPublisher memoryKLineDataPublisher
     ) {
-        this.subscribeData = memoryKLineDataPublisher.registry(symbol, interval);
+        kLineBufferMap.put(id, memoryKLineDataPublisher.registry(symbol, interval, startTime));
     }
 
 
     @Override
     protected KLine loadKLine() throws Exception {
-        JSONObject data = subscribeData.getData();
-
-        return data == null ? null: KLineMapper.mapJsonToKLine(data);
+        KLineBuffer kLineBuffer = kLineBufferMap.get(id);
+        return kLineBuffer.take();
     }
 }

@@ -35,6 +35,7 @@ import java.util.function.Consumer;
  */
 @Slf4j
 public abstract class AbstractWebsocketClient<P,T> {
+    private static final int MAX_FRAME_SIZE = 10 * 1024 * 1024;  // 10 MB or set to your desired size
 
     /**
      * websocket的url字符串
@@ -123,10 +124,15 @@ public abstract class AbstractWebsocketClient<P,T> {
                                 p.addLast(sslCtx.newHandler(ch.alloc(), uri.getHost(), port));
                             }
 
+                            p.addLast("http-chunked", new ChunkedWriteHandler()); // 支持大数据流
+
+
                             p.addLast(new HttpClientCodec());
-                            p.addLast(new HttpObjectAggregator(8192));
+                            p.addLast(new HttpObjectAggregator(81920));
                             p.addLast(new ChunkedWriteHandler());
-                            p.addLast(new WebSocketFrameAggregator(8192));
+
+                            p.addLast(new WebSocketFrameAggregator(MAX_FRAME_SIZE));  // 设置聚合器的最大帧大小
+
 
                             p.addLast(handler);
                         }
@@ -191,6 +197,7 @@ public abstract class AbstractWebsocketClient<P,T> {
         });
 
         if (flag) {
+            log.debug("send request [{}]", request);
             channel.writeAndFlush(new TextWebSocketFrame(JSON.toJSONString(request)));
         } else {
             throw new IllegalArgumentException("request id registered");

@@ -89,32 +89,40 @@ public class AbstractBinanceWSApiClient extends AbstractWebsocketClient<JSONObje
             boolean isSignature,
             Consumer<JSONObject> callback
     ) {
-        if (ipWeightSupporter.submitIpWeight(ipWeight)) {
+        try {
+            if (ipWeightSupporter.submitIpWeight(ipWeight)) {
 
-            //需要签名
-            if (isSignature) {
-                JSONObject params = request.getJSONObject("params");
-                params.put("timestamp", System.currentTimeMillis());
-                try {
-                    params.put("signature", SignatureUtil.signatureHMAC(asKey.getSecretKey(), params));
-                } catch (InvalidKeyException e) {
-                    throw new IllegalArgumentException("signature params error");
+                //需要签名
+                if (isSignature) {
+                    JSONObject params = request.getJSONObject("params");
+                    params.put("timestamp", System.currentTimeMillis());
+                    try {
+                        params.put("signature", SignatureUtil.signatureHMAC(asKey.getSecretKey(), params));
+                    } catch (InvalidKeyException e) {
+                        throw new IllegalArgumentException("signature params error");
+                    }
+                    params.put("apiKey", asKey.getApiKey());
                 }
-                params.put("apiKey", asKey.getApiKey());
+
+                super.sendRequest(id, request, response -> {
+                    if (response != null) {
+                        if (response.getInteger("status") != null && response.getInteger("status") != 200) {
+                            log.error("receive error response [{}]", response);
+                        }
+                        log.debug("send request id[{}] success, response[{}]", id, response);
+                        callback.accept(response);
+                    } else {
+                        callback.accept(null);
+                        log.error("send request id[{}] fail", id);
+                    }
+                });
+            } else {
+                log.warn("current ipWeight[{}] not support send request", ipWeightSupporter.currentWeight());
             }
-
-            super.sendRequest(id, request, response -> {
-                if (response != null) {
-                    log.debug("send request id[{}] success, response[{}]", id, response);
-                    callback.accept(response);
-                } else {
-                    callback.accept(null);
-                    log.error("send request id[{}] fail", id);
-                }
-            });
-        } else {
-            log.warn("current ipWeight[{}] not support send request", ipWeightSupporter.currentWeight());
+        } catch (Exception e) {
+            log.error("send request error", e);
         }
+
     }
     /**
      * 订阅stream
