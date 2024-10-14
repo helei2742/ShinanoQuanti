@@ -13396,3 +13396,588 @@ Caused by: java.lang.reflect.InaccessibleObjectException: Unable to make field p
 [ WARN ] [2024-10-13 21:41:09,346] [main] o.a.f.r.w.WebMonitorUtils -JobManager log files are unavailable in the web dashboard. Log file location not found in environment variable 'log.file' or configuration key 'web.log.path'.
 [ WARN ] [2024-10-13 21:41:09,528] [flink-pekko.actor.default-dispatcher-4] o.a.f.r.s.t.DefaultDelegationTokenManager -No tokens obtained so skipping notifications
 [ WARN ] [2024-10-13 21:41:09,528] [flink-pekko.actor.default-dispatcher-4] o.a.f.r.s.t.DefaultDelegationTokenManager -Tokens update task not started because either no tokens obtained or none of the tokens specified its renewal date
+[ WARN ] [2024-10-13 21:55:13,410] [main] i.n.b.Bootstrap -Unknown channel option 'SO_BROADCAST' for channel '[id: 0xa4a2219c]'
+[ WARN ] [2024-10-13 21:55:14,533] [main] i.n.b.Bootstrap -Unknown channel option 'SO_BROADCAST' for channel '[id: 0x4340bf3a]'
+[ WARN ] [2024-10-13 21:55:17,131] [main] o.a.f.r.s.t.DefaultDelegationTokenManager -No tokens obtained so skipping notifications
+[ WARN ] [2024-10-13 21:55:17,451] [main] o.a.f.r.w.WebMonitorUtils -Log file environment variable 'log.file' is not set.
+[ WARN ] [2024-10-13 21:55:17,451] [main] o.a.f.r.w.WebMonitorUtils -JobManager log files are unavailable in the web dashboard. Log file location not found in environment variable 'log.file' or configuration key 'web.log.path'.
+[ WARN ] [2024-10-13 21:55:17,562] [flink-pekko.actor.default-dispatcher-4] o.a.f.r.s.t.DefaultDelegationTokenManager -No tokens obtained so skipping notifications
+[ WARN ] [2024-10-13 21:55:17,562] [flink-pekko.actor.default-dispatcher-4] o.a.f.r.s.t.DefaultDelegationTokenManager -Tokens update task not started because either no tokens obtained or none of the tokens specified its renewal date
+[ WARN ] [2024-10-13 21:55:36,122] [main] i.n.b.Bootstrap -Unknown channel option 'SO_BROADCAST' for channel '[id: 0x31c4d428]'
+[ WARN ] [2024-10-13 21:55:37,202] [main] i.n.b.Bootstrap -Unknown channel option 'SO_BROADCAST' for channel '[id: 0x69df9ac2]'
+[ WARN ] [2024-10-13 21:55:39,459] [main] o.a.f.r.s.t.DefaultDelegationTokenManager -No tokens obtained so skipping notifications
+[ WARN ] [2024-10-13 21:55:39,739] [main] o.a.f.r.w.WebMonitorUtils -Log file environment variable 'log.file' is not set.
+[ WARN ] [2024-10-13 21:55:39,739] [main] o.a.f.r.w.WebMonitorUtils -JobManager log files are unavailable in the web dashboard. Log file location not found in environment variable 'log.file' or configuration key 'web.log.path'.
+[ WARN ] [2024-10-13 21:55:39,868] [flink-pekko.actor.default-dispatcher-4] o.a.f.r.s.t.DefaultDelegationTokenManager -No tokens obtained so skipping notifications
+[ WARN ] [2024-10-13 21:55:39,868] [flink-pekko.actor.default-dispatcher-4] o.a.f.r.s.t.DefaultDelegationTokenManager -Tokens update task not started because either no tokens obtained or none of the tokens specified its renewal date
+[ WARN ] [2024-10-13 21:55:49,410] [Flink-Metric-View-Updater-thread-1] o.a.f.r.i.n.b.NetworkBufferPool -Memory usage [119%] is too high to satisfy all of the requests. This can severely impact network throughput. Please consider increasing available network memory, or decreasing configured size of network buffer pools. (totalMemory=64.000mb (67108864 bytes), requestedMemory=76.500mb (80216064 bytes), missingMemory=12.500mb (13107200 bytes))
+[ WARN ] [2024-10-13 21:57:41,104] [main] i.n.b.Bootstrap -Unknown channel option 'SO_BROADCAST' for channel '[id: 0x6fd29b21]'
+[ WARN ] [2024-10-13 21:57:42,178] [main] i.n.b.Bootstrap -Unknown channel option 'SO_BROADCAST' for channel '[id: 0xd2defc5f]'
+[ WARN ] [2024-10-13 21:57:58,475] [main] i.n.b.Bootstrap -Unknown channel option 'SO_BROADCAST' for channel '[id: 0x498ec18c]'
+[ WARN ] [2024-10-13 21:57:59,542] [main] i.n.b.Bootstrap -Unknown channel option 'SO_BROADCAST' for channel '[id: 0x615d53f5]'
+[ WARN ] [2024-10-13 21:58:01,896] [Thread-2] o.a.f.r.s.t.DefaultDelegationTokenManager -No tokens obtained so skipping notifications
+[ WARN ] [2024-10-13 21:58:01,896] [Thread-3] o.a.f.r.s.t.DefaultDelegationTokenManager -No tokens obtained so skipping notifications
+[ WARN ] [2024-10-13 21:58:02,198] [Thread-2] o.a.f.r.w.WebMonitorUtils -Log file environment variable 'log.file' is not set.
+[ WARN ] [2024-10-13 21:58:02,198] [Thread-3] o.a.f.r.w.WebMonitorUtils -Log file environment variable 'log.file' is not set.
+[ WARN ] [2024-10-13 21:58:02,198] [Thread-3] o.a.f.r.w.WebMonitorUtils -JobManager log files are unavailable in the web dashboard. Log file location not found in environment variable 'log.file' or configuration key 'web.log.path'.
+[ WARN ] [2024-10-13 21:58:02,198] [Thread-2] o.a.f.r.w.WebMonitorUtils -JobManager log files are unavailable in the web dashboard. Log file location not found in environment variable 'log.file' or configuration key 'web.log.path'.
+[ WARN ] [2024-10-13 21:58:02,321] [flink-pekko.actor.default-dispatcher-4] o.a.f.r.s.t.DefaultDelegationTokenManager -No tokens obtained so skipping notifications
+[ WARN ] [2024-10-13 21:58:02,321] [flink-pekko.actor.default-dispatcher-4] o.a.f.r.s.t.DefaultDelegationTokenManager -No tokens obtained so skipping notifications
+[ WARN ] [2024-10-13 21:58:02,321] [flink-pekko.actor.default-dispatcher-4] o.a.f.r.s.t.DefaultDelegationTokenManager -Tokens update task not started because either no tokens obtained or none of the tokens specified its renewal date
+[ WARN ] [2024-10-13 21:58:02,321] [flink-pekko.actor.default-dispatcher-4] o.a.f.r.s.t.DefaultDelegationTokenManager -Tokens update task not started because either no tokens obtained or none of the tokens specified its renewal date
+[ WARN ] [2024-10-13 21:58:11,846] [Flink-Metric-View-Updater-thread-1] o.a.f.r.i.n.b.NetworkBufferPool -Memory usage [239%] is too high to satisfy all of the requests. This can severely impact network throughput. Please consider increasing available network memory, or decreasing configured size of network buffer pools. (totalMemory=64.000mb (67108864 bytes), requestedMemory=153.000mb (160432128 bytes), missingMemory=89.000mb (93323264 bytes))
+[ WARN ] [2024-10-13 21:58:11,846] [Flink-Metric-View-Updater-thread-1] o.a.f.r.i.n.b.NetworkBufferPool -Memory usage [239%] is too high to satisfy all of the requests. This can severely impact network throughput. Please consider increasing available network memory, or decreasing configured size of network buffer pools. (totalMemory=64.000mb (67108864 bytes), requestedMemory=153.000mb (160432128 bytes), missingMemory=89.000mb (93323264 bytes))
+[ WARN ] [2024-10-13 21:59:00,701] [main] i.n.b.Bootstrap -Unknown channel option 'SO_BROADCAST' for channel '[id: 0xeb7e4f17]'
+[ WARN ] [2024-10-13 21:59:01,805] [main] i.n.b.Bootstrap -Unknown channel option 'SO_BROADCAST' for channel '[id: 0x4ac3156b]'
+[ WARN ] [2024-10-13 21:59:04,114] [Thread-3] o.a.f.r.s.t.DefaultDelegationTokenManager -No tokens obtained so skipping notifications
+[ WARN ] [2024-10-13 21:59:04,401] [Thread-3] o.a.f.r.w.WebMonitorUtils -Log file environment variable 'log.file' is not set.
+[ WARN ] [2024-10-13 21:59:04,401] [Thread-3] o.a.f.r.w.WebMonitorUtils -JobManager log files are unavailable in the web dashboard. Log file location not found in environment variable 'log.file' or configuration key 'web.log.path'.
+[ WARN ] [2024-10-13 21:59:04,523] [flink-pekko.actor.default-dispatcher-4] o.a.f.r.s.t.DefaultDelegationTokenManager -No tokens obtained so skipping notifications
+[ WARN ] [2024-10-13 21:59:04,523] [flink-pekko.actor.default-dispatcher-4] o.a.f.r.s.t.DefaultDelegationTokenManager -Tokens update task not started because either no tokens obtained or none of the tokens specified its renewal date
+[ WARN ] [2024-10-13 21:59:05,038] [KeyedProcess (15/20)#0] o.a.f.r.t.Task -KeyedProcess (15/20)#0 (06abae7ab972679ea2f93158c91ba454_a5f387f7dd2912f7be37b34caeefab16_14_0) switched from DEPLOYING to FAILED with failure cause:
+java.io.IOException: Insufficient number of network buffers: required 21, but only 6 available. The total number of network buffers is currently set to 2048 of 32768 bytes each. You can increase this number by setting the configuration keys 'taskmanager.memory.network.fraction', 'taskmanager.memory.network.min', and 'taskmanager.memory.network.max'.
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.internalCreateBufferPool(NetworkBufferPool.java:494)
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.createBufferPool(NetworkBufferPool.java:467)
+	at org.apache.flink.runtime.io.network.partition.ResultPartitionFactory.lambda$createBufferPoolFactory$0(ResultPartitionFactory.java:399)
+	at org.apache.flink.runtime.io.network.partition.ResultPartition.setup(ResultPartition.java:158)
+	at org.apache.flink.runtime.taskmanager.Task.setupPartitionsAndGates(Task.java:981)
+	at org.apache.flink.runtime.taskmanager.Task.doRun(Task.java:669)
+	at org.apache.flink.runtime.taskmanager.Task.run(Task.java:575)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ WARN ] [2024-10-13 21:59:05,034] [KeyedProcess (11/20)#0] o.a.f.r.t.Task -KeyedProcess (11/20)#0 (06abae7ab972679ea2f93158c91ba454_a5f387f7dd2912f7be37b34caeefab16_10_0) switched from DEPLOYING to FAILED with failure cause:
+java.io.IOException: Insufficient number of network buffers: required 21, but only 6 available. The total number of network buffers is currently set to 2048 of 32768 bytes each. You can increase this number by setting the configuration keys 'taskmanager.memory.network.fraction', 'taskmanager.memory.network.min', and 'taskmanager.memory.network.max'.
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.internalCreateBufferPool(NetworkBufferPool.java:494)
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.createBufferPool(NetworkBufferPool.java:467)
+	at org.apache.flink.runtime.io.network.partition.ResultPartitionFactory.lambda$createBufferPoolFactory$0(ResultPartitionFactory.java:399)
+	at org.apache.flink.runtime.io.network.partition.ResultPartition.setup(ResultPartition.java:158)
+	at org.apache.flink.runtime.taskmanager.Task.setupPartitionsAndGates(Task.java:981)
+	at org.apache.flink.runtime.taskmanager.Task.doRun(Task.java:669)
+	at org.apache.flink.runtime.taskmanager.Task.run(Task.java:575)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ WARN ] [2024-10-13 21:59:05,036] [KeyedProcess (14/20)#0] o.a.f.r.t.Task -KeyedProcess (14/20)#0 (06abae7ab972679ea2f93158c91ba454_a5f387f7dd2912f7be37b34caeefab16_13_0) switched from DEPLOYING to FAILED with failure cause:
+java.io.IOException: Insufficient number of network buffers: required 21, but only 6 available. The total number of network buffers is currently set to 2048 of 32768 bytes each. You can increase this number by setting the configuration keys 'taskmanager.memory.network.fraction', 'taskmanager.memory.network.min', and 'taskmanager.memory.network.max'.
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.internalCreateBufferPool(NetworkBufferPool.java:494)
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.createBufferPool(NetworkBufferPool.java:467)
+	at org.apache.flink.runtime.io.network.partition.ResultPartitionFactory.lambda$createBufferPoolFactory$0(ResultPartitionFactory.java:399)
+	at org.apache.flink.runtime.io.network.partition.ResultPartition.setup(ResultPartition.java:158)
+	at org.apache.flink.runtime.taskmanager.Task.setupPartitionsAndGates(Task.java:981)
+	at org.apache.flink.runtime.taskmanager.Task.doRun(Task.java:669)
+	at org.apache.flink.runtime.taskmanager.Task.run(Task.java:575)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ WARN ] [2024-10-13 21:59:05,034] [KeyedProcess (12/20)#0] o.a.f.r.t.Task -KeyedProcess (12/20)#0 (06abae7ab972679ea2f93158c91ba454_a5f387f7dd2912f7be37b34caeefab16_11_0) switched from DEPLOYING to FAILED with failure cause:
+java.io.IOException: Insufficient number of network buffers: required 21, but only 6 available. The total number of network buffers is currently set to 2048 of 32768 bytes each. You can increase this number by setting the configuration keys 'taskmanager.memory.network.fraction', 'taskmanager.memory.network.min', and 'taskmanager.memory.network.max'.
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.internalCreateBufferPool(NetworkBufferPool.java:494)
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.createBufferPool(NetworkBufferPool.java:467)
+	at org.apache.flink.runtime.io.network.partition.ResultPartitionFactory.lambda$createBufferPoolFactory$0(ResultPartitionFactory.java:399)
+	at org.apache.flink.runtime.io.network.partition.ResultPartition.setup(ResultPartition.java:158)
+	at org.apache.flink.runtime.taskmanager.Task.setupPartitionsAndGates(Task.java:981)
+	at org.apache.flink.runtime.taskmanager.Task.doRun(Task.java:669)
+	at org.apache.flink.runtime.taskmanager.Task.run(Task.java:575)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ WARN ] [2024-10-13 21:59:05,035] [KeyedProcess (13/20)#0] o.a.f.r.t.Task -KeyedProcess (13/20)#0 (06abae7ab972679ea2f93158c91ba454_a5f387f7dd2912f7be37b34caeefab16_12_0) switched from DEPLOYING to FAILED with failure cause:
+java.io.IOException: Insufficient number of network buffers: required 21, but only 6 available. The total number of network buffers is currently set to 2048 of 32768 bytes each. You can increase this number by setting the configuration keys 'taskmanager.memory.network.fraction', 'taskmanager.memory.network.min', and 'taskmanager.memory.network.max'.
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.internalCreateBufferPool(NetworkBufferPool.java:494)
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.createBufferPool(NetworkBufferPool.java:467)
+	at org.apache.flink.runtime.io.network.partition.ResultPartitionFactory.lambda$createBufferPoolFactory$0(ResultPartitionFactory.java:399)
+	at org.apache.flink.runtime.io.network.partition.ResultPartition.setup(ResultPartition.java:158)
+	at org.apache.flink.runtime.taskmanager.Task.setupPartitionsAndGates(Task.java:981)
+	at org.apache.flink.runtime.taskmanager.Task.doRun(Task.java:669)
+	at org.apache.flink.runtime.taskmanager.Task.run(Task.java:575)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ WARN ] [2024-10-13 21:59:05,040] [KeyedProcess (16/20)#0] o.a.f.r.t.Task -KeyedProcess (16/20)#0 (06abae7ab972679ea2f93158c91ba454_a5f387f7dd2912f7be37b34caeefab16_15_0) switched from DEPLOYING to FAILED with failure cause:
+java.io.IOException: Insufficient number of network buffers: required 21, but only 6 available. The total number of network buffers is currently set to 2048 of 32768 bytes each. You can increase this number by setting the configuration keys 'taskmanager.memory.network.fraction', 'taskmanager.memory.network.min', and 'taskmanager.memory.network.max'.
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.internalCreateBufferPool(NetworkBufferPool.java:494)
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.createBufferPool(NetworkBufferPool.java:467)
+	at org.apache.flink.runtime.io.network.partition.ResultPartitionFactory.lambda$createBufferPoolFactory$0(ResultPartitionFactory.java:399)
+	at org.apache.flink.runtime.io.network.partition.ResultPartition.setup(ResultPartition.java:158)
+	at org.apache.flink.runtime.taskmanager.Task.setupPartitionsAndGates(Task.java:981)
+	at org.apache.flink.runtime.taskmanager.Task.doRun(Task.java:669)
+	at org.apache.flink.runtime.taskmanager.Task.run(Task.java:575)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ WARN ] [2024-10-13 21:59:05,042] [KeyedProcess (17/20)#0] o.a.f.r.t.Task -KeyedProcess (17/20)#0 (06abae7ab972679ea2f93158c91ba454_a5f387f7dd2912f7be37b34caeefab16_16_0) switched from DEPLOYING to FAILED with failure cause:
+java.io.IOException: Insufficient number of network buffers: required 21, but only 6 available. The total number of network buffers is currently set to 2048 of 32768 bytes each. You can increase this number by setting the configuration keys 'taskmanager.memory.network.fraction', 'taskmanager.memory.network.min', and 'taskmanager.memory.network.max'.
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.internalCreateBufferPool(NetworkBufferPool.java:494)
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.createBufferPool(NetworkBufferPool.java:467)
+	at org.apache.flink.runtime.io.network.partition.ResultPartitionFactory.lambda$createBufferPoolFactory$0(ResultPartitionFactory.java:399)
+	at org.apache.flink.runtime.io.network.partition.ResultPartition.setup(ResultPartition.java:158)
+	at org.apache.flink.runtime.taskmanager.Task.setupPartitionsAndGates(Task.java:981)
+	at org.apache.flink.runtime.taskmanager.Task.doRun(Task.java:669)
+	at org.apache.flink.runtime.taskmanager.Task.run(Task.java:575)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ WARN ] [2024-10-13 21:59:05,048] [KeyedProcess (18/20)#0] o.a.f.r.t.Task -KeyedProcess (18/20)#0 (06abae7ab972679ea2f93158c91ba454_a5f387f7dd2912f7be37b34caeefab16_17_0) switched from DEPLOYING to FAILED with failure cause:
+java.io.IOException: Insufficient number of network buffers: required 21, but only 6 available. The total number of network buffers is currently set to 2048 of 32768 bytes each. You can increase this number by setting the configuration keys 'taskmanager.memory.network.fraction', 'taskmanager.memory.network.min', and 'taskmanager.memory.network.max'.
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.internalCreateBufferPool(NetworkBufferPool.java:494)
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.createBufferPool(NetworkBufferPool.java:467)
+	at org.apache.flink.runtime.io.network.partition.ResultPartitionFactory.lambda$createBufferPoolFactory$0(ResultPartitionFactory.java:399)
+	at org.apache.flink.runtime.io.network.partition.ResultPartition.setup(ResultPartition.java:158)
+	at org.apache.flink.runtime.taskmanager.Task.setupPartitionsAndGates(Task.java:981)
+	at org.apache.flink.runtime.taskmanager.Task.doRun(Task.java:669)
+	at org.apache.flink.runtime.taskmanager.Task.run(Task.java:575)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ WARN ] [2024-10-13 21:59:05,050] [KeyedProcess (19/20)#0] o.a.f.r.t.Task -KeyedProcess (19/20)#0 (06abae7ab972679ea2f93158c91ba454_a5f387f7dd2912f7be37b34caeefab16_18_0) switched from DEPLOYING to FAILED with failure cause:
+java.io.IOException: Insufficient number of network buffers: required 21, but only 6 available. The total number of network buffers is currently set to 2048 of 32768 bytes each. You can increase this number by setting the configuration keys 'taskmanager.memory.network.fraction', 'taskmanager.memory.network.min', and 'taskmanager.memory.network.max'.
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.internalCreateBufferPool(NetworkBufferPool.java:494)
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.createBufferPool(NetworkBufferPool.java:467)
+	at org.apache.flink.runtime.io.network.partition.ResultPartitionFactory.lambda$createBufferPoolFactory$0(ResultPartitionFactory.java:399)
+	at org.apache.flink.runtime.io.network.partition.ResultPartition.setup(ResultPartition.java:158)
+	at org.apache.flink.runtime.taskmanager.Task.setupPartitionsAndGates(Task.java:981)
+	at org.apache.flink.runtime.taskmanager.Task.doRun(Task.java:669)
+	at org.apache.flink.runtime.taskmanager.Task.run(Task.java:575)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ WARN ] [2024-10-13 21:59:05,052] [KeyedProcess (20/20)#0] o.a.f.r.t.Task -KeyedProcess (20/20)#0 (06abae7ab972679ea2f93158c91ba454_a5f387f7dd2912f7be37b34caeefab16_19_0) switched from DEPLOYING to FAILED with failure cause:
+java.io.IOException: Insufficient number of network buffers: required 21, but only 6 available. The total number of network buffers is currently set to 2048 of 32768 bytes each. You can increase this number by setting the configuration keys 'taskmanager.memory.network.fraction', 'taskmanager.memory.network.min', and 'taskmanager.memory.network.max'.
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.internalCreateBufferPool(NetworkBufferPool.java:494)
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.createBufferPool(NetworkBufferPool.java:467)
+	at org.apache.flink.runtime.io.network.partition.ResultPartitionFactory.lambda$createBufferPoolFactory$0(ResultPartitionFactory.java:399)
+	at org.apache.flink.runtime.io.network.partition.ResultPartition.setup(ResultPartition.java:158)
+	at org.apache.flink.runtime.taskmanager.Task.setupPartitionsAndGates(Task.java:981)
+	at org.apache.flink.runtime.taskmanager.Task.doRun(Task.java:669)
+	at org.apache.flink.runtime.taskmanager.Task.run(Task.java:575)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ WARN ] [2024-10-13 21:59:05,077] [KeyedProcess -> Sink: Print to Std. Out (7/20)#0] o.a.f.r.t.Task -KeyedProcess -> Sink: Print to Std. Out (7/20)#0 (06abae7ab972679ea2f93158c91ba454_33964bca3cbd702c3e1ba5c78fec57cb_6_0) switched from DEPLOYING to FAILED with failure cause:
+java.io.IOException: Insufficient number of network buffers: required 1, but only 0 available. The total number of network buffers is currently set to 2048 of 32768 bytes each. You can increase this number by setting the configuration keys 'taskmanager.memory.network.fraction', 'taskmanager.memory.network.min', and 'taskmanager.memory.network.max'.
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.internalCreateBufferPool(NetworkBufferPool.java:494)
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.createBufferPool(NetworkBufferPool.java:455)
+	at org.apache.flink.runtime.io.network.partition.consumer.SingleInputGateFactory.lambda$createBufferPoolFactory$3(SingleInputGateFactory.java:452)
+	at org.apache.flink.runtime.io.network.partition.consumer.SingleInputGate.setup(SingleInputGate.java:310)
+	at org.apache.flink.runtime.taskmanager.InputGateWithMetrics.setup(InputGateWithMetrics.java:105)
+	at org.apache.flink.runtime.taskmanager.Task.setupPartitionsAndGates(Task.java:987)
+	at org.apache.flink.runtime.taskmanager.Task.doRun(Task.java:669)
+	at org.apache.flink.runtime.taskmanager.Task.run(Task.java:575)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ WARN ] [2024-10-13 21:59:05,078] [KeyedProcess -> Sink: Print to Std. Out (9/20)#0] o.a.f.r.t.Task -KeyedProcess -> Sink: Print to Std. Out (9/20)#0 (06abae7ab972679ea2f93158c91ba454_33964bca3cbd702c3e1ba5c78fec57cb_8_0) switched from DEPLOYING to FAILED with failure cause:
+java.io.IOException: Insufficient number of network buffers: required 1, but only 0 available. The total number of network buffers is currently set to 2048 of 32768 bytes each. You can increase this number by setting the configuration keys 'taskmanager.memory.network.fraction', 'taskmanager.memory.network.min', and 'taskmanager.memory.network.max'.
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.internalCreateBufferPool(NetworkBufferPool.java:494)
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.createBufferPool(NetworkBufferPool.java:455)
+	at org.apache.flink.runtime.io.network.partition.consumer.SingleInputGateFactory.lambda$createBufferPoolFactory$3(SingleInputGateFactory.java:452)
+	at org.apache.flink.runtime.io.network.partition.consumer.SingleInputGate.setup(SingleInputGate.java:310)
+	at org.apache.flink.runtime.taskmanager.InputGateWithMetrics.setup(InputGateWithMetrics.java:105)
+	at org.apache.flink.runtime.taskmanager.Task.setupPartitionsAndGates(Task.java:987)
+	at org.apache.flink.runtime.taskmanager.Task.doRun(Task.java:669)
+	at org.apache.flink.runtime.taskmanager.Task.run(Task.java:575)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ WARN ] [2024-10-13 21:59:05,080] [KeyedProcess -> Sink: Print to Std. Out (8/20)#0] o.a.f.r.t.Task -KeyedProcess -> Sink: Print to Std. Out (8/20)#0 (06abae7ab972679ea2f93158c91ba454_33964bca3cbd702c3e1ba5c78fec57cb_7_0) switched from DEPLOYING to FAILED with failure cause:
+java.io.IOException: Insufficient number of network buffers: required 1, but only 0 available. The total number of network buffers is currently set to 2048 of 32768 bytes each. You can increase this number by setting the configuration keys 'taskmanager.memory.network.fraction', 'taskmanager.memory.network.min', and 'taskmanager.memory.network.max'.
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.internalCreateBufferPool(NetworkBufferPool.java:494)
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.createBufferPool(NetworkBufferPool.java:455)
+	at org.apache.flink.runtime.io.network.partition.consumer.SingleInputGateFactory.lambda$createBufferPoolFactory$3(SingleInputGateFactory.java:452)
+	at org.apache.flink.runtime.io.network.partition.consumer.SingleInputGate.setup(SingleInputGate.java:310)
+	at org.apache.flink.runtime.taskmanager.InputGateWithMetrics.setup(InputGateWithMetrics.java:105)
+	at org.apache.flink.runtime.taskmanager.Task.setupPartitionsAndGates(Task.java:987)
+	at org.apache.flink.runtime.taskmanager.Task.doRun(Task.java:669)
+	at org.apache.flink.runtime.taskmanager.Task.run(Task.java:575)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ WARN ] [2024-10-13 21:59:05,082] [KeyedProcess -> Sink: Print to Std. Out (10/20)#0] o.a.f.r.t.Task -KeyedProcess -> Sink: Print to Std. Out (10/20)#0 (06abae7ab972679ea2f93158c91ba454_33964bca3cbd702c3e1ba5c78fec57cb_9_0) switched from DEPLOYING to FAILED with failure cause:
+java.io.IOException: Insufficient number of network buffers: required 1, but only 0 available. The total number of network buffers is currently set to 2048 of 32768 bytes each. You can increase this number by setting the configuration keys 'taskmanager.memory.network.fraction', 'taskmanager.memory.network.min', and 'taskmanager.memory.network.max'.
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.internalCreateBufferPool(NetworkBufferPool.java:494)
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.createBufferPool(NetworkBufferPool.java:455)
+	at org.apache.flink.runtime.io.network.partition.consumer.SingleInputGateFactory.lambda$createBufferPoolFactory$3(SingleInputGateFactory.java:452)
+	at org.apache.flink.runtime.io.network.partition.consumer.SingleInputGate.setup(SingleInputGate.java:310)
+	at org.apache.flink.runtime.taskmanager.InputGateWithMetrics.setup(InputGateWithMetrics.java:105)
+	at org.apache.flink.runtime.taskmanager.Task.setupPartitionsAndGates(Task.java:987)
+	at org.apache.flink.runtime.taskmanager.Task.doRun(Task.java:669)
+	at org.apache.flink.runtime.taskmanager.Task.run(Task.java:575)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ WARN ] [2024-10-13 21:59:05,083] [KeyedProcess -> Sink: Print to Std. Out (12/20)#0] o.a.f.r.t.Task -KeyedProcess -> Sink: Print to Std. Out (12/20)#0 (06abae7ab972679ea2f93158c91ba454_33964bca3cbd702c3e1ba5c78fec57cb_11_0) switched from DEPLOYING to FAILED with failure cause:
+java.io.IOException: Insufficient number of network buffers: required 1, but only 0 available. The total number of network buffers is currently set to 2048 of 32768 bytes each. You can increase this number by setting the configuration keys 'taskmanager.memory.network.fraction', 'taskmanager.memory.network.min', and 'taskmanager.memory.network.max'.
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.internalCreateBufferPool(NetworkBufferPool.java:494)
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.createBufferPool(NetworkBufferPool.java:455)
+	at org.apache.flink.runtime.io.network.partition.consumer.SingleInputGateFactory.lambda$createBufferPoolFactory$3(SingleInputGateFactory.java:452)
+	at org.apache.flink.runtime.io.network.partition.consumer.SingleInputGate.setup(SingleInputGate.java:310)
+	at org.apache.flink.runtime.taskmanager.InputGateWithMetrics.setup(InputGateWithMetrics.java:105)
+	at org.apache.flink.runtime.taskmanager.Task.setupPartitionsAndGates(Task.java:987)
+	at org.apache.flink.runtime.taskmanager.Task.doRun(Task.java:669)
+	at org.apache.flink.runtime.taskmanager.Task.run(Task.java:575)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ WARN ] [2024-10-13 21:59:05,084] [KeyedProcess -> Sink: Print to Std. Out (11/20)#0] o.a.f.r.t.Task -KeyedProcess -> Sink: Print to Std. Out (11/20)#0 (06abae7ab972679ea2f93158c91ba454_33964bca3cbd702c3e1ba5c78fec57cb_10_0) switched from DEPLOYING to FAILED with failure cause:
+java.io.IOException: Insufficient number of network buffers: required 1, but only 0 available. The total number of network buffers is currently set to 2048 of 32768 bytes each. You can increase this number by setting the configuration keys 'taskmanager.memory.network.fraction', 'taskmanager.memory.network.min', and 'taskmanager.memory.network.max'.
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.internalCreateBufferPool(NetworkBufferPool.java:494)
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.createBufferPool(NetworkBufferPool.java:455)
+	at org.apache.flink.runtime.io.network.partition.consumer.SingleInputGateFactory.lambda$createBufferPoolFactory$3(SingleInputGateFactory.java:452)
+	at org.apache.flink.runtime.io.network.partition.consumer.SingleInputGate.setup(SingleInputGate.java:310)
+	at org.apache.flink.runtime.taskmanager.InputGateWithMetrics.setup(InputGateWithMetrics.java:105)
+	at org.apache.flink.runtime.taskmanager.Task.setupPartitionsAndGates(Task.java:987)
+	at org.apache.flink.runtime.taskmanager.Task.doRun(Task.java:669)
+	at org.apache.flink.runtime.taskmanager.Task.run(Task.java:575)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ WARN ] [2024-10-13 21:59:05,086] [KeyedProcess -> Sink: Print to Std. Out (13/20)#0] o.a.f.r.t.Task -KeyedProcess -> Sink: Print to Std. Out (13/20)#0 (06abae7ab972679ea2f93158c91ba454_33964bca3cbd702c3e1ba5c78fec57cb_12_0) switched from DEPLOYING to FAILED with failure cause:
+java.io.IOException: Insufficient number of network buffers: required 1, but only 0 available. The total number of network buffers is currently set to 2048 of 32768 bytes each. You can increase this number by setting the configuration keys 'taskmanager.memory.network.fraction', 'taskmanager.memory.network.min', and 'taskmanager.memory.network.max'.
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.internalCreateBufferPool(NetworkBufferPool.java:494)
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.createBufferPool(NetworkBufferPool.java:455)
+	at org.apache.flink.runtime.io.network.partition.consumer.SingleInputGateFactory.lambda$createBufferPoolFactory$3(SingleInputGateFactory.java:452)
+	at org.apache.flink.runtime.io.network.partition.consumer.SingleInputGate.setup(SingleInputGate.java:310)
+	at org.apache.flink.runtime.taskmanager.InputGateWithMetrics.setup(InputGateWithMetrics.java:105)
+	at org.apache.flink.runtime.taskmanager.Task.setupPartitionsAndGates(Task.java:987)
+	at org.apache.flink.runtime.taskmanager.Task.doRun(Task.java:669)
+	at org.apache.flink.runtime.taskmanager.Task.run(Task.java:575)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ WARN ] [2024-10-13 21:59:05,087] [KeyedProcess -> Sink: Print to Std. Out (14/20)#0] o.a.f.r.t.Task -KeyedProcess -> Sink: Print to Std. Out (14/20)#0 (06abae7ab972679ea2f93158c91ba454_33964bca3cbd702c3e1ba5c78fec57cb_13_0) switched from DEPLOYING to FAILED with failure cause:
+java.io.IOException: Insufficient number of network buffers: required 1, but only 0 available. The total number of network buffers is currently set to 2048 of 32768 bytes each. You can increase this number by setting the configuration keys 'taskmanager.memory.network.fraction', 'taskmanager.memory.network.min', and 'taskmanager.memory.network.max'.
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.internalCreateBufferPool(NetworkBufferPool.java:494)
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.createBufferPool(NetworkBufferPool.java:455)
+	at org.apache.flink.runtime.io.network.partition.consumer.SingleInputGateFactory.lambda$createBufferPoolFactory$3(SingleInputGateFactory.java:452)
+	at org.apache.flink.runtime.io.network.partition.consumer.SingleInputGate.setup(SingleInputGate.java:310)
+	at org.apache.flink.runtime.taskmanager.InputGateWithMetrics.setup(InputGateWithMetrics.java:105)
+	at org.apache.flink.runtime.taskmanager.Task.setupPartitionsAndGates(Task.java:987)
+	at org.apache.flink.runtime.taskmanager.Task.doRun(Task.java:669)
+	at org.apache.flink.runtime.taskmanager.Task.run(Task.java:575)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ WARN ] [2024-10-13 21:59:05,088] [KeyedProcess -> Sink: Print to Std. Out (15/20)#0] o.a.f.r.t.Task -KeyedProcess -> Sink: Print to Std. Out (15/20)#0 (06abae7ab972679ea2f93158c91ba454_33964bca3cbd702c3e1ba5c78fec57cb_14_0) switched from DEPLOYING to FAILED with failure cause:
+java.io.IOException: Insufficient number of network buffers: required 1, but only 0 available. The total number of network buffers is currently set to 2048 of 32768 bytes each. You can increase this number by setting the configuration keys 'taskmanager.memory.network.fraction', 'taskmanager.memory.network.min', and 'taskmanager.memory.network.max'.
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.internalCreateBufferPool(NetworkBufferPool.java:494)
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.createBufferPool(NetworkBufferPool.java:455)
+	at org.apache.flink.runtime.io.network.partition.consumer.SingleInputGateFactory.lambda$createBufferPoolFactory$3(SingleInputGateFactory.java:452)
+	at org.apache.flink.runtime.io.network.partition.consumer.SingleInputGate.setup(SingleInputGate.java:310)
+	at org.apache.flink.runtime.taskmanager.InputGateWithMetrics.setup(InputGateWithMetrics.java:105)
+	at org.apache.flink.runtime.taskmanager.Task.setupPartitionsAndGates(Task.java:987)
+	at org.apache.flink.runtime.taskmanager.Task.doRun(Task.java:669)
+	at org.apache.flink.runtime.taskmanager.Task.run(Task.java:575)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ WARN ] [2024-10-13 21:59:05,090] [KeyedProcess -> Sink: Print to Std. Out (16/20)#0] o.a.f.r.t.Task -KeyedProcess -> Sink: Print to Std. Out (16/20)#0 (06abae7ab972679ea2f93158c91ba454_33964bca3cbd702c3e1ba5c78fec57cb_15_0) switched from DEPLOYING to FAILED with failure cause:
+java.io.IOException: Insufficient number of network buffers: required 1, but only 0 available. The total number of network buffers is currently set to 2048 of 32768 bytes each. You can increase this number by setting the configuration keys 'taskmanager.memory.network.fraction', 'taskmanager.memory.network.min', and 'taskmanager.memory.network.max'.
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.internalCreateBufferPool(NetworkBufferPool.java:494)
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.createBufferPool(NetworkBufferPool.java:455)
+	at org.apache.flink.runtime.io.network.partition.consumer.SingleInputGateFactory.lambda$createBufferPoolFactory$3(SingleInputGateFactory.java:452)
+	at org.apache.flink.runtime.io.network.partition.consumer.SingleInputGate.setup(SingleInputGate.java:310)
+	at org.apache.flink.runtime.taskmanager.InputGateWithMetrics.setup(InputGateWithMetrics.java:105)
+	at org.apache.flink.runtime.taskmanager.Task.setupPartitionsAndGates(Task.java:987)
+	at org.apache.flink.runtime.taskmanager.Task.doRun(Task.java:669)
+	at org.apache.flink.runtime.taskmanager.Task.run(Task.java:575)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ WARN ] [2024-10-13 21:59:05,092] [KeyedProcess -> Sink: Print to Std. Out (17/20)#0] o.a.f.r.t.Task -KeyedProcess -> Sink: Print to Std. Out (17/20)#0 (06abae7ab972679ea2f93158c91ba454_33964bca3cbd702c3e1ba5c78fec57cb_16_0) switched from DEPLOYING to FAILED with failure cause:
+java.io.IOException: Insufficient number of network buffers: required 1, but only 0 available. The total number of network buffers is currently set to 2048 of 32768 bytes each. You can increase this number by setting the configuration keys 'taskmanager.memory.network.fraction', 'taskmanager.memory.network.min', and 'taskmanager.memory.network.max'.
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.internalCreateBufferPool(NetworkBufferPool.java:494)
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.createBufferPool(NetworkBufferPool.java:455)
+	at org.apache.flink.runtime.io.network.partition.consumer.SingleInputGateFactory.lambda$createBufferPoolFactory$3(SingleInputGateFactory.java:452)
+	at org.apache.flink.runtime.io.network.partition.consumer.SingleInputGate.setup(SingleInputGate.java:310)
+	at org.apache.flink.runtime.taskmanager.InputGateWithMetrics.setup(InputGateWithMetrics.java:105)
+	at org.apache.flink.runtime.taskmanager.Task.setupPartitionsAndGates(Task.java:987)
+	at org.apache.flink.runtime.taskmanager.Task.doRun(Task.java:669)
+	at org.apache.flink.runtime.taskmanager.Task.run(Task.java:575)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ WARN ] [2024-10-13 21:59:05,094] [KeyedProcess -> Sink: Print to Std. Out (18/20)#0] o.a.f.r.t.Task -KeyedProcess -> Sink: Print to Std. Out (18/20)#0 (06abae7ab972679ea2f93158c91ba454_33964bca3cbd702c3e1ba5c78fec57cb_17_0) switched from DEPLOYING to FAILED with failure cause:
+java.io.IOException: Insufficient number of network buffers: required 1, but only 0 available. The total number of network buffers is currently set to 2048 of 32768 bytes each. You can increase this number by setting the configuration keys 'taskmanager.memory.network.fraction', 'taskmanager.memory.network.min', and 'taskmanager.memory.network.max'.
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.internalCreateBufferPool(NetworkBufferPool.java:494)
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.createBufferPool(NetworkBufferPool.java:455)
+	at org.apache.flink.runtime.io.network.partition.consumer.SingleInputGateFactory.lambda$createBufferPoolFactory$3(SingleInputGateFactory.java:452)
+	at org.apache.flink.runtime.io.network.partition.consumer.SingleInputGate.setup(SingleInputGate.java:310)
+	at org.apache.flink.runtime.taskmanager.InputGateWithMetrics.setup(InputGateWithMetrics.java:105)
+	at org.apache.flink.runtime.taskmanager.Task.setupPartitionsAndGates(Task.java:987)
+	at org.apache.flink.runtime.taskmanager.Task.doRun(Task.java:669)
+	at org.apache.flink.runtime.taskmanager.Task.run(Task.java:575)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ WARN ] [2024-10-13 21:59:05,095] [KeyedProcess -> Sink: Print to Std. Out (19/20)#0] o.a.f.r.t.Task -KeyedProcess -> Sink: Print to Std. Out (19/20)#0 (06abae7ab972679ea2f93158c91ba454_33964bca3cbd702c3e1ba5c78fec57cb_18_0) switched from DEPLOYING to FAILED with failure cause:
+java.io.IOException: Insufficient number of network buffers: required 1, but only 0 available. The total number of network buffers is currently set to 2048 of 32768 bytes each. You can increase this number by setting the configuration keys 'taskmanager.memory.network.fraction', 'taskmanager.memory.network.min', and 'taskmanager.memory.network.max'.
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.internalCreateBufferPool(NetworkBufferPool.java:494)
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.createBufferPool(NetworkBufferPool.java:455)
+	at org.apache.flink.runtime.io.network.partition.consumer.SingleInputGateFactory.lambda$createBufferPoolFactory$3(SingleInputGateFactory.java:452)
+	at org.apache.flink.runtime.io.network.partition.consumer.SingleInputGate.setup(SingleInputGate.java:310)
+	at org.apache.flink.runtime.taskmanager.InputGateWithMetrics.setup(InputGateWithMetrics.java:105)
+	at org.apache.flink.runtime.taskmanager.Task.setupPartitionsAndGates(Task.java:987)
+	at org.apache.flink.runtime.taskmanager.Task.doRun(Task.java:669)
+	at org.apache.flink.runtime.taskmanager.Task.run(Task.java:575)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ WARN ] [2024-10-13 21:59:05,097] [KeyedProcess -> Sink: Print to Std. Out (20/20)#0] o.a.f.r.t.Task -KeyedProcess -> Sink: Print to Std. Out (20/20)#0 (06abae7ab972679ea2f93158c91ba454_33964bca3cbd702c3e1ba5c78fec57cb_19_0) switched from DEPLOYING to FAILED with failure cause:
+java.io.IOException: Insufficient number of network buffers: required 1, but only 0 available. The total number of network buffers is currently set to 2048 of 32768 bytes each. You can increase this number by setting the configuration keys 'taskmanager.memory.network.fraction', 'taskmanager.memory.network.min', and 'taskmanager.memory.network.max'.
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.internalCreateBufferPool(NetworkBufferPool.java:494)
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.createBufferPool(NetworkBufferPool.java:455)
+	at org.apache.flink.runtime.io.network.partition.consumer.SingleInputGateFactory.lambda$createBufferPoolFactory$3(SingleInputGateFactory.java:452)
+	at org.apache.flink.runtime.io.network.partition.consumer.SingleInputGate.setup(SingleInputGate.java:310)
+	at org.apache.flink.runtime.taskmanager.InputGateWithMetrics.setup(InputGateWithMetrics.java:105)
+	at org.apache.flink.runtime.taskmanager.Task.setupPartitionsAndGates(Task.java:987)
+	at org.apache.flink.runtime.taskmanager.Task.doRun(Task.java:669)
+	at org.apache.flink.runtime.taskmanager.Task.run(Task.java:575)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ WARN ] [2024-10-13 21:59:05,310] [flink-pekko.actor.default-dispatcher-6] o.a.f.r.t.TaskManagerLocation -No hostname could be resolved for the IP address 127.0.0.1, using IP address as host name. Local input split assignment (such as for HDFS files) may be impacted.
+[ WARN ] [2024-10-13 21:59:45,227] [main] i.n.b.Bootstrap -Unknown channel option 'SO_BROADCAST' for channel '[id: 0x8c9ca9e8]'
+[ WARN ] [2024-10-13 21:59:46,335] [main] i.n.b.Bootstrap -Unknown channel option 'SO_BROADCAST' for channel '[id: 0x7f3fb22f]'
+[ WARN ] [2024-10-13 21:59:48,587] [Thread-2] o.a.f.r.s.t.DefaultDelegationTokenManager -No tokens obtained so skipping notifications
+[ WARN ] [2024-10-13 21:59:48,882] [Thread-2] o.a.f.r.w.WebMonitorUtils -Log file environment variable 'log.file' is not set.
+[ WARN ] [2024-10-13 21:59:48,882] [Thread-2] o.a.f.r.w.WebMonitorUtils -JobManager log files are unavailable in the web dashboard. Log file location not found in environment variable 'log.file' or configuration key 'web.log.path'.
+[ WARN ] [2024-10-13 21:59:49,010] [flink-pekko.actor.default-dispatcher-4] o.a.f.r.s.t.DefaultDelegationTokenManager -No tokens obtained so skipping notifications
+[ WARN ] [2024-10-13 21:59:49,010] [flink-pekko.actor.default-dispatcher-4] o.a.f.r.s.t.DefaultDelegationTokenManager -Tokens update task not started because either no tokens obtained or none of the tokens specified its renewal date
+[ WARN ] [2024-10-13 21:59:49,554] [KeyedProcess (12/20)#0] o.a.f.r.t.Task -KeyedProcess (12/20)#0 (7ac35bfa196a96d3538ff1dcb8c19373_a5f387f7dd2912f7be37b34caeefab16_11_0) switched from DEPLOYING to FAILED with failure cause:
+java.io.IOException: Insufficient number of network buffers: required 21, but only 6 available. The total number of network buffers is currently set to 2048 of 32768 bytes each. You can increase this number by setting the configuration keys 'taskmanager.memory.network.fraction', 'taskmanager.memory.network.min', and 'taskmanager.memory.network.max'.
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.internalCreateBufferPool(NetworkBufferPool.java:494)
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.createBufferPool(NetworkBufferPool.java:467)
+	at org.apache.flink.runtime.io.network.partition.ResultPartitionFactory.lambda$createBufferPoolFactory$0(ResultPartitionFactory.java:399)
+	at org.apache.flink.runtime.io.network.partition.ResultPartition.setup(ResultPartition.java:158)
+	at org.apache.flink.runtime.taskmanager.Task.setupPartitionsAndGates(Task.java:981)
+	at org.apache.flink.runtime.taskmanager.Task.doRun(Task.java:669)
+	at org.apache.flink.runtime.taskmanager.Task.run(Task.java:575)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ WARN ] [2024-10-13 21:59:49,555] [KeyedProcess (14/20)#0] o.a.f.r.t.Task -KeyedProcess (14/20)#0 (7ac35bfa196a96d3538ff1dcb8c19373_a5f387f7dd2912f7be37b34caeefab16_13_0) switched from DEPLOYING to FAILED with failure cause:
+java.io.IOException: Insufficient number of network buffers: required 21, but only 6 available. The total number of network buffers is currently set to 2048 of 32768 bytes each. You can increase this number by setting the configuration keys 'taskmanager.memory.network.fraction', 'taskmanager.memory.network.min', and 'taskmanager.memory.network.max'.
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.internalCreateBufferPool(NetworkBufferPool.java:494)
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.createBufferPool(NetworkBufferPool.java:467)
+	at org.apache.flink.runtime.io.network.partition.ResultPartitionFactory.lambda$createBufferPoolFactory$0(ResultPartitionFactory.java:399)
+	at org.apache.flink.runtime.io.network.partition.ResultPartition.setup(ResultPartition.java:158)
+	at org.apache.flink.runtime.taskmanager.Task.setupPartitionsAndGates(Task.java:981)
+	at org.apache.flink.runtime.taskmanager.Task.doRun(Task.java:669)
+	at org.apache.flink.runtime.taskmanager.Task.run(Task.java:575)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ WARN ] [2024-10-13 21:59:49,557] [KeyedProcess (15/20)#0] o.a.f.r.t.Task -KeyedProcess (15/20)#0 (7ac35bfa196a96d3538ff1dcb8c19373_a5f387f7dd2912f7be37b34caeefab16_14_0) switched from DEPLOYING to FAILED with failure cause:
+java.io.IOException: Insufficient number of network buffers: required 21, but only 6 available. The total number of network buffers is currently set to 2048 of 32768 bytes each. You can increase this number by setting the configuration keys 'taskmanager.memory.network.fraction', 'taskmanager.memory.network.min', and 'taskmanager.memory.network.max'.
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.internalCreateBufferPool(NetworkBufferPool.java:494)
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.createBufferPool(NetworkBufferPool.java:467)
+	at org.apache.flink.runtime.io.network.partition.ResultPartitionFactory.lambda$createBufferPoolFactory$0(ResultPartitionFactory.java:399)
+	at org.apache.flink.runtime.io.network.partition.ResultPartition.setup(ResultPartition.java:158)
+	at org.apache.flink.runtime.taskmanager.Task.setupPartitionsAndGates(Task.java:981)
+	at org.apache.flink.runtime.taskmanager.Task.doRun(Task.java:669)
+	at org.apache.flink.runtime.taskmanager.Task.run(Task.java:575)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ WARN ] [2024-10-13 21:59:49,554] [KeyedProcess (11/20)#0] o.a.f.r.t.Task -KeyedProcess (11/20)#0 (7ac35bfa196a96d3538ff1dcb8c19373_a5f387f7dd2912f7be37b34caeefab16_10_0) switched from DEPLOYING to FAILED with failure cause:
+java.io.IOException: Insufficient number of network buffers: required 21, but only 6 available. The total number of network buffers is currently set to 2048 of 32768 bytes each. You can increase this number by setting the configuration keys 'taskmanager.memory.network.fraction', 'taskmanager.memory.network.min', and 'taskmanager.memory.network.max'.
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.internalCreateBufferPool(NetworkBufferPool.java:494)
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.createBufferPool(NetworkBufferPool.java:467)
+	at org.apache.flink.runtime.io.network.partition.ResultPartitionFactory.lambda$createBufferPoolFactory$0(ResultPartitionFactory.java:399)
+	at org.apache.flink.runtime.io.network.partition.ResultPartition.setup(ResultPartition.java:158)
+	at org.apache.flink.runtime.taskmanager.Task.setupPartitionsAndGates(Task.java:981)
+	at org.apache.flink.runtime.taskmanager.Task.doRun(Task.java:669)
+	at org.apache.flink.runtime.taskmanager.Task.run(Task.java:575)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ WARN ] [2024-10-13 21:59:49,554] [KeyedProcess (13/20)#0] o.a.f.r.t.Task -KeyedProcess (13/20)#0 (7ac35bfa196a96d3538ff1dcb8c19373_a5f387f7dd2912f7be37b34caeefab16_12_0) switched from DEPLOYING to FAILED with failure cause:
+java.io.IOException: Insufficient number of network buffers: required 21, but only 6 available. The total number of network buffers is currently set to 2048 of 32768 bytes each. You can increase this number by setting the configuration keys 'taskmanager.memory.network.fraction', 'taskmanager.memory.network.min', and 'taskmanager.memory.network.max'.
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.internalCreateBufferPool(NetworkBufferPool.java:494)
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.createBufferPool(NetworkBufferPool.java:467)
+	at org.apache.flink.runtime.io.network.partition.ResultPartitionFactory.lambda$createBufferPoolFactory$0(ResultPartitionFactory.java:399)
+	at org.apache.flink.runtime.io.network.partition.ResultPartition.setup(ResultPartition.java:158)
+	at org.apache.flink.runtime.taskmanager.Task.setupPartitionsAndGates(Task.java:981)
+	at org.apache.flink.runtime.taskmanager.Task.doRun(Task.java:669)
+	at org.apache.flink.runtime.taskmanager.Task.run(Task.java:575)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ WARN ] [2024-10-13 21:59:49,559] [KeyedProcess (16/20)#0] o.a.f.r.t.Task -KeyedProcess (16/20)#0 (7ac35bfa196a96d3538ff1dcb8c19373_a5f387f7dd2912f7be37b34caeefab16_15_0) switched from DEPLOYING to FAILED with failure cause:
+java.io.IOException: Insufficient number of network buffers: required 21, but only 6 available. The total number of network buffers is currently set to 2048 of 32768 bytes each. You can increase this number by setting the configuration keys 'taskmanager.memory.network.fraction', 'taskmanager.memory.network.min', and 'taskmanager.memory.network.max'.
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.internalCreateBufferPool(NetworkBufferPool.java:494)
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.createBufferPool(NetworkBufferPool.java:467)
+	at org.apache.flink.runtime.io.network.partition.ResultPartitionFactory.lambda$createBufferPoolFactory$0(ResultPartitionFactory.java:399)
+	at org.apache.flink.runtime.io.network.partition.ResultPartition.setup(ResultPartition.java:158)
+	at org.apache.flink.runtime.taskmanager.Task.setupPartitionsAndGates(Task.java:981)
+	at org.apache.flink.runtime.taskmanager.Task.doRun(Task.java:669)
+	at org.apache.flink.runtime.taskmanager.Task.run(Task.java:575)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ WARN ] [2024-10-13 21:59:49,561] [KeyedProcess (17/20)#0] o.a.f.r.t.Task -KeyedProcess (17/20)#0 (7ac35bfa196a96d3538ff1dcb8c19373_a5f387f7dd2912f7be37b34caeefab16_16_0) switched from DEPLOYING to FAILED with failure cause:
+java.io.IOException: Insufficient number of network buffers: required 21, but only 6 available. The total number of network buffers is currently set to 2048 of 32768 bytes each. You can increase this number by setting the configuration keys 'taskmanager.memory.network.fraction', 'taskmanager.memory.network.min', and 'taskmanager.memory.network.max'.
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.internalCreateBufferPool(NetworkBufferPool.java:494)
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.createBufferPool(NetworkBufferPool.java:467)
+	at org.apache.flink.runtime.io.network.partition.ResultPartitionFactory.lambda$createBufferPoolFactory$0(ResultPartitionFactory.java:399)
+	at org.apache.flink.runtime.io.network.partition.ResultPartition.setup(ResultPartition.java:158)
+	at org.apache.flink.runtime.taskmanager.Task.setupPartitionsAndGates(Task.java:981)
+	at org.apache.flink.runtime.taskmanager.Task.doRun(Task.java:669)
+	at org.apache.flink.runtime.taskmanager.Task.run(Task.java:575)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ WARN ] [2024-10-13 21:59:49,562] [KeyedProcess (18/20)#0] o.a.f.r.t.Task -KeyedProcess (18/20)#0 (7ac35bfa196a96d3538ff1dcb8c19373_a5f387f7dd2912f7be37b34caeefab16_17_0) switched from DEPLOYING to FAILED with failure cause:
+java.io.IOException: Insufficient number of network buffers: required 21, but only 6 available. The total number of network buffers is currently set to 2048 of 32768 bytes each. You can increase this number by setting the configuration keys 'taskmanager.memory.network.fraction', 'taskmanager.memory.network.min', and 'taskmanager.memory.network.max'.
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.internalCreateBufferPool(NetworkBufferPool.java:494)
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.createBufferPool(NetworkBufferPool.java:467)
+	at org.apache.flink.runtime.io.network.partition.ResultPartitionFactory.lambda$createBufferPoolFactory$0(ResultPartitionFactory.java:399)
+	at org.apache.flink.runtime.io.network.partition.ResultPartition.setup(ResultPartition.java:158)
+	at org.apache.flink.runtime.taskmanager.Task.setupPartitionsAndGates(Task.java:981)
+	at org.apache.flink.runtime.taskmanager.Task.doRun(Task.java:669)
+	at org.apache.flink.runtime.taskmanager.Task.run(Task.java:575)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ WARN ] [2024-10-13 21:59:49,572] [KeyedProcess (19/20)#0] o.a.f.r.t.Task -KeyedProcess (19/20)#0 (7ac35bfa196a96d3538ff1dcb8c19373_a5f387f7dd2912f7be37b34caeefab16_18_0) switched from DEPLOYING to FAILED with failure cause:
+java.io.IOException: Insufficient number of network buffers: required 21, but only 6 available. The total number of network buffers is currently set to 2048 of 32768 bytes each. You can increase this number by setting the configuration keys 'taskmanager.memory.network.fraction', 'taskmanager.memory.network.min', and 'taskmanager.memory.network.max'.
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.internalCreateBufferPool(NetworkBufferPool.java:494)
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.createBufferPool(NetworkBufferPool.java:467)
+	at org.apache.flink.runtime.io.network.partition.ResultPartitionFactory.lambda$createBufferPoolFactory$0(ResultPartitionFactory.java:399)
+	at org.apache.flink.runtime.io.network.partition.ResultPartition.setup(ResultPartition.java:158)
+	at org.apache.flink.runtime.taskmanager.Task.setupPartitionsAndGates(Task.java:981)
+	at org.apache.flink.runtime.taskmanager.Task.doRun(Task.java:669)
+	at org.apache.flink.runtime.taskmanager.Task.run(Task.java:575)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ WARN ] [2024-10-13 21:59:49,574] [KeyedProcess (20/20)#0] o.a.f.r.t.Task -KeyedProcess (20/20)#0 (7ac35bfa196a96d3538ff1dcb8c19373_a5f387f7dd2912f7be37b34caeefab16_19_0) switched from DEPLOYING to FAILED with failure cause:
+java.io.IOException: Insufficient number of network buffers: required 21, but only 6 available. The total number of network buffers is currently set to 2048 of 32768 bytes each. You can increase this number by setting the configuration keys 'taskmanager.memory.network.fraction', 'taskmanager.memory.network.min', and 'taskmanager.memory.network.max'.
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.internalCreateBufferPool(NetworkBufferPool.java:494)
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.createBufferPool(NetworkBufferPool.java:467)
+	at org.apache.flink.runtime.io.network.partition.ResultPartitionFactory.lambda$createBufferPoolFactory$0(ResultPartitionFactory.java:399)
+	at org.apache.flink.runtime.io.network.partition.ResultPartition.setup(ResultPartition.java:158)
+	at org.apache.flink.runtime.taskmanager.Task.setupPartitionsAndGates(Task.java:981)
+	at org.apache.flink.runtime.taskmanager.Task.doRun(Task.java:669)
+	at org.apache.flink.runtime.taskmanager.Task.run(Task.java:575)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ WARN ] [2024-10-13 21:59:49,584] [KeyedProcess -> Sink: Print to Std. Out (7/20)#0] o.a.f.r.t.Task -KeyedProcess -> Sink: Print to Std. Out (7/20)#0 (7ac35bfa196a96d3538ff1dcb8c19373_33964bca3cbd702c3e1ba5c78fec57cb_6_0) switched from DEPLOYING to FAILED with failure cause:
+java.io.IOException: Insufficient number of network buffers: required 1, but only 0 available. The total number of network buffers is currently set to 2048 of 32768 bytes each. You can increase this number by setting the configuration keys 'taskmanager.memory.network.fraction', 'taskmanager.memory.network.min', and 'taskmanager.memory.network.max'.
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.internalCreateBufferPool(NetworkBufferPool.java:494)
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.createBufferPool(NetworkBufferPool.java:455)
+	at org.apache.flink.runtime.io.network.partition.consumer.SingleInputGateFactory.lambda$createBufferPoolFactory$3(SingleInputGateFactory.java:452)
+	at org.apache.flink.runtime.io.network.partition.consumer.SingleInputGate.setup(SingleInputGate.java:310)
+	at org.apache.flink.runtime.taskmanager.InputGateWithMetrics.setup(InputGateWithMetrics.java:105)
+	at org.apache.flink.runtime.taskmanager.Task.setupPartitionsAndGates(Task.java:987)
+	at org.apache.flink.runtime.taskmanager.Task.doRun(Task.java:669)
+	at org.apache.flink.runtime.taskmanager.Task.run(Task.java:575)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ WARN ] [2024-10-13 21:59:49,585] [KeyedProcess -> Sink: Print to Std. Out (8/20)#0] o.a.f.r.t.Task -KeyedProcess -> Sink: Print to Std. Out (8/20)#0 (7ac35bfa196a96d3538ff1dcb8c19373_33964bca3cbd702c3e1ba5c78fec57cb_7_0) switched from DEPLOYING to FAILED with failure cause:
+java.io.IOException: Insufficient number of network buffers: required 1, but only 0 available. The total number of network buffers is currently set to 2048 of 32768 bytes each. You can increase this number by setting the configuration keys 'taskmanager.memory.network.fraction', 'taskmanager.memory.network.min', and 'taskmanager.memory.network.max'.
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.internalCreateBufferPool(NetworkBufferPool.java:494)
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.createBufferPool(NetworkBufferPool.java:455)
+	at org.apache.flink.runtime.io.network.partition.consumer.SingleInputGateFactory.lambda$createBufferPoolFactory$3(SingleInputGateFactory.java:452)
+	at org.apache.flink.runtime.io.network.partition.consumer.SingleInputGate.setup(SingleInputGate.java:310)
+	at org.apache.flink.runtime.taskmanager.InputGateWithMetrics.setup(InputGateWithMetrics.java:105)
+	at org.apache.flink.runtime.taskmanager.Task.setupPartitionsAndGates(Task.java:987)
+	at org.apache.flink.runtime.taskmanager.Task.doRun(Task.java:669)
+	at org.apache.flink.runtime.taskmanager.Task.run(Task.java:575)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ WARN ] [2024-10-13 21:59:49,587] [KeyedProcess -> Sink: Print to Std. Out (9/20)#0] o.a.f.r.t.Task -KeyedProcess -> Sink: Print to Std. Out (9/20)#0 (7ac35bfa196a96d3538ff1dcb8c19373_33964bca3cbd702c3e1ba5c78fec57cb_8_0) switched from DEPLOYING to FAILED with failure cause:
+java.io.IOException: Insufficient number of network buffers: required 1, but only 0 available. The total number of network buffers is currently set to 2048 of 32768 bytes each. You can increase this number by setting the configuration keys 'taskmanager.memory.network.fraction', 'taskmanager.memory.network.min', and 'taskmanager.memory.network.max'.
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.internalCreateBufferPool(NetworkBufferPool.java:494)
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.createBufferPool(NetworkBufferPool.java:455)
+	at org.apache.flink.runtime.io.network.partition.consumer.SingleInputGateFactory.lambda$createBufferPoolFactory$3(SingleInputGateFactory.java:452)
+	at org.apache.flink.runtime.io.network.partition.consumer.SingleInputGate.setup(SingleInputGate.java:310)
+	at org.apache.flink.runtime.taskmanager.InputGateWithMetrics.setup(InputGateWithMetrics.java:105)
+	at org.apache.flink.runtime.taskmanager.Task.setupPartitionsAndGates(Task.java:987)
+	at org.apache.flink.runtime.taskmanager.Task.doRun(Task.java:669)
+	at org.apache.flink.runtime.taskmanager.Task.run(Task.java:575)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ WARN ] [2024-10-13 21:59:49,588] [KeyedProcess -> Sink: Print to Std. Out (10/20)#0] o.a.f.r.t.Task -KeyedProcess -> Sink: Print to Std. Out (10/20)#0 (7ac35bfa196a96d3538ff1dcb8c19373_33964bca3cbd702c3e1ba5c78fec57cb_9_0) switched from DEPLOYING to FAILED with failure cause:
+java.io.IOException: Insufficient number of network buffers: required 1, but only 0 available. The total number of network buffers is currently set to 2048 of 32768 bytes each. You can increase this number by setting the configuration keys 'taskmanager.memory.network.fraction', 'taskmanager.memory.network.min', and 'taskmanager.memory.network.max'.
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.internalCreateBufferPool(NetworkBufferPool.java:494)
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.createBufferPool(NetworkBufferPool.java:455)
+	at org.apache.flink.runtime.io.network.partition.consumer.SingleInputGateFactory.lambda$createBufferPoolFactory$3(SingleInputGateFactory.java:452)
+	at org.apache.flink.runtime.io.network.partition.consumer.SingleInputGate.setup(SingleInputGate.java:310)
+	at org.apache.flink.runtime.taskmanager.InputGateWithMetrics.setup(InputGateWithMetrics.java:105)
+	at org.apache.flink.runtime.taskmanager.Task.setupPartitionsAndGates(Task.java:987)
+	at org.apache.flink.runtime.taskmanager.Task.doRun(Task.java:669)
+	at org.apache.flink.runtime.taskmanager.Task.run(Task.java:575)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ WARN ] [2024-10-13 21:59:49,590] [KeyedProcess -> Sink: Print to Std. Out (11/20)#0] o.a.f.r.t.Task -KeyedProcess -> Sink: Print to Std. Out (11/20)#0 (7ac35bfa196a96d3538ff1dcb8c19373_33964bca3cbd702c3e1ba5c78fec57cb_10_0) switched from DEPLOYING to FAILED with failure cause:
+java.io.IOException: Insufficient number of network buffers: required 1, but only 0 available. The total number of network buffers is currently set to 2048 of 32768 bytes each. You can increase this number by setting the configuration keys 'taskmanager.memory.network.fraction', 'taskmanager.memory.network.min', and 'taskmanager.memory.network.max'.
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.internalCreateBufferPool(NetworkBufferPool.java:494)
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.createBufferPool(NetworkBufferPool.java:455)
+	at org.apache.flink.runtime.io.network.partition.consumer.SingleInputGateFactory.lambda$createBufferPoolFactory$3(SingleInputGateFactory.java:452)
+	at org.apache.flink.runtime.io.network.partition.consumer.SingleInputGate.setup(SingleInputGate.java:310)
+	at org.apache.flink.runtime.taskmanager.InputGateWithMetrics.setup(InputGateWithMetrics.java:105)
+	at org.apache.flink.runtime.taskmanager.Task.setupPartitionsAndGates(Task.java:987)
+	at org.apache.flink.runtime.taskmanager.Task.doRun(Task.java:669)
+	at org.apache.flink.runtime.taskmanager.Task.run(Task.java:575)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ WARN ] [2024-10-13 21:59:49,592] [KeyedProcess -> Sink: Print to Std. Out (12/20)#0] o.a.f.r.t.Task -KeyedProcess -> Sink: Print to Std. Out (12/20)#0 (7ac35bfa196a96d3538ff1dcb8c19373_33964bca3cbd702c3e1ba5c78fec57cb_11_0) switched from DEPLOYING to FAILED with failure cause:
+java.io.IOException: Insufficient number of network buffers: required 1, but only 0 available. The total number of network buffers is currently set to 2048 of 32768 bytes each. You can increase this number by setting the configuration keys 'taskmanager.memory.network.fraction', 'taskmanager.memory.network.min', and 'taskmanager.memory.network.max'.
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.internalCreateBufferPool(NetworkBufferPool.java:494)
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.createBufferPool(NetworkBufferPool.java:455)
+	at org.apache.flink.runtime.io.network.partition.consumer.SingleInputGateFactory.lambda$createBufferPoolFactory$3(SingleInputGateFactory.java:452)
+	at org.apache.flink.runtime.io.network.partition.consumer.SingleInputGate.setup(SingleInputGate.java:310)
+	at org.apache.flink.runtime.taskmanager.InputGateWithMetrics.setup(InputGateWithMetrics.java:105)
+	at org.apache.flink.runtime.taskmanager.Task.setupPartitionsAndGates(Task.java:987)
+	at org.apache.flink.runtime.taskmanager.Task.doRun(Task.java:669)
+	at org.apache.flink.runtime.taskmanager.Task.run(Task.java:575)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ WARN ] [2024-10-13 21:59:49,594] [KeyedProcess -> Sink: Print to Std. Out (13/20)#0] o.a.f.r.t.Task -KeyedProcess -> Sink: Print to Std. Out (13/20)#0 (7ac35bfa196a96d3538ff1dcb8c19373_33964bca3cbd702c3e1ba5c78fec57cb_12_0) switched from DEPLOYING to FAILED with failure cause:
+java.io.IOException: Insufficient number of network buffers: required 1, but only 0 available. The total number of network buffers is currently set to 2048 of 32768 bytes each. You can increase this number by setting the configuration keys 'taskmanager.memory.network.fraction', 'taskmanager.memory.network.min', and 'taskmanager.memory.network.max'.
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.internalCreateBufferPool(NetworkBufferPool.java:494)
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.createBufferPool(NetworkBufferPool.java:455)
+	at org.apache.flink.runtime.io.network.partition.consumer.SingleInputGateFactory.lambda$createBufferPoolFactory$3(SingleInputGateFactory.java:452)
+	at org.apache.flink.runtime.io.network.partition.consumer.SingleInputGate.setup(SingleInputGate.java:310)
+	at org.apache.flink.runtime.taskmanager.InputGateWithMetrics.setup(InputGateWithMetrics.java:105)
+	at org.apache.flink.runtime.taskmanager.Task.setupPartitionsAndGates(Task.java:987)
+	at org.apache.flink.runtime.taskmanager.Task.doRun(Task.java:669)
+	at org.apache.flink.runtime.taskmanager.Task.run(Task.java:575)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ WARN ] [2024-10-13 21:59:49,597] [KeyedProcess -> Sink: Print to Std. Out (14/20)#0] o.a.f.r.t.Task -KeyedProcess -> Sink: Print to Std. Out (14/20)#0 (7ac35bfa196a96d3538ff1dcb8c19373_33964bca3cbd702c3e1ba5c78fec57cb_13_0) switched from DEPLOYING to FAILED with failure cause:
+java.io.IOException: Insufficient number of network buffers: required 1, but only 0 available. The total number of network buffers is currently set to 2048 of 32768 bytes each. You can increase this number by setting the configuration keys 'taskmanager.memory.network.fraction', 'taskmanager.memory.network.min', and 'taskmanager.memory.network.max'.
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.internalCreateBufferPool(NetworkBufferPool.java:494)
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.createBufferPool(NetworkBufferPool.java:455)
+	at org.apache.flink.runtime.io.network.partition.consumer.SingleInputGateFactory.lambda$createBufferPoolFactory$3(SingleInputGateFactory.java:452)
+	at org.apache.flink.runtime.io.network.partition.consumer.SingleInputGate.setup(SingleInputGate.java:310)
+	at org.apache.flink.runtime.taskmanager.InputGateWithMetrics.setup(InputGateWithMetrics.java:105)
+	at org.apache.flink.runtime.taskmanager.Task.setupPartitionsAndGates(Task.java:987)
+	at org.apache.flink.runtime.taskmanager.Task.doRun(Task.java:669)
+	at org.apache.flink.runtime.taskmanager.Task.run(Task.java:575)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ WARN ] [2024-10-13 21:59:49,601] [KeyedProcess -> Sink: Print to Std. Out (15/20)#0] o.a.f.r.t.Task -KeyedProcess -> Sink: Print to Std. Out (15/20)#0 (7ac35bfa196a96d3538ff1dcb8c19373_33964bca3cbd702c3e1ba5c78fec57cb_14_0) switched from DEPLOYING to FAILED with failure cause:
+java.io.IOException: Insufficient number of network buffers: required 1, but only 0 available. The total number of network buffers is currently set to 2048 of 32768 bytes each. You can increase this number by setting the configuration keys 'taskmanager.memory.network.fraction', 'taskmanager.memory.network.min', and 'taskmanager.memory.network.max'.
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.internalCreateBufferPool(NetworkBufferPool.java:494)
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.createBufferPool(NetworkBufferPool.java:455)
+	at org.apache.flink.runtime.io.network.partition.consumer.SingleInputGateFactory.lambda$createBufferPoolFactory$3(SingleInputGateFactory.java:452)
+	at org.apache.flink.runtime.io.network.partition.consumer.SingleInputGate.setup(SingleInputGate.java:310)
+	at org.apache.flink.runtime.taskmanager.InputGateWithMetrics.setup(InputGateWithMetrics.java:105)
+	at org.apache.flink.runtime.taskmanager.Task.setupPartitionsAndGates(Task.java:987)
+	at org.apache.flink.runtime.taskmanager.Task.doRun(Task.java:669)
+	at org.apache.flink.runtime.taskmanager.Task.run(Task.java:575)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ WARN ] [2024-10-13 21:59:49,602] [KeyedProcess -> Sink: Print to Std. Out (16/20)#0] o.a.f.r.t.Task -KeyedProcess -> Sink: Print to Std. Out (16/20)#0 (7ac35bfa196a96d3538ff1dcb8c19373_33964bca3cbd702c3e1ba5c78fec57cb_15_0) switched from DEPLOYING to FAILED with failure cause:
+java.io.IOException: Insufficient number of network buffers: required 1, but only 0 available. The total number of network buffers is currently set to 2048 of 32768 bytes each. You can increase this number by setting the configuration keys 'taskmanager.memory.network.fraction', 'taskmanager.memory.network.min', and 'taskmanager.memory.network.max'.
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.internalCreateBufferPool(NetworkBufferPool.java:494)
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.createBufferPool(NetworkBufferPool.java:455)
+	at org.apache.flink.runtime.io.network.partition.consumer.SingleInputGateFactory.lambda$createBufferPoolFactory$3(SingleInputGateFactory.java:452)
+	at org.apache.flink.runtime.io.network.partition.consumer.SingleInputGate.setup(SingleInputGate.java:310)
+	at org.apache.flink.runtime.taskmanager.InputGateWithMetrics.setup(InputGateWithMetrics.java:105)
+	at org.apache.flink.runtime.taskmanager.Task.setupPartitionsAndGates(Task.java:987)
+	at org.apache.flink.runtime.taskmanager.Task.doRun(Task.java:669)
+	at org.apache.flink.runtime.taskmanager.Task.run(Task.java:575)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ WARN ] [2024-10-13 21:59:49,604] [KeyedProcess -> Sink: Print to Std. Out (17/20)#0] o.a.f.r.t.Task -KeyedProcess -> Sink: Print to Std. Out (17/20)#0 (7ac35bfa196a96d3538ff1dcb8c19373_33964bca3cbd702c3e1ba5c78fec57cb_16_0) switched from DEPLOYING to FAILED with failure cause:
+java.io.IOException: Insufficient number of network buffers: required 1, but only 0 available. The total number of network buffers is currently set to 2048 of 32768 bytes each. You can increase this number by setting the configuration keys 'taskmanager.memory.network.fraction', 'taskmanager.memory.network.min', and 'taskmanager.memory.network.max'.
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.internalCreateBufferPool(NetworkBufferPool.java:494)
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.createBufferPool(NetworkBufferPool.java:455)
+	at org.apache.flink.runtime.io.network.partition.consumer.SingleInputGateFactory.lambda$createBufferPoolFactory$3(SingleInputGateFactory.java:452)
+	at org.apache.flink.runtime.io.network.partition.consumer.SingleInputGate.setup(SingleInputGate.java:310)
+	at org.apache.flink.runtime.taskmanager.InputGateWithMetrics.setup(InputGateWithMetrics.java:105)
+	at org.apache.flink.runtime.taskmanager.Task.setupPartitionsAndGates(Task.java:987)
+	at org.apache.flink.runtime.taskmanager.Task.doRun(Task.java:669)
+	at org.apache.flink.runtime.taskmanager.Task.run(Task.java:575)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ WARN ] [2024-10-13 21:59:49,604] [KeyedProcess -> Sink: Print to Std. Out (18/20)#0] o.a.f.r.t.Task -KeyedProcess -> Sink: Print to Std. Out (18/20)#0 (7ac35bfa196a96d3538ff1dcb8c19373_33964bca3cbd702c3e1ba5c78fec57cb_17_0) switched from DEPLOYING to FAILED with failure cause:
+java.io.IOException: Insufficient number of network buffers: required 1, but only 0 available. The total number of network buffers is currently set to 2048 of 32768 bytes each. You can increase this number by setting the configuration keys 'taskmanager.memory.network.fraction', 'taskmanager.memory.network.min', and 'taskmanager.memory.network.max'.
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.internalCreateBufferPool(NetworkBufferPool.java:494)
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.createBufferPool(NetworkBufferPool.java:455)
+	at org.apache.flink.runtime.io.network.partition.consumer.SingleInputGateFactory.lambda$createBufferPoolFactory$3(SingleInputGateFactory.java:452)
+	at org.apache.flink.runtime.io.network.partition.consumer.SingleInputGate.setup(SingleInputGate.java:310)
+	at org.apache.flink.runtime.taskmanager.InputGateWithMetrics.setup(InputGateWithMetrics.java:105)
+	at org.apache.flink.runtime.taskmanager.Task.setupPartitionsAndGates(Task.java:987)
+	at org.apache.flink.runtime.taskmanager.Task.doRun(Task.java:669)
+	at org.apache.flink.runtime.taskmanager.Task.run(Task.java:575)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ WARN ] [2024-10-13 21:59:49,607] [KeyedProcess -> Sink: Print to Std. Out (19/20)#0] o.a.f.r.t.Task -KeyedProcess -> Sink: Print to Std. Out (19/20)#0 (7ac35bfa196a96d3538ff1dcb8c19373_33964bca3cbd702c3e1ba5c78fec57cb_18_0) switched from DEPLOYING to FAILED with failure cause:
+java.io.IOException: Insufficient number of network buffers: required 1, but only 0 available. The total number of network buffers is currently set to 2048 of 32768 bytes each. You can increase this number by setting the configuration keys 'taskmanager.memory.network.fraction', 'taskmanager.memory.network.min', and 'taskmanager.memory.network.max'.
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.internalCreateBufferPool(NetworkBufferPool.java:494)
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.createBufferPool(NetworkBufferPool.java:455)
+	at org.apache.flink.runtime.io.network.partition.consumer.SingleInputGateFactory.lambda$createBufferPoolFactory$3(SingleInputGateFactory.java:452)
+	at org.apache.flink.runtime.io.network.partition.consumer.SingleInputGate.setup(SingleInputGate.java:310)
+	at org.apache.flink.runtime.taskmanager.InputGateWithMetrics.setup(InputGateWithMetrics.java:105)
+	at org.apache.flink.runtime.taskmanager.Task.setupPartitionsAndGates(Task.java:987)
+	at org.apache.flink.runtime.taskmanager.Task.doRun(Task.java:669)
+	at org.apache.flink.runtime.taskmanager.Task.run(Task.java:575)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ WARN ] [2024-10-13 21:59:49,609] [KeyedProcess -> Sink: Print to Std. Out (20/20)#0] o.a.f.r.t.Task -KeyedProcess -> Sink: Print to Std. Out (20/20)#0 (7ac35bfa196a96d3538ff1dcb8c19373_33964bca3cbd702c3e1ba5c78fec57cb_19_0) switched from DEPLOYING to FAILED with failure cause:
+java.io.IOException: Insufficient number of network buffers: required 1, but only 0 available. The total number of network buffers is currently set to 2048 of 32768 bytes each. You can increase this number by setting the configuration keys 'taskmanager.memory.network.fraction', 'taskmanager.memory.network.min', and 'taskmanager.memory.network.max'.
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.internalCreateBufferPool(NetworkBufferPool.java:494)
+	at org.apache.flink.runtime.io.network.buffer.NetworkBufferPool.createBufferPool(NetworkBufferPool.java:455)
+	at org.apache.flink.runtime.io.network.partition.consumer.SingleInputGateFactory.lambda$createBufferPoolFactory$3(SingleInputGateFactory.java:452)
+	at org.apache.flink.runtime.io.network.partition.consumer.SingleInputGate.setup(SingleInputGate.java:310)
+	at org.apache.flink.runtime.taskmanager.InputGateWithMetrics.setup(InputGateWithMetrics.java:105)
+	at org.apache.flink.runtime.taskmanager.Task.setupPartitionsAndGates(Task.java:987)
+	at org.apache.flink.runtime.taskmanager.Task.doRun(Task.java:669)
+	at org.apache.flink.runtime.taskmanager.Task.run(Task.java:575)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ WARN ] [2024-10-13 21:59:49,842] [flink-pekko.actor.default-dispatcher-4] o.a.f.r.t.TaskManagerLocation -No hostname could be resolved for the IP address 127.0.0.1, using IP address as host name. Local input split assignment (such as for HDFS files) may be impacted.
+[ WARN ] [2024-10-13 22:04:15,297] [main] i.n.b.Bootstrap -Unknown channel option 'SO_BROADCAST' for channel '[id: 0x160faf6d]'
+[ WARN ] [2024-10-13 22:04:16,394] [main] i.n.b.Bootstrap -Unknown channel option 'SO_BROADCAST' for channel '[id: 0x1213865f]'
+[ WARN ] [2024-10-13 22:04:18,591] [Thread-3] o.a.f.r.s.t.DefaultDelegationTokenManager -No tokens obtained so skipping notifications
+[ WARN ] [2024-10-13 22:05:59,883] [main] i.n.b.Bootstrap -Unknown channel option 'SO_BROADCAST' for channel '[id: 0x2d0c430e]'
+[ WARN ] [2024-10-13 22:06:00,966] [main] i.n.b.Bootstrap -Unknown channel option 'SO_BROADCAST' for channel '[id: 0x3090df74]'
+[ WARN ] [2024-10-13 22:06:03,510] [Thread-3] o.a.f.r.s.t.DefaultDelegationTokenManager -No tokens obtained so skipping notifications
+[ WARN ] [2024-10-13 22:06:03,823] [Thread-3] o.a.f.r.w.WebMonitorUtils -Log file environment variable 'log.file' is not set.
+[ WARN ] [2024-10-13 22:06:03,823] [Thread-3] o.a.f.r.w.WebMonitorUtils -JobManager log files are unavailable in the web dashboard. Log file location not found in environment variable 'log.file' or configuration key 'web.log.path'.
+[ WARN ] [2024-10-13 22:06:03,949] [flink-pekko.actor.default-dispatcher-4] o.a.f.r.s.t.DefaultDelegationTokenManager -No tokens obtained so skipping notifications
+[ WARN ] [2024-10-13 22:06:03,949] [flink-pekko.actor.default-dispatcher-4] o.a.f.r.s.t.DefaultDelegationTokenManager -Tokens update task not started because either no tokens obtained or none of the tokens specified its renewal date
+[ WARN ] [2024-10-13 22:06:13,451] [Flink-Metric-View-Updater-thread-1] o.a.f.r.i.n.b.NetworkBufferPool -Memory usage [146%] is too high to satisfy all of the requests. This can severely impact network throughput. Please consider increasing available network memory, or decreasing configured size of network buffer pools. (totalMemory=128.000mb (134217728 bytes), requestedMemory=188.000mb (197132288 bytes), missingMemory=60.000mb (62914560 bytes))
+[ WARN ] [2024-10-13 22:06:36,219] [main] i.n.b.Bootstrap -Unknown channel option 'SO_BROADCAST' for channel '[id: 0xc3be45c4]'
+[ WARN ] [2024-10-13 22:06:37,306] [main] i.n.b.Bootstrap -Unknown channel option 'SO_BROADCAST' for channel '[id: 0x9ba084cf]'
+[ WARN ] [2024-10-13 22:06:39,542] [Thread-2] o.a.f.r.s.t.DefaultDelegationTokenManager -No tokens obtained so skipping notifications
+[ WARN ] [2024-10-13 22:06:39,846] [Thread-2] o.a.f.r.w.WebMonitorUtils -Log file environment variable 'log.file' is not set.
+[ WARN ] [2024-10-13 22:06:39,846] [Thread-2] o.a.f.r.w.WebMonitorUtils -JobManager log files are unavailable in the web dashboard. Log file location not found in environment variable 'log.file' or configuration key 'web.log.path'.
+[ WARN ] [2024-10-13 22:06:39,973] [flink-pekko.actor.default-dispatcher-4] o.a.f.r.s.t.DefaultDelegationTokenManager -No tokens obtained so skipping notifications
+[ WARN ] [2024-10-13 22:06:39,973] [flink-pekko.actor.default-dispatcher-4] o.a.f.r.s.t.DefaultDelegationTokenManager -Tokens update task not started because either no tokens obtained or none of the tokens specified its renewal date
+[ WARN ] [2024-10-13 22:08:23,899] [main] i.n.b.Bootstrap -Unknown channel option 'SO_BROADCAST' for channel '[id: 0xb09fae58]'
+[ WARN ] [2024-10-13 22:08:24,983] [main] i.n.b.Bootstrap -Unknown channel option 'SO_BROADCAST' for channel '[id: 0x69c02bf9]'
+[ WARN ] [2024-10-13 22:08:27,342] [Thread-3] o.a.f.r.s.t.DefaultDelegationTokenManager -No tokens obtained so skipping notifications
+[ WARN ] [2024-10-13 22:08:27,342] [Thread-2] o.a.f.r.s.t.DefaultDelegationTokenManager -No tokens obtained so skipping notifications
+[ WARN ] [2024-10-13 22:08:27,688] [Thread-2] o.a.f.r.w.WebMonitorUtils -Log file environment variable 'log.file' is not set.
+[ WARN ] [2024-10-13 22:08:27,688] [Thread-3] o.a.f.r.w.WebMonitorUtils -Log file environment variable 'log.file' is not set.
+[ WARN ] [2024-10-13 22:08:27,688] [Thread-2] o.a.f.r.w.WebMonitorUtils -JobManager log files are unavailable in the web dashboard. Log file location not found in environment variable 'log.file' or configuration key 'web.log.path'.
+[ WARN ] [2024-10-13 22:08:27,688] [Thread-3] o.a.f.r.w.WebMonitorUtils -JobManager log files are unavailable in the web dashboard. Log file location not found in environment variable 'log.file' or configuration key 'web.log.path'.
+[ WARN ] [2024-10-13 22:08:27,818] [flink-pekko.actor.default-dispatcher-5] o.a.f.r.s.t.DefaultDelegationTokenManager -No tokens obtained so skipping notifications
+[ WARN ] [2024-10-13 22:08:27,818] [flink-pekko.actor.default-dispatcher-5] o.a.f.r.s.t.DefaultDelegationTokenManager -Tokens update task not started because either no tokens obtained or none of the tokens specified its renewal date
+[ WARN ] [2024-10-13 22:08:27,818] [flink-pekko.actor.default-dispatcher-4] o.a.f.r.s.t.DefaultDelegationTokenManager -No tokens obtained so skipping notifications
+[ WARN ] [2024-10-13 22:08:27,818] [flink-pekko.actor.default-dispatcher-4] o.a.f.r.s.t.DefaultDelegationTokenManager -Tokens update task not started because either no tokens obtained or none of the tokens specified its renewal date

@@ -50,7 +50,7 @@ public class AutoTradeTask {
         return this;
     }
 
-    public void execute() throws Exception {
+    public void execute(String name) throws Exception {
         // 使用自定义 SourceFunction 生成 K 线数据流
         KeyedStream<KLine, String> keyedStream = env.addSource(memoryKLineSource)
                 .keyBy(KLine::getSymbol);
@@ -92,6 +92,6 @@ public class AutoTradeTask {
 //                }
             }
         }).print();
-        env.execute("test1");
+        env.execute(name);
     }
 }

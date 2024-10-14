@@ -164,7 +164,7 @@ public class MemoryKLineDataPublisher implements KLineDataPublisher {
                 KLine kLine = null;
                 while ((kLine = buffer.take()) != null && !KLine.STREAM_END_KLINE.equals(kLine)){
                     kb.put(kLine);
-                    log.info("put real time kline, current kline buffer size[{}]", kb.size());
+                    log.debug("put real time kline, current kline buffer size[{}]", kb.size());
                 }
             } catch (InterruptedException e) {
                 log.error("put kline data into kline buffer [{}] error", kb, e);

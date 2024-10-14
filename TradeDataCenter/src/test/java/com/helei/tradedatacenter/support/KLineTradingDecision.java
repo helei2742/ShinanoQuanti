@@ -40,9 +40,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class KLineTradingDecision {
     private MemoryKLineDataPublisher dataPublisher;
 
-    private MemoryKLineSource memoryKLineSource;
+    private MemoryKLineSource memoryKLineSource_btc;
+
+    private MemoryKLineSource memoryKLineSource_eth;
 
     private String btcusdt = "btcusdt";
+
+    private String ethusdt = "ethusdt";
+
     BinanceWSApiClient streamClient;
     BinanceWSApiClient normalClient;
     @BeforeAll
@@ -55,9 +60,11 @@ public class KLineTradingDecision {
             normalClient.connect();
 
             dataPublisher = new MemoryKLineDataPublisher(streamClient, normalClient, 100, 200, 3)
-                    .addListenKLine(btcusdt, Arrays.asList(KLineInterval.M_1, KLineInterval.d_1, KLineInterval.m_1));
+                    .addListenKLine(btcusdt, Arrays.asList(KLineInterval.M_1, KLineInterval.d_1, KLineInterval.m_1))
+                    .addListenKLine(ethusdt, Arrays.asList(KLineInterval.M_1, KLineInterval.d_1, KLineInterval.m_1));
 
-            memoryKLineSource = new MemoryKLineSource(btcusdt, KLineInterval.M_1, LocalDateTime.of(2020, 1, 1, 0, 0), dataPublisher);
+            memoryKLineSource_btc = new MemoryKLineSource(btcusdt, KLineInterval.M_1, LocalDateTime.of(2020, 1, 1, 0, 0), dataPublisher);
+            memoryKLineSource_eth = new MemoryKLineSource(ethusdt, KLineInterval.M_1, LocalDateTime.of(2020, 1, 1, 0, 0), dataPublisher);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -67,26 +74,47 @@ public class KLineTradingDecision {
     @Autowired
     @Qualifier("flinkEnv")
     private StreamExecutionEnvironment env;
-
+    @Autowired
+    @Qualifier("flinkEnv2")
+    private StreamExecutionEnvironment env2;
 
     @Test
     public void testIndicator() throws Exception {
         String macdName = "MACD-12-26-9";
         String rsiName = "RSI";
-        new AutoTradeTask(env, memoryKLineSource)
-                .addIndicator(new MACDCalculator(macdName, 12, 26, 9))
-                .addIndicator(new RSICalculator(rsiName, 15))
-//                .addSignalMaker(new MACDSignal_V1(macdName))
-                .execute();
+        new Thread(()->{
+            try {
+                new AutoTradeTask(env, memoryKLineSource_btc)
+                        .addIndicator(new MACDCalculator(macdName, 12, 26, 9))
+                        .addIndicator(new RSICalculator(rsiName, 15))
+    //                .addSignalMaker(new MACDSignal_V1(macdName))
+                        .execute("btc");
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
 
+        }).start();
+        new Thread(()->{
+            try {
+                new AutoTradeTask(env2, memoryKLineSource_eth)
+                        .addIndicator(new MACDCalculator(macdName, 12, 26, 9))
+                        .addIndicator(new RSICalculator(rsiName, 15))
+                        .addIndicator(new PSTCalculator("PST", 60, 3,3))
+                        .execute("eth");
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+
+        }).start();
+        TimeUnit.SECONDS.sleep(1000);
     }
 
     @SneakyThrows
     @Test
     public void testPST() {
-        new AutoTradeTask(env, memoryKLineSource)
+        new AutoTradeTask(env, memoryKLineSource_btc)
                 .addIndicator(new PSTCalculator("PST", 60, 3,3))
-                .execute();
+                .execute("btc");
     }
 
     @Test
