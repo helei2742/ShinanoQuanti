@@ -1,15 +1,17 @@
+
 package com.helei.cexapi.netty.handler;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+        import com.helei.cexapi.netty.NettyConstants;
+        import lombok.AllArgsConstructor;
+        import lombok.Data;
+        import lombok.EqualsAndHashCode;
+        import lombok.NoArgsConstructor;
+        import lombok.extern.slf4j.Slf4j;
 
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Consumer;
+        import java.util.concurrent.ConcurrentHashMap;
+        import java.util.concurrent.ConcurrentMap;
+        import java.util.concurrent.atomic.AtomicBoolean;
+        import java.util.function.Consumer;
 
 
 @Slf4j
@@ -17,7 +19,6 @@ public class RequestResponseHandler<T> {
 
     private final ConcurrentMap<String, HandlerEntity<T>> requestIdMap = new ConcurrentHashMap<>();
 
-    private final long liveSecond = 300;
 
     /**
      * 注册request
@@ -29,7 +30,7 @@ public class RequestResponseHandler<T> {
         requestIdMap.compute(id, (k, v)->{
             if (v == null) {
                 res.set(true);
-                long expireTime = System.currentTimeMillis() + liveSecond * 1000;
+                long expireTime = System.currentTimeMillis() + NettyConstants.REQUEST_WAITE_SECONDS * 1000;
                 v = new HandlerEntity<>(expireTime, callback);
                 log.debug("registry request id[{}] success, expire time [{}]", id, expireTime);
             }

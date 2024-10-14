@@ -100,7 +100,9 @@ public class MemoryKLineDataPublisher implements KLineDataPublisher {
                             .subscribeType(WebSocketStreamType.KLINE)
                             .invocationHandler((streamName, result) -> {
                                 //分发订阅的k线
-                                dispatchKLineData(key, KLineMapper.mapJsonToKLine(result));
+                                KLine kLine = KLineMapper.mapJsonToKLine(result);
+                                kLine.setKLineInterval(kLineInterval);
+                                dispatchKLineData(key, kLine);
                             })
                             .callbackExecutor(publishExecutor)
                             .build()
@@ -152,6 +154,7 @@ public class MemoryKLineDataPublisher implements KLineDataPublisher {
                 kLineList -> {
                     try {
                         for (KLine kLine : kLineList) {
+                            kLine.setKLineInterval(interval);
                             kb.put(kLine);
                         }
                     } catch (InterruptedException e) {

@@ -4,6 +4,7 @@ import com.helei.cexapi.binanceapi.BinanceWSApiClient;
 import com.helei.cexapi.binanceapi.BinanceWSApiClientHandler;
 import com.helei.cexapi.binanceapi.supporter.IpWeightSupporter;
 
+import javax.net.ssl.SSLException;
 import java.net.InetSocketAddress;
 import java.net.URISyntaxException;
 
@@ -17,15 +18,16 @@ public class CEXApiFactory {
     public static BinanceWSApiClient binanceApiClient(
             int threadPoolSize,
             String url
-    ) throws URISyntaxException {
+    ) throws URISyntaxException, SSLException {
         BinanceWSApiClientHandler handler = new BinanceWSApiClientHandler();
 
-        return new BinanceWSApiClient(
+        BinanceWSApiClient client = new BinanceWSApiClient(
                 threadPoolSize,
                 url,
-                proxy,
                 new IpWeightSupporter("localIp"),
                 handler
         );
+        client.setProxy(proxy);
+        return client;
     }
 }

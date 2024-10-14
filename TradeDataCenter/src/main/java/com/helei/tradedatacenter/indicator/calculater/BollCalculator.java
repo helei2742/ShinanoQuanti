@@ -25,11 +25,6 @@ public class BollCalculator extends BaseIndicatorCalculator<Boll> {
         priceListState = getRuntimeContext().getListState(new ListStateDescriptor<>("priceListState", Double.class));
     }
 
-//    @Override
-//    public String indicatorKey(Boll indicator) throws Exception {
-//        return "BOLL-" + period;
-//    }
-
     @Override
     public Boll calculateInKLine(KLine kLine) throws Exception {
         LinkedList<Double> priceList = new LinkedList<>();

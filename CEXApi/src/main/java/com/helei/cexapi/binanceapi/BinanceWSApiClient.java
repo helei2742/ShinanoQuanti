@@ -1,20 +1,18 @@
 
-
 package com.helei.cexapi.binanceapi;
 
 import com.helei.cexapi.binanceapi.api.BinanceWSBaseApi;
-import com.helei.cexapi.binanceapi.api.BinanceWSSpotApi;
+import com.helei.cexapi.binanceapi.api.BinanceWSMarketApi;
 import com.helei.cexapi.binanceapi.api.BinanceWSStreamApi;
+import com.helei.cexapi.binanceapi.api.BinanceWSTradeApi;
 import com.helei.cexapi.binanceapi.base.AbstractBinanceWSApiClient;
 import com.helei.cexapi.binanceapi.base.AbstractBinanceWSApiClientHandler;
-import com.helei.cexapi.binanceapi.dto.ASKey;
 import com.helei.cexapi.binanceapi.supporter.BinanceWSStreamSupporter;
 import com.helei.cexapi.binanceapi.supporter.IpWeightSupporter;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
-
-import java.net.InetSocketAddress;
+import javax.net.ssl.SSLException;
 import java.net.URISyntaxException;
 
 
@@ -34,42 +32,29 @@ public class BinanceWSApiClient extends AbstractBinanceWSApiClient {
     /**
      * 现货相关的api
      */
-    private final BinanceWSSpotApi spotApi;
+    private final BinanceWSMarketApi marketApi;
 
     /**
      * stream流推送相关api
      */
     private final BinanceWSStreamApi streamApi;
 
+    /**
+     * 交易相关api
+     */
+    private final BinanceWSTradeApi tradeApi;
+
+
     public BinanceWSApiClient(
             int threadPoolSize,
             String url,
             IpWeightSupporter ipWeightSupporter,
             AbstractBinanceWSApiClientHandler handler
-    ) throws URISyntaxException {
+    ) throws URISyntaxException, SSLException {
         super(threadPoolSize, url, ipWeightSupporter, new BinanceWSStreamSupporter(), handler);
         baseApi = new BinanceWSBaseApi(this);
-        spotApi = new BinanceWSSpotApi(this);
+        marketApi = new BinanceWSMarketApi(this);
         streamApi = new BinanceWSStreamApi(this);
-    }
-
-    public BinanceWSApiClient(
-            int threadPoolSize,
-            String url,
-            InetSocketAddress proxy,
-            IpWeightSupporter ipWeightSupporter,
-            AbstractBinanceWSApiClientHandler handler
-    ) throws URISyntaxException {
-        super(threadPoolSize, url, ipWeightSupporter, new BinanceWSStreamSupporter(), handler);
-        super.proxy = proxy;
-        baseApi = new BinanceWSBaseApi(this);
-        spotApi = new BinanceWSSpotApi(this);
-        streamApi = new BinanceWSStreamApi(this);
-    }
-
-
-    public BinanceWSApiClient setSignature(ASKey asKey) {
-        super.asKey = asKey;
-        return this;
+        tradeApi = new BinanceWSTradeApi(this);
     }
 }

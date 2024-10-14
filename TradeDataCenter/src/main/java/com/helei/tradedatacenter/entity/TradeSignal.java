@@ -1,7 +1,6 @@
-
 package com.helei.tradedatacenter.entity;
 
-import com.helei.tradedatacenter.constants.TradeSide;
+import com.helei.cexapi.binanceapi.constants.order.TradeSide;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,6 +21,11 @@ public class TradeSignal {
      * 信号名
      */
     private String name;
+
+    /**
+     * 发出这个信号的k线
+     */
+    private KLine kLine;
 
     /**
      * 当前时间
@@ -48,3 +52,4 @@ public class TradeSignal {
      */
     private Double protectPrice;
 }
+

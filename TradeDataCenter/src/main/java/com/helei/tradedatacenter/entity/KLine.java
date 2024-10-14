@@ -1,15 +1,13 @@
-
-
 package com.helei.tradedatacenter.entity;
 
 import com.helei.cexapi.binanceapi.constants.KLineInterval;
+import com.helei.cexapi.binanceapi.constants.WebSocketStreamType;
 import com.helei.tradedatacenter.indicator.Indicator;
 import lombok.*;
 
 import java.io.Serial;
 import java.time.LocalDateTime;
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * K线实体类
@@ -83,6 +81,14 @@ public class KLine {
      * 存放各种指标以及他的值
      */
     private HashMap<String, Indicator> indicators = new HashMap<>();
+
+    /**
+     * 获取stream流名称
+     * @return stream流名称
+     */
+    public String getStreamKey() {
+        return symbol + "@kline_" + kLineInterval.getDescribe();
+    }
 
     @Override
     public String toString() {

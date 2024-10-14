@@ -1,16 +1,20 @@
+
 package com.helei.cexapi.netty.base;
 
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelPromise;
-import io.netty.channel.SimpleChannelInboundHandler;
-import io.netty.handler.codec.http.FullHttpResponse;
-import io.netty.handler.codec.http.websocketx.*;
-import io.netty.handler.timeout.IdleStateEvent;
-import io.netty.util.CharsetUtil;
-import lombok.extern.slf4j.Slf4j;
+        import com.helei.cexapi.netty.NettyConstants;
+        import io.netty.channel.ChannelFuture;
+        import io.netty.channel.ChannelHandlerContext;
+        import io.netty.channel.ChannelPromise;
+        import io.netty.channel.SimpleChannelInboundHandler;
+        import io.netty.handler.codec.http.FullHttpResponse;
+        import io.netty.handler.codec.http.websocketx.*;
+        import io.netty.handler.timeout.IdleStateEvent;
+        import io.netty.util.CharsetUtil;
+        import lombok.extern.slf4j.Slf4j;
 
-import io.netty.channel.*;
+        import io.netty.channel.*;
+
+        import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -19,6 +23,7 @@ import io.netty.channel.*;
  * @param <T>
  */
 @Slf4j
+@ChannelHandler.Sharable
 public abstract class AbstractWebSocketClientHandler<P, T> extends SimpleChannelInboundHandler<Object> {
 
     private WebSocketClientHandshaker handshaker;
@@ -52,6 +57,13 @@ public abstract class AbstractWebSocketClientHandler<P, T> extends SimpleChannel
     @Override
     public void channelInactive(ChannelHandlerContext ctx) {
         log.info("WebSocket Client disconnected!");
+    }
+
+    @Override
+    public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
+        log.info("WebSocket Client unregistered!, start reconnect");
+
+        websocketClient.connect();
     }
 
     @Override
@@ -155,4 +167,3 @@ public abstract class AbstractWebSocketClientHandler<P, T> extends SimpleChannel
         return handshakeFuture;
     }
 }
-

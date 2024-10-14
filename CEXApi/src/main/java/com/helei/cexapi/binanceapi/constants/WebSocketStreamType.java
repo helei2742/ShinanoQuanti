@@ -88,4 +88,9 @@ public enum WebSocketStreamType {
     public interface AbstractBinanceWSSHandler {
         String buildStreamName(String symbol, Map<String, Object> params);
     }
+
+    @Override
+    public String toString() {
+        return description;
+    }
 }

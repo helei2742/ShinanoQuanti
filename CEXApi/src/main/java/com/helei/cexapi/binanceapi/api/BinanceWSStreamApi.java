@@ -6,6 +6,7 @@ import com.helei.cexapi.binanceapi.BinanceWSApiClient;
 import com.helei.cexapi.binanceapi.base.AbstractBinanceWSApi;
 import com.helei.cexapi.binanceapi.base.SubscribeResultInvocationHandler;
 import com.helei.cexapi.binanceapi.constants.WebSocketStreamType;
+import com.helei.cexapi.binanceapi.dto.ASKey;
 import com.helei.cexapi.binanceapi.dto.StreamSubscribeEntity;
 
 import java.net.URISyntaxException;
@@ -92,7 +93,7 @@ public class BinanceWSStreamApi extends AbstractBinanceWSApi {
                 ExecutorService executorService,
                 Map<String, Object> params
         ) {
-            return addSubscribeEntity(subscribeType, invocationHandler, executorService, false, params);
+            return addSubscribeEntity(subscribeType, invocationHandler, executorService, null, params);
         }
 
         /**
@@ -106,10 +107,10 @@ public class BinanceWSStreamApi extends AbstractBinanceWSApi {
                 WebSocketStreamType subscribeType,
                 SubscribeResultInvocationHandler invocationHandler,
                 ExecutorService executorService,
-                boolean signature,
+                ASKey asKey,
                 Map<String, Object> params
         ) {
-            return addSubscribeEntity(new StreamSubscribeEntity(symbol, subscribeType, invocationHandler, executorService, params, signature));
+            return addSubscribeEntity(new StreamSubscribeEntity(symbol, subscribeType, invocationHandler, executorService, params, asKey));
         }
         /**
          * 添加订阅类型， 必须在设置symbol之后

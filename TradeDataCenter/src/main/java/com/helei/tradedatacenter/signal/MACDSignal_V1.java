@@ -1,18 +1,17 @@
 
 package com.helei.tradedatacenter.signal;
 
-import cn.hutool.core.util.BooleanUtil;
-import com.helei.tradedatacenter.constants.TradeSide;
-import com.helei.tradedatacenter.entity.KLine;
-import com.helei.tradedatacenter.entity.TradeSignal;
-import com.helei.tradedatacenter.indicator.MACD;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.flink.api.common.state.ValueState;
-import org.apache.flink.api.common.state.ValueStateDescriptor;
-import org.apache.flink.api.common.typeinfo.TypeInformation;
-import org.apache.flink.configuration.Configuration;
+        import com.helei.cexapi.binanceapi.constants.order.TradeSide;
+        import com.helei.tradedatacenter.entity.KLine;
+        import com.helei.tradedatacenter.entity.TradeSignal;
+        import com.helei.tradedatacenter.indicator.MACD;
+        import lombok.extern.slf4j.Slf4j;
+        import org.apache.flink.api.common.functions.OpenContext;
+        import org.apache.flink.api.common.state.ValueState;
+        import org.apache.flink.api.common.state.ValueStateDescriptor;
+        import org.apache.flink.api.common.typeinfo.TypeInformation;
 
-import java.io.IOException;
+        import java.io.IOException;
 
 
 @Slf4j
@@ -21,15 +20,6 @@ public class MACDSignal_V1 extends AbstractSignalMaker{
     private final String macdName;
 
 
-    /**
-     * 当前k线，就是buildSignal(kline) 参数kline同意openTime的k线
-     */
-    private ValueState<KLine> curKLine;
-
-    /**
-     * 当前是否发出过信号
-     */
-    private ValueState<Boolean> isCurSendSignal;
 
     /**
      * 上一跟MACD
@@ -43,20 +33,18 @@ public class MACDSignal_V1 extends AbstractSignalMaker{
 
 
     public MACDSignal_V1(String macdName) {
+        super(true);
         this.macdName = macdName;
     }
 
 
     @Override
-    public void open(Configuration parameters) throws Exception {
+    public void onOpen(OpenContext openContext) throws Exception {
         ValueStateDescriptor<MACD> descriptor = new ValueStateDescriptor<>("lastMACD", TypeInformation.of(MACD.class));
         lastMACD = getRuntimeContext().getState(descriptor);
 
         underLineGoldAcrossCount = getRuntimeContext().getState(new ValueStateDescriptor<>("underLineGoldAcrossCount", Integer.class));
 
-        curKLine = getRuntimeContext().getState(new ValueStateDescriptor<>("currentKLine", TypeInformation.of(KLine.class)));
-
-        isCurSendSignal = getRuntimeContext().getState(new ValueStateDescriptor<>("isCurSendSignal", Boolean.class));
     }
 
 
@@ -85,8 +73,6 @@ public class MACDSignal_V1 extends AbstractSignalMaker{
 
     @Override
     protected TradeSignal buildSignal(KLine kLine) throws IOException {
-
-
 
         MACD currentMACD = (MACD) kLine.getIndicators().get(macdName);
         MACD lastMACD = this.lastMACD.value();
@@ -117,7 +103,6 @@ public class MACDSignal_V1 extends AbstractSignalMaker{
                     .build());
         }
 
-        updateCurKLine(kLine);
         return null;
     }
 
@@ -128,13 +113,6 @@ public class MACDSignal_V1 extends AbstractSignalMaker{
      * @throws IOException IOException
      */
     private TradeSignal trySendSignal(TradeSignal signal) throws IOException {
-
-        //1.发送过信号，发送null
-        if (BooleanUtil.isTrue(isCurSendSignal.value())) {
-            log.info("已发送过macd信号");
-            return null;
-        }
-        isCurSendSignal.update(true);
         log.info("macd [{}]信号", signal.getTradeSide());
         return signal;
     }
@@ -143,18 +121,6 @@ public class MACDSignal_V1 extends AbstractSignalMaker{
         return underLineGoldAcrossCount.value() == null ? 0 : underLineGoldAcrossCount.value();
     }
 
-    /**
-     * 更新当前k线，如果成功更新，还要将isSendSignal设置为false
-     * @param cur cur
-     * @throws IOException IOException
-     */
-    private void updateCurKLine(KLine cur) throws IOException {
-        KLine last = curKLine.value();
-        if (last == null || !last.getOpenTime().isEqual(cur.getOpenTime())) {
-            curKLine.update(cur);
-            isCurSendSignal.update(false );
-        }
-    }
     /**
      * 计算金叉死叉
      * @param last  上一次的MACD

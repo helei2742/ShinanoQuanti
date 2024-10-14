@@ -1,21 +1,24 @@
+
+
 package com.helei.cexapi.binanceapi.base;
 
-import com.alibaba.fastjson.JSONObject;
-import com.helei.cexapi.binanceapi.dto.ASKey;
-import com.helei.cexapi.binanceapi.dto.StreamSubscribeEntity;
-import com.helei.cexapi.binanceapi.dto.WebSocketCommandBuilder;
-import com.helei.cexapi.binanceapi.supporter.BinanceWSStreamSupporter;
-import com.helei.cexapi.binanceapi.supporter.IpWeightSupporter;
-import com.helei.cexapi.binanceapi.util.SignatureUtil;
-import com.helei.cexapi.netty.base.AbstractWebsocketClient;
-import com.helei.cexapi.binanceapi.constants.WebSocketCommandType;
-import lombok.extern.slf4j.Slf4j;
+        import com.alibaba.fastjson.JSONObject;
+        import com.helei.cexapi.binanceapi.dto.ASKey;
+        import com.helei.cexapi.binanceapi.dto.StreamSubscribeEntity;
+        import com.helei.cexapi.binanceapi.dto.WebSocketCommandBuilder;
+        import com.helei.cexapi.binanceapi.supporter.BinanceWSStreamSupporter;
+        import com.helei.cexapi.binanceapi.supporter.IpWeightSupporter;
+        import com.helei.cexapi.binanceapi.util.SignatureUtil;
+        import com.helei.cexapi.netty.base.AbstractWebsocketClient;
+        import com.helei.cexapi.binanceapi.constants.command.BaseCommandType;
+        import lombok.extern.slf4j.Slf4j;
 
-import java.net.URISyntaxException;
-import java.security.InvalidKeyException;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Consumer;
+        import javax.net.ssl.SSLException;
+        import java.net.URISyntaxException;
+        import java.security.InvalidKeyException;
+        import java.util.List;
+        import java.util.concurrent.CompletableFuture;
+        import java.util.function.Consumer;
 
 /**
  * 币按ws接口客户端抽象类
@@ -34,16 +37,13 @@ public class AbstractBinanceWSApiClient extends AbstractWebsocketClient<JSONObje
      */
     private final BinanceWSStreamSupporter binanceWSStreamSupporter;
 
-    protected ASKey asKey;
-
-
     public AbstractBinanceWSApiClient(
             int threadPoolSize,
             String url,
             IpWeightSupporter ipWeightSupporter,
             BinanceWSStreamSupporter binanceWSStreamSupporter,
             AbstractBinanceWSApiClientHandler handler
-    ) throws URISyntaxException {
+    ) throws URISyntaxException, SSLException {
         super(threadPoolSize, url, handler);
 
         this.ipWeightSupporter = ipWeightSupporter;
@@ -53,47 +53,51 @@ public class AbstractBinanceWSApiClient extends AbstractWebsocketClient<JSONObje
 
 
     @Override
+    public String getIdFromRequest(JSONObject request) {
+        return request.getString("id");
+    }
+
+    @Override
     public void submitStreamResponse(String streamName, JSONObject message) {
         binanceWSStreamSupporter.publishStreamResponse(streamName, message, callbackInvoker);
     }
 
 
-
     /**
      * 发生请求
+     *
      * @param ipWeight ip weight
-     * @param id   请求的id
-     * @param request   请求体
-     * @param callback  回调
+     * @param request  请求体
+     * @param callback 回调
      */
     public void sendRequest(
             int ipWeight,
-            String id,
             JSONObject request,
             Consumer<JSONObject> callback
     ) {
-        sendRequest(ipWeight, id, request, false, callback);
+        sendRequest(ipWeight, request, null, callback);
     }
+
     /**
      * 发生请求
-     * @param ipWeight ip weight
-     * @param id   请求的id
-     * @param request   请求体
-     * @param isSignature   是否签名
-     * @param callback  回调
+     *
+     * @param ipWeight    ip weight
+     * @param request     请求体
+     * @param asKey         签名参数
+     * @param callback    回调
      */
     public void sendRequest(
             int ipWeight,
-            String id,
             JSONObject request,
-            boolean isSignature,
+            ASKey asKey,
             Consumer<JSONObject> callback
     ) {
         try {
             if (ipWeightSupporter.submitIpWeight(ipWeight)) {
+                String id = getIdFromRequest(request);
 
                 //需要签名
-                if (isSignature) {
+                if (asKey != null) {
                     JSONObject params = request.getJSONObject("params");
                     params.put("timestamp", System.currentTimeMillis());
                     try {
@@ -104,8 +108,9 @@ public class AbstractBinanceWSApiClient extends AbstractWebsocketClient<JSONObje
                     params.put("apiKey", asKey.getApiKey());
                 }
 
-                super.sendRequest(id, request, response -> {
+                super.sendRequest(request, response -> {
                     if (response != null) {
+
                         if (response.getInteger("status") != null && response.getInteger("status") != 200) {
                             log.error("receive error response [{}]", response);
                         }
@@ -122,36 +127,73 @@ public class AbstractBinanceWSApiClient extends AbstractWebsocketClient<JSONObje
         } catch (Exception e) {
             log.error("send request error", e);
         }
-
     }
+
+    /**
+     * 发生请求
+     * @param ipWeight    ip weight
+     * @param request     请求体
+     * @param asKey 签名
+     */
+    public CompletableFuture<JSONObject> sendRequest(
+            int ipWeight,
+            JSONObject request,
+            ASKey asKey
+    ) {
+        if (ipWeightSupporter.submitIpWeight(ipWeight)) {
+            log.error("ipWeight[{}] not support send request", ipWeightSupporter.currentWeight());
+            return null;
+        }
+        return super.sendRequest(trySignatureRequest(request, asKey));
+    }
+
+    private JSONObject trySignatureRequest(JSONObject request, ASKey asKey) {
+        //需要签名
+        if (asKey != null) {
+            JSONObject params = request.getJSONObject("params");
+            params.put("timestamp", System.currentTimeMillis());
+            params.put("apiKey", asKey.getApiKey());
+            try {
+                params.put("signature", SignatureUtil.signatureHMAC(asKey.getSecretKey(), params));
+            } catch (InvalidKeyException e) {
+                log.error("signature params error");
+                return null;
+            }
+        }
+        return request;
+    }
+
+
     /**
      * 订阅stream
-     * @param symbol 需订阅的币种symbol
+     *
+     * @param symbol  需订阅的币种symbol
      * @param subList 需订阅的类型
      */
     public void subscribeStream(String symbol, List<StreamSubscribeEntity> subList) {
-        WebSocketCommandBuilder builder = WebSocketCommandBuilder.builder().setCommandType(WebSocketCommandType.SUBSCRIBE);
 
-        AtomicBoolean isSignature = new AtomicBoolean(false);
-        subList.forEach(e->{
-            if (e.isSignature()) {
-                isSignature.set(true);
-            }
-            builder.addArrayParam(e.getStreamName());
-        });
-        JSONObject command = builder.build();
+        WebSocketCommandBuilder builder = WebSocketCommandBuilder.builder().setCommandType(BaseCommandType.SUBSCRIBE);
 
-        log.info("subscribe stream command: {}", command);
+        /*
+         * 由于StreamSubscribeEntity中可能存在鉴权的ASKey，需要每个单独发请求
+         */
+        for (StreamSubscribeEntity subscribeEntity : subList) {
+            builder.clear();
+            builder.addArrayParam(subscribeEntity.getStreamName());
+            JSONObject command = builder.build();
 
-        String id = command.getString("id");
+            log.info("subscribe stream command: {}", command);
 
-        sendRequest(1, id, command, isSignature.get(), response -> {
-            if (response != null) {
-                log.debug("get subscribe response: {}", response);
-                binanceWSStreamSupporter.addSubscribe(symbol, subList);
-            }else {
-                log.error("get subscribe response error, requestId[{}]", id);
-            }
-        });
+            String id = command.getString("id");
+
+            sendRequest(1, command, subscribeEntity.getAsKey(), response -> {
+                if (response != null) {
+                    log.debug("get subscribe response: {}", response);
+                    binanceWSStreamSupporter.addSubscribe(symbol, List.of(subscribeEntity));
+                } else {
+                    log.error("get subscribe response error, requestId[{}]", id);
+                }
+            });
+        }
     }
 }

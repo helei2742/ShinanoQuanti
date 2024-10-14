@@ -3,20 +3,26 @@ package com.helei.tradedatacenter.support;
 
 import com.helei.cexapi.CEXApiFactory;
 import com.helei.cexapi.binanceapi.BinanceWSApiClient;
+import com.helei.cexapi.binanceapi.constants.order.BaseOrder;
 import com.helei.cexapi.constants.WebSocketUrl;
 import com.helei.tradedatacenter.AutoTradeTask;
 import com.helei.cexapi.binanceapi.constants.KLineInterval;
 import com.helei.tradedatacenter.datasource.HistoryKLineLoader;
 import com.helei.tradedatacenter.datasource.MemoryKLineDataPublisher;
 import com.helei.tradedatacenter.datasource.MemoryKLineSource;
+import com.helei.tradedatacenter.decision.AbstractDecisionMaker;
 import com.helei.tradedatacenter.entity.KLine;
+import com.helei.tradedatacenter.entity.TradeSignal;
 import com.helei.tradedatacenter.indicator.calculater.MACDCalculator;
 import com.helei.tradedatacenter.indicator.calculater.PSTCalculator;
 import com.helei.tradedatacenter.indicator.calculater.RSICalculator;
+import com.helei.tradedatacenter.order.AbstractOrderCommitter;
+import com.helei.tradedatacenter.signal.AbstractSignalMaker;
 import com.helei.tradedatacenter.signal.MACDSignal_V1;
 import com.helei.tradedatacenter.util.KLineBuffer;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.flink.api.common.functions.OpenContext;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -25,10 +31,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -56,8 +64,7 @@ public class KLineTradingDecision {
             streamClient = CEXApiFactory.binanceApiClient(4, WebSocketUrl.WS_STREAM_URL);
             normalClient = CEXApiFactory.binanceApiClient(4, WebSocketUrl.WS_NORMAL_URL);
 
-            streamClient.connect();
-            normalClient.connect();
+            CompletableFuture.allOf(streamClient.connect(), normalClient.connect()).get();
 
             dataPublisher = new MemoryKLineDataPublisher(streamClient, normalClient, 100, 200, 3)
                     .addListenKLine(btcusdt, Arrays.asList(KLineInterval.M_1, KLineInterval.d_1, KLineInterval.m_1))
@@ -82,24 +89,82 @@ public class KLineTradingDecision {
     public void testIndicator() throws Exception {
         String macdName = "MACD-12-26-9";
         String rsiName = "RSI";
-        new Thread(()->{
-            try {
-                new AutoTradeTask(env, memoryKLineSource_btc)
-                        .addIndicator(new MACDCalculator(macdName, 12, 26, 9))
-                        .addIndicator(new RSICalculator(rsiName, 15))
-    //                .addSignalMaker(new MACDSignal_V1(macdName))
-                        .execute("btc");
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-
-        }).start();
+//        new Thread(()->{
+//            try {
+//                new AutoTradeTask(env, memoryKLineSource_btc)
+//                        .addIndicator(new MACDCalculator(macdName, 12, 26, 9))
+//                        .addIndicator(new RSICalculator(rsiName, 15))
+//                        .addSignalMaker(new AbstractSignalMaker(true) {
+//                            @Override
+//                            public void onOpen(OpenContext openContext) throws Exception {
+//
+//                            }
+//
+//                            @Override
+//                            protected void stateUpdate(KLine kLine) throws IOException {
+//                                System.out.println(kLine);
+//                            }
+//
+//                            @Override
+//                            protected TradeSignal buildSignal(KLine kLine) throws IOException {
+//                                return null;
+//                            }
+//                        })
+//                        .addDecisionMaker(new AbstractDecisionMaker() {
+//                            @Override
+//                            public BaseOrder decisionAndBuilderOrder(TradeSignal signal) {
+//
+//                                return null;
+//                            }
+//                        })
+//                        .addOrderCommiter(new AbstractOrderCommitter() {
+//                            @Override
+//                            public boolean commitTradeOrder(BaseOrder order) {
+//                                return false;
+//                            }
+//                        })
+//                        .execute("btc");
+//            } catch (Exception e) {
+//                throw new RuntimeException(e);
+//            }
+//
+//        }).start();
         new Thread(()->{
             try {
                 new AutoTradeTask(env2, memoryKLineSource_eth)
                         .addIndicator(new MACDCalculator(macdName, 12, 26, 9))
                         .addIndicator(new RSICalculator(rsiName, 15))
                         .addIndicator(new PSTCalculator("PST", 60, 3,3))
+                        .addSignalMaker(new AbstractSignalMaker(true) {
+                            @Override
+                            public void onOpen(OpenContext openContext) throws Exception {
+
+                            }
+
+                            @Override
+                            protected void stateUpdate(KLine kLine) throws IOException {
+                                System.out.println(kLine);
+                            }
+
+                            @Override
+                            protected TradeSignal buildSignal(KLine kLine) throws IOException {
+                                System.out.println(kLine);
+                                return null;
+                            }
+                        })
+                        .addDecisionMaker(new AbstractDecisionMaker() {
+                            @Override
+                            public BaseOrder decisionAndBuilderOrder(TradeSignal signal) {
+
+                                return null;
+                            }
+                        })
+                        .addOrderCommiter(new AbstractOrderCommitter() {
+                            @Override
+                            public boolean commitTradeOrder(BaseOrder order) {
+                                return false;
+                            }
+                        })
                         .execute("eth");
             } catch (Exception e) {
                 throw new RuntimeException(e);

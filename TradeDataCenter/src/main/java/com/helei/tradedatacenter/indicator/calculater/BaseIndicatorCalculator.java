@@ -1,5 +1,3 @@
-
-
 package com.helei.tradedatacenter.indicator.calculater;
 
 import com.helei.tradedatacenter.entity.KLine;
@@ -19,7 +17,7 @@ public abstract class BaseIndicatorCalculator<T extends Indicator> extends Keyed
     }
 
     @Override
-    public void processElement(KLine kLine, KeyedProcessFunction<String, KLine, KLine>.Context context, Collector<KLine> collector){
+    public void processElement(KLine kLine, KeyedProcessFunction<String, KLine, KLine>.Context context, Collector<KLine> collector) throws Exception {
         try {
             T Indicator = calculateInKLine(kLine);
             kLine.getIndicators().put(name, Indicator);
@@ -30,10 +28,9 @@ public abstract class BaseIndicatorCalculator<T extends Indicator> extends Keyed
         }
     }
 
-//    public abstract String indicatorKey(T indicator) throws Exception;
-
     /**
      * 计算指标，放进kLine里
+     *
      * @param kLine kLine
      * @return kLine
      */

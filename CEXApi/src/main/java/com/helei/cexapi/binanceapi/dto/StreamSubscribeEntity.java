@@ -45,7 +45,7 @@ public class StreamSubscribeEntity {
      */
     private Map<String, Object> params;
 
-    private boolean signature;
+    private ASKey asKey;
 
 
     /**

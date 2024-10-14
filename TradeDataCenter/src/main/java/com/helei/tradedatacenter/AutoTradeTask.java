@@ -1,21 +1,16 @@
-
 package com.helei.tradedatacenter;
 
+import com.helei.cexapi.binanceapi.constants.order.BaseOrder;
 import com.helei.tradedatacenter.datasource.BaseKLineSource;
-import com.helei.tradedatacenter.datasource.MemoryKLineSource;
+import com.helei.tradedatacenter.decision.AbstractDecisionMaker;
 import com.helei.tradedatacenter.entity.KLine;
 import com.helei.tradedatacenter.entity.TradeSignal;
 import com.helei.tradedatacenter.indicator.Indicator;
-import com.helei.tradedatacenter.indicator.PST;
 import com.helei.tradedatacenter.indicator.calculater.BaseIndicatorCalculator;
+import com.helei.tradedatacenter.order.AbstractOrderCommitter;
 import com.helei.tradedatacenter.signal.AbstractSignalMaker;
-import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.KeyedStream;
-import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
-import org.apache.flink.streaming.api.functions.KeyedProcessFunction;
-import org.apache.flink.streaming.api.functions.source.SourceFunction;
-import org.apache.flink.util.Collector;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -23,12 +18,37 @@ import java.util.List;
 
 
 public class AutoTradeTask {
+
+    /**
+     * 环境
+     */
     private final StreamExecutionEnvironment env;
 
+    /**
+     * k线数据源
+     */
+    private final BaseKLineSource memoryKLineSource;
+
+    /**
+     * 指标计算器
+     */
     private final List<BaseIndicatorCalculator<? extends Indicator>> indicatorCalList;
 
+    /**
+     * 信号处理器
+     */
     private final List<AbstractSignalMaker> signalMakers;
-    private final BaseKLineSource memoryKLineSource;
+
+    /**
+     * 决策器
+     */
+    private final List<AbstractDecisionMaker> decisionMakers;
+
+    /**
+     * 订单提交器
+     */
+    private final List<AbstractOrderCommitter> orderCommiters;
+
 
     public AutoTradeTask(StreamExecutionEnvironment env, BaseKLineSource memoryKLineSource) {
         // 设置 Flink 流环境
@@ -37,61 +57,104 @@ public class AutoTradeTask {
         this.memoryKLineSource = memoryKLineSource;
 
         this.indicatorCalList = new ArrayList<>();
+
         this.signalMakers = new ArrayList<>();
+
+        this.decisionMakers = new ArrayList<>();
+
+        this.orderCommiters = new ArrayList<>();
     }
 
+    /**
+     * 添加指标计算器
+     *
+     * @param calculator 指标计算器
+     * @param <T>        指标类型
+     * @return this
+     */
     public <T extends Indicator> AutoTradeTask addIndicator(BaseIndicatorCalculator<T> calculator) {
         indicatorCalList.add(calculator);
         return this;
     }
 
+    /**
+     * 添加信号生成器
+     *
+     * @param signalMaker 信号生成器
+     * @return this
+     */
     public AutoTradeTask addSignalMaker(AbstractSignalMaker signalMaker) {
         this.signalMakers.add(signalMaker);
         return this;
     }
 
+    /**
+     * 添加决策器
+     *
+     * @param decisionMaker 决策器
+     * @return this
+     */
+    public AutoTradeTask addDecisionMaker(AbstractDecisionMaker decisionMaker) {
+        this.decisionMakers.add(decisionMaker);
+        return this;
+    }
+
+
+    /**
+     * 添加订单提交器
+     *
+     * @param orderCommiter 订单提交器
+     * @return this
+     */
+    public AutoTradeTask addOrderCommiter(AbstractOrderCommitter orderCommiter) {
+        this.orderCommiters.add(orderCommiter);
+        return this;
+    }
+
     public void execute(String name) throws Exception {
-        // 使用自定义 SourceFunction 生成 K 线数据流
-        KeyedStream<KLine, String> keyedStream = env.addSource(memoryKLineSource)
-                .keyBy(KLine::getSymbol);
+        //1. 使用自定义 SourceFunction 生成 K 线数据流
+        KeyedStream<KLine, String> kLineStream = env.addSource(memoryKLineSource).keyBy(KLine::getStreamKey);
 
-        SingleOutputStreamOperator<KLine> process = null;
+        // 2.指标处理，串行
         for (BaseIndicatorCalculator<? extends Indicator> calculator : indicatorCalList) {
-            if (process == null) {
-                process = keyedStream.process(calculator);
-            } else {
-                process = process.keyBy(KLine::getSymbol).process(calculator);
-            }
+            kLineStream = kLineStream.process(calculator).keyBy(KLine::getStreamKey);
         }
 
-//        if (signalMakers.size() == 0) {
-//            throw new IllegalArgumentException("no signal maker");
-//        }
-
-        KeyedStream<KLine, String> dataStream = null;
-        if (process == null) {
-            dataStream = keyedStream;
-        } else {
-            dataStream = process.keyBy(KLine::getSymbol);
+        if (signalMakers.isEmpty()) {
+            throw new IllegalArgumentException("no signal maker");
         }
-//
-//        Iterator<AbstractSignalMaker> signalMakerIterator = signalMakers.iterator();
-//        SingleOutputStreamOperator<TradeSignal> signal = dataStream.process(signalMakerIterator.next());
-//        while (signalMakerIterator.hasNext()) {
-//            signal.union(dataStream.process(signalMakerIterator.next()));
-//        }
 
-        // 4. 输出最终结果
-        dataStream.process(new KeyedProcessFunction<String, KLine, String>() {
-            @Override
-            public void processElement(KLine kLine, Context context, Collector<String> collector) throws Exception {
-                collector.collect(kLine.toString());
-//                PST pst = (PST)kLine.getIndicators().get("PST");
-//                if (pst != null) {
-//                    collector.collect(kLine.toString() + "\npredict price - " + pst.getRelativeUpTrendLine().predictPrice(kLine.getOpenTime()));
-//                }
-            }
-        }).print();
+        //3, 信号处理,并行
+        Iterator<AbstractSignalMaker> signalMakerIterator = signalMakers.iterator();
+
+        KeyedStream<TradeSignal, String> signalStream = kLineStream.process(signalMakerIterator.next()).keyBy(signal -> signal.getKLine().getStreamKey());
+
+        while (signalMakerIterator.hasNext()) {
+            signalStream.union(kLineStream.process(signalMakerIterator.next()));
+        }
+
+
+        if (decisionMakers.isEmpty()) {
+            throw new IllegalArgumentException("no decision maker");
+        }
+
+        //4、决策器
+        Iterator<AbstractDecisionMaker> decisionMakerIterator = decisionMakers.iterator();
+
+        KeyedStream<BaseOrder, String> orderStream = signalStream.process(decisionMakerIterator.next()).keyBy(BaseOrder::getSymbol);
+
+        while (decisionMakerIterator.hasNext()) {
+            orderStream.union(signalStream.process(decisionMakerIterator.next()));
+        }
+
+
+        //最后将决策走到订单提交器
+        for (AbstractOrderCommitter orderCommitter : orderCommiters) {
+            orderStream.addSink(orderCommitter);
+        }
+
         env.execute(name);
     }
+
 }
+

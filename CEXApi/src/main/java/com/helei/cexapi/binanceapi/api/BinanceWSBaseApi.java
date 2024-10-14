@@ -1,13 +1,10 @@
-
-
-
 package com.helei.cexapi.binanceapi.api;
 
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.helei.cexapi.binanceapi.BinanceWSApiClient;
 import com.helei.cexapi.binanceapi.base.AbstractBinanceWSApi;
-import com.helei.cexapi.binanceapi.constants.WebSocketCommandType;
+import com.helei.cexapi.binanceapi.constants.command.BaseCommandType;
 import com.helei.cexapi.binanceapi.dto.WebSocketCommandBuilder;
 import lombok.extern.slf4j.Slf4j;
 
@@ -36,10 +33,10 @@ public class BinanceWSBaseApi extends AbstractBinanceWSApi {
      * @param callback callback, 失败则会传入null. 由父类的线程池执行
      */
     public void queryServerTime(Consumer<Long> callback) {
-        JSONObject command = WebSocketCommandBuilder.builder().setCommandType(WebSocketCommandType.TIME).build();
+        JSONObject command = WebSocketCommandBuilder.builder().setCommandType(BaseCommandType.TIME).build();
 
         String id = command.getString("id");
-        binanceWSApiClient.sendRequest(1, id, command, result -> {
+        binanceWSApiClient.sendRequest(1, command, result -> {
             if (result != null) {
                 try {
                     callback.accept(result.getLong("serverTime"));
@@ -120,11 +117,9 @@ public class BinanceWSBaseApi extends AbstractBinanceWSApi {
         }
         JSONObject command = WebSocketCommandBuilder
                 .builder()
-                .setCommandType(WebSocketCommandType.EXCHANGE_INFO)
+                .setCommandType(BaseCommandType.EXCHANGE_INFO)
                 .setParams(jb)
                 .build();
-
-        String id = command.getString("id");
-        binanceWSApiClient.sendRequest(20, id, command, callback);
+        binanceWSApiClient.sendRequest(20, command, callback);
     }
 }

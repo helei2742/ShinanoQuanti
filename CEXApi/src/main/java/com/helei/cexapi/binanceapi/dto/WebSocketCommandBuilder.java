@@ -1,12 +1,12 @@
 
 
-
 package com.helei.cexapi.binanceapi.dto;
 
 
-        import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONArray;
         import com.alibaba.fastjson.JSONObject;
-        import com.helei.cexapi.binanceapi.constants.WebSocketCommandType;
+        import com.helei.cexapi.binanceapi.constants.command.WSCommandType;
+        import com.helei.cexapi.binanceapi.constants.command.BaseCommandType;
         import lombok.Data;
         import lombok.EqualsAndHashCode;
 
@@ -30,15 +30,15 @@ public class WebSocketCommandBuilder {
     }
 
     public JSONObject buildPing() {
-        return setCommandType(WebSocketCommandType.PING).build();
+        return setCommandType(BaseCommandType.PING).build();
     }
 
     public JSONObject buildPong() {
-        return setCommandType(WebSocketCommandType.PONG).build();
+        return setCommandType(BaseCommandType.PONG).build();
     }
 
-    public WebSocketCommandBuilder setCommandType(WebSocketCommandType webSocketCommandType) {
-        command.put("method", webSocketCommandType.getDescription());
+    public WebSocketCommandBuilder setCommandType(WSCommandType wsCommandType) {
+        command.put("method", wsCommandType.getDescription());
         return this;
     }
 
@@ -80,4 +80,17 @@ public class WebSocketCommandBuilder {
         }
         return this;
     }
+
+    /**
+     * 清除参数
+     * @return
+     */
+    public WebSocketCommandBuilder clear() {
+        synchronized (command) {
+            command.put("id", UUID.randomUUID().toString());
+            command.remove("params");
+        }
+        return this;
+    }
 }
+
