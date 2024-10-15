@@ -21,12 +21,17 @@ public class MemoryKLineSource extends BaseKLineSource {
 
     private static final Map<String, KLineBuffer> kLineBufferMap = new HashMap<>();
 
+    private final String symbol;
+
+    private final KLineInterval interval;
+
     public MemoryKLineSource(
             String symbol,
             KLineInterval interval,
             LocalDateTime startTime,
-            MemoryKLineDataPublisher memoryKLineDataPublisher
-    ) {
+            MemoryKLineDataPublisher memoryKLineDataPublisher) {
+        this.symbol = symbol;
+        this.interval = interval;
         kLineBufferMap.put(id, memoryKLineDataPublisher.registry(symbol, interval, startTime));
     }
 
@@ -34,6 +39,9 @@ public class MemoryKLineSource extends BaseKLineSource {
     @Override
     protected KLine loadKLine() throws Exception {
         KLineBuffer kLineBuffer = kLineBufferMap.get(id);
+        if (kLineBuffer == null) {
+            log.error("didn't registry kline[{}]-[{}] on memoryKLineDataPublisher", symbol, interval.getDescribe());
+        }
         return kLineBuffer.take();
     }
 }

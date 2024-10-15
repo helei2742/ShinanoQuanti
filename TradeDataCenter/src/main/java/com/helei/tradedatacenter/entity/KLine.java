@@ -1,11 +1,12 @@
 package com.helei.tradedatacenter.entity;
 
 import com.helei.cexapi.binanceapi.constants.KLineInterval;
-import com.helei.cexapi.binanceapi.constants.WebSocketStreamType;
-import com.helei.tradedatacenter.indicator.Indicator;
+import com.helei.tradedatacenter.resolvestream.indicator.Indicator;
+import com.helei.tradedatacenter.resolvestream.indicator.config.IndicatorConfig;
 import lombok.*;
 
 import java.io.Serial;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 
@@ -17,7 +18,7 @@ import java.util.HashMap;
 @NoArgsConstructor
 @EqualsAndHashCode
 @Builder
-public class KLine {
+public class KLine implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 8888L; // 显式声明 serialVersionUID
@@ -80,7 +81,14 @@ public class KLine {
     /**
      * 存放各种指标以及他的值
      */
-    private HashMap<String, Indicator> indicators = new HashMap<>();
+    private HashMap<IndicatorConfig<? extends Indicator>, Indicator> indicators = new HashMap<>();
+
+
+    public <T extends Indicator> T getIndicator(IndicatorConfig<T> config) {
+        Indicator indicator = indicators.get(config);
+        if (indicator == null) return null;
+        return (T) indicator;
+    }
 
     /**
      * 获取stream流名称
@@ -106,3 +114,4 @@ public class KLine {
                 '}';
     }
 }
+

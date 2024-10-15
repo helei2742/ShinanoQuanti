@@ -100,7 +100,7 @@ public class CalculatorUtil {
         }
 
         int n = arr.size();
-        int start = n - 1;
+        int count = 1;
 
         // 从倒数第二个元素开始，比较相邻元素的大小
         boolean isIncreasing = calField.apply(arr.get(n - 2)) <= calField.apply(arr.get(n - 1));  // 判断单调性（递增或递减）
@@ -110,19 +110,19 @@ public class CalculatorUtil {
             if (isIncreasing) {
                 // 如果是递增序列
                 if (calField.apply(arr.get(i)) > calField.apply(arr.get(i + 1))) {
-                    start = i + 1;
                     break;
                 }
+
             } else {
                 // 如果是递减序列
                 if (calField.apply(arr.get(i)) > calField.apply(arr.get(i + 1))) {
-                    start = i + 1;
                     break;
                 }
             }
+            count++;
         }
 
         // 返回最后具有单调性的部分
-        return arr.subList(start, n);
+        return arr.subList(n - Math.max(2, count), n);
     }
 }

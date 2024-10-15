@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+
+
 /**
  * 交易信号
  */
@@ -21,6 +23,11 @@ public class TradeSignal {
      * 信号名
      */
     private String name;
+
+    /**
+     * 信号描述
+     */
+    private String description;
 
     /**
      * 发出这个信号的k线
@@ -50,6 +57,13 @@ public class TradeSignal {
     /**
      * 止损价格
      */
-    private Double protectPrice;
+    private Double stopPrice;
+
+    /**
+     * 信号是否过期
+     */
+    private Boolean isExpire;
 }
+
+
 

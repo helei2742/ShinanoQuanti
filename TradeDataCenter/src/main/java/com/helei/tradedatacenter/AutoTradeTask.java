@@ -2,13 +2,15 @@ package com.helei.tradedatacenter;
 
 import com.helei.cexapi.binanceapi.constants.order.BaseOrder;
 import com.helei.tradedatacenter.datasource.BaseKLineSource;
-import com.helei.tradedatacenter.decision.AbstractDecisionMaker;
+import com.helei.tradedatacenter.resolvestream.decision.AbstractDecisionMaker;
 import com.helei.tradedatacenter.entity.KLine;
 import com.helei.tradedatacenter.entity.TradeSignal;
-import com.helei.tradedatacenter.indicator.Indicator;
-import com.helei.tradedatacenter.indicator.calculater.BaseIndicatorCalculator;
-import com.helei.tradedatacenter.order.AbstractOrderCommitter;
-import com.helei.tradedatacenter.signal.AbstractSignalMaker;
+import com.helei.tradedatacenter.resolvestream.indicator.Indicator;
+import com.helei.tradedatacenter.resolvestream.indicator.calculater.BaseIndicatorCalculator;
+import com.helei.tradedatacenter.resolvestream.indicator.calculater.PSTCalculator;
+import com.helei.tradedatacenter.resolvestream.indicator.config.PSTConfig;
+import com.helei.tradedatacenter.resolvestream.order.AbstractOrderCommitter;
+import com.helei.tradedatacenter.resolvestream.signal.AbstractSignalMaker;
 import org.apache.flink.streaming.api.datastream.KeyedStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 
@@ -28,6 +30,11 @@ public class AutoTradeTask {
      * k线数据源
      */
     private final BaseKLineSource memoryKLineSource;
+
+    /**
+     * PST设置
+     */
+    private PSTConfig pstConfig;
 
     /**
      * 指标计算器
@@ -138,7 +145,7 @@ public class AutoTradeTask {
             throw new IllegalArgumentException("no decision maker");
         }
 
-        //4、决策器
+        //4、决策器，
         Iterator<AbstractDecisionMaker> decisionMakerIterator = decisionMakers.iterator();
 
         KeyedStream<BaseOrder, String> orderStream = signalStream.process(decisionMakerIterator.next()).keyBy(BaseOrder::getSymbol);
@@ -157,4 +164,3 @@ public class AutoTradeTask {
     }
 
 }
-
