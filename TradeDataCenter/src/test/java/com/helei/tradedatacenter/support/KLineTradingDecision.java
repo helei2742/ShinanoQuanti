@@ -12,6 +12,7 @@ import com.helei.tradedatacenter.datasource.HistoryKLineLoader;
 import com.helei.tradedatacenter.datasource.MemoryKLineDataPublisher;
 import com.helei.tradedatacenter.datasource.MemoryKLineSource;
 import com.helei.tradedatacenter.dto.OriginOrder;
+import com.helei.tradedatacenter.resolvestream.GroupSignalResolver;
 import com.helei.tradedatacenter.resolvestream.decision.AbstractDecisionMaker;
 import com.helei.tradedatacenter.entity.KLine;
 import com.helei.tradedatacenter.entity.TradeSignal;
@@ -31,6 +32,8 @@ import com.helei.tradedatacenter.resolvestream.signal.PSTSignalMaker;
 import com.helei.tradedatacenter.util.KLineBuffer;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.flink.api.java.tuple.Tuple2;
+import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -39,8 +42,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -187,6 +194,41 @@ public class KLineTradingDecision {
                 .addIndicator(new MACDCalculator(new MACDConfig(12, 26, 9)))
                 .addIndicator(new BollCalculator(bollConfig))
                 .addSignalMaker(new BollSignalMaker(bollConfig))
+                .addSignalMaker(new PSTSignalMaker(pstConfig))
+                .addGroupSignalResolver(new GroupSignalResolver() {
+                    private transient BufferedWriter writer;
+
+                    @Override
+                    public void open(Configuration parameters) throws Exception {
+                        writer = new BufferedWriter(new FileWriter("test-kline-file.txt", true));
+                    }
+
+                    @Override
+                    public void invoke(Tuple2<KLine, List<TradeSignal>> value, Context context) throws Exception {
+                        List<TradeSignal> list = value.getField(1);
+
+                        if (list.isEmpty()) return;
+
+                        writer.write("\n<<start>>\n");
+                        writer.write(value.getField(0).toString());
+                        writer.newLine();
+
+                        for (TradeSignal tradeSignal : list) {
+                            writer.write(tradeSignal.toString());
+                        }
+                        writer.write("<<end>>\n");
+                    }
+
+                    // 任务结束时调用，关闭文件流
+                    @Override
+                    public void close() throws Exception {
+                        if (writer != null) {
+                            writer.flush();
+                            writer.close(); // 关闭文件流
+                        }
+                        super.close();
+                    }
+                })
 //                .addSignalMaker(new PSTSignalMaker(pstConfig))
                 .addInService()
                 .build();
@@ -203,6 +245,8 @@ public class KLineTradingDecision {
                     }
                 })
                 .execute("test");
+
+
     }
 
     @SneakyThrows

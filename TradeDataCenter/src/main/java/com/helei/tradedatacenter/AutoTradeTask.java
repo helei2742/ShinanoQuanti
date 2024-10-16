@@ -1,21 +1,21 @@
 package com.helei.tradedatacenter;
 
-        import com.helei.cexapi.binanceapi.constants.order.BaseOrder;
-        import com.helei.tradedatacenter.dto.OriginOrder;
-        import com.helei.tradedatacenter.entity.TradeSignal;
-        import com.helei.tradedatacenter.resolvestream.decision.AbstractDecisionMaker;
-        import com.helei.tradedatacenter.resolvestream.order.AbstractOrderCommitter;
-        import lombok.extern.slf4j.Slf4j;
-        import org.apache.flink.api.common.functions.AggregateFunction;
-        import org.apache.flink.streaming.api.datastream.DataStream;
-        import org.apache.flink.streaming.api.datastream.KeyedStream;
-        import org.apache.flink.streaming.api.windowing.assigners.SlidingEventTimeWindows;
-        import org.apache.flink.streaming.api.windowing.time.Time;
+import com.helei.cexapi.binanceapi.constants.order.BaseOrder;
+import com.helei.tradedatacenter.dto.OriginOrder;
+import com.helei.tradedatacenter.entity.TradeSignal;
+import com.helei.tradedatacenter.resolvestream.decision.AbstractDecisionMaker;
+import com.helei.tradedatacenter.resolvestream.order.AbstractOrderCommitter;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.flink.api.common.functions.AggregateFunction;
+import org.apache.flink.streaming.api.datastream.DataStream;
+import org.apache.flink.streaming.api.datastream.KeyedStream;
+import org.apache.flink.streaming.api.windowing.assigners.SlidingEventTimeWindows;
+import org.apache.flink.streaming.api.windowing.time.Time;
 
-        import java.time.Duration;
-        import java.util.ArrayList;
-        import java.util.Iterator;
-        import java.util.List;
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 @Slf4j
 public class AutoTradeTask {
@@ -76,7 +76,7 @@ public class AutoTradeTask {
 
         KeyedStream<TradeSignal, String> signalStream = tradeSignalService.getCombineTradeSignalStream();
 
-//        signalStream.print();
+        signalStream.print();
         DataStream<List<TradeSignal>> windowSignal = signalStream
                 .timeWindow(Time.of(Duration.ofMinutes(1)), Time.of(Duration.ofSeconds(10)))
                 .aggregate(new AggregateFunction<TradeSignal, List<TradeSignal>, List<TradeSignal>>() {

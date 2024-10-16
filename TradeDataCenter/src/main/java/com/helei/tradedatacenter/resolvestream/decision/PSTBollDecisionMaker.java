@@ -1,15 +1,15 @@
 package com.helei.tradedatacenter.resolvestream.decision;
 
 
-        import com.helei.tradedatacenter.dto.OriginOrder;
-        import com.helei.tradedatacenter.entity.TradeSignal;
-        import com.helei.tradedatacenter.resolvestream.decision.config.PSTBollDecisionConfig_v1;
-        import lombok.extern.slf4j.Slf4j;
+    import com.helei.tradedatacenter.dto.OriginOrder;
+    import com.helei.tradedatacenter.entity.TradeSignal;
+    import com.helei.tradedatacenter.resolvestream.decision.config.PSTBollDecisionConfig_v1;
+    import lombok.extern.slf4j.Slf4j;
 
-        import java.math.BigDecimal;
-        import java.util.List;
-        import java.util.Map;
-        import java.util.stream.Collectors;
+    import java.math.BigDecimal;
+    import java.util.List;
+    import java.util.Map;
+    import java.util.stream.Collectors;
 
 /**
  * 根据PST和Boll指标决策下单

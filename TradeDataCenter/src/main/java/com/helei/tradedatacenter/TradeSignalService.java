@@ -1,21 +1,28 @@
 package com.helei.tradedatacenter;
 
-        import com.helei.tradedatacenter.datasource.BaseKLineSource;
-        import com.helei.tradedatacenter.entity.KLine;
-        import com.helei.tradedatacenter.entity.TradeSignal;
-        import com.helei.tradedatacenter.resolvestream.indicator.Indicator;
-        import com.helei.tradedatacenter.resolvestream.indicator.calculater.BaseIndicatorCalculator;
-        import com.helei.tradedatacenter.resolvestream.signal.AbstractSignalMaker;
-        import lombok.Getter;
-        import lombok.extern.slf4j.Slf4j;
-        import org.apache.flink.streaming.api.datastream.DataStream;
-        import org.apache.flink.streaming.api.datastream.KeyedStream;
-        import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+import com.helei.tradedatacenter.datasource.BaseKLineSource;
+import com.helei.tradedatacenter.entity.KLine;
+import com.helei.tradedatacenter.entity.TradeSignal;
+import com.helei.tradedatacenter.resolvestream.GroupSignalResolver;
+import com.helei.tradedatacenter.resolvestream.SignalSplitResolver;
+import com.helei.tradedatacenter.resolvestream.indicator.Indicator;
+import com.helei.tradedatacenter.resolvestream.indicator.calculater.BaseIndicatorCalculator;
+import com.helei.tradedatacenter.resolvestream.signal.AbstractSignalMaker;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.flink.api.common.state.*;
+import org.apache.flink.api.common.typeinfo.BasicTypeInfo;
+import org.apache.flink.api.common.typeinfo.TypeInformation;
+import org.apache.flink.api.java.tuple.Tuple2;
+import org.apache.flink.streaming.api.datastream.BroadcastStream;
+import org.apache.flink.streaming.api.datastream.DataStream;
+import org.apache.flink.streaming.api.datastream.KeyedStream;
+import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+import org.apache.flink.streaming.api.functions.KeyedProcessFunction;
+import org.apache.flink.util.Collector;
 
-        import java.util.ArrayList;
-        import java.util.Iterator;
-        import java.util.List;
-        import java.util.function.Function;
+import java.util.*;
+import java.util.function.Function;
 
 
 @Slf4j
@@ -42,6 +49,7 @@ public class TradeSignalService {
 
     /**
      * 添加信号流处理器
+     *
      * @param resolver resolver
      */
     public void addTradeSignalStreamResolver(TradeSignalStreamResolver resolver) {
@@ -51,6 +59,7 @@ public class TradeSignalService {
 
     /**
      * 当前信号流处理器是否为空
+     *
      * @return boolean
      */
     public boolean isEmpty() {
@@ -60,6 +69,7 @@ public class TradeSignalService {
 
     /**
      * 获取联合的交易信号流，，根据交易对名symbol进行的keyby
+     *
      * @return KeyedStream
      */
     public KeyedStream<TradeSignal, String> getCombineTradeSignalStream() {
@@ -76,8 +86,9 @@ public class TradeSignalService {
         return combineStream.keyBy(TradeSignal::getStreamKey);
     }
 
-
-
+    /**
+     * 交易信号流处理器
+     */
     @Getter
     public static class TradeSignalStreamResolver {
         /**
@@ -100,6 +111,14 @@ public class TradeSignalService {
          */
         private final List<AbstractSignalMaker> signalMakers;
 
+        /**
+         * 分组信号处理器，会将信号按k线进行分组
+         */
+        private final List<GroupSignalResolver> groupSignalResolvers;
+
+
+        private final MapStateDescriptor<String, KLine> broadcastStateDescriptor = new MapStateDescriptor<>("broadcast-close-kline", BasicTypeInfo.STRING_TYPE_INFO, TypeInformation.of(KLine.class));
+
 
         public TradeSignalStreamResolver(StreamExecutionEnvironment env) {
             this.env = env;
@@ -107,9 +126,15 @@ public class TradeSignalService {
             this.indicatorCalList = new ArrayList<>();
 
             this.signalMakers = new ArrayList<>();
+
+            this.groupSignalResolvers = new ArrayList<>();
         }
 
 
+        /**
+         * 开始执行产生信号流
+         * @return 信号流
+         */
         public DataStream<TradeSignal> makeSignalStream() {
             if (kLineSource == null) {
                 throw new IllegalArgumentException("未添加k线数据源");
@@ -139,7 +164,32 @@ public class TradeSignalService {
             }
 
 
+            if (!groupSignalResolvers.isEmpty()) {
+                buildAndSinkGroupStream(kLineStream, signalStream);
+            }
+
             return signalStream;
+        }
+
+
+        /**
+         * 根据kline中已完结k线，将signal按照k线进行分组。得到新的流后调用GroupSignalResolver进行sink
+         *
+         * @param kLineStream  kLineStream
+         * @param signalStream signalStream
+         */
+        private void buildAndSinkGroupStream(KeyedStream<KLine, String> kLineStream, DataStream<TradeSignal> signalStream) {
+
+            BroadcastStream<KLine> broadcastCloseStream = kLineStream.broadcast(broadcastStateDescriptor);
+
+            DataStream<Tuple2<KLine, List<TradeSignal>>> groupSignalStream = signalStream
+                    .keyBy(TradeSignal::getStreamKey)
+                    .connect(broadcastCloseStream)
+                    .process(new SignalSplitResolver(broadcastStateDescriptor));
+
+            for (GroupSignalResolver groupSignalResolver : groupSignalResolvers) {
+                groupSignalStream.addSink(groupSignalResolver);
+            }
         }
     }
 
@@ -208,6 +258,17 @@ public class TradeSignalService {
          */
         public TradeSignalStreamResolverBuilder addSignalMaker(AbstractSignalMaker signalMaker) {
             tradeSignalStreamResolver.getSignalMakers().add(signalMaker);
+            return this;
+        }
+
+
+        /**
+         * 添加组信号处理器
+         * @param groupSignalResolver 组信号处理器
+         * @return this
+         */
+        public TradeSignalStreamResolverBuilder addGroupSignalResolver(GroupSignalResolver groupSignalResolver) {
+            tradeSignalStreamResolver.getGroupSignalResolvers().add(groupSignalResolver);
             return this;
         }
 

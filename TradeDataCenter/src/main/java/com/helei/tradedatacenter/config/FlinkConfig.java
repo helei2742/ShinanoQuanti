@@ -2,7 +2,6 @@ package com.helei.tradedatacenter.config;
 
 import org.apache.flink.configuration.MemorySize;
 import org.apache.flink.configuration.TaskManagerOptions;
-import org.apache.flink.streaming.api.TimeCharacteristic;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,7 +30,6 @@ public class FlinkConfig {
 //                .createRemoteEnvironment(jobManagerHost, jobManagerPort);
         // 可选的其他配置
         // env.setParallelism(4);  // 设置并行度
-        env.setStreamTimeCharacteristic(TimeCharacteristic.ProcessingTime);
         return env;
     }
     @Bean(name = "flinkEnv2")
@@ -52,7 +50,6 @@ public class FlinkConfig {
 //                .createRemoteEnvironment(jobManagerHost, jobManagerPort);
         // 可选的其他配置
         // env.setParallelism(4);  // 设置并行度
-        env.setStreamTimeCharacteristic(TimeCharacteristic.ProcessingTime);
         return env;
     }
 }
