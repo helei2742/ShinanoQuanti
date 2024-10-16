@@ -31,7 +31,7 @@ public class FlinkConfig {
 //                .createRemoteEnvironment(jobManagerHost, jobManagerPort);
         // 可选的其他配置
         // env.setParallelism(4);  // 设置并行度
-        env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
+        env.setStreamTimeCharacteristic(TimeCharacteristic.ProcessingTime);
         return env;
     }
     @Bean(name = "flinkEnv2")
@@ -52,7 +52,7 @@ public class FlinkConfig {
 //                .createRemoteEnvironment(jobManagerHost, jobManagerPort);
         // 可选的其他配置
         // env.setParallelism(4);  // 设置并行度
-        env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
+        env.setStreamTimeCharacteristic(TimeCharacteristic.ProcessingTime);
         return env;
     }
 }

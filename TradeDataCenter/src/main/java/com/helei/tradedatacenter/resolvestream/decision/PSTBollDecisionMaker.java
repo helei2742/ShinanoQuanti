@@ -36,7 +36,7 @@ public class PSTBollDecisionMaker extends AbstractDecisionMaker {
         List<TradeSignal> pstSignals = signalMap.get(pstKey);
         List<TradeSignal> bollSignals = signalMap.get(bollKey);
 
-        if (pstSignals.isEmpty() || bollSignals.isEmpty()) {
+        if (pstSignals == null || bollSignals == null || pstSignals.isEmpty() || bollSignals.isEmpty()) {
             log.warn("pst和boll信号不满足共振， 不生成订单");
             return null;
         }
