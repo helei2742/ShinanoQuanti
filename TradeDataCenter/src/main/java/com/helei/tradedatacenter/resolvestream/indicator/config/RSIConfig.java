@@ -1,9 +1,11 @@
 package com.helei.tradedatacenter.resolvestream.indicator.config;
 
-        import com.helei.tradedatacenter.resolvestream.indicator.RSI;
-        import lombok.Getter;
+import com.helei.tradedatacenter.resolvestream.indicator.RSI;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
 @Getter
+@EqualsAndHashCode(callSuper = false)
 public class RSIConfig extends IndicatorConfig<RSI> {
     private final int period;
 

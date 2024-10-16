@@ -1,14 +1,13 @@
-
-
 package com.helei.tradedatacenter.resolvestream.order;
 
-import com.alibaba.fastjson.JSONObject;
-import com.helei.cexapi.binanceapi.BinanceWSApiClient;
-import com.helei.cexapi.binanceapi.api.BinanceWSTradeApi;
-import com.helei.cexapi.binanceapi.constants.order.BaseOrder;
-import lombok.extern.slf4j.Slf4j;
+        import com.alibaba.fastjson.JSONObject;
+        import com.helei.cexapi.binanceapi.BinanceWSApiClient;
+        import com.helei.cexapi.binanceapi.api.BinanceWSTradeApi;
+        import com.helei.cexapi.binanceapi.constants.order.BaseOrder;
+        import com.helei.tradedatacenter.dto.OriginOrder;
+        import lombok.extern.slf4j.Slf4j;
 
-import java.util.concurrent.ExecutionException;
+        import java.util.concurrent.ExecutionException;
 
 
 /**
@@ -25,10 +24,11 @@ public class BinanceOrderCommitter extends AbstractOrderCommitter {
 
 
     @Override
-    public boolean commitTradeOrder(BaseOrder order) {
+    public boolean commitTradeOrder(OriginOrder order) {
         JSONObject response = null;
         try {
-            response = tradeApi.commitOrder(order, null).get();
+            //TODO 用户
+            response = tradeApi.commitOrder(null, null).get();
 
             if (response == null) {
                 log.error("get trade response is null");

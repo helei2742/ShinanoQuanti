@@ -1,15 +1,15 @@
 package com.helei.tradedatacenter.resolvestream.order;
 
-import com.helei.cexapi.binanceapi.constants.order.BaseOrder;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.flink.streaming.api.functions.sink.RichSinkFunction;
+        import com.helei.tradedatacenter.dto.OriginOrder;
+        import lombok.extern.slf4j.Slf4j;
+        import org.apache.flink.streaming.api.functions.sink.RichSinkFunction;
 
 @Slf4j
-public abstract class AbstractOrderCommitter extends RichSinkFunction<BaseOrder> {
+public abstract class AbstractOrderCommitter extends RichSinkFunction<OriginOrder> {
 
 
     @Override
-    public void invoke(BaseOrder order, Context context) throws Exception {
+    public void invoke(OriginOrder order, Context context) throws Exception {
 
         if (commitTradeOrder(order)) {
             log.info("Order committed successfully");
@@ -19,5 +19,5 @@ public abstract class AbstractOrderCommitter extends RichSinkFunction<BaseOrder>
         }
     }
 
-    public abstract boolean commitTradeOrder(BaseOrder order);
+    public abstract boolean commitTradeOrder(OriginOrder order);
 }

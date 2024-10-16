@@ -1,45 +1,40 @@
 package com.helei.tradedatacenter.resolvestream.signal;
 
-import com.helei.cexapi.binanceapi.constants.order.TradeSide;
-import com.helei.tradedatacenter.entity.KLine;
-import com.helei.tradedatacenter.entity.TradeSignal;
-import com.helei.tradedatacenter.resolvestream.indicator.Boll;
-import com.helei.tradedatacenter.resolvestream.indicator.config.BollConfig;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.flink.api.common.functions.OpenContext;
-import org.apache.flink.api.common.state.ValueState;
-import org.apache.flink.api.common.state.ValueStateDescriptor;
-import org.apache.flink.api.common.typeinfo.TypeInformation;
-import org.apache.flink.streaming.api.TimerService;
+        import com.helei.cexapi.binanceapi.constants.order.TradeSide;
+        import com.helei.tradedatacenter.entity.KLine;
+        import com.helei.tradedatacenter.entity.TradeSignal;
+        import com.helei.tradedatacenter.resolvestream.indicator.Boll;
+        import com.helei.tradedatacenter.resolvestream.indicator.config.BollConfig;
+        import lombok.extern.slf4j.Slf4j;
+        import org.apache.flink.api.common.functions.OpenContext;
+        import org.apache.flink.api.common.state.ValueState;
+        import org.apache.flink.api.common.state.ValueStateDescriptor;
+        import org.apache.flink.api.common.typeinfo.TypeInformation;
+        import org.apache.flink.streaming.api.TimerService;
 
-import java.io.IOException;
-import java.time.LocalDateTime;
+        import java.io.IOException;
+        import java.time.LocalDateTime;
 
 @Slf4j
 public class BollSignalMaker extends AbstractSignalMaker {
 
     private final BollConfig bollConfig;
 
-    /**
-     * 上一个实时k
-     */
-    private ValueState<KLine> lastRealTimeKLineState;
 
-
-    protected BollSignalMaker(BollConfig bollConfig) {
+    public BollSignalMaker(BollConfig bollConfig) {
         super(true);
         this.bollConfig = bollConfig;
     }
 
     @Override
     public void onOpen(OpenContext openContext) throws Exception {
-        lastRealTimeKLineState = getRuntimeContext().getState(new ValueStateDescriptor<>(bollConfig.getIndicatorName() + "_lastKLineState", TypeInformation.of(KLine.class)));
     }
 
 
     @Override
     protected TradeSignal resolveHistoryKLine(KLine kLine, TimerService timerService) throws IOException {
-        return tryBuildCenterSignal(kLine);
+        TradeSignal tradeSignal = tryBuildUpDownSignal(kLine);
+        return tradeSignal == null ? tryBuildCenterSignal(kLine) : tradeSignal;
     }
 
     @Override
@@ -54,10 +49,6 @@ public class BollSignalMaker extends AbstractSignalMaker {
      * @return TradeSignal
      */
     private TradeSignal tryBuildUpDownSignal(KLine kLine) throws IOException {
-        KLine lastRealTimeKLine = lastRealTimeKLineState.value();
-        if (lastRealTimeKLine == null) {
-            return null;
-        }
 
         Boll boll = kLine.getIndicator(bollConfig);
         if (boll == null) return null;
@@ -75,7 +66,6 @@ public class BollSignalMaker extends AbstractSignalMaker {
             return buildSignal(kLine, TradeSide.BUY, "触碰boll下轨", sma, kLine.getLow());
         }
 
-        lastRealTimeKLineState.update(kLine);
         return null;
     }
 
@@ -93,7 +83,7 @@ public class BollSignalMaker extends AbstractSignalMaker {
             return buildSignal(kLine, TradeSide.BUY, "上穿中轨", curBoll.getUpper(), kLine.getLow());
         }
 
-        if (kLine.getOpen() < curBoll.getSma() && kLine.getClose() < curBoll.getSma()) {
+        if (kLine.getOpen() > curBoll.getSma() && kLine.getClose() < curBoll.getSma()) {
             return buildSignal(kLine, TradeSide.SALE, "下穿中轨", curBoll.getLower(), kLine.getHigh());
         }
 

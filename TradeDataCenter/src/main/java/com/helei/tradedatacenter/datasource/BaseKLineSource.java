@@ -1,10 +1,17 @@
 package com.helei.tradedatacenter.datasource;
 
+import com.helei.cexapi.binanceapi.constants.KLineInterval;
 import com.helei.tradedatacenter.entity.KLine;
 import org.apache.flink.streaming.api.functions.source.SourceFunction;
 
 public abstract class BaseKLineSource implements SourceFunction<KLine> {
     private volatile boolean isRunning = true;
+
+    public final KLineInterval kLineInterval;
+
+    protected BaseKLineSource(KLineInterval kLineInterval) {
+        this.kLineInterval = kLineInterval;
+    }
 
     @Override
     public void run(SourceContext<KLine> sourceContext) throws Exception {
@@ -25,3 +32,5 @@ public abstract class BaseKLineSource implements SourceFunction<KLine> {
         isRunning = false;
     }
 }
+
+

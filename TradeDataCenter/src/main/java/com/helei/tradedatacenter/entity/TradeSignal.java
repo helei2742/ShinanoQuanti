@@ -1,12 +1,12 @@
 package com.helei.tradedatacenter.entity;
 
-import com.helei.cexapi.binanceapi.constants.order.TradeSide;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+        import com.helei.cexapi.binanceapi.constants.order.TradeSide;
+        import lombok.AllArgsConstructor;
+        import lombok.Builder;
+        import lombok.Data;
+        import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+        import java.time.LocalDateTime;
 
 
 
@@ -63,7 +63,13 @@ public class TradeSignal {
      * 信号是否过期
      */
     private Boolean isExpire;
+
+    /**
+     * 获取信号流的名字
+     * @return streamName
+     */
+    public String getStreamKey() {
+        return kLine.getSymbol();
+    }
 }
-
-
 

@@ -28,8 +28,8 @@ public class KLineMapper {
         JSONObject kjb = jsonObject.getJSONObject("data").getJSONObject("k");
 
         KLine kLine = new KLine();
-        kLine.setOpenTime(Instant.ofEpochMilli(kjb.getLong("t")).atZone(ZoneId.systemDefault()).toLocalDateTime());
-        kLine.setCloseTime(Instant.ofEpochMilli(kjb.getLong("T")).atZone(ZoneId.systemDefault()).toLocalDateTime());
+        kLine.setOpenTime(kjb.getLong("t"));
+        kLine.setCloseTime(kjb.getLong("T"));
         kLine.setSymbol(kjb.getString("s"));
         kLine.setHigh(kjb.getDouble("h"));
         kLine.setLow(kjb.getDouble("l"));
@@ -45,8 +45,8 @@ public class KLineMapper {
             return null;
         }
         KLine kLine = new KLine();
-        kLine.setOpenTime(Instant.ofEpochMilli(jsonArray.getLong(0)).atZone(ZoneId.systemDefault()).toLocalDateTime());
-        kLine.setCloseTime(Instant.ofEpochMilli(jsonArray.getLong(6)).atZone(ZoneId.systemDefault()).toLocalDateTime());
+        kLine.setOpenTime(jsonArray.getLong(0));
+        kLine.setCloseTime(jsonArray.getLong(6));
 //        kLine.setSymbol(kjb.getString("s"));
         kLine.setHigh(jsonArray.getDouble(2));
         kLine.setLow(jsonArray.getDouble(3));

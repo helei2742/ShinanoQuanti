@@ -2,10 +2,12 @@
 package com.helei.tradedatacenter.resolvestream.indicator.config;
 
 
-        import com.helei.tradedatacenter.resolvestream.indicator.Boll;
-        import lombok.Getter;
+import com.helei.tradedatacenter.resolvestream.indicator.Boll;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
 @Getter
+@EqualsAndHashCode(callSuper = false)
 public class BollConfig extends IndicatorConfig<Boll> {
 
     private final int period;

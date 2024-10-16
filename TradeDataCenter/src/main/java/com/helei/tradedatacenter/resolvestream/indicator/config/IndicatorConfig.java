@@ -2,12 +2,14 @@
 package com.helei.tradedatacenter.resolvestream.indicator.config;
 
         import com.alibaba.fastjson.JSONObject;
+        import lombok.EqualsAndHashCode;
 
         import java.io.Serializable;
 
 /**
  * 指标配置
  */
+@EqualsAndHashCode(callSuper = false)
 public abstract class IndicatorConfig<T> implements Serializable {
     public final Class<T> indicatorClass;
 

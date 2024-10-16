@@ -122,7 +122,7 @@ public class PSTSignalMaker extends AbstractSignalMaker {
 
     private TradeSignal tryBuildSignal(KLine kLine, TimerService timerService, boolean isCheckEnd) throws Exception {
         PST pst = curPST.value();
-        log.info("当前 PST = [{}]", pst);
+        log.info("当前 PST, symbol [{}] -> [{}]", kLine.getStreamKey(), pst);
         if (pst == null) return null;
 
 
@@ -142,8 +142,8 @@ public class PSTSignalMaker extends AbstractSignalMaker {
         double upK = upTrendLine.getK();
         double downK = downTrendLine.getK();
 
-        double upPrice = upK * (kLine.getCloseTime().toEpochSecond(ZoneOffset.UTC)+1) + upTrendLine.getM();
-        double downPrice = downK * (kLine.getCloseTime().toEpochSecond(ZoneOffset.UTC)+1) + downTrendLine.getM();
+        double upPrice = upK * (kLine.getCloseTime()/1000.0+1) + upTrendLine.getM();
+        double downPrice = downK * (kLine.getCloseTime()/1000.0+1) + downTrendLine.getM();
         if (upK < 0 && downK > 0) { //两条趋势线相交，交点在右侧
             //是否需要检查k线结束才发信号
             if (isCheckEnd) {
@@ -186,7 +186,7 @@ public class PSTSignalMaker extends AbstractSignalMaker {
     private void setTimerSignal(KLine kLine, TimerService timerService, List<Double> spList) throws Exception {
         if (!tsPrice.get().iterator().hasNext()) {
             //设置定时执行，看是否还站上
-            long invokeTime = kLine.getCloseTime().toEpochSecond(ZoneOffset.UTC) - LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
+            long invokeTime = kLine.getCloseTime()/1000 - LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
             timerService.registerProcessingTimeTimer(invokeTime);
             tsPrice.update(spList);
         }

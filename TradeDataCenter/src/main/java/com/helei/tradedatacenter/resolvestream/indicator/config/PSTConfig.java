@@ -1,10 +1,12 @@
 package com.helei.tradedatacenter.resolvestream.indicator.config;
 
-        import com.helei.tradedatacenter.resolvestream.indicator.PST;
-        import lombok.Getter;
+import com.helei.tradedatacenter.resolvestream.indicator.PST;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
 @Getter
-public class PSTConfig extends IndicatorConfig<PST>{
+@EqualsAndHashCode(callSuper = false)
+public class PSTConfig extends IndicatorConfig<PST> {
     private final int pressureCount;
 
     private final int supportCount;

@@ -1,9 +1,11 @@
 package com.helei.tradedatacenter.resolvestream.indicator.config;
 
         import com.helei.tradedatacenter.resolvestream.indicator.EMA;
+        import lombok.EqualsAndHashCode;
         import lombok.Getter;
 
 @Getter
+@EqualsAndHashCode(callSuper = false)
 public class EMAConfig extends IndicatorConfig<EMA>{
     private final int period;
 

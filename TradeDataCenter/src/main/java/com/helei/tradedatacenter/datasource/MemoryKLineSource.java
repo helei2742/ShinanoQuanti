@@ -2,14 +2,14 @@
 package com.helei.tradedatacenter.datasource;
 
 import com.helei.cexapi.binanceapi.constants.KLineInterval;
-import com.helei.tradedatacenter.entity.KLine;
-import com.helei.tradedatacenter.util.KLineBuffer;
-import lombok.extern.slf4j.Slf4j;
+        import com.helei.tradedatacenter.entity.KLine;
+        import com.helei.tradedatacenter.util.KLineBuffer;
+        import lombok.extern.slf4j.Slf4j;
 
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+        import java.time.LocalDateTime;
+        import java.util.HashMap;
+        import java.util.Map;
+        import java.util.UUID;
 
 
 /**
@@ -23,15 +23,14 @@ public class MemoryKLineSource extends BaseKLineSource {
 
     private final String symbol;
 
-    private final KLineInterval interval;
 
     public MemoryKLineSource(
             String symbol,
             KLineInterval interval,
             LocalDateTime startTime,
             MemoryKLineDataPublisher memoryKLineDataPublisher) {
+        super(interval);
         this.symbol = symbol;
-        this.interval = interval;
         kLineBufferMap.put(id, memoryKLineDataPublisher.registry(symbol, interval, startTime));
     }
 
@@ -40,7 +39,7 @@ public class MemoryKLineSource extends BaseKLineSource {
     protected KLine loadKLine() throws Exception {
         KLineBuffer kLineBuffer = kLineBufferMap.get(id);
         if (kLineBuffer == null) {
-            log.error("didn't registry kline[{}]-[{}] on memoryKLineDataPublisher", symbol, interval.getDescribe());
+            log.error("didn't registry kline[{}]-[{}] on memoryKLineDataPublisher", symbol, kLineInterval.getDescribe());
         }
         return kLineBuffer.take();
     }

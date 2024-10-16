@@ -11,7 +11,7 @@ import org.apache.flink.api.common.state.ListStateDescriptor;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
 import org.apache.flink.configuration.Configuration;
 
-import java.time.ZoneOffset;
+
 import java.util.*;
 
 /**
@@ -81,12 +81,12 @@ public class PSTCalculator extends BaseIndicatorCalculator<PST> {
 
         TrendLine upTrendLine = CalculatorUtil.calculateTrend(
                 CalculatorUtil.getLastMonotonicPart(high, KLine::getHigh),
-                k -> Double.valueOf(k.getOpenTime().toInstant(ZoneOffset.UTC).getEpochSecond()),
+                k -> (double) (k.getOpenTime() / 1000),
                 KLine::getHigh
         );
         TrendLine downTrendLine = CalculatorUtil.calculateTrend(
                 CalculatorUtil.getLastMonotonicPart(low, KLine::getLow),
-                k -> Double.valueOf(k.getOpenTime().toInstant(ZoneOffset.UTC).getEpochSecond()),
+                k -> (double) (k.getOpenTime() / 1000),
                 KLine::getLow
         );
 

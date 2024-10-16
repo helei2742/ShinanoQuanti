@@ -1,10 +1,12 @@
 package com.helei.tradedatacenter.resolvestream.indicator.config;
 
-        import com.helei.tradedatacenter.resolvestream.indicator.MACD;
-        import lombok.Getter;
+import com.helei.tradedatacenter.resolvestream.indicator.MACD;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
 @Getter
-public class MACDConfig extends IndicatorConfig<MACD>{
+@EqualsAndHashCode(callSuper = false)
+public class MACDConfig extends IndicatorConfig<MACD> {
     private int ema1Period = 12;
 
     private int ema2Period = 26;

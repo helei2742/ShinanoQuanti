@@ -150,7 +150,7 @@ public abstract class AbstractSignalMaker extends KeyedProcessFunction<String, K
     private void updateCurKLine(KLine cur) throws IOException {
         KLine last = curKLine.value();
         //存储的k线为空，或存储的k线的open时间与收到的open时间不同。说明当前k线发生变化，重置状态
-        if (last == null || !last.getOpenTime().isEqual(cur.getOpenTime())) {
+        if (last == null || last.getOpenTime() != cur.getOpenTime()) {
             isCurSendSignal.update(false);
         }
         if (cur.isEnd()) {

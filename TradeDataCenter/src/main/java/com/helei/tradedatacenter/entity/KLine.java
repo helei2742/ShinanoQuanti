@@ -7,6 +7,7 @@ import lombok.*;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 
@@ -60,12 +61,12 @@ public class KLine implements Serializable {
     /**
      * 开盘时间
      */
-    private LocalDateTime openTime;
+    private long openTime;
 
     /**
      * 收盘时间
      */
-    private LocalDateTime closeTime;
+    private long closeTime;
 
 
     /**
@@ -98,6 +99,7 @@ public class KLine implements Serializable {
         return symbol + "@kline_" + kLineInterval.getDescribe();
     }
 
+
     @Override
     public String toString() {
         return "KLine{" +
@@ -107,11 +109,15 @@ public class KLine implements Serializable {
                 ", high=" + high +
                 ", low=" + low +
                 ", volume=" + volume +
-                ", openTime=" + openTime +
-                ", closeTime=" + closeTime +
+                ", openTime=" + Instant.ofEpochMilli(openTime) +
+                ", closeTime=" + Instant.ofEpochMilli(closeTime) +
                 ", end=" + end +
                 ", indicators=" + indicators +
                 '}';
+    }
+
+    public KLine clone() {
+        return KLine.builder().symbol(symbol).open(open).close(close).high(high).low(low).volume(volume).openTime(openTime).closeTime(closeTime).end(end).indicators(indicators).kLineInterval(kLineInterval).build();
     }
 }
 

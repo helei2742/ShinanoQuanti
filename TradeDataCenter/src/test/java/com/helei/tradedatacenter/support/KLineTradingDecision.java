@@ -7,15 +7,26 @@ import com.helei.cexapi.binanceapi.constants.order.BaseOrder;
 import com.helei.cexapi.constants.WebSocketUrl;
 import com.helei.tradedatacenter.AutoTradeTask;
 import com.helei.cexapi.binanceapi.constants.KLineInterval;
+import com.helei.tradedatacenter.TradeSignalService;
 import com.helei.tradedatacenter.datasource.HistoryKLineLoader;
 import com.helei.tradedatacenter.datasource.MemoryKLineDataPublisher;
 import com.helei.tradedatacenter.datasource.MemoryKLineSource;
+import com.helei.tradedatacenter.dto.OriginOrder;
 import com.helei.tradedatacenter.resolvestream.decision.AbstractDecisionMaker;
 import com.helei.tradedatacenter.entity.KLine;
 import com.helei.tradedatacenter.entity.TradeSignal;
+import com.helei.tradedatacenter.resolvestream.decision.PSTBollDecisionMaker;
+import com.helei.tradedatacenter.resolvestream.decision.config.PSTBollDecisionConfig_v1;
+import com.helei.tradedatacenter.resolvestream.indicator.calculater.BollCalculator;
+import com.helei.tradedatacenter.resolvestream.indicator.calculater.MACDCalculator;
 import com.helei.tradedatacenter.resolvestream.indicator.calculater.PSTCalculator;
+import com.helei.tradedatacenter.resolvestream.indicator.calculater.RSICalculator;
+import com.helei.tradedatacenter.resolvestream.indicator.config.BollConfig;
+import com.helei.tradedatacenter.resolvestream.indicator.config.MACDConfig;
 import com.helei.tradedatacenter.resolvestream.indicator.config.PSTConfig;
+import com.helei.tradedatacenter.resolvestream.indicator.config.RSIConfig;
 import com.helei.tradedatacenter.resolvestream.order.AbstractOrderCommitter;
+import com.helei.tradedatacenter.resolvestream.signal.BollSignalMaker;
 import com.helei.tradedatacenter.resolvestream.signal.PSTSignalMaker;
 import com.helei.tradedatacenter.util.KLineBuffer;
 import lombok.SneakyThrows;
@@ -42,7 +53,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class KLineTradingDecision {
     private MemoryKLineDataPublisher dataPublisher;
 
-    private MemoryKLineSource memoryKLineSource_btc;
+    private MemoryKLineSource memoryKLineSource_btc_15m;
+    private MemoryKLineSource memoryKLineSource_btc_2h;
 
     private MemoryKLineSource memoryKLineSource_eth;
 
@@ -52,6 +64,7 @@ public class KLineTradingDecision {
 
     BinanceWSApiClient streamClient;
     BinanceWSApiClient normalClient;
+
     @BeforeAll
     public void before() {
         try {
@@ -61,12 +74,13 @@ public class KLineTradingDecision {
             CompletableFuture.allOf(streamClient.connect(), normalClient.connect()).get();
 
             dataPublisher = new MemoryKLineDataPublisher(streamClient, normalClient, 100, 200, 3)
-                    .addListenKLine(btcusdt, Arrays.asList(KLineInterval.M_1, KLineInterval.d_1, KLineInterval.m_1))
+                    .addListenKLine(btcusdt, Arrays.asList(KLineInterval.M_1, KLineInterval.h_2, KLineInterval.m_15))
                     .addListenKLine(ethusdt, Arrays.asList(KLineInterval.M_1, KLineInterval.d_1, KLineInterval.m_15));
 
-            memoryKLineSource_btc = new MemoryKLineSource(btcusdt, KLineInterval.M_1, LocalDateTime.of(2020, 1, 1, 0, 0), dataPublisher);
-            memoryKLineSource_eth = new MemoryKLineSource(ethusdt, KLineInterval.m_15, LocalDateTime.of(2020, 1, 1, 0, 0), dataPublisher);
+            memoryKLineSource_btc_2h = new MemoryKLineSource(btcusdt, KLineInterval.h_2, LocalDateTime.of(2020, 1, 1, 0, 0), dataPublisher);
+            memoryKLineSource_btc_15m = new MemoryKLineSource(btcusdt, KLineInterval.m_15, LocalDateTime.of(2020, 1, 1, 0, 0), dataPublisher);
 
+            memoryKLineSource_eth = new MemoryKLineSource(ethusdt, KLineInterval.m_15, LocalDateTime.of(2020, 1, 1, 0, 0), dataPublisher);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -123,42 +137,78 @@ public class KLineTradingDecision {
 //            }
 //
 //        }).start();
-        new Thread(()->{
-            try {
-                PSTConfig pstConfig = new PSTConfig(60, 3, 3);
-                new AutoTradeTask(env2, memoryKLineSource_eth)
-//                        .addIndicator(new MACDCalculator(new MACDConfig(12, 26, 9)))
-//                        .addIndicator(new RSICalculator(new RSIConfig(15)))
-                        .addIndicator(new PSTCalculator(pstConfig))
-                        .addSignalMaker(new PSTSignalMaker(pstConfig))
-                        .addDecisionMaker(new AbstractDecisionMaker() {
-                            @Override
-                            public BaseOrder decisionAndBuilderOrder(TradeSignal signal) {
-                                System.out.println(signal);
-                                return null;
-                            }
-                        })
-                        .addOrderCommiter(new AbstractOrderCommitter() {
-                            @Override
-                            public boolean commitTradeOrder(BaseOrder order) {
-                                return false;
-                            }
-                        })
-                        .execute("eth");
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
+//        new Thread(()->{
+//            try {
+//                PSTConfig pstConfig = new PSTConfig(60, 3, 3);
+//                new AutoTradeTask(env2, memoryKLineSource_eth)
+////                        .addIndicator(new MACDCalculator(new MACDConfig(12, 26, 9)))
+////                        .addIndicator(new RSICalculator(new RSIConfig(15)))
+//                        .addIndicator(new PSTCalculator(pstConfig))
+//                        .addSignalMaker(new PSTSignalMaker(pstConfig))
+//                        .addDecisionMaker(new AbstractDecisionMaker() {
+//                            @Override
+//                            public BaseOrder decisionAndBuilderOrder(TradeSignal signal) {
+//                                System.out.println(signal);
+//                                return null;
+//                            }
+//                        })
+//                        .addOrderCommiter(new AbstractOrderCommitter() {
+//                            @Override
+//                            public boolean commitTradeOrder(BaseOrder order) {
+//                                return false;
+//                            }
+//                        })
+//                        .execute("eth");
+//            } catch (Exception e) {
+//                throw new RuntimeException(e);
+//            }
+//
+//        }).start();
+//        TimeUnit.SECONDS.sleep(1000);
+    }
 
-        }).start();
-        TimeUnit.SECONDS.sleep(1000);
+    @Test
+    public void testAutoTradeV2() throws Exception {
+        PSTConfig pstConfig = new PSTConfig(60, 3, 3);
+
+        BollConfig bollConfig = new BollConfig(15);
+        TradeSignalService tradeSignalService = TradeSignalService
+                .builder(env)
+//                .buildResolver()
+//                .addKLineSource(memoryKLineSource_btc_15m)
+//                .addIndicator(new MACDCalculator(new MACDConfig(12, 26, 9)))
+//                .addIndicator(new RSICalculator(new RSIConfig(15)))
+//                .addIndicator(new PSTCalculator(pstConfig))
+//                .addSignalMaker(new PSTSignalMaker(pstConfig))
+//                .addInService()
+                .buildResolver()
+                .addKLineSource(memoryKLineSource_btc_2h)
+                .addIndicator(new PSTCalculator(pstConfig))
+                .addIndicator(new MACDCalculator(new MACDConfig(12, 26, 9)))
+                .addIndicator(new BollCalculator(bollConfig))
+                .addSignalMaker(new BollSignalMaker(bollConfig))
+//                .addSignalMaker(new PSTSignalMaker(pstConfig))
+                .addInService()
+                .build();
+
+        AutoTradeTask autoTradeTask = new AutoTradeTask(tradeSignalService);
+
+        autoTradeTask
+                .addDecisionMaker(new PSTBollDecisionMaker(new PSTBollDecisionConfig_v1(pstConfig, bollConfig)))
+                .addOrderCommiter(new AbstractOrderCommitter() {
+                    @Override
+                    public boolean commitTradeOrder(OriginOrder order) {
+                        System.out.println(order);
+                        return false;
+                    }
+                })
+                .execute("test");
     }
 
     @SneakyThrows
     @Test
     public void testPST() {
-        new AutoTradeTask(env, memoryKLineSource_btc)
-                .addIndicator(new PSTCalculator(new PSTConfig(60, 3, 3)))
-                .execute("btc");
+
     }
 
     @Test
@@ -180,7 +230,7 @@ public class KLineTradingDecision {
                         }
                         System.out.println("add kline " + counter.incrementAndGet() + ", buffer size " + kb.size());
                     }
-                }).thenRun(()->{
+                }).thenRun(() -> {
                     System.out.println("end of history");
                 });
 

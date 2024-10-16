@@ -1,9 +1,11 @@
 package com.helei.tradedatacenter.resolvestream.indicator.config;
 
         import com.helei.tradedatacenter.resolvestream.indicator.MA;
+        import lombok.EqualsAndHashCode;
         import lombok.Getter;
 
 @Getter
+@EqualsAndHashCode(callSuper = false)
 public class MAConfig extends IndicatorConfig<MA>{
     private final int period;
 
