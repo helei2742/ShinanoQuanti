@@ -4,74 +4,133 @@ import com.helei.tradedatacenter.entity.KLine;
 import com.helei.tradedatacenter.entity.TradeSignal;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.flink.api.common.state.*;
+import org.apache.flink.api.common.typeinfo.TypeHint;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.configuration.Configuration;
-import org.apache.flink.streaming.api.functions.co.BroadcastProcessFunction;
-import org.apache.flink.streaming.api.functions.co.KeyedBroadcastProcessFunction;
+import org.apache.flink.streaming.api.functions.co.KeyedCoProcessFunction;
 import org.apache.flink.util.Collector;
 
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
+import java.io.IOException;
+import java.util.*;
 
 
+/**
+ * 信号分片器，将信号按照K线进行分组
+ */
 @Slf4j
-public class SignalSplitResolver extends KeyedBroadcastProcessFunction<String, TradeSignal, KLine, Tuple2<KLine, List<TradeSignal>>> {
+public class SignalSplitResolver extends KeyedCoProcessFunction<String, KLine, TradeSignal, Tuple2<KLine, List<TradeSignal>>> {
 
-    private final MapStateDescriptor<String, KLine> broadcastStateDescriptor;
 
-    private final String CURRENT_KLINE_KEY = "curKLine";
+    private ListState<TradeSignal> timebaseSignalListState;
 
-    private ListState<TradeSignal> windowSignal;
+    private ValueState<Tuple2<Long, Long>> timebaseState;
 
-    public SignalSplitResolver(MapStateDescriptor<String, KLine> broadcastStateDescriptor) {
-        this.broadcastStateDescriptor = broadcastStateDescriptor;
+    private final long sendWindowLength;
+
+    private final long allowDelayTime;
+
+    public SignalSplitResolver(Long sendWindowLength, long allowDelayTime) {
+        this.sendWindowLength = sendWindowLength;
+        this.allowDelayTime = allowDelayTime;
     }
 
     @Override
     public void open(Configuration parameters) throws Exception {
-//                                    curKLineOpenTime = getRuntimeContext().getState(new ValueStateDescriptor<>("curKLineOpenTImeState", BasicTypeInfo.LONG_TYPE_INFO));
-        windowSignal = getRuntimeContext().getListState(new ListStateDescriptor<>("tradeSignalWindowState", TypeInformation.of(TradeSignal.class)));
+        timebaseSignalListState = getRuntimeContext().getListState(new ListStateDescriptor<>("timebaseSignalListState", TypeInformation.of(TradeSignal.class)));
+        timebaseState = getRuntimeContext().getState(new ValueStateDescriptor<>("timebaseState", TypeInformation.of(new TypeHint<Tuple2<Long, Long>>() {})));
     }
 
+
     @Override
-    public void processElement(TradeSignal signal, KeyedBroadcastProcessFunction<String, TradeSignal, KLine, Tuple2<KLine, List<TradeSignal>>>.ReadOnlyContext readOnlyContext, Collector<Tuple2<KLine, List<TradeSignal>>> collector) throws Exception {
-        // 从广播状态中获取划分规则
-        ReadOnlyBroadcastState<String, KLine> broadcastState = readOnlyContext.getBroadcastState(broadcastStateDescriptor);
-        KLine curKLine = broadcastState.get(CURRENT_KLINE_KEY);
+    public void processElement1(KLine kLine, KeyedCoProcessFunction<String, KLine, TradeSignal, Tuple2<KLine, List<TradeSignal>>>.Context context, Collector<Tuple2<KLine, List<TradeSignal>>> collector) throws Exception {
 
-        //窗口的写入
-        Iterable<TradeSignal> windowState = windowSignal.get();
+        long startTime = getWindowStart(kLine, context.timerService().currentProcessingTime());
+        long entTime = startTime + sendWindowLength;
 
-        long curOpenTime = curKLine.getOpenTime();
-        long signalTime = signal.getKLine().getOpenTime();
 
-        if (signalTime == curOpenTime) { // 是当前k线
-            windowSignal.add(signal);
-        } else {
-            Iterator<TradeSignal> iterable = windowState.iterator();
+        //获取发送时间窗口内的信号
+        List<TradeSignal> signalList = getOrInitSignalListState();
 
-            List<TradeSignal> curWindow = new ArrayList<>();
-            while (iterable.hasNext()) {
-                curWindow.add(iterable.next());
+        List<TradeSignal> needSendSignal = new ArrayList<>();
+
+
+        for (TradeSignal signal : signalList) {//当前k在基线时间内有信号
+            //只添加在当前发送窗口的
+            if (signal.getCreateTime() >= startTime && signal.getCreateTime() <= entTime) {
+                needSendSignal.add(signal);
             }
-
-            collector.collect(Tuple2.of(curKLine, curWindow));
-            windowSignal.update(new ArrayList<>());
-
-            log.warn("信号时间[{}]不在当前k线时间[{}]内, k时间已过期", Date.from(Instant.ofEpochMilli(signalTime)), Date.from(Instant.ofEpochMilli(curOpenTime)));
         }
+
+        //发送流
+        collector.collect(new Tuple2<>(kLine, needSendSignal));
+
+        //更新发送窗口
+        updateSignalListState(signalList, startTime);
     }
 
+
     @Override
-    public void processBroadcastElement(KLine kLine, KeyedBroadcastProcessFunction<String, TradeSignal, KLine, Tuple2<KLine, List<TradeSignal>>>.Context context, Collector<Tuple2<KLine, List<TradeSignal>>> collector) throws Exception {
-        if (!kLine.isEnd()) return;
-        // 来到新的k线
-        //更新当前k状态
-        BroadcastState<String, KLine> broadcastState = context.getBroadcastState(broadcastStateDescriptor);
-        broadcastState.put(CURRENT_KLINE_KEY, kLine);
+    public void processElement2(TradeSignal signal, KeyedCoProcessFunction<String, KLine, TradeSignal, Tuple2<KLine, List<TradeSignal>>>.Context context, Collector<Tuple2<KLine, List<TradeSignal>>> collector) throws Exception {
+        List<TradeSignal> signalList = getOrInitSignalListState();
+        if (signal.getCreateTime() == null) {
+            log.warn("信号没有创建时间，将自动丢弃.[{}]", signal);
+            return;
+        }
+        signalList.add(signal);
+        timebaseSignalListState.update(signalList);
+    }
+
+
+    /**
+     * 获取当前窗口的起始时间
+     * @param kLine kLine
+     * @param currentTime currentTime
+     * @return 窗口的起始时间
+     * @throws IOException IOException
+     */
+    private long getWindowStart(KLine kLine, long currentTime) throws IOException {
+        Tuple2<Long, Long> timebase = timebaseState.value();
+
+        if (timebase == null || kLine.isEnd()) {
+            timebase = new Tuple2<>(kLine.getOpenTime(), currentTime);
+        }
+        timebaseState.update(timebase);
+
+
+        long windowStart = (long)timebase.getField(0) + (currentTime - (long)timebase.getField(1)) / sendWindowLength * sendWindowLength;
+
+        return windowStart - allowDelayTime;
+    }
+
+    /**
+     * 更新窗口，去除过期的
+     * @param signalList signalList
+     * @param limitTime limitTime
+     * @throws Exception Exception
+     */
+    private void updateSignalListState(List<TradeSignal> signalList, Long limitTime) throws Exception {
+        signalList.removeIf(signal -> signal.getCreateTime() < limitTime);
+        timebaseSignalListState.update(signalList);
+    }
+
+
+    /**
+     * 取SignalList，如果为空则会初始化
+     * @return SignalList
+     * @throws Exception SignalList
+     */
+    private List<TradeSignal> getOrInitSignalListState() throws Exception {
+        List<TradeSignal> signals = new ArrayList<>();
+        Iterable<TradeSignal> iterable = timebaseSignalListState.get();
+
+        if (iterable == null) {
+            timebaseSignalListState.update(signals);
+            return signals;
+        }
+
+        iterable.forEach(signals::add);
+        signals.sort(Comparator.comparing(TradeSignal::getCreateTime));
+        return signals;
     }
 }

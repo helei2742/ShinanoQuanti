@@ -1,19 +1,19 @@
 package com.helei.tradedatacenter.resolvestream.signal;
 
-        import com.helei.cexapi.binanceapi.constants.order.TradeSide;
-        import com.helei.tradedatacenter.entity.KLine;
-        import com.helei.tradedatacenter.entity.TradeSignal;
-        import com.helei.tradedatacenter.resolvestream.indicator.Boll;
-        import com.helei.tradedatacenter.resolvestream.indicator.config.BollConfig;
-        import lombok.extern.slf4j.Slf4j;
-        import org.apache.flink.api.common.functions.OpenContext;
-        import org.apache.flink.api.common.state.ValueState;
-        import org.apache.flink.api.common.state.ValueStateDescriptor;
-        import org.apache.flink.api.common.typeinfo.TypeInformation;
-        import org.apache.flink.streaming.api.TimerService;
+import com.helei.cexapi.binanceapi.constants.order.TradeSide;
+import com.helei.tradedatacenter.entity.KLine;
+import com.helei.tradedatacenter.entity.TradeSignal;
+import com.helei.tradedatacenter.resolvestream.indicator.Boll;
+import com.helei.tradedatacenter.resolvestream.indicator.config.BollConfig;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.flink.api.common.functions.OpenContext;
+import org.apache.flink.api.common.state.ValueState;
+import org.apache.flink.api.common.state.ValueStateDescriptor;
+import org.apache.flink.api.common.typeinfo.TypeInformation;
+import org.apache.flink.streaming.api.TimerService;
 
-        import java.io.IOException;
-        import java.time.LocalDateTime;
+import java.io.IOException;
+import java.time.LocalDateTime;
 
 @Slf4j
 public class BollSignalMaker extends AbstractSignalMaker {
@@ -97,7 +97,6 @@ public class BollSignalMaker extends AbstractSignalMaker {
                 .tradeSide(tradeSide)
                 .currentPrice(kLine.getClose())
                 .kLine(kLine)
-                .createTime(LocalDateTime.now())
                 .targetPrice(target)
                 .stopPrice(stop)
                 .build();

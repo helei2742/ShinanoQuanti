@@ -1,13 +1,13 @@
 package com.helei.tradedatacenter.entity;
 
-        import com.helei.cexapi.binanceapi.constants.order.TradeSide;
-        import lombok.AllArgsConstructor;
-        import lombok.Builder;
-        import lombok.Data;
-        import lombok.NoArgsConstructor;
+import com.helei.cexapi.binanceapi.constants.order.TradeSide;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-        import java.time.LocalDateTime;
-
+import java.time.Instant;
+import java.time.LocalDateTime;
 
 
 /**
@@ -37,7 +37,7 @@ public class TradeSignal {
     /**
      * 当前时间
      */
-    private LocalDateTime createTime;
+    private Long createTime;
 
     /**
      * 交易方向
@@ -66,10 +66,27 @@ public class TradeSignal {
 
     /**
      * 获取信号流的名字
+     *
      * @return streamName
      */
     public String getStreamKey() {
         return kLine.getSymbol();
+    }
+
+
+    @Override
+    public String toString() {
+        return "TradeSignal{" +
+                "name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", kLine=" + kLine +
+                ", createTime=" + (createTime == null ? "null" : Instant.ofEpochMilli(createTime)) +
+                ", tradeSide=" + tradeSide +
+                ", currentPrice=" + currentPrice +
+                ", targetPrice=" + targetPrice +
+                ", stopPrice=" + stopPrice +
+                ", isExpire=" + isExpire +
+                '}';
     }
 }
 

@@ -1,18 +1,18 @@
 package com.helei.tradedatacenter.resolvestream.signal;
 
-        import cn.hutool.core.util.BooleanUtil;
-        import com.helei.tradedatacenter.entity.KLine;
-        import com.helei.tradedatacenter.entity.TradeSignal;
-        import lombok.extern.slf4j.Slf4j;
-        import org.apache.flink.api.common.functions.OpenContext;
-        import org.apache.flink.api.common.state.ValueState;
-        import org.apache.flink.api.common.state.ValueStateDescriptor;
-        import org.apache.flink.api.common.typeinfo.TypeInformation;
-        import org.apache.flink.streaming.api.TimerService;
-        import org.apache.flink.streaming.api.functions.KeyedProcessFunction;
-        import org.apache.flink.util.Collector;
+import cn.hutool.core.util.BooleanUtil;
+import com.helei.tradedatacenter.entity.KLine;
+import com.helei.tradedatacenter.entity.TradeSignal;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.flink.api.common.functions.OpenContext;
+import org.apache.flink.api.common.state.ValueState;
+import org.apache.flink.api.common.state.ValueStateDescriptor;
+import org.apache.flink.api.common.typeinfo.TypeInformation;
+import org.apache.flink.streaming.api.TimerService;
+import org.apache.flink.streaming.api.functions.KeyedProcessFunction;
+import org.apache.flink.util.Collector;
 
-        import java.io.IOException;
+import java.io.IOException;
 
 
 /**
@@ -72,12 +72,21 @@ public abstract class AbstractSignalMaker extends KeyedProcessFunction<String, K
             if (BooleanUtil.isTrue(kLine.isEnd())) { //历史k线发出的信号打上标识
                 tradeSignal = resolveHistoryKLine(kLine, context.timerService());
                 if (tradeSignal == null) return;
+
                 tradeSignal.setIsExpire(true);
+                //设置创建时间, 历史k线得到的信号，时间为这个k的结束时间
+                tradeSignal.setCreateTime(kLine.getCloseTime());
             } else {
                 tradeSignal = resolveRealTimeKLine(kLine, context.timerService());
                 if (tradeSignal == null) return;
+
+
                 tradeSignal.setIsExpire(false);
+                //设置创建时间
+                tradeSignal.setCreateTime(context.timerService().currentProcessingTime());
             }
+
+            tradeSignal.setKLine(kLine);
 
             if (isAKLineSendOneSignal && BooleanUtil.isTrue(isCurSendSignal.value())) {
                 //当前k线发送过信号
@@ -86,7 +95,7 @@ public abstract class AbstractSignalMaker extends KeyedProcessFunction<String, K
                 isCurSendSignal.update(true);
                 collector.collect(tradeSignal);
 
-                log.info("signal maker send a signal: [{}]", tradeSignal);
+                log.debug("signal maker send a signal: [{}]", tradeSignal);
             }
         } catch (Exception e) {
             log.error("build signal error", e);
@@ -100,6 +109,8 @@ public abstract class AbstractSignalMaker extends KeyedProcessFunction<String, K
         TradeSignal tradeSignal = onTimerInvoke();
         if (tradeSignal != null) {
             log.info("signal maker send a timer signal: [{}]", tradeSignal);
+
+            tradeSignal.setCreateTime(tradeSignal.getKLine().isEnd() ? tradeSignal.getKLine().getCloseTime() : ctx.timerService().currentProcessingTime());
             out.collect(tradeSignal);
         }
     }
@@ -134,6 +145,7 @@ public abstract class AbstractSignalMaker extends KeyedProcessFunction<String, K
 
     /**
      * 产出定时信号，要触发，先要调用 context.timerService().registerProcessingTimeTimer(timer);
+     *
      * @return TradeSignal
      * @throws IOException IOException
      */
@@ -150,7 +162,7 @@ public abstract class AbstractSignalMaker extends KeyedProcessFunction<String, K
     private void updateCurKLine(KLine cur) throws IOException {
         KLine last = curKLine.value();
         //存储的k线为空，或存储的k线的open时间与收到的open时间不同。说明当前k线发生变化，重置状态
-        if (last == null || last.getOpenTime() != cur.getOpenTime()) {
+        if (last == null || last.getCloseTime() < cur.getOpenTime()) {
             isCurSendSignal.update(false);
         }
         if (cur.isEnd()) {

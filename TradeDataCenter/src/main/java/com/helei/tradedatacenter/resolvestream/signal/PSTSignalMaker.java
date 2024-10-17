@@ -122,7 +122,7 @@ public class PSTSignalMaker extends AbstractSignalMaker {
 
     private TradeSignal tryBuildSignal(KLine kLine, TimerService timerService, boolean isCheckEnd) throws Exception {
         PST pst = curPST.value();
-        log.info("当前 PST, symbol [{}] -> [{}]", kLine.getStreamKey(), pst);
+        log.debug("当前 PST, symbol [{}] -> [{}]", kLine.getStreamKey(), pst);
         if (pst == null) return null;
 
 
@@ -138,6 +138,8 @@ public class PSTSignalMaker extends AbstractSignalMaker {
 
         List<Double> pList = pst.getPressure();
         List<Double> sList = pst.getSupport();
+
+        if (pList.size() < 2 || sList.size() < 2) return null;
 
         double upK = upTrendLine.getK();
         double downK = downTrendLine.getK();
@@ -201,7 +203,6 @@ public class PSTSignalMaker extends AbstractSignalMaker {
                 .stopPrice(stop)
                 .kLine(kLine)
                 .currentPrice(kLine.getClose())
-                .createTime(LocalDateTime.now())
                 .tradeSide(side)
                 .build();
     }

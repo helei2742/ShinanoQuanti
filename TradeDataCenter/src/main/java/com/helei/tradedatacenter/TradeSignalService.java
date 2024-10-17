@@ -1,3 +1,5 @@
+
+
 package com.helei.tradedatacenter;
 
 import com.helei.tradedatacenter.datasource.BaseKLineSource;
@@ -5,21 +7,14 @@ import com.helei.tradedatacenter.entity.KLine;
 import com.helei.tradedatacenter.entity.TradeSignal;
 import com.helei.tradedatacenter.resolvestream.GroupSignalResolver;
 import com.helei.tradedatacenter.resolvestream.SignalSplitResolver;
-import com.helei.tradedatacenter.resolvestream.indicator.Indicator;
 import com.helei.tradedatacenter.resolvestream.indicator.calculater.BaseIndicatorCalculator;
 import com.helei.tradedatacenter.resolvestream.signal.AbstractSignalMaker;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.flink.api.common.state.*;
-import org.apache.flink.api.common.typeinfo.BasicTypeInfo;
-import org.apache.flink.api.common.typeinfo.TypeInformation;
 import org.apache.flink.api.java.tuple.Tuple2;
-import org.apache.flink.streaming.api.datastream.BroadcastStream;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.KeyedStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
-import org.apache.flink.streaming.api.functions.KeyedProcessFunction;
-import org.apache.flink.util.Collector;
 
 import java.util.*;
 import java.util.function.Function;
@@ -104,7 +99,7 @@ public class TradeSignalService {
         /**
          * 指标计算器
          */
-        private final List<BaseIndicatorCalculator<? extends Indicator>> indicatorCalList;
+        private final List<BaseIndicatorCalculator> indicatorCalList;
 
         /**
          * 信号处理器
@@ -116,9 +111,15 @@ public class TradeSignalService {
          */
         private final List<GroupSignalResolver> groupSignalResolvers;
 
+        /**
+         * 分组窗口占k线时间区间的比例
+         */
+        private double groupWindowRatioOfKLine = 0.2;
 
-        private final MapStateDescriptor<String, KLine> broadcastStateDescriptor = new MapStateDescriptor<>("broadcast-close-kline", BasicTypeInfo.STRING_TYPE_INFO, TypeInformation.of(KLine.class));
-
+        /**
+         * 允许的指标延迟时间
+         */
+        private long allowDelayTime = 15000;
 
         public TradeSignalStreamResolver(StreamExecutionEnvironment env) {
             this.env = env;
@@ -133,6 +134,7 @@ public class TradeSignalService {
 
         /**
          * 开始执行产生信号流
+         *
          * @return 信号流
          */
         public DataStream<TradeSignal> makeSignalStream() {
@@ -145,7 +147,7 @@ public class TradeSignalService {
 
 //            kLineStream.print();
             // 2.指标处理，串行
-            for (BaseIndicatorCalculator<? extends Indicator> calculator : indicatorCalList) {
+            for (BaseIndicatorCalculator<?> calculator : indicatorCalList) {
                 kLineStream = kLineStream.process(calculator).keyBy(KLine::getStreamKey);
             }
 //            kLineStream.print();
@@ -160,7 +162,7 @@ public class TradeSignalService {
 
             while (signalMakerIterator.hasNext()) {
 
-                signalStream.union(kLineStream.process(signalMakerIterator.next()));
+                signalStream = signalStream.union(kLineStream.process(signalMakerIterator.next()));
             }
 
 
@@ -180,13 +182,12 @@ public class TradeSignalService {
          */
         private void buildAndSinkGroupStream(KeyedStream<KLine, String> kLineStream, DataStream<TradeSignal> signalStream) {
 
-            BroadcastStream<KLine> broadcastCloseStream = kLineStream.broadcast(broadcastStateDescriptor);
+            signalStream.print();
+            DataStream<Tuple2<KLine, List<TradeSignal>>> groupSignalStream = kLineStream
+                    .connect(signalStream.keyBy(signal -> signal.getKLine().getStreamKey()))
+                    .process(new SignalSplitResolver((long) (kLineSource.kLineInterval.getSecond() * groupWindowRatioOfKLine * 1000), allowDelayTime));
 
-            DataStream<Tuple2<KLine, List<TradeSignal>>> groupSignalStream = signalStream
-                    .keyBy(TradeSignal::getStreamKey)
-                    .connect(broadcastCloseStream)
-                    .process(new SignalSplitResolver(broadcastStateDescriptor));
-
+            groupSignalStream.print();
             for (GroupSignalResolver groupSignalResolver : groupSignalResolvers) {
                 groupSignalStream.addSink(groupSignalResolver);
             }
@@ -238,14 +239,35 @@ public class TradeSignalService {
             return this;
         }
 
+
+        /**
+         * 设置分组窗口占k线的比例
+         * @param ratio ratio
+         * @return this
+         */
+        public TradeSignalStreamResolverBuilder setWindowLengthRationOfKLine(double ratio) {
+            tradeSignalStreamResolver.groupWindowRatioOfKLine = ratio;
+            return this;
+        }
+
+        /**
+         * 设置运行的指标延迟delay
+         * @param delay 指标延迟
+         * @return this
+         */
+        public TradeSignalStreamResolverBuilder setAllowSignalDelay(long delay) {
+            tradeSignalStreamResolver.allowDelayTime = delay;
+            return this;
+        }
+
         /**
          * 添加指标计算器
          *
          * @param calculator 指标计算器
-         * @param <T>        指标类型
+         * @param <>         指标类型
          * @return this
          */
-        public <T extends Indicator> TradeSignalStreamResolverBuilder addIndicator(BaseIndicatorCalculator<T> calculator) {
+        public TradeSignalStreamResolverBuilder addIndicator(BaseIndicatorCalculator calculator) {
             tradeSignalStreamResolver.getIndicatorCalList().add(calculator);
             return this;
         }
@@ -264,6 +286,7 @@ public class TradeSignalService {
 
         /**
          * 添加组信号处理器
+         *
          * @param groupSignalResolver 组信号处理器
          * @return this
          */

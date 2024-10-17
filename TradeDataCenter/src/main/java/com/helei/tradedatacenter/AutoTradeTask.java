@@ -76,46 +76,46 @@ public class AutoTradeTask {
 
         KeyedStream<TradeSignal, String> signalStream = tradeSignalService.getCombineTradeSignalStream();
 
-        signalStream.print();
-        DataStream<List<TradeSignal>> windowSignal = signalStream
-                .timeWindow(Time.of(Duration.ofMinutes(1)), Time.of(Duration.ofSeconds(10)))
-                .aggregate(new AggregateFunction<TradeSignal, List<TradeSignal>, List<TradeSignal>>() {
-                    @Override
-                    public List<TradeSignal> createAccumulator() {
-                        return new ArrayList<>();
-                    }
-
-                    @Override
-                    public List<TradeSignal> add(TradeSignal signal, List<TradeSignal> tradeSignals) {
-                        tradeSignals.add(signal);
-                        return tradeSignals;
-                    }
-
-                    @Override
-                    public List<TradeSignal> getResult(List<TradeSignal> tradeSignals) {
-                        return tradeSignals;
-                    }
-
-                    @Override
-                    public List<TradeSignal> merge(List<TradeSignal> tradeSignals, List<TradeSignal> acc1) {
-                        tradeSignals.addAll(acc1);
-                        return tradeSignals;
-                    }
-                });
-
-        //4、决策器，
-        Iterator<AbstractDecisionMaker> decisionMakerIterator = decisionMakers.iterator();
-
-        KeyedStream<OriginOrder, String> orderStream = windowSignal.process(decisionMakerIterator.next()).keyBy(OriginOrder::getSymbol);
-
-        while (decisionMakerIterator.hasNext()) {
-            orderStream.union(windowSignal.process(decisionMakerIterator.next()));
-        }
-        orderStream.print();
-        //最后将决策走到订单提交器
-        for (AbstractOrderCommitter orderCommitter : orderCommiters) {
-            orderStream.addSink(orderCommitter);
-        }
+//
+//        DataStream<List<TradeSignal>> windowSignal = signalStream
+//                .timeWindow(Time.of(Duration.ofMinutes(1)), Time.of(Duration.ofSeconds(10)))
+//                .aggregate(new AggregateFunction<TradeSignal, List<TradeSignal>, List<TradeSignal>>() {
+//                    @Override
+//                    public List<TradeSignal> createAccumulator() {
+//                        return new ArrayList<>();
+//                    }
+//
+//                    @Override
+//                    public List<TradeSignal> add(TradeSignal signal, List<TradeSignal> tradeSignals) {
+//                        tradeSignals.add(signal);
+//                        return tradeSignals;
+//                    }
+//
+//                    @Override
+//                    public List<TradeSignal> getResult(List<TradeSignal> tradeSignals) {
+//                        return tradeSignals;
+//                    }
+//
+//                    @Override
+//                    public List<TradeSignal> merge(List<TradeSignal> tradeSignals, List<TradeSignal> acc1) {
+//                        tradeSignals.addAll(acc1);
+//                        return tradeSignals;
+//                    }
+//                });
+//
+//        //4、决策器，
+//        Iterator<AbstractDecisionMaker> decisionMakerIterator = decisionMakers.iterator();
+//
+//        KeyedStream<OriginOrder, String> orderStream = windowSignal.process(decisionMakerIterator.next()).keyBy(OriginOrder::getSymbol);
+//
+//        while (decisionMakerIterator.hasNext()) {
+//            orderStream.union(windowSignal.process(decisionMakerIterator.next()));
+//        }
+//        orderStream.print();
+//        //最后将决策走到订单提交器
+//        for (AbstractOrderCommitter orderCommitter : orderCommiters) {
+//            orderStream.addSink(orderCommitter);
+//        }
 
         tradeSignalService.getEnv().execute(name);
     }
