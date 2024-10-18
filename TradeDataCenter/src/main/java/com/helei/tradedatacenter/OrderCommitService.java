@@ -5,7 +5,9 @@ import com.helei.cexapi.binanceapi.constants.order.BaseOrder;
 import com.helei.tradedatacenter.config.TradeConfig;
 import com.helei.tradedatacenter.conventor.AccountInfoMapper;
 import com.helei.tradedatacenter.dto.AccountInfo;
+import com.helei.tradedatacenter.dto.AccountLocationConfig;
 import com.helei.tradedatacenter.dto.OriginOrder;
+import com.helei.tradedatacenter.util.CalculatorUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.datastream.DataStream;
@@ -39,13 +41,17 @@ public class OrderCommitService {
                     future.thenAcceptAsync((accountInfoJSON) -> {
                         AccountInfo accountInfo = AccountInfoMapper.mapJsonToAccountInfo(accountInfoJSON);
                         log.info("获取到最新的账户信息[{}]", accountInfo);
+                        String uId = accountInfo.getUId();
                         Double freeUsdt = accountInfo.getFreeUsdt();
 
                         if (freeUsdt < TradeConfig.MIN_ORDER_USDT_COUNT_LIMIT) {
-                            log.warn("账户[{}]的剩余USDT[{}]小于限制[{}]，取消下单", accountInfo.getUId(), freeUsdt, TradeConfig.MIN_ORDER_USDT_COUNT_LIMIT);
+                            log.warn("账户[{}]的剩余USDT[{}]小于限制[{}]，取消下单", uId, freeUsdt, TradeConfig.MIN_ORDER_USDT_COUNT_LIMIT);
                             return;
                         }
 
+                        AccountLocationConfig locationConfig = accountInfoService.getAccountLocationConfig(uId);
+                        //计算可开数量
+                        CalculatorUtil.calculatePositionSize(freeUsdt, locationConfig, originOrder.getTargetPrice())
 
                     });
                 }

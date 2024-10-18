@@ -125,4 +125,32 @@ public class CalculatorUtil {
         // 返回最后具有单调性的部分
         return arr.subList(n - Math.max(2, count), n);
     }
+
+
+
+    //计算仓位大小
+    public static double calculatePositionSize(
+            double totalCapital,
+            double riskPercent,
+            double currentPrice,
+            double stopLoss,
+            double leverage
+    ) {
+        // Calculate the maximum amount of capital to risk in this trade
+        double maxRiskAmount = totalCapital * riskPercent;
+
+        // Calculate the risk per contract (difference between current price and stop loss)
+        double perContractRisk = currentPrice - stopLoss;
+
+        // If stop loss is greater than or equal to current price, return 0 as position size is invalid
+        if (perContractRisk <= 0) {
+            System.out.println("Invalid stop loss: Stop loss must be less than current price.");
+            return 0;
+        }
+
+        // Calculate the position size (number of contracts) taking leverage into account
+
+        return (maxRiskAmount / perContractRisk) * leverage;
+    }
+
 }
