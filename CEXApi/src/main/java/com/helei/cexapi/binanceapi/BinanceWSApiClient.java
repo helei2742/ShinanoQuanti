@@ -1,10 +1,7 @@
 
 package com.helei.cexapi.binanceapi;
 
-import com.helei.cexapi.binanceapi.api.BinanceWSBaseApi;
-import com.helei.cexapi.binanceapi.api.BinanceWSMarketApi;
-import com.helei.cexapi.binanceapi.api.BinanceWSStreamApi;
-import com.helei.cexapi.binanceapi.api.BinanceWSTradeApi;
+import com.helei.cexapi.binanceapi.api.*;
 import com.helei.cexapi.binanceapi.base.AbstractBinanceWSApiClient;
 import com.helei.cexapi.binanceapi.base.AbstractBinanceWSApiClientHandler;
 import com.helei.cexapi.binanceapi.supporter.BinanceWSStreamSupporter;
@@ -44,6 +41,8 @@ public class BinanceWSApiClient extends AbstractBinanceWSApiClient {
      */
     private final BinanceWSTradeApi tradeApi;
 
+    private final BinanceWSAccountApi accountApi;
+
 
     public BinanceWSApiClient(
             int threadPoolSize,
@@ -56,5 +55,6 @@ public class BinanceWSApiClient extends AbstractBinanceWSApiClient {
         marketApi = new BinanceWSMarketApi(this);
         streamApi = new BinanceWSStreamApi(this);
         tradeApi = new BinanceWSTradeApi(this);
+        accountApi = new BinanceWSAccountApi(this);
     }
 }

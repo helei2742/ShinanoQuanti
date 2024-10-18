@@ -1,0 +1,36 @@
+package com.helei.tradedatacenter.dto;
+
+import lombok.*;
+
+import java.util.List;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode
+@ToString
+public class AccountInfo {
+
+    private String uId;
+
+    private String accountType;
+
+    private Long updateTime;
+
+    private List<AssetInfo> balances;
+
+    /**
+     * 获取账户可用的usdt
+     * @return 可用的usdt
+     */
+    public Double getFreeUsdt() {
+        if (balances == null || balances.isEmpty()) return 0.0;
+
+        for (AssetInfo balance : balances) {
+            if (balance.getAsset().equalsIgnoreCase("usdt")) {
+                return balance.getFree();
+            }
+        }
+        return 0.0;
+    }
+}

@@ -2,17 +2,15 @@ package com.helei.tradedatacenter;
 
 import com.helei.cexapi.binanceapi.constants.order.BaseOrder;
 import com.helei.tradedatacenter.dto.OriginOrder;
+import com.helei.tradedatacenter.entity.KLine;
 import com.helei.tradedatacenter.entity.TradeSignal;
 import com.helei.tradedatacenter.resolvestream.decision.AbstractDecisionMaker;
 import com.helei.tradedatacenter.resolvestream.order.AbstractOrderCommitter;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.flink.api.common.functions.AggregateFunction;
+import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.KeyedStream;
-import org.apache.flink.streaming.api.windowing.assigners.SlidingEventTimeWindows;
-import org.apache.flink.streaming.api.windowing.time.Time;
 
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -27,97 +25,49 @@ public class AutoTradeTask {
     private final TradeSignalService tradeSignalService;
 
     /**
-     * 决策器
+     * 决策服务
      */
-    private final List<AbstractDecisionMaker> decisionMakers;
+    private final DecisionMakerService decisionMakerService;
 
     /**
      * 订单提交器
      */
-    private final List<AbstractOrderCommitter> orderCommiters;
+    private final OrderCommitService orderCommitService;
 
 
-
-    public AutoTradeTask(TradeSignalService tradeSignalService) {
+    public AutoTradeTask(
+            TradeSignalService tradeSignalService,
+            DecisionMakerService decisionMakerService,
+            OrderCommitService orderCommitService
+    ) {
         this.tradeSignalService = tradeSignalService;
 
-        this.decisionMakers = new ArrayList<>();
+        this.decisionMakerService = decisionMakerService;
 
-        this.orderCommiters = new ArrayList<>();
+        this.orderCommitService = orderCommitService;
     }
 
-    /**
-     * 添加决策器
-     *
-     * @param decisionMaker 决策器
-     * @return this
-     */
-    public AutoTradeTask addDecisionMaker(AbstractDecisionMaker decisionMaker) {
-        this.decisionMakers.add(decisionMaker);
-        return this;
-    }
-
-
-    /**
-     * 添加订单提交器
-     *
-     * @param orderCommiter 订单提交器
-     * @return this
-     */
-    public AutoTradeTask addOrderCommiter(AbstractOrderCommitter orderCommiter) {
-        this.orderCommiters.add(orderCommiter);
-        return this;
-    }
 
     public void execute(String name) throws Exception {
-        if (decisionMakers.isEmpty()) {
-            throw new IllegalArgumentException("没有添加决策器");
-        }
 
-        KeyedStream<TradeSignal, String> signalStream = tradeSignalService.getCombineTradeSignalStream();
+        //1.信号服务
+        KeyedStream<Tuple2<KLine, List<TradeSignal>>, String> symbolGroupSignalStream = tradeSignalService.getSymbolGroupSignalStream();
 
-//
-//        DataStream<List<TradeSignal>> windowSignal = signalStream
-//                .timeWindow(Time.of(Duration.ofMinutes(1)), Time.of(Duration.ofSeconds(10)))
-//                .aggregate(new AggregateFunction<TradeSignal, List<TradeSignal>, List<TradeSignal>>() {
-//                    @Override
-//                    public List<TradeSignal> createAccumulator() {
-//                        return new ArrayList<>();
-//                    }
-//
-//                    @Override
-//                    public List<TradeSignal> add(TradeSignal signal, List<TradeSignal> tradeSignals) {
-//                        tradeSignals.add(signal);
-//                        return tradeSignals;
-//                    }
-//
-//                    @Override
-//                    public List<TradeSignal> getResult(List<TradeSignal> tradeSignals) {
-//                        return tradeSignals;
-//                    }
-//
-//                    @Override
-//                    public List<TradeSignal> merge(List<TradeSignal> tradeSignals, List<TradeSignal> acc1) {
-//                        tradeSignals.addAll(acc1);
-//                        return tradeSignals;
-//                    }
-//                });
-//
-//        //4、决策器，
-//        Iterator<AbstractDecisionMaker> decisionMakerIterator = decisionMakers.iterator();
-//
-//        KeyedStream<OriginOrder, String> orderStream = windowSignal.process(decisionMakerIterator.next()).keyBy(OriginOrder::getSymbol);
-//
-//        while (decisionMakerIterator.hasNext()) {
-//            orderStream.union(windowSignal.process(decisionMakerIterator.next()));
-//        }
-//        orderStream.print();
-//        //最后将决策走到订单提交器
-//        for (AbstractOrderCommitter orderCommitter : orderCommiters) {
-//            orderStream.addSink(orderCommitter);
-//        }
+        //2.决策服务
+        DataStream<OriginOrder> originOrderStream = decisionMakerService.decision(symbolGroupSignalStream);
+
+        //3订单提交服务
+        DataStream<BaseOrder> commitedOrderStream = orderCommitService.commitOrder(originOrderStream);
+
+        //4已提交订单入库
+        //TODO
+        commitedOrderStream.print();
 
         tradeSignalService.getEnv().execute(name);
     }
 
 }
+
+
+
+

@@ -25,7 +25,7 @@ public class RandomKLineSource extends BaseKLineSource {
     private final Double minPrice;
 
 
-    private final AtomicLong  realTimer;
+    private final AtomicLong realTimer;
     @Setter
     private boolean isRealTime = false;
 
@@ -34,7 +34,7 @@ public class RandomKLineSource extends BaseKLineSource {
         this.symbol = symbol.toUpperCase();
 
         this.startTimeStamp = new AtomicLong(startTimeStamp.toInstant(ZoneOffset.UTC).toEpochMilli());
-        realTimer = this.startTimeStamp;
+        realTimer = new AtomicLong(startTimeStamp.toInstant(ZoneOffset.UTC).toEpochMilli());
         this.maxPrice = maxPrice;
         this.minPrice = minPrice;
     }
@@ -55,8 +55,10 @@ public class RandomKLineSource extends BaseKLineSource {
         if (isRealTime) {
             long curTime = realTimer.addAndGet(200);
             if (curTime >= openTime + plus) {
-                openTime = startTimeStamp.addAndGet(openTime + plus);
+                openTime = startTimeStamp.addAndGet(plus);
             }
+        } else {
+            openTime = startTimeStamp.addAndGet(plus);
         }
 
         TimeUnit.MILLISECONDS.sleep(200);
@@ -65,3 +67,4 @@ public class RandomKLineSource extends BaseKLineSource {
         return kLine;
     }
 }
+
