@@ -16,13 +16,11 @@ public class CEXApiFactory {
 //    private static InetSocketAddress proxy = null;
 
     public static BinanceWSApiClient binanceApiClient(
-            int threadPoolSize,
             String url
     ) throws URISyntaxException, SSLException {
         BinanceWSApiClientHandler handler = new BinanceWSApiClientHandler();
 
         BinanceWSApiClient client = new BinanceWSApiClient(
-                threadPoolSize,
                 url,
                 new IpWeightSupporter("localIp"),
                 handler

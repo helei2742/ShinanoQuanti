@@ -59,6 +59,16 @@ public enum WebSocketStreamType {
     ALL_TICKER("!ticker@arr", (symbol, params) -> "@!ticker@arr"),
 
     /**
+     * 按symbol的最优挂单信息
+     */
+    BOOK_TICKER("bookTicker", ((symbol, params) -> "@bookTicker")),
+
+    /**
+     * 强平订单，推送特定symbol的强平订单快照信息。 1000ms内至多仅推送一条最近的强平订单作为快照
+     */
+    FORCE_ORDER("forceOrder", ((symbol, params) -> symbol + "@forceOrder")),
+
+    /**
      * 所有symbol 24小时完整ticker信息.需要注意的是，只有发生变化的ticker更新才会被推送。
      */
     ALL_MINI_TICKER("!miniTicker@arr", (symbol, params) -> "!miniTicker@arr"),

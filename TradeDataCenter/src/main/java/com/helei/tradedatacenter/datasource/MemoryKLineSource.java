@@ -17,9 +17,11 @@ import com.helei.cexapi.binanceapi.constants.KLineInterval;
  */
 @Slf4j
 public class MemoryKLineSource extends BaseKLineSource {
+    private static final Map<String, KLineBuffer> kLineBufferMap = new HashMap<>();
+
+
     private final String id = UUID.randomUUID().toString();
 
-    private static final Map<String, KLineBuffer> kLineBufferMap = new HashMap<>();
 
     private final String symbol;
 

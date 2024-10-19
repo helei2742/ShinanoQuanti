@@ -4,12 +4,12 @@ package com.helei.tradedatacenter;
 
 import com.alibaba.fastjson.JSONObject;
 import com.helei.cexapi.binanceapi.BinanceWSApiClient;
-import com.helei.cexapi.binanceapi.api.BinanceWSAccountApi;
+import com.helei.cexapi.binanceapi.api.ws.BinanceWSContractAccountApi;
+import com.helei.cexapi.binanceapi.api.ws.BinanceWSSpotAccountApi;
 import com.helei.cexapi.binanceapi.dto.ASKey;
 import com.helei.tradedatacenter.dto.AccountLocationConfig;
 import com.helei.tradedatacenter.dto.UserInfo;
 import lombok.Getter;
-import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,10 +36,10 @@ public class AccountInfoService {
     /**
      * 账户api
      */
-    private final BinanceWSAccountApi accountApi;
+    private final BinanceWSContractAccountApi accountApi;
 
     public AccountInfoService(BinanceWSApiClient binanceWSApiClient) {
-        this.accountApi = binanceWSApiClient.getAccountApi();
+        this.accountApi = binanceWSApiClient.getContractAccountApi();
     }
 
     /**
@@ -53,7 +53,7 @@ public class AccountInfoService {
         for (String accountId : symbol2UIdsMap.get(symbol)) {
             ASKey asKey = uid2UserInfo.get(accountId).getAsKey();
 
-            CompletableFuture<JSONObject> future = accountApi.accountStatus(false, asKey);
+            CompletableFuture<JSONObject> future = accountApi.accountStatus( asKey);
             list.add(future);
         }
 

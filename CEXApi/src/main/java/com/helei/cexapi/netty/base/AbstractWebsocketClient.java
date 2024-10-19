@@ -1,40 +1,36 @@
-
-
-
-
-
 package com.helei.cexapi.netty.base;
 
 
-        import com.alibaba.fastjson.JSON;
-        import com.helei.cexapi.netty.NettyConstants;
-        import com.helei.cexapi.netty.handler.RequestResponseHandler;
-        import io.netty.bootstrap.Bootstrap;
-        import io.netty.channel.*;
-        import io.netty.channel.nio.NioEventLoopGroup;
-        import io.netty.channel.socket.nio.NioSocketChannel;
-        import io.netty.handler.codec.http.DefaultHttpHeaders;
-        import io.netty.handler.codec.http.HttpClientCodec;
-        import io.netty.handler.codec.http.HttpObjectAggregator;
-        import io.netty.handler.codec.http.websocketx.*;
-        import io.netty.handler.proxy.Socks5ProxyHandler;
-        import io.netty.handler.ssl.SslContext;
-        import io.netty.handler.ssl.SslContextBuilder;
-        import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
-        import io.netty.handler.stream.ChunkedWriteHandler;
-        import lombok.Getter;
-        import lombok.Setter;
-        import lombok.extern.slf4j.Slf4j;
+import com.alibaba.fastjson.JSON;
+import com.helei.cexapi.netty.NettyConstants;
+import com.helei.cexapi.netty.handler.RequestResponseHandler;
+import io.netty.bootstrap.Bootstrap;
+import io.netty.channel.*;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.http.DefaultHttpHeaders;
+import io.netty.handler.codec.http.HttpClientCodec;
+import io.netty.handler.codec.http.HttpObjectAggregator;
+import io.netty.handler.codec.http.websocketx.*;
+import io.netty.handler.proxy.Socks5ProxyHandler;
+import io.netty.handler.ssl.SslContext;
+import io.netty.handler.ssl.SslContextBuilder;
+import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
+import io.netty.handler.stream.ChunkedWriteHandler;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.task.VirtualThreadTaskExecutor;
 
-        import javax.net.ssl.SSLException;
-        import java.net.InetSocketAddress;
-        import java.net.URI;
-        import java.net.URISyntaxException;
-        import java.util.concurrent.*;
-        import java.util.concurrent.atomic.AtomicBoolean;
-        import java.util.concurrent.atomic.AtomicInteger;
-        import java.util.concurrent.atomic.AtomicReference;
-        import java.util.function.Consumer;
+import javax.net.ssl.SSLException;
+import java.net.InetSocketAddress;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
 
 /**
  * Websocket客户端
@@ -50,7 +46,7 @@ public abstract class AbstractWebsocketClient<P, T> {
     /**
      * websocket的url字符串
      */
-    private final String url;
+    protected String url;
 
     /**
      * netty pipeline 最后一个执行的handler
@@ -60,7 +56,7 @@ public abstract class AbstractWebsocketClient<P, T> {
     /**
      * 执行回调的线程池
      */
-    protected final ExecutorService callbackInvoker;
+    protected final VirtualThreadTaskExecutor callbackInvoker;
 
     /**
      * 代理
@@ -96,28 +92,22 @@ public abstract class AbstractWebsocketClient<P, T> {
     private final RequestResponseHandler<T> requestResponseHandler;
 
     public AbstractWebsocketClient(
-            int threadPoolSize,
             String url,
             AbstractWebSocketClientHandler<P, T> handler
-    ) throws URISyntaxException, SSLException {
+    ) {
         this.url = url;
         this.handler = handler;
         this.handler.websocketClient = this;
 
-        if (threadPoolSize <= 0) {
-            this.callbackInvoker = null;
-        } else {
-            this.callbackInvoker = Executors.newFixedThreadPool(threadPoolSize);
-        }
+        this.callbackInvoker = new VirtualThreadTaskExecutor();
 
         requestResponseHandler = new RequestResponseHandler<>();
+    }
+
+    private void init() throws SSLException, URISyntaxException {
 
         resolveParamFromUrl();
 
-        init();
-    }
-
-    private void init() throws SSLException {
         WebSocketClientHandshaker handshaker = WebSocketClientHandshakerFactory.newHandshaker(
                 uri, WebSocketVersion.V13, null, true, new DefaultHttpHeaders()
         );
@@ -168,26 +158,39 @@ public abstract class AbstractWebsocketClient<P, T> {
 
     /**
      * 链接服务端
-     * @throws Exception Exception
+     * @throws SSLException Exception
      */
-    public CompletableFuture<Void> connect() {
+    public CompletableFuture<Void> connect() throws SSLException, URISyntaxException {
+        log.info("开始初始化WS客户端");
+        init();
+        log.info("初始化WS客户端完成，开始链接服务器");
 
-        return CompletableFuture.runAsync(()->{
+        return reconnect();
+    }
+
+
+    /**
+     * 重链接
+     * @return  CompletableFuture<Void>
+     */
+    public CompletableFuture<Void> reconnect() {
+        return CompletableFuture.runAsync(() -> {
             AtomicBoolean isSuccess = new AtomicBoolean(false);
             while (reconnectTimes.incrementAndGet() <= NettyConstants.RECONNECT_LIMIT) {
-                eventLoopGroup.schedule(()->{
+                eventLoopGroup.schedule(() -> {
                     reconnectTimes.decrementAndGet();
                 }, 60, TimeUnit.SECONDS);
 
-                log.info("start connect [{}], current times [{}]", uri,reconnectTimes.get());
-                CountDownLatch latch = new CountDownLatch(1);;
+                log.info("start connect [{}], current times [{}]", uri, reconnectTimes.get());
+                CountDownLatch latch = new CountDownLatch(1);
+
 
                 eventLoopGroup.schedule(() -> {
                     try {
                         channel = bootstrap.connect().sync().channel();
                         // 8. 等待 WebSocket 握手完成
                         handler.handshakeFuture().sync();
-                        log.info("connect [{}] success, current times [{}]", uri,reconnectTimes.get());
+
                         isSuccess.set(true);
                     } catch (Exception e) {
                         log.error("connect [{}] error, times [{}]", uri, reconnectTimes.get(), e);
@@ -202,6 +205,8 @@ public abstract class AbstractWebsocketClient<P, T> {
                 }
 
                 if (isSuccess.get()) {
+
+                    log.info("connect [{}] success, current times [{}]", uri, reconnectTimes.get());
                     isRunning.set(true);
                     break;
                 }
@@ -212,7 +217,6 @@ public abstract class AbstractWebsocketClient<P, T> {
                 close();
             }
         }, callbackInvoker);
-
     }
 
 
@@ -233,6 +237,7 @@ public abstract class AbstractWebsocketClient<P, T> {
 
     /**
      * 从request获取id
+     *
      * @param request request
      * @return id
      */
@@ -240,6 +245,7 @@ public abstract class AbstractWebsocketClient<P, T> {
 
     /**
      * 发送请求, 注册响应监听
+     *
      * @param request  请求体
      * @param callback 请求结果的回调
      */
@@ -254,7 +260,7 @@ public abstract class AbstractWebsocketClient<P, T> {
      * @param callback        请求结果的回调
      * @param executorService 执行回调的线程池，传入为空则会尝试使用本类的线程池以及netty线程池
      */
-    public void sendRequest(P request, Consumer<T> callback, ExecutorService executorService) {
+    public void sendRequest(P request, Consumer<T> callback, VirtualThreadTaskExecutor executorService) {
         boolean flag = requestResponseHandler.registryRequest(getIdFromRequest(request), response -> {
             if (executorService == null) {
                 if (callbackInvoker == null) { //netty线程处理
@@ -282,10 +288,11 @@ public abstract class AbstractWebsocketClient<P, T> {
 
     /**
      * 发送请求, 注册响应监听
-     * @param request         请求体
+     *
+     * @param request 请求体
      */
     public CompletableFuture<T> sendRequest(P request) {
-        return CompletableFuture.supplyAsync(()->{
+        return CompletableFuture.supplyAsync(() -> {
             if (request == null) {
                 log.error("request is null");
                 return null;
@@ -308,7 +315,7 @@ public abstract class AbstractWebsocketClient<P, T> {
             }
 
             try {
-                if (! latch.await(NettyConstants.REQUEST_WAITE_SECONDS, TimeUnit.SECONDS)) return null;
+                if (!latch.await(NettyConstants.REQUEST_WAITE_SECONDS, TimeUnit.SECONDS)) return null;
 
                 return jb.get();
             } catch (InterruptedException e) {

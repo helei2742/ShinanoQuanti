@@ -6,7 +6,7 @@ import com.helei.cexapi.binanceapi.BinanceWSApiClient;
 import com.helei.cexapi.binanceapi.constants.KLineInterval;
 import com.helei.cexapi.binanceapi.constants.order.TradeSide;
 import com.helei.cexapi.binanceapi.dto.ASKey;
-import com.helei.cexapi.constants.WebSocketUrl;
+import com.helei.cexapi.constants.BinanceApiUrl;
 import com.helei.tradedatacenter.*;
 import com.helei.tradedatacenter.datasource.RandomKLineSource;
 import com.helei.tradedatacenter.dto.AccountLocationConfig;
@@ -68,7 +68,7 @@ public class RandomKLineSourceTest {
     @BeforeAll
     public static void before() {
         try {
-            normalClient = CEXApiFactory.binanceApiClient(4, WebSocketUrl.WS_NORMAL_URL);
+            normalClient = CEXApiFactory.binanceApiClient(BinanceApiUrl.WS_NORMAL_URL);
 
             normalClient.connect();
 

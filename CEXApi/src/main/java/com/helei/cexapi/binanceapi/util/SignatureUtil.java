@@ -35,26 +35,20 @@ public class SignatureUtil {
             payload.deleteCharAt(payload.length() - 1);
         }
 
-        String s = hmac256(secretKey, payload.toString());
-        System.out.println("data - " + payload);
-        System.out.println("key - " + secretKey);
-        System.out.println(s);
-
-
-        return s;
+        return hmac256(secretKey, payload.toString());
     }
 
     // 辅助方法：将 byte[] 转换为十六进制字符串
     public static String hmac256(String secretKey, String data) throws Exception {
         // 创建 HMAC SHA-256 密钥
-        SecretKeySpec secretKeySpec = new SecretKeySpec(secretKey.getBytes(StandardCharsets.US_ASCII), "HmacSHA256");
+        SecretKeySpec secretKeySpec = new SecretKeySpec(secretKey.getBytes(StandardCharsets.UTF_8), "HmacSHA256");
 
         // 获取 HMAC 实例
         Mac mac = Mac.getInstance("HmacSHA256");
         mac.init(secretKeySpec);
 
         // 计算 HMAC
-        byte[] hmacBytes = mac.doFinal(data.getBytes(StandardCharsets.US_ASCII));
+        byte[] hmacBytes = mac.doFinal(data.getBytes(StandardCharsets.UTF_8));
 
         // 将结果转换为十六进制字符串
         return new BigInteger(1, hmacBytes).toString(16);

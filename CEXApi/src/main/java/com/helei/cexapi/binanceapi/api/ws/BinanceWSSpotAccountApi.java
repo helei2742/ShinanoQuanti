@@ -1,4 +1,4 @@
-package com.helei.cexapi.binanceapi.api;
+package com.helei.cexapi.binanceapi.api.ws;
 
 import com.alibaba.fastjson.JSONObject;
 import com.helei.cexapi.binanceapi.BinanceWSApiClient;
@@ -16,9 +16,9 @@ import java.util.concurrent.CompletableFuture;
  * 用户相关api
  */
 @Slf4j
-public class BinanceWSAccountApi extends AbstractBinanceWSApi {
+public class BinanceWSSpotAccountApi extends AbstractBinanceWSApi {
 
-    public BinanceWSAccountApi(BinanceWSApiClient binanceWSApiClient) throws URISyntaxException {
+    public BinanceWSSpotAccountApi(BinanceWSApiClient binanceWSApiClient) throws URISyntaxException {
         super(binanceWSApiClient);
     }
 

@@ -2,7 +2,7 @@ package com.helei.tradedatacenter.support;
 
 import com.helei.cexapi.CEXApiFactory;
 import com.helei.cexapi.binanceapi.BinanceWSApiClient;
-import com.helei.cexapi.constants.WebSocketUrl;
+import com.helei.cexapi.constants.BinanceApiUrl;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -21,7 +21,7 @@ public class HistorySourceTest {
     @BeforeAll
     public static void before() {
         try {
-            binanceWSApiClient = CEXApiFactory.binanceApiClient(5, WebSocketUrl.WS_NORMAL_URL);
+            binanceWSApiClient = CEXApiFactory.binanceApiClient(BinanceApiUrl.WS_NORMAL_URL);
             binanceWSApiClient.connect();
         } catch (Exception e) {
             e.printStackTrace();

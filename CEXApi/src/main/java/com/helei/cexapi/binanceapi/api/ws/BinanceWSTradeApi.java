@@ -1,5 +1,5 @@
 
-package com.helei.cexapi.binanceapi.api;
+package com.helei.cexapi.binanceapi.api.ws;
 
         import cn.hutool.core.util.StrUtil;
         import com.alibaba.fastjson.JSON;

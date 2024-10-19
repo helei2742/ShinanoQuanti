@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ASKey {
 
+    public static final ASKey EMPTY_ASKEY = new ASKey();
+
     /**
      * apikey，websocket时防请求参数体里，http时放在请求头
      */

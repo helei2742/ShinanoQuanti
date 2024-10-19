@@ -2,8 +2,7 @@ package com.helei.tradedatacenter.resolvestream.order;
 
         import com.alibaba.fastjson.JSONObject;
         import com.helei.cexapi.binanceapi.BinanceWSApiClient;
-        import com.helei.cexapi.binanceapi.api.BinanceWSTradeApi;
-        import com.helei.cexapi.binanceapi.constants.order.BaseOrder;
+        import com.helei.cexapi.binanceapi.api.ws.BinanceWSTradeApi;
         import com.helei.tradedatacenter.dto.OriginOrder;
         import lombok.extern.slf4j.Slf4j;
 

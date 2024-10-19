@@ -1,4 +1,4 @@
-package com.helei.cexapi.binanceapi.api;
+package com.helei.cexapi.binanceapi.api.ws;
 
 import com.alibaba.fastjson.JSONObject;
 import com.helei.cexapi.binanceapi.BinanceWSApiClient;

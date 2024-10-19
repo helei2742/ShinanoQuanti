@@ -23,6 +23,7 @@ public class WebSocketCommandBuilder {
     WebSocketCommandBuilder() {
         command = new JSONObject();
         command.put("id", UUID.randomUUID().toString());
+        command.put("params", new JSONObject());
     }
 
     public static WebSocketCommandBuilder builder() {

@@ -1,25 +1,24 @@
-
-
 package com.helei.cexapi.binanceapi.base;
 
-        import com.alibaba.fastjson.JSONObject;
-        import com.helei.cexapi.binanceapi.dto.ASKey;
-        import com.helei.cexapi.binanceapi.dto.StreamSubscribeEntity;
-        import com.helei.cexapi.binanceapi.dto.WebSocketCommandBuilder;
-        import com.helei.cexapi.binanceapi.supporter.BinanceWSStreamSupporter;
-        import com.helei.cexapi.binanceapi.supporter.IpWeightSupporter;
-        import com.helei.cexapi.binanceapi.util.SignatureUtil;
-        import com.helei.cexapi.netty.base.AbstractWebsocketClient;
-        import com.helei.cexapi.binanceapi.constants.command.BaseCommandType;
-        import lombok.extern.slf4j.Slf4j;
+import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSONObject;
+import com.helei.cexapi.binanceapi.dto.ASKey;
+import com.helei.cexapi.binanceapi.dto.StreamSubscribeEntity;
+import com.helei.cexapi.binanceapi.dto.WebSocketCommandBuilder;
+import com.helei.cexapi.binanceapi.supporter.BinanceWSStreamSupporter;
+import com.helei.cexapi.binanceapi.supporter.IpWeightSupporter;
+import com.helei.cexapi.binanceapi.util.SignatureUtil;
+import com.helei.cexapi.netty.base.AbstractWebsocketClient;
+import com.helei.cexapi.binanceapi.constants.command.BaseCommandType;
+import lombok.extern.slf4j.Slf4j;
 
-        import javax.net.ssl.SSLException;
-        import java.net.URISyntaxException;
-        import java.security.InvalidKeyException;
-        import java.security.NoSuchAlgorithmException;
-        import java.util.List;
-        import java.util.concurrent.CompletableFuture;
-        import java.util.function.Consumer;
+import javax.net.ssl.SSLException;
+import java.net.URISyntaxException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 
 /**
  * 币按ws接口客户端抽象类
@@ -39,13 +38,12 @@ public class AbstractBinanceWSApiClient extends AbstractWebsocketClient<JSONObje
     private final BinanceWSStreamSupporter binanceWSStreamSupporter;
 
     public AbstractBinanceWSApiClient(
-            int threadPoolSize,
             String url,
             IpWeightSupporter ipWeightSupporter,
             BinanceWSStreamSupporter binanceWSStreamSupporter,
             AbstractBinanceWSApiClientHandler handler
-    ) throws URISyntaxException, SSLException {
-        super(threadPoolSize, url, handler);
+    ) throws URISyntaxException {
+        super(url, handler);
 
         this.ipWeightSupporter = ipWeightSupporter;
 
@@ -82,10 +80,10 @@ public class AbstractBinanceWSApiClient extends AbstractWebsocketClient<JSONObje
     /**
      * 发生请求
      *
-     * @param ipWeight    ip weight
-     * @param request     请求体
-     * @param asKey         签名参数
-     * @param callback    回调
+     * @param ipWeight ip weight
+     * @param request  请求体
+     * @param asKey    签名参数
+     * @param callback 回调
      */
     public void sendRequest(
             int ipWeight,
@@ -132,9 +130,10 @@ public class AbstractBinanceWSApiClient extends AbstractWebsocketClient<JSONObje
 
     /**
      * 发生请求
-     * @param ipWeight    ip weight
-     * @param request     请求体
-     * @param asKey 签名
+     *
+     * @param ipWeight ip weight
+     * @param request  请求体
+     * @param asKey    签名
      */
     public CompletableFuture<JSONObject> sendRequest(
             int ipWeight,
@@ -145,12 +144,28 @@ public class AbstractBinanceWSApiClient extends AbstractWebsocketClient<JSONObje
             log.error("ipWeight[{}] not support send request", ipWeightSupporter.currentWeight());
             return null;
         }
-        return super.sendRequest(trySignatureRequest(request, asKey));
+        return super.sendRequest(trySignatureRequest(request, asKey))
+                .thenApplyAsync(
+                        jb -> {
+                            if (jb == null || jb.getInteger("status") != 200) {
+                                log.error("请求不成功，响应为 [{}]", jb);
+                                throw new RuntimeException("请求不成功");
+                            }
+                            return jb;
+                        }
+                );
     }
 
+
+    /**
+     * 如果askey不为空，则对请求进行签名
+     * @param request request
+     * @param asKey asKey
+     * @return JSONObject 签名后的请求
+     */
     private JSONObject trySignatureRequest(JSONObject request, ASKey asKey) {
         //需要签名
-        if (asKey != null) {
+        if (asKey != null && StrUtil.isNotBlank(asKey.getApiKey()) && StrUtil.isNotBlank(asKey.getSecretKey()) ) {
             JSONObject params = request.getJSONObject("params");
             params.put("timestamp", System.currentTimeMillis());
             params.put("apiKey", asKey.getApiKey());

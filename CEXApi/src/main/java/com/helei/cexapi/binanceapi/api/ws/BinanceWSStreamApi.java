@@ -1,6 +1,6 @@
 
 
-package com.helei.cexapi.binanceapi.api;
+package com.helei.cexapi.binanceapi.api.ws;
 
 import com.helei.cexapi.binanceapi.BinanceWSApiClient;
 import com.helei.cexapi.binanceapi.base.AbstractBinanceWSApi;

@@ -1,21 +1,20 @@
-
 package com.helei.tradedatacenter.datasource;
 
-        import com.alibaba.fastjson.JSONArray;
-        import com.helei.cexapi.binanceapi.BinanceWSApiClient;
-        import com.helei.cexapi.binanceapi.constants.KLineInterval;
-        import com.helei.tradedatacenter.conventor.KLineMapper;
-        import com.helei.tradedatacenter.entity.KLine;
-        import lombok.extern.slf4j.Slf4j;
+import com.alibaba.fastjson.JSONArray;
+import com.helei.cexapi.binanceapi.BinanceWSApiClient;
+import com.helei.cexapi.binanceapi.constants.KLineInterval;
+import com.helei.tradedatacenter.conventor.KLineMapper;
+import com.helei.tradedatacenter.entity.KLine;
+import lombok.extern.slf4j.Slf4j;
 
-        import java.time.LocalDateTime;
-        import java.time.ZoneOffset;
-        import java.util.List;
-        import java.util.concurrent.CompletableFuture;
-        import java.util.concurrent.CountDownLatch;
-        import java.util.concurrent.ExecutorService;
-        import java.util.function.Consumer;
-        import java.util.stream.Collectors;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 /**
  * 历史k线数据源
@@ -40,14 +39,14 @@ public class HistoryKLineLoader {
 
     }
 
-    public CompletableFuture<Long> startLoad (
+    public CompletableFuture<Long> startLoad(
             String symbol,
             KLineInterval interval,
             LocalDateTime startTime,
             Consumer<List<KLine>> batchKLineConsumer
     ) {
         String upperSymbol = symbol.toUpperCase();
-        return CompletableFuture.supplyAsync(()->{
+        return CompletableFuture.supplyAsync(() -> {
 
             long curTimeSecond = startTime.toInstant(ZoneOffset.UTC).getEpochSecond();
 

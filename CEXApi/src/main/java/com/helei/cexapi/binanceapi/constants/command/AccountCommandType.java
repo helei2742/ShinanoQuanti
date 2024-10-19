@@ -4,6 +4,24 @@ package com.helei.cexapi.binanceapi.constants.command;
 public enum AccountCommandType implements WSCommandType{
 
     /**
+     * 创建一个新的user data stream，返回值为一个listenKey，即websocket订阅的stream名称。
+     * 如果该帐户具有有效的listenKey，则将返回该listenKey并将其有效期延长60分钟。
+     */
+    USER_DATA_STREAM_START("userDataStream.start"),
+
+    /**
+     * Websocket API延长listenKey有效期
+     * 有效期延长至本次调用后60分钟
+     */
+    USER_DATA_STREAM_PING("userDataStream.ping"),
+
+    /**
+     * Websocket API关闭listenKey
+     * 关闭某账户数据流
+     */
+    USER_DATA_STREAM_CLOSE("userDataStream.stop"),
+
+    /**
      * 账户信息
      */
     ACCOUNT_STATUS("account.status"),
@@ -21,7 +39,12 @@ public enum AccountCommandType implements WSCommandType{
     /**
      * 账户成交历史
      */
-    MY_TRADES("myTrades")
+    MY_TRADES("myTrades"),
+
+    /**
+     * 账户余额
+     */
+    ACCOUNT_BALANCE("v2/account.balance")
     ;
 
     AccountCommandType(String description) {

@@ -2,8 +2,9 @@ package com.helei.cexapi.binanceapi.api;
 
 import com.helei.cexapi.CEXApiFactory;
 import com.helei.cexapi.binanceapi.BinanceWSApiClient;
+import com.helei.cexapi.binanceapi.api.ws.BinanceWSSpotAccountApi;
 import com.helei.cexapi.binanceapi.dto.ASKey;
-import com.helei.cexapi.constants.BinanceWebSocketUrl;
+import com.helei.cexapi.constants.BinanceApiUrl;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -11,14 +12,14 @@ import javax.net.ssl.SSLException;
 import java.net.URISyntaxException;
 import java.util.concurrent.ExecutionException;
 
-class BinanceWSAccountApiTest {
+class BinanceWSSpotAccountApiTest {
 
-    private static BinanceWSAccountApi binanceWSAccountApi;
+    private static BinanceWSSpotAccountApi binanceWSSpotAccountApi;
 
     @BeforeAll
     public static void beforeAll() throws URISyntaxException, SSLException, ExecutionException, InterruptedException {
-        BinanceWSApiClient binanceWSApiClient = CEXApiFactory.binanceApiClient(1, BinanceWebSocketUrl.WS_NORMAL_URL);
-        binanceWSAccountApi = binanceWSApiClient.getAccountApi();
+        BinanceWSApiClient binanceWSApiClient = CEXApiFactory.binanceApiClient(BinanceApiUrl.WS_NORMAL_URL);
+        binanceWSSpotAccountApi = binanceWSApiClient.getSpotAccountApi();
         binanceWSApiClient.connect().get();
     }
 
@@ -27,7 +28,7 @@ class BinanceWSAccountApiTest {
         String ak = "TUFsFL4YrBsR4fnBqgewxiGfL3Su5L9plcjZuyRO3cq6M1yuwV3eiNX1LcMamYxz";
         String sk = "YsLzVacYo8eOGlZZ7RjznyWVjPHltIXzZJz2BrggCmCUDcW75FyFEv0uKyLBVAuU";
 
-        binanceWSAccountApi.accountStatus(true, new ASKey(ak, sk)).thenAccept(res -> {
+        binanceWSSpotAccountApi.accountStatus(true, new ASKey(ak, sk)).thenAccept(res -> {
                             System.out.println(res);
                         }
                 )

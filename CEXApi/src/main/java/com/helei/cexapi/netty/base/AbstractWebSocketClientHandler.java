@@ -63,7 +63,7 @@ public abstract class AbstractWebSocketClientHandler<P, T> extends SimpleChannel
     public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
         log.info("WebSocket Client unregistered!, start reconnect");
 
-        websocketClient.connect();
+        websocketClient.reconnect();
     }
 
     @Override

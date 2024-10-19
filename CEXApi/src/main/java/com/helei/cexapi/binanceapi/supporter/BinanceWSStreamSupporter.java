@@ -3,6 +3,7 @@ package com.helei.cexapi.binanceapi.supporter;
 import com.alibaba.fastjson.JSONObject;
 import com.helei.cexapi.binanceapi.dto.StreamSubscribeEntity;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.task.VirtualThreadTaskExecutor;
 
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -14,6 +15,9 @@ import java.util.concurrent.ExecutorService;
 @Slf4j
 public class BinanceWSStreamSupporter {
 
+    /**
+     * 存储订阅流的信息，包含有收到流消息的回调。
+     */
     private final ConcurrentMap<String, StreamSubscribeEntity> subscribeMap;
 
     public BinanceWSStreamSupporter() {
@@ -41,7 +45,7 @@ public class BinanceWSStreamSupporter {
      * @param message         message
      * @param callbackInvoker callbackInvoker
      */
-    public void publishStreamResponse(String streamName, JSONObject message, ExecutorService callbackInvoker) {
+    public void publishStreamResponse(String streamName, JSONObject message, VirtualThreadTaskExecutor callbackInvoker) {
 
         StreamSubscribeEntity subscribeEntity = subscribeMap.get(streamName);
         if (subscribeEntity == null) {

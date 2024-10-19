@@ -33,4 +33,8 @@ public class WebSocketStreamParamKey {
      */
     public static final String SECRET_KEY = "secretKey";
 
+    /**
+     * 用于推送账户信息的key
+     */
+    public static final String LISTEN_KEY = "listenKey";
 }

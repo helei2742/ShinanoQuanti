@@ -1,15 +1,19 @@
-package com.helei.cexapi.binanceapi.api;
+package com.helei.cexapi.binanceapi.api.ws;
 
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.helei.cexapi.binanceapi.BinanceWSApiClient;
 import com.helei.cexapi.binanceapi.base.AbstractBinanceWSApi;
+import com.helei.cexapi.binanceapi.constants.WebSocketStreamParamKey;
+import com.helei.cexapi.binanceapi.constants.command.AccountCommandType;
 import com.helei.cexapi.binanceapi.constants.command.BaseCommandType;
+import com.helei.cexapi.binanceapi.dto.ASKey;
 import com.helei.cexapi.binanceapi.dto.WebSocketCommandBuilder;
 import lombok.extern.slf4j.Slf4j;
 
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 
@@ -122,4 +126,55 @@ public class BinanceWSBaseApi extends AbstractBinanceWSApi {
                 .build();
         binanceWSApiClient.sendRequest(20, command, callback);
     }
+
+
+
+        /**
+         * 请求listenKey
+         * @return CompletableFuture<String> listenKey
+         */
+        public CompletableFuture<String> requestListenKey(ASKey asKey) {
+            JSONObject command = WebSocketCommandBuilder.builder()
+                    .setCommandType(AccountCommandType.USER_DATA_STREAM_START)
+                    .addParam(WebSocketStreamParamKey.API_KEY, asKey.getApiKey())
+                    .build();
+
+            log.info("请求获取listenKey， 请求[{}}", command);
+            return binanceWSApiClient.sendRequest(5, command, ASKey.EMPTY_ASKEY)
+                    .thenApplyAsync(json -> json.getJSONObject("result").getString("listenKey"));
+        }
+
+        /**
+         * Websocket API延长listenKey有效期
+         * 有效期延长至本次调用后60分钟
+         * @return CompletableFuture<String> listenKey
+         */
+        public CompletableFuture<String> lengthenListenKey(String listenKey, ASKey asKey) {
+            JSONObject command = WebSocketCommandBuilder.builder()
+                    .setCommandType(AccountCommandType.USER_DATA_STREAM_PING)
+                    .addParam(WebSocketStreamParamKey.API_KEY, asKey.getApiKey())
+                    .addParam(WebSocketStreamParamKey.LISTEN_KEY, listenKey)
+                    .build();
+
+            log.info("请求获取listenKey， 请求[{}}", command);
+            return binanceWSApiClient.sendRequest(5, command, ASKey.EMPTY_ASKEY)
+                    .thenApplyAsync(json -> json.getJSONObject("result").getString("listenKey"));
+        }
+
+        /**
+         * Websocket API关闭listenKey
+         * @return CompletableFuture<String> listenKey
+         */
+        public CompletableFuture<Boolean> closeListenKey(String listenKey, ASKey asKey) {
+            JSONObject command = WebSocketCommandBuilder.builder()
+                    .setCommandType(AccountCommandType.USER_DATA_STREAM_CLOSE)
+                    .addParam(WebSocketStreamParamKey.API_KEY, asKey.getApiKey())
+                    .addParam(WebSocketStreamParamKey.LISTEN_KEY, listenKey)
+                    .build();
+
+            log.info("请求获取listenKey， 请求[{}}", command);
+            return binanceWSApiClient.sendRequest(5, command, ASKey.EMPTY_ASKEY)
+                    .thenApplyAsync(json -> json.getInteger("status") == 200);
+        }
+
 }
