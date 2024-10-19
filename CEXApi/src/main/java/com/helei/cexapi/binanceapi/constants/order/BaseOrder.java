@@ -11,9 +11,25 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode
 public class BaseOrder {
 
+    /**
+     * 交易对
+     */
     private String symbol;
 
+    /**
+     * 交易方向
+     */
     private TradeSide side;
+
+    /**
+     * apikey
+     */
+    private String apiKey;
+
+    /**
+     * 签名
+     */
+    private String signature;
 
     private Long recvWindow;
 

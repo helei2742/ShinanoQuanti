@@ -1,14 +1,17 @@
 package com.helei.tradedatacenter.support;
 
 
+import com.helei.cexapi.CEXApiFactory;
+import com.helei.cexapi.binanceapi.BinanceWSApiClient;
 import com.helei.cexapi.binanceapi.constants.KLineInterval;
 import com.helei.cexapi.binanceapi.constants.order.TradeSide;
-import com.helei.tradedatacenter.AutoTradeTask;
-import com.helei.tradedatacenter.DecisionMakerService;
-import com.helei.tradedatacenter.OrderCommitService;
-import com.helei.tradedatacenter.TradeSignalService;
+import com.helei.cexapi.binanceapi.dto.ASKey;
+import com.helei.cexapi.constants.WebSocketUrl;
+import com.helei.tradedatacenter.*;
 import com.helei.tradedatacenter.datasource.RandomKLineSource;
+import com.helei.tradedatacenter.dto.AccountLocationConfig;
 import com.helei.tradedatacenter.dto.OriginOrder;
+import com.helei.tradedatacenter.dto.UserInfo;
 import com.helei.tradedatacenter.entity.KLine;
 import com.helei.tradedatacenter.entity.TradeSignal;
 import com.helei.tradedatacenter.resolvestream.decision.AbstractDecisionMaker;
@@ -34,7 +37,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -50,6 +52,7 @@ public class RandomKLineSourceTest {
     private static RandomKLineSource btc_1h_source;
     private static RandomKLineSource btc_15m_source;
 
+    private static BinanceWSApiClient normalClient;
 
     @Autowired
     @Qualifier("flinkEnv")
@@ -60,9 +63,15 @@ public class RandomKLineSourceTest {
     private StreamExecutionEnvironment env2;
 
 
+
+
     @BeforeAll
     public static void before() {
         try {
+            normalClient = CEXApiFactory.binanceApiClient(4, WebSocketUrl.WS_NORMAL_URL);
+
+            normalClient.connect();
+
             btc_1h_source = new RandomKLineSource(btcusdt, KLineInterval.h_1, LocalDateTime.of(2022, 10, 3, 0, 0), 2000.0, 19000.0);
             btc_15m_source = new RandomKLineSource(btcusdt, KLineInterval.m_15, LocalDateTime.of(2022, 10, 3, 0, 0), 2000.0, 19000.0);
 
@@ -94,7 +103,14 @@ public class RandomKLineSourceTest {
             }
         });
 
-        OrderCommitService orderCommitService = new OrderCommitService();
+        String sk = "C1ihCOkWEECpnsbx4HcFLZubOyZX2CvPVaIvxlHtDNwfai8WsEzIxV6rLIizvgl9";
+        String ak = "HZzsqyA0uBTC4GzaykzeUL5ml7V0jzGXGwU38WGDUmH8JLzPIw3ZfbGxa4ZzuzFm";
+
+        AccountInfoService accountInfoService = new AccountInfoService(normalClient);
+        String testId = "testId";
+        accountInfoService.getUid2UserInfo().put(testId, new UserInfo(testId, new ASKey(ak, sk), List.of("BTCUSDT"), new AccountLocationConfig(0.2, 10 , 50)));
+        accountInfoService.getSymbol2UIdsMap().put("BTCUSDT", List.of(testId));
+        OrderCommitService orderCommitService = new OrderCommitService(accountInfoService, new LimitOrderBuildSupporter());
 
 
         AutoTradeTask autoTradeTask = new AutoTradeTask(tradeSignalService, decisionMakerService, orderCommitService);

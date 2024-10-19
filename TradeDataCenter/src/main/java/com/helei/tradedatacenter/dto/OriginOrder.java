@@ -1,9 +1,9 @@
 package com.helei.tradedatacenter.dto;
 
-        import com.helei.cexapi.binanceapi.constants.order.TradeSide;
-        import lombok.*;
+import com.helei.cexapi.binanceapi.constants.order.TradeSide;
+import lombok.*;
 
-        import java.math.BigDecimal;
+import java.math.BigDecimal;
 
 
 /**
@@ -35,6 +35,11 @@ public class OriginOrder {
      * 目标价格
      */
     private BigDecimal targetPrice;
+
+    /**
+     * 进场价格
+     */
+    private BigDecimal enterPrice;
 
     /**
      * 止损价格

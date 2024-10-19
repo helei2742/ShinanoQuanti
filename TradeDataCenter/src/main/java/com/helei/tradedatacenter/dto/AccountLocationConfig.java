@@ -1,8 +1,15 @@
 package com.helei.tradedatacenter.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 /**
  * 账户仓位设置
  */
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class AccountLocationConfig {
 
     /**

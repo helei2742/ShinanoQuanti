@@ -16,6 +16,7 @@ package com.helei.cexapi.binanceapi.base;
         import javax.net.ssl.SSLException;
         import java.net.URISyntaxException;
         import java.security.InvalidKeyException;
+        import java.security.NoSuchAlgorithmException;
         import java.util.List;
         import java.util.concurrent.CompletableFuture;
         import java.util.function.Consumer;
@@ -140,7 +141,7 @@ public class AbstractBinanceWSApiClient extends AbstractWebsocketClient<JSONObje
             JSONObject request,
             ASKey asKey
     ) {
-        if (ipWeightSupporter.submitIpWeight(ipWeight)) {
+        if (!ipWeightSupporter.submitIpWeight(ipWeight)) {
             log.error("ipWeight[{}] not support send request", ipWeightSupporter.currentWeight());
             return null;
         }
@@ -155,8 +156,8 @@ public class AbstractBinanceWSApiClient extends AbstractWebsocketClient<JSONObje
             params.put("apiKey", asKey.getApiKey());
             try {
                 params.put("signature", SignatureUtil.signatureHMAC(asKey.getSecretKey(), params));
-            } catch (InvalidKeyException e) {
-                log.error("signature params error");
+            } catch (Exception e) {
+                log.error("signature params error", e);
                 return null;
             }
         }

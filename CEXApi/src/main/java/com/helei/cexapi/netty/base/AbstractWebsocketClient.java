@@ -22,6 +22,7 @@ package com.helei.cexapi.netty.base;
         import io.netty.handler.ssl.SslContextBuilder;
         import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
         import io.netty.handler.stream.ChunkedWriteHandler;
+        import lombok.Getter;
         import lombok.Setter;
         import lombok.extern.slf4j.Slf4j;
 
@@ -71,6 +72,12 @@ public abstract class AbstractWebsocketClient<P, T> {
      * 重链接次数
      */
     private final AtomicInteger reconnectTimes = new AtomicInteger(0);
+
+    /**
+     * 当前是否在允许
+     */
+    @Getter
+    private final AtomicBoolean isRunning = new AtomicBoolean(false);
 
     private Bootstrap bootstrap;
 
@@ -195,10 +202,12 @@ public abstract class AbstractWebsocketClient<P, T> {
                 }
 
                 if (isSuccess.get()) {
+                    isRunning.set(true);
                     break;
                 }
             }
             if (!isSuccess.get()) {
+                isRunning.set(false);
                 log.error("reconnect times out of limit [{}], close websocket client", NettyConstants.RECONNECT_LIMIT);
                 close();
             }
@@ -299,7 +308,7 @@ public abstract class AbstractWebsocketClient<P, T> {
             }
 
             try {
-                if (! latch.await(NettyConstants.RECONNECT_DELAY_SECONDS, TimeUnit.SECONDS)) return null;
+                if (! latch.await(NettyConstants.REQUEST_WAITE_SECONDS, TimeUnit.SECONDS)) return null;
 
                 return jb.get();
             } catch (InterruptedException e) {

@@ -1,0 +1,66 @@
+[ ERROR] [2024-10-17 22:56:37,429] [KeyedProcess (18/20)#0] c.h.t.r.s.AbstractSignalMaker -build signal error
+java.lang.IndexOutOfBoundsException: Index 1 out of bounds for length 1
+	at java.base/jdk.internal.util.Preconditions.outOfBounds(Preconditions.java:100)
+	at java.base/jdk.internal.util.Preconditions.outOfBoundsCheckIndex(Preconditions.java:106)
+	at java.base/jdk.internal.util.Preconditions.checkIndex(Preconditions.java:302)
+	at java.base/java.util.Objects.checkIndex(Objects.java:385)
+	at java.base/java.util.ArrayList.get(ArrayList.java:427)
+	at com.helei.tradedatacenter.resolvestream.signal.PSTSignalMaker.tryBuildSignal(PSTSignalMaker.java:160)
+	at com.helei.tradedatacenter.resolvestream.signal.PSTSignalMaker.resolveHistoryKLine(PSTSignalMaker.java:83)
+	at com.helei.tradedatacenter.resolvestream.signal.AbstractSignalMaker.processElement(AbstractSignalMaker.java:73)
+	at com.helei.tradedatacenter.resolvestream.signal.AbstractSignalMaker.processElement(AbstractSignalMaker.java:25)
+	at org.apache.flink.streaming.api.operators.KeyedProcessOperator.processElement(KeyedProcessOperator.java:83)
+	at org.apache.flink.streaming.runtime.io.RecordProcessorUtils.lambda$getRecordProcessor$0(RecordProcessorUtils.java:64)
+	at org.apache.flink.streaming.runtime.tasks.OneInputStreamTask$StreamTaskNetworkOutput.emitRecord(OneInputStreamTask.java:238)
+	at org.apache.flink.streaming.runtime.io.AbstractStreamTaskNetworkInput.processElement(AbstractStreamTaskNetworkInput.java:157)
+	at org.apache.flink.streaming.runtime.io.AbstractStreamTaskNetworkInput.emitNext(AbstractStreamTaskNetworkInput.java:114)
+	at org.apache.flink.streaming.runtime.io.StreamOneInputProcessor.processInput(StreamOneInputProcessor.java:65)
+	at org.apache.flink.streaming.runtime.tasks.StreamTask.processInput(StreamTask.java:638)
+	at org.apache.flink.streaming.runtime.tasks.mailbox.MailboxProcessor.runMailboxLoop(MailboxProcessor.java:231)
+	at org.apache.flink.streaming.runtime.tasks.StreamTask.runMailboxLoop(StreamTask.java:973)
+	at org.apache.flink.streaming.runtime.tasks.StreamTask.invoke(StreamTask.java:917)
+	at org.apache.flink.runtime.taskmanager.Task.runWithSystemExitMonitoring(Task.java:970)
+	at org.apache.flink.runtime.taskmanager.Task.restoreAndInvoke(Task.java:949)
+	at org.apache.flink.runtime.taskmanager.Task.doRun(Task.java:763)
+	at org.apache.flink.runtime.taskmanager.Task.run(Task.java:575)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ ERROR] [2024-10-17 23:52:54,071] [Cancellation Watchdog for KeyedProcess (4/20)#0 (b95cee45c06e17e11e773c7d75588dfd_15ac0c748e1c3d37f5ba3d5ec1af80be_3_0).] o.a.f.r.t.TaskExecutor -Task did not exit gracefully within 180 + seconds.
+org.apache.flink.util.FlinkRuntimeException: Task did not exit gracefully within 180 + seconds.
+	at org.apache.flink.runtime.taskmanager.Task$TaskCancelerWatchDog.run(Task.java:1833)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ ERROR] [2024-10-17 23:52:54,071] [Cancellation Watchdog for Sink: Print to Std. Out (13/20)#0 (b95cee45c06e17e11e773c7d75588dfd_f23572632efe40698f94826385515203_12_0).] o.a.f.r.t.TaskExecutor -Task did not exit gracefully within 180 + seconds.
+org.apache.flink.util.FlinkRuntimeException: Task did not exit gracefully within 180 + seconds.
+	at org.apache.flink.runtime.taskmanager.Task$TaskCancelerWatchDog.run(Task.java:1833)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ ERROR] [2024-10-17 23:52:54,071] [Cancellation Watchdog for KeyedProcess (13/20)#0 (b95cee45c06e17e11e773c7d75588dfd_6d2677a0ecc3fd8df0b72ec675edf8f4_12_0).] o.a.f.r.t.TaskExecutor -Task did not exit gracefully within 180 + seconds.
+org.apache.flink.util.FlinkRuntimeException: Task did not exit gracefully within 180 + seconds.
+	at org.apache.flink.runtime.taskmanager.Task$TaskCancelerWatchDog.run(Task.java:1833)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ ERROR] [2024-10-17 23:52:54,071] [Cancellation Watchdog for Co-Keyed-Process -> (Sink: Print to Std. Out, Sink: Unnamed) (13/20)#0 (b95cee45c06e17e11e773c7d75588dfd_9f48ce38c07cdc5610ddbf460ec3f07a_12_0).] o.a.f.r.t.TaskExecutor -Task did not exit gracefully within 180 + seconds.
+org.apache.flink.util.FlinkRuntimeException: Task did not exit gracefully within 180 + seconds.
+	at org.apache.flink.runtime.taskmanager.Task$TaskCancelerWatchDog.run(Task.java:1833)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ ERROR] [2024-10-17 23:52:54,071] [Cancellation Watchdog for KeyedProcess (4/20)#0 (b95cee45c06e17e11e773c7d75588dfd_15ac0c748e1c3d37f5ba3d5ec1af80be_3_0).] o.a.f.r.m.MiniCluster -TaskManager #0 failed.
+org.apache.flink.util.FlinkRuntimeException: Task did not exit gracefully within 180 + seconds.
+	at org.apache.flink.runtime.taskmanager.Task$TaskCancelerWatchDog.run(Task.java:1833)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ ERROR] [2024-10-17 23:52:54,071] [Cancellation Watchdog for KeyedProcess (13/20)#0 (b95cee45c06e17e11e773c7d75588dfd_6d2677a0ecc3fd8df0b72ec675edf8f4_12_0).] o.a.f.r.m.MiniCluster -TaskManager #0 failed.
+org.apache.flink.util.FlinkRuntimeException: Task did not exit gracefully within 180 + seconds.
+	at org.apache.flink.runtime.taskmanager.Task$TaskCancelerWatchDog.run(Task.java:1833)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ ERROR] [2024-10-17 23:52:54,071] [Cancellation Watchdog for Co-Keyed-Process -> (Sink: Print to Std. Out, Sink: Unnamed) (13/20)#0 (b95cee45c06e17e11e773c7d75588dfd_9f48ce38c07cdc5610ddbf460ec3f07a_12_0).] o.a.f.r.m.MiniCluster -TaskManager #0 failed.
+org.apache.flink.util.FlinkRuntimeException: Task did not exit gracefully within 180 + seconds.
+	at org.apache.flink.runtime.taskmanager.Task$TaskCancelerWatchDog.run(Task.java:1833)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ ERROR] [2024-10-17 23:52:54,071] [Cancellation Watchdog for Sink: Print to Std. Out (13/20)#0 (b95cee45c06e17e11e773c7d75588dfd_f23572632efe40698f94826385515203_12_0).] o.a.f.r.m.MiniCluster -TaskManager #0 failed.
+org.apache.flink.util.FlinkRuntimeException: Task did not exit gracefully within 180 + seconds.
+	at org.apache.flink.runtime.taskmanager.Task$TaskCancelerWatchDog.run(Task.java:1833)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ ERROR] [2024-10-17 23:52:54,074] [Cancellation Watchdog for KeyedProcess (13/20)#0 (b95cee45c06e17e11e773c7d75588dfd_15ac0c748e1c3d37f5ba3d5ec1af80be_12_0).] o.a.f.r.t.TaskExecutor -Task did not exit gracefully within 180 + seconds.
+org.apache.flink.util.FlinkRuntimeException: Task did not exit gracefully within 180 + seconds.
+	at org.apache.flink.runtime.taskmanager.Task$TaskCancelerWatchDog.run(Task.java:1833)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[ ERROR] [2024-10-17 23:52:54,074] [Cancellation Watchdog for KeyedProcess (13/20)#0 (b95cee45c06e17e11e773c7d75588dfd_15ac0c748e1c3d37f5ba3d5ec1af80be_12_0).] o.a.f.r.m.MiniCluster -TaskManager #0 failed.
+org.apache.flink.util.FlinkRuntimeException: Task did not exit gracefully within 180 + seconds.
+	at org.apache.flink.runtime.taskmanager.Task$TaskCancelerWatchDog.run(Task.java:1833)
+	at java.base/java.lang.Thread.run(Thread.java:1583)

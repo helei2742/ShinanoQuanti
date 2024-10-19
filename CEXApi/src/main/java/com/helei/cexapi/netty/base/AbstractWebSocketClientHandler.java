@@ -1,24 +1,22 @@
 
 package com.helei.cexapi.netty.base;
 
-        import com.helei.cexapi.netty.NettyConstants;
-        import io.netty.channel.ChannelFuture;
-        import io.netty.channel.ChannelHandlerContext;
-        import io.netty.channel.ChannelPromise;
-        import io.netty.channel.SimpleChannelInboundHandler;
-        import io.netty.handler.codec.http.FullHttpResponse;
-        import io.netty.handler.codec.http.websocketx.*;
-        import io.netty.handler.timeout.IdleStateEvent;
-        import io.netty.util.CharsetUtil;
-        import lombok.extern.slf4j.Slf4j;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelPromise;
+import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.handler.codec.http.FullHttpResponse;
+import io.netty.handler.codec.http.websocketx.*;
+import io.netty.handler.timeout.IdleStateEvent;
+import io.netty.util.CharsetUtil;
+import lombok.extern.slf4j.Slf4j;
 
-        import io.netty.channel.*;
-
-        import java.util.concurrent.TimeUnit;
+import io.netty.channel.*;
 
 
 /**
  * WebSocket客户端处理器抽象类
+ *
  * @param <P>
  * @param <T>
  */
@@ -34,6 +32,7 @@ public abstract class AbstractWebSocketClientHandler<P, T> extends SimpleChannel
 
     /**
      * 收到消息处理
+     *
      * @param text 消息字符串
      */
     protected abstract void whenReceiveMessage(String text);
@@ -57,6 +56,7 @@ public abstract class AbstractWebSocketClientHandler<P, T> extends SimpleChannel
     @Override
     public void channelInactive(ChannelHandlerContext ctx) {
         log.info("WebSocket Client disconnected!");
+        websocketClient.getIsRunning().set(false);
     }
 
     @Override
@@ -88,9 +88,9 @@ public abstract class AbstractWebSocketClientHandler<P, T> extends SimpleChannel
             throw new IllegalStateException(
                     "Unexpected FullHttpResponse (getStatus=" + response.status() +
                             ", content=" + response.content().toString(CharsetUtil.UTF_8) + ')');
-        }  else if (msg instanceof WebSocketFrame frame) {
+        } else if (msg instanceof WebSocketFrame frame) {
             if (frame instanceof TextWebSocketFrame textFrame) {
-                log.debug("websocket client 接收到的消息：{}",textFrame.text());
+                log.debug("websocket client 接收到的消息：{}", textFrame.text());
 
                 whenReceiveMessage(textFrame.text());
 
@@ -106,7 +106,6 @@ public abstract class AbstractWebSocketClientHandler<P, T> extends SimpleChannel
             }
         }
     }
-
 
 
     @Override

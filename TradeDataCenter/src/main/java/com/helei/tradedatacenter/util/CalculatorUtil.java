@@ -3,6 +3,7 @@
 
 package com.helei.tradedatacenter.util;
 
+import com.helei.tradedatacenter.dto.AccountLocationConfig;
 import com.helei.tradedatacenter.dto.TrendLine;
 import com.helei.tradedatacenter.entity.KLine;
 
@@ -128,14 +129,22 @@ public class CalculatorUtil {
 
 
 
-    //计算仓位大小
+    /**
+     * 计算仓位大小
+     * @param totalCapital  总可用金额
+     * @param locationConfig    仓位设置
+     * @param currentPrice  当前价格
+     * @return 仓位大小
+     */
     public static double calculatePositionSize(
             double totalCapital,
-            double riskPercent,
-            double currentPrice,
-            double stopLoss,
-            double leverage
+            AccountLocationConfig locationConfig,
+            double currentPrice
+
     ) {
+        double riskPercent = locationConfig.getRiskPercent();
+        double leverage = locationConfig.getLeverage();
+        double stopLoss = locationConfig.getStopLoss();
         // Calculate the maximum amount of capital to risk in this trade
         double maxRiskAmount = totalCapital * riskPercent;
 
