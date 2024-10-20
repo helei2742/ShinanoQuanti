@@ -1,8 +1,8 @@
 package com.helei.tradedatacenter.datasource;
 
 import com.alibaba.fastjson.JSONArray;
-import com.helei.cexapi.binanceapi.BinanceWSApiClient;
-import com.helei.cexapi.binanceapi.constants.KLineInterval;
+import com.helei.binanceapi.BinanceWSApiClient;
+import com.helei.constants.KLineInterval;
 import com.helei.tradedatacenter.conventor.KLineMapper;
 import com.helei.tradedatacenter.entity.KLine;
 import lombok.extern.slf4j.Slf4j;

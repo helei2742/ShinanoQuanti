@@ -1,6 +1,6 @@
 package com.helei.tradedatacenter.resolvestream.signal;
 
-import com.helei.cexapi.binanceapi.constants.order.TradeSide;
+import com.helei.constants.TradeSide;
 import com.helei.tradedatacenter.dto.TrendLine;
 import com.helei.tradedatacenter.entity.KLine;
 import com.helei.tradedatacenter.entity.TradeSignal;

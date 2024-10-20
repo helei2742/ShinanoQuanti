@@ -19,6 +19,8 @@
     <modules>
         <module>TradeDataCenter</module>
         <module>CEXApi</module>
+        <module>Base</module>
+        <module>BinanceApi</module>
     </modules>
 
 

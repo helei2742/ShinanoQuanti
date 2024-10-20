@@ -1,6 +1,6 @@
 package com.helei.tradedatacenter.entity;
 
-import com.helei.cexapi.binanceapi.constants.order.TradeSide;
+import com.helei.constants.TradeSide;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

@@ -1,7 +1,7 @@
 package com.helei.tradedatacenter;
 
 import com.alibaba.fastjson.JSONObject;
-import com.helei.cexapi.binanceapi.constants.order.BaseOrder;
+import com.helei.binanceapi.dto.order.BaseOrder;
 import com.helei.tradedatacenter.config.TradeConfig;
 import com.helei.tradedatacenter.conventor.AccountInfoMapper;
 import com.helei.tradedatacenter.dto.AccountInfo;

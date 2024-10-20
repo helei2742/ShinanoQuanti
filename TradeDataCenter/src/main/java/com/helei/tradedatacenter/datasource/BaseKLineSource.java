@@ -1,6 +1,6 @@
 package com.helei.tradedatacenter.datasource;
 
-import com.helei.cexapi.binanceapi.constants.KLineInterval;
+import com.helei.constants.KLineInterval;
 import com.helei.tradedatacenter.entity.KLine;
 import org.apache.flink.streaming.api.functions.source.SourceFunction;
 

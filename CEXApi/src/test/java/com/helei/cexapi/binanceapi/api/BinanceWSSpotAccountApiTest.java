@@ -1,10 +1,10 @@
 package com.helei.cexapi.binanceapi.api;
 
 import com.helei.cexapi.CEXApiFactory;
-import com.helei.cexapi.binanceapi.BinanceWSApiClient;
-import com.helei.cexapi.binanceapi.api.ws.BinanceWSSpotAccountApi;
-import com.helei.cexapi.binanceapi.dto.ASKey;
-import com.helei.cexapi.constants.BinanceApiUrl;
+import com.helei.binanceapi.BinanceWSApiClient;
+import com.helei.binanceapi.api.ws.BinanceWSSpotAccountApi;
+import com.helei.binanceapi.dto.ASKey;
+import com.helei.binanceapi.constants.BinanceApiUrl;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 

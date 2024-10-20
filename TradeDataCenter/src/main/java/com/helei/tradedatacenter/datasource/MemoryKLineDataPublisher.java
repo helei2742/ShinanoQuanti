@@ -1,15 +1,16 @@
 package com.helei.tradedatacenter.datasource;
 
-import com.helei.cexapi.binanceapi.BinanceWSApiClient;
-import com.helei.cexapi.binanceapi.api.ws.BinanceWSStreamApi;
-import com.helei.cexapi.binanceapi.constants.WebSocketStreamParamKey;
-import com.helei.cexapi.binanceapi.constants.WebSocketStreamType;
-import com.helei.cexapi.binanceapi.dto.StreamSubscribeEntity;
-import com.helei.cexapi.binanceapi.constants.KLineInterval;
+
+import com.helei.binanceapi.BinanceWSApiClient;
+import com.helei.binanceapi.api.ws.BinanceWSStreamApi;
+import com.helei.constants.KLineInterval;
+import com.helei.binanceapi.constants.WebSocketStreamParamKey;
+import com.helei.binanceapi.constants.WebSocketStreamType;
+import com.helei.binanceapi.dto.StreamSubscribeEntity;
 import com.helei.tradedatacenter.conventor.KLineMapper;
 import com.helei.tradedatacenter.entity.KLine;
-import com.helei.cexapi.utl.CustomBlockingQueue;
 import com.helei.tradedatacenter.util.KLineBuffer;
+import com.helei.util.CustomBlockingQueue;
 import lombok.extern.slf4j.Slf4j;
 
 

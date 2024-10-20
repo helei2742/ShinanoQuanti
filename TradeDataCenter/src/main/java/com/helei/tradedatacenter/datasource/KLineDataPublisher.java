@@ -1,8 +1,8 @@
 package com.helei.tradedatacenter.datasource;
 
-import com.helei.cexapi.binanceapi.constants.KLineInterval;
 
-import java.time.LocalDateTime;
+import com.helei.constants.KLineInterval;
+
 import java.util.List;
 
 public interface KLineDataPublisher {

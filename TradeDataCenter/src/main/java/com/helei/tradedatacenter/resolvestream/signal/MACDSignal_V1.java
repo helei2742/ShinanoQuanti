@@ -1,21 +1,21 @@
 package com.helei.tradedatacenter.resolvestream.signal;
 
-        import com.helei.cexapi.binanceapi.constants.order.TradeSide;
-        import com.helei.tradedatacenter.entity.KLine;
-        import com.helei.tradedatacenter.entity.TradeSignal;
-        import com.helei.tradedatacenter.resolvestream.indicator.MACD;
-        import lombok.extern.slf4j.Slf4j;
-        import org.apache.flink.api.common.functions.OpenContext;
-        import org.apache.flink.api.common.state.ValueState;
-        import org.apache.flink.api.common.state.ValueStateDescriptor;
-        import org.apache.flink.api.common.typeinfo.TypeInformation;
-        import org.apache.flink.streaming.api.TimerService;
+import com.helei.constants.TradeSide;
+import com.helei.tradedatacenter.entity.KLine;
+import com.helei.tradedatacenter.entity.TradeSignal;
+import com.helei.tradedatacenter.resolvestream.indicator.MACD;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.flink.api.common.functions.OpenContext;
+import org.apache.flink.api.common.state.ValueState;
+import org.apache.flink.api.common.state.ValueStateDescriptor;
+import org.apache.flink.api.common.typeinfo.TypeInformation;
+import org.apache.flink.streaming.api.TimerService;
 
-        import java.io.IOException;
+import java.io.IOException;
 
 
 @Slf4j
-public class MACDSignal_V1 extends AbstractSignalMaker{
+public class MACDSignal_V1 extends AbstractSignalMaker {
 
     private final String macdName;
 
@@ -54,7 +54,6 @@ public class MACDSignal_V1 extends AbstractSignalMaker{
         MACD currentMACD = (MACD) kLine.getIndicators().get(macdName);
 
 
-
         if (lastMACD != null) {
             //是否在水下
             boolean under = currentMACD.dif() <= 0;
@@ -91,10 +90,11 @@ public class MACDSignal_V1 extends AbstractSignalMaker{
 
     /**
      * 尝试发送信号
-     * @param kLine kLine
-     * @param under 是否水下交叉
+     *
+     * @param kLine       kLine
+     * @param under       是否水下交叉
      * @param acrossState 交叉形态
-     * @return  信号，不适合产生信号则返回null
+     * @return 信号，不适合产生信号则返回null
      */
     private TradeSignal trySendSignal(KLine kLine, boolean under, int acrossState) throws IOException {
         // 水下第二次金叉，产出买入信号
@@ -112,6 +112,7 @@ public class MACDSignal_V1 extends AbstractSignalMaker{
 
     /**
      * 尝试发送， 必须满足未发送过信号的条件
+     *
      * @return signal
      * @throws IOException IOException
      */
@@ -135,9 +136,10 @@ public class MACDSignal_V1 extends AbstractSignalMaker{
 
     /**
      * 计算金叉死叉
-     * @param last  上一次的MACD
-     * @param current   当前MACD
-     * @return  1 表示金叉， -1 表示死叉， 0 表示没有交叉
+     *
+     * @param last    上一次的MACD
+     * @param current 当前MACD
+     * @return 1 表示金叉， -1 表示死叉， 0 表示没有交叉
      */
     private int calGoldDeathAcross(MACD last, MACD current) {
         if ((last.dif() > last.getDea()) && (current.dif() <= current.getDea())) {

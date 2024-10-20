@@ -1,12 +1,12 @@
 package com.helei.tradedatacenter.resolvestream.order;
 
-        import com.alibaba.fastjson.JSONObject;
-        import com.helei.cexapi.binanceapi.BinanceWSApiClient;
-        import com.helei.cexapi.binanceapi.api.ws.BinanceWSTradeApi;
-        import com.helei.tradedatacenter.dto.OriginOrder;
-        import lombok.extern.slf4j.Slf4j;
+import com.alibaba.fastjson.JSONObject;
+import com.helei.binanceapi.BinanceWSApiClient;
+import com.helei.binanceapi.api.ws.BinanceWSTradeApi;
+import com.helei.tradedatacenter.dto.OriginOrder;
+import lombok.extern.slf4j.Slf4j;
 
-        import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutionException;
 
 
 /**

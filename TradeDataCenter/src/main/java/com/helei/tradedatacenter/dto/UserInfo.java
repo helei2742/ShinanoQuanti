@@ -1,6 +1,6 @@
 package com.helei.tradedatacenter.dto;
 
-import com.helei.cexapi.binanceapi.dto.ASKey;
+import com.helei.binanceapi.dto.ASKey;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -1,6 +1,6 @@
 package com.helei.tradedatacenter.entity;
 
-import com.helei.cexapi.binanceapi.constants.KLineInterval;
+import com.helei.constants.KLineInterval;
 import com.helei.tradedatacenter.resolvestream.indicator.Indicator;
 import com.helei.tradedatacenter.resolvestream.indicator.config.IndicatorConfig;
 import lombok.*;
@@ -8,7 +8,6 @@ import lombok.*;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.HashMap;
 
 /**

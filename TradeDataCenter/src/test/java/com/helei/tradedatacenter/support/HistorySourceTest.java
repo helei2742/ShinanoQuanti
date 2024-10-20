@@ -1,8 +1,8 @@
 package com.helei.tradedatacenter.support;
 
 import com.helei.cexapi.CEXApiFactory;
-import com.helei.cexapi.binanceapi.BinanceWSApiClient;
-import com.helei.cexapi.constants.BinanceApiUrl;
+import com.helei.binanceapi.BinanceWSApiClient;
+import com.helei.binanceapi.constants.BinanceApiUrl;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

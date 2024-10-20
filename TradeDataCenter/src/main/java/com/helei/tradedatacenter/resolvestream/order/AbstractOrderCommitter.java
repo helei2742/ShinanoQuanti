@@ -1,6 +1,6 @@
 package com.helei.tradedatacenter.resolvestream.order;
 
-import com.helei.cexapi.binanceapi.constants.order.BaseOrder;
+import com.helei.binanceapi.dto.order.BaseOrder;
 import com.helei.tradedatacenter.dto.OriginOrder;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.flink.configuration.Configuration;

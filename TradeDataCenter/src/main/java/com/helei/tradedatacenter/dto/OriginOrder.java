@@ -1,6 +1,6 @@
 package com.helei.tradedatacenter.dto;
 
-import com.helei.cexapi.binanceapi.constants.order.TradeSide;
+import com.helei.constants.TradeSide;
 import lombok.*;
 
 import java.math.BigDecimal;

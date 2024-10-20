@@ -1,9 +1,9 @@
 package com.helei.tradedatacenter.support;
 
 
-import com.helei.cexapi.binanceapi.constants.order.BaseOrder;
-import com.helei.cexapi.binanceapi.constants.order.LimitOrder;
-import com.helei.cexapi.binanceapi.constants.order.TimeInForce;
+import com.helei.binanceapi.constants.TimeInForce;
+import com.helei.binanceapi.dto.order.BaseOrder;
+import com.helei.binanceapi.dto.order.LimitOrder;
 import com.helei.tradedatacenter.dto.OriginOrder;
 
 import java.math.BigDecimal;
