@@ -1,4 +1,4 @@
-package com.helei.binanceapi.constants;
+package com.helei.constants;
 
 
 /**

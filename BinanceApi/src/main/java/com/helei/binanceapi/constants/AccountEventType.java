@@ -10,16 +10,14 @@ public enum AccountEventType {
 
     /**
      * listenKey过期推送
-     * <p>
-     * 事件描述
-     * <p>
-     * 当前连接使用的有效listenKey过期时，user data stream 将会推送此事件。
-     * <p>
+     * <p>事件描述</p>
+     * <p>当前连接使用的有效listenKey过期时，user data stream 将会推送此事件。</p>
      * 注意:
      * <p>
      * 此事件与 websocket 连接中断没有必然联系
      * 只有正在连接中的有效listenKey过期时才会收到此消息
      * 收到此消息后 user data stream 将不再更新，直到用户使用新的有效的listenKey
+     * </p>
      */
     LISTEN_KEY_EXPIRED("listenKeyExpired"),
 
@@ -88,6 +86,20 @@ public enum AccountEventType {
      * <p>STRATEGY_UPDATE 在策略交易创建、取消、失效等等时候更新。</p>
      */
     STRATEGY_UPDATE("STRATEGY_UPDATE"),
+
+    /**
+     * 网格更新推送
+     * <p>事件描述</p>
+     * <p>GRID_UPDATE 在网格子订单有部份或是完全成交时更新。</p>
+     */
+    GRID_UPDATE("GRID_UPDATE"),
+
+    /**
+     * 条件订单(TP/SL)触发后拒绝更新推送
+     * <p>事件描述</p>
+     * <p>CONDITIONAL_ORDER_TRIGGER_REJECT 在止盈止损单触发后被拒绝时推送</p>
+     */
+    CONDITIONAL_ORDER_TRIGGER_REJECT("CONDITIONAL_ORDER_TRIGGER_REJECT"),
     ;
 
     public static final Map<String, AccountEventType> STATUS_MAP = new HashMap<>();

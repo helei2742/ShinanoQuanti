@@ -10,7 +10,8 @@ import java.util.List;
  * 账户资金仓位发生变化事件
  */
 @EqualsAndHashCode(callSuper = true)
-@Data
+@Getter
+@Setter
 public class BalancePositionUpdateEvent extends AccountEvent {
 
     /**

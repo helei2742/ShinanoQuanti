@@ -1,5 +1,7 @@
-package com.helei.binanceapi.constants;
+package com.helei.binanceapi.constants.strategy;
 
+
+import lombok.Getter;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -7,6 +9,7 @@ import java.util.Map;
 /**
  * 策略状态
  */
+@Getter
 public enum StrategyStatus {
     NEW("NEW"),
     WORKING("WORKING"),
@@ -28,7 +31,4 @@ public enum StrategyStatus {
         this.description = description;
     }
 
-    public String getDescription() {
-        return description;
-    }
 }

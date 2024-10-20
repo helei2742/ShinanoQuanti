@@ -1,7 +1,7 @@
 package com.helei.cexapi;
 
 import com.helei.binanceapi.BinanceWSApiClient;
-import com.helei.binanceapi.constants.WebSocketStreamParamKey;
+import com.helei.constants.WebSocketStreamParamKey;
 import com.helei.binanceapi.constants.WebSocketStreamType;
 import com.helei.binanceapi.dto.StreamSubscribeEntity;
 import com.helei.binanceapi.constants.BinanceApiUrl;

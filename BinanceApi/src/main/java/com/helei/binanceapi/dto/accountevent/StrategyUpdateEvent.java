@@ -1,8 +1,9 @@
 package com.helei.binanceapi.dto.accountevent;
 
 import com.helei.binanceapi.constants.AccountEventType;
-import com.helei.binanceapi.constants.StrategyOPCode;
-import com.helei.binanceapi.constants.StrategyStatus;
+import com.helei.binanceapi.constants.strategy.StrategyOPCode;
+import com.helei.binanceapi.constants.strategy.StrategyStatus;
+import com.helei.binanceapi.constants.strategy.StrategyType;
 
 public class StrategyUpdateEvent extends AccountEvent {
     /**
@@ -25,7 +26,7 @@ public class StrategyUpdateEvent extends AccountEvent {
         /**
          * 策略类型 "st"
          */
-        private String strategyType;
+        private StrategyType strategyType;
         /**
          * 策略状态 "ss"
          */

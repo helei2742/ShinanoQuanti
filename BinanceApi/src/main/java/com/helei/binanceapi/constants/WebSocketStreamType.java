@@ -1,6 +1,7 @@
 package com.helei.binanceapi.constants;
 
 
+import com.helei.constants.WebSocketStreamParamKey;
 import lombok.Getter;
 import java.util.Map;
 

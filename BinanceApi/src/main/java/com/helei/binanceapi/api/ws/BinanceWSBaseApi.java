@@ -4,7 +4,7 @@ import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.helei.binanceapi.BinanceWSApiClient;
 import com.helei.binanceapi.base.AbstractBinanceWSApi;
-import com.helei.binanceapi.constants.WebSocketStreamParamKey;
+import com.helei.constants.WebSocketStreamParamKey;
 import com.helei.binanceapi.constants.command.AccountCommandType;
 import com.helei.binanceapi.constants.command.BaseCommandType;
 import com.helei.binanceapi.dto.ASKey;
