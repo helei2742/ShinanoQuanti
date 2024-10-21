@@ -1,7 +1,7 @@
 package com.helei.binanceapi.base;
 
 import com.alibaba.fastjson.JSONObject;
-import com.helei.binanceapi.dto.ASKey;
+import com.helei.dto.ASKey;
 import com.helei.binanceapi.supporter.IpWeightSupporter;
 import com.helei.binanceapi.util.SignatureUtil;
 import lombok.extern.slf4j.Slf4j;

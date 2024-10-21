@@ -2,7 +2,7 @@ package com.helei.binanceapi.api.rest;
 
 import cn.hutool.core.util.StrUtil;
 import com.helei.binanceapi.base.BinanceRestApiClient;
-import com.helei.binanceapi.dto.ASKey;
+import com.helei.dto.ASKey;
 import com.helei.binanceapi.supporter.IpWeightSupporter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.task.VirtualThreadTaskExecutor;

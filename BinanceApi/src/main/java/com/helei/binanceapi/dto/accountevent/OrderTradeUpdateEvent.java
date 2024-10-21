@@ -9,6 +9,10 @@ import lombok.*;
 /**
  * 订单交易更新推送事件
  */
+@Getter
+@Setter
+@ToString
+
 public class OrderTradeUpdateEvent extends AccountEvent {
 
     /**
@@ -24,7 +28,6 @@ public class OrderTradeUpdateEvent extends AccountEvent {
     public OrderTradeUpdateEvent(Long eventTime) {
         super(AccountEventType.ORDER_TRADE_UPDATE, eventTime);
     }
-
 
     @Data
     @AllArgsConstructor
@@ -63,7 +66,7 @@ public class OrderTradeUpdateEvent extends AccountEvent {
         /**
          * 订单平均价格
          */
-        private String averagePrice;
+        private Double averagePrice;
         /**
          * 条件订单触发价格,对追踪止损单无效
          */
@@ -79,7 +82,7 @@ public class OrderTradeUpdateEvent extends AccountEvent {
         /**
          * 订单ID
          */
-        private long orderId;
+        private Long orderId;
         /**
          * 订单末次成交量
          */
@@ -107,15 +110,15 @@ public class OrderTradeUpdateEvent extends AccountEvent {
         /**
          * 成交ID
          */
-        private String tradeId;
+        private Long tradeId;
         /**
          * 买单净值
          */
-        private String buyerNetValue;
+        private Double buyerNetValue;
         /**
          * 卖单净值
          */
-        private String sellerNetValue;
+        private Double sellerNetValue;
         /**
          * 该成交是作为挂单成交吗？
          */
@@ -147,7 +150,7 @@ public class OrderTradeUpdateEvent extends AccountEvent {
         /**
          * 追踪止损回调比例,仅在追踪止损单时会推送此字段
          */
-        private String callbackRate;
+        private Double callbackRate;
         /**
          * 是否开启条件单触发保护
          */

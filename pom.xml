@@ -17,10 +17,11 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>TradeDataCenter</module>
+        <module>TradeSignalCenter</module>
         <module>CEXApi</module>
         <module>Base</module>
         <module>BinanceApi</module>
+        <module>UserInfoCenter</module>
     </modules>
 
 
@@ -33,6 +34,8 @@
         <protostuff.version>1.7.2</protostuff.version>
         <flink.version>1.20.0</flink.version>
         <scala.version>2.12</scala.version>
+        <hutool.version>5.7.21</hutool.version>
+        <mapstruct.version>1.6.0</mapstruct.version>
     </properties>
 
 

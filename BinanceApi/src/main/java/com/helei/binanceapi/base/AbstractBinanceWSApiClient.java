@@ -2,7 +2,7 @@ package com.helei.binanceapi.base;
 
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
-import com.helei.binanceapi.dto.ASKey;
+import com.helei.dto.ASKey;
 import com.helei.binanceapi.dto.StreamSubscribeEntity;
 import com.helei.dto.WebSocketCommandBuilder;
 import com.helei.binanceapi.supporter.BinanceWSStreamSupporter;

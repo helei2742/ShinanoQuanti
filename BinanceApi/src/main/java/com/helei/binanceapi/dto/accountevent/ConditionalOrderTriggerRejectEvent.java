@@ -8,6 +8,8 @@ import lombok.*;
  */
 @Setter
 @Getter
+@ToString
+
 public class ConditionalOrderTriggerRejectEvent extends AccountEvent {
 
     /**

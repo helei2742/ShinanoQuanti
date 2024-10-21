@@ -8,7 +8,10 @@ import lombok.*;
 /**
  * 网格更新推送事件
  */
+@Setter
 @Getter
+@ToString
+
 public class GridUpdateEvent extends AccountEvent {
 
     /**
@@ -36,7 +39,7 @@ public class GridUpdateEvent extends AccountEvent {
         /**
          * 策略 ID "si"
          */
-        private String strategyId;
+        private Long strategyId;
         /**
          * 策略类型 "st"
          */
@@ -72,6 +75,6 @@ public class GridUpdateEvent extends AccountEvent {
         /**
          * 更新时间 "ut"
          */
-        private Double updateTime;
+        private Long updateTime;
     }
 }

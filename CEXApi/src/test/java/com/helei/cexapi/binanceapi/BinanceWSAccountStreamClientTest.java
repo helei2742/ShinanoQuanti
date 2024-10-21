@@ -2,8 +2,11 @@ package com.helei.cexapi.binanceapi;
 
 import com.helei.binanceapi.BinanceWSAccountStreamClient;
 import com.helei.binanceapi.BinanceWSApiClient;
+import com.helei.binanceapi.dto.accountevent.AccountEvent;
+import com.helei.binanceapi.dto.accountevent.GridUpdateEvent;
+import com.helei.binanceapi.dto.accountevent.OrderTradeUpdateEvent;
 import com.helei.cexapi.CEXApiFactory;
-import com.helei.binanceapi.dto.ASKey;
+import com.helei.dto.ASKey;
 import com.helei.binanceapi.supporter.IpWeightSupporter;
 import com.helei.binanceapi.constants.BinanceApiUrl;
 import lombok.extern.slf4j.Slf4j;
@@ -22,22 +25,29 @@ class BinanceWSAccountStreamClientTest {
     private static BinanceWSApiClient apiClient;
 
     private static BinanceWSAccountStreamClient binanceWSAccountStreamClient;
+
     private static ASKey asKey;
 
     private static volatile String listenKey;
 
     @BeforeAll
     public static void beforAll() throws URISyntaxException, SSLException, ExecutionException, InterruptedException {
-        apiClient = CEXApiFactory.binanceApiClient(BinanceApiUrl.WS_NORMAL_URL);
+        apiClient = CEXApiFactory.binanceApiClient(BinanceApiUrl.WS_NORMAL_URL_TEST);
         apiClient.connect().get();
-        String ak = "TUFsFL4YrBsR4fnBqgewxiGfL3Su5L9plcjZuyRO3cq6M1yuwV3eiNX1LcMamYxz";
-        String sk = "YsLzVacYo8eOGlZZ7RjznyWVjPHltIXzZJz2BrggCmCUDcW75FyFEv0uKyLBVAuU";
+//        String ak = "TUFsFL4YrBsR4fnBqgewxiGfL3Su5L9plcjZuyRO3cq6M1yuwV3eiNX1LcMamYxz";
+//        String sk = "YsLzVacYo8eOGlZZ7RjznyWVjPHltIXzZJz2BrggCmCUDcW75FyFEv0uKyLBVAuU";
+        //spot test
+//        String ak = "1JIhkPyK07xadG9x8hIwqitN95MgpypPzA4b6TLraTonRnJ8BBJQlaO2iL9tPH0Y";
+//        String sk = "t84TYFR1zieMGncbw3kYq4zAPLxIJHJeMdD8V0FMKxij9fApojV6bhbDpyyjNDWt";
+
+        String ak = "b252246c6c6e81b64b8ff52caf6b8f37471187b1b9086399e27f6911242cbc66";
+        String sk = "a4ed1b1addad2a49d13e08644f0cc8fc02a5c14c3511d374eac4e37763cadf5f";
         asKey = new ASKey(ak, sk);
 
-        InetSocketAddress proxy = new InetSocketAddress("127.0.0.1", 7897);
+        InetSocketAddress proxy = new InetSocketAddress("127.0.0.1", 7890);
 
         binanceWSAccountStreamClient = new BinanceWSAccountStreamClient(
-                BinanceApiUrl.WS_U_CONTRACT_STREAM_URL,
+                BinanceApiUrl.WS_ACCOUNT_INFO_STREAM_URL_TEST,
                 new IpWeightSupporter(BinanceApiUrl.WS_U_CONTRACT_STREAM_URL),
                 asKey,
                 100,
@@ -76,13 +86,18 @@ class BinanceWSAccountStreamClientTest {
     }
 
     @Test
-    void startAccountInfoStream() throws ExecutionException, InterruptedException {
+    void startAccountInfoStream() throws Exception {
         CompletableFuture<Boolean> booleanCompletableFuture = binanceWSAccountStreamClient.startAccountInfoStream();
 
         Boolean b = booleanCompletableFuture.get();
 
         System.out.println("开启信息流结果： " + b);
 
+        AccountEvent accountEvent = null;
 
+        while ((accountEvent = binanceWSAccountStreamClient.getAccountEvent()) != null) {
+            System.out.println(accountEvent);
+
+        }
     }
 }

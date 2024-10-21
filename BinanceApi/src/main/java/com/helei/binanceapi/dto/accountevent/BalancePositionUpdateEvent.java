@@ -12,6 +12,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @Getter
 @Setter
+@ToString
 public class BalancePositionUpdateEvent extends AccountEvent {
 
     /**

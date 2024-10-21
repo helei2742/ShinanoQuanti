@@ -3,6 +3,7 @@ package com.helei.binanceapi.dto;
 
 import com.helei.binanceapi.base.SubscribeResultInvocationHandler;
 import com.helei.binanceapi.constants.WebSocketStreamType;
+import com.helei.dto.ASKey;
 import lombok.*;
 
 import java.util.HashMap;

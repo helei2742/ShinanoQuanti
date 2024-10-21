@@ -17,6 +17,7 @@ import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
 import io.netty.handler.stream.ChunkedWriteHandler;
+import io.netty.handler.timeout.IdleStateHandler;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -146,6 +147,7 @@ public abstract class AbstractWebsocketClient<P, T> {
 
                         p.addLast(new HttpClientCodec());
                         p.addLast(new HttpObjectAggregator(81920));
+                        p.addLast(new IdleStateHandler(0, 0, 10, TimeUnit.SECONDS));
                         p.addLast(new ChunkedWriteHandler());
 
                         p.addLast(new WebSocketFrameAggregator(MAX_FRAME_SIZE));  // 设置聚合器的最大帧大小
@@ -329,6 +331,7 @@ public abstract class AbstractWebsocketClient<P, T> {
      * 发送ping
      */
     public void sendPing() {
+        log.info("send ping");
         channel.writeAndFlush(new PingWebSocketFrame());
     }
 
@@ -336,6 +339,7 @@ public abstract class AbstractWebsocketClient<P, T> {
      * 发送pong
      */
     public void sendPong() {
+        log.info("send pong");
         channel.writeAndFlush(new PongWebSocketFrame());
     }
 

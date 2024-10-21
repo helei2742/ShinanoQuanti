@@ -7,7 +7,7 @@ import com.helei.binanceapi.base.AbstractBinanceWSApi;
 import com.helei.constants.WebSocketStreamParamKey;
 import com.helei.binanceapi.constants.command.AccountCommandType;
 import com.helei.binanceapi.constants.command.BaseCommandType;
-import com.helei.binanceapi.dto.ASKey;
+import com.helei.dto.ASKey;
 import com.helei.dto.WebSocketCommandBuilder;
 import lombok.extern.slf4j.Slf4j;
 

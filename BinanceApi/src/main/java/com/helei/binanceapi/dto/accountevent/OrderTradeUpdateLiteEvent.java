@@ -2,10 +2,18 @@ package com.helei.binanceapi.dto.accountevent;
 
 import com.helei.binanceapi.constants.AccountEventType;
 import com.helei.constants.TradeSide;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
  * 精简交易推送相比原有的ORDER_TRADE_UPDATE流减少了数据延迟，但该交易推送仅推送和交易相关的字段。
  */
+@Setter
+@Getter
+@ToString
+
 public class OrderTradeUpdateLiteEvent extends AccountEvent {
 
     /**
@@ -47,11 +55,11 @@ public class OrderTradeUpdateLiteEvent extends AccountEvent {
     /**
      * 成交ID "t"
      */
-    private String tradeId;
+    private Long tradeId;
     /**
      * 订单ID "i"
      */
-    private String orderId;
+    private Long orderId;
 
 
     public OrderTradeUpdateLiteEvent(Long eventTime) {

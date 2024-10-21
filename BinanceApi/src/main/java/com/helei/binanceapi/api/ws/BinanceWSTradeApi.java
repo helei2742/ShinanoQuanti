@@ -9,7 +9,7 @@ package com.helei.binanceapi.api.ws;
         import com.helei.binanceapi.constants.CancelRestrictions;
         import com.helei.binanceapi.dto.order.BaseOrder;
         import com.helei.binanceapi.constants.command.TradeCommandType;
-        import com.helei.binanceapi.dto.ASKey;
+        import com.helei.dto.ASKey;
         import com.helei.dto.WebSocketCommandBuilder;
         import lombok.extern.slf4j.Slf4j;
 

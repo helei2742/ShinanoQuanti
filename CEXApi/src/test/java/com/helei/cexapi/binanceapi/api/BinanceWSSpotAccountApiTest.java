@@ -3,7 +3,7 @@ package com.helei.cexapi.binanceapi.api;
 import com.helei.cexapi.CEXApiFactory;
 import com.helei.binanceapi.BinanceWSApiClient;
 import com.helei.binanceapi.api.ws.BinanceWSSpotAccountApi;
-import com.helei.binanceapi.dto.ASKey;
+import com.helei.dto.ASKey;
 import com.helei.binanceapi.constants.BinanceApiUrl;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

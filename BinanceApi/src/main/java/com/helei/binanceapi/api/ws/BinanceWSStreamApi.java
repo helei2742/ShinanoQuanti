@@ -6,7 +6,7 @@ import com.helei.binanceapi.BinanceWSApiClient;
 import com.helei.binanceapi.base.AbstractBinanceWSApi;
 import com.helei.binanceapi.base.SubscribeResultInvocationHandler;
 import com.helei.binanceapi.constants.WebSocketStreamType;
-import com.helei.binanceapi.dto.ASKey;
+import com.helei.dto.ASKey;
 import com.helei.binanceapi.dto.StreamSubscribeEntity;
 
 import java.net.URISyntaxException;

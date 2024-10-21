@@ -1,13 +1,14 @@
 package com.helei.binanceapi.dto.accountevent;
 
 import com.helei.binanceapi.constants.AccountEventType;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 /**
  * 杠杆倍数等账户配置 更新推送
  */
+@Getter
+@Setter
+@ToString
 public class AccountConfigUpdateEvent extends AccountEvent {
 
     /**

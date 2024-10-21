@@ -4,6 +4,15 @@ import com.helei.binanceapi.constants.AccountEventType;
 import com.helei.binanceapi.constants.strategy.StrategyOPCode;
 import com.helei.binanceapi.constants.strategy.StrategyStatus;
 import com.helei.binanceapi.constants.strategy.StrategyType;
+import lombok.*;
+
+
+/**
+ * 策略交易更新推送
+ */
+@Getter
+@Setter
+@ToString
 
 public class StrategyUpdateEvent extends AccountEvent {
     /**
@@ -12,17 +21,21 @@ public class StrategyUpdateEvent extends AccountEvent {
     private Long matchMakingTime;
 
 
+    private StrategyUpdateInfo strategyUpdateInfo;
 
     public StrategyUpdateEvent(Long eventTime) {
         super(AccountEventType.STRATEGY_UPDATE, eventTime);
     }
 
 
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class StrategyUpdateInfo{
         /**
          * 策略 ID "si"
          */
-        private long strategyId;
+        private Long strategyId;
         /**
          * 策略类型 "st"
          */

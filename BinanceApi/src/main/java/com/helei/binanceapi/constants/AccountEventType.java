@@ -1,5 +1,6 @@
 package com.helei.binanceapi.constants;
 
+import com.helei.binanceapi.supporter.AccountEventConverter;
 import lombok.Getter;
 
 import java.util.HashMap;
@@ -19,7 +20,7 @@ public enum AccountEventType {
      * 收到此消息后 user data stream 将不再更新，直到用户使用新的有效的listenKey
      * </p>
      */
-    LISTEN_KEY_EXPIRED("listenKeyExpired"),
+    LISTEN_KEY_EXPIRED("listenKeyExpired", AccountEventConverter.Converter.LISTEN_KEY_EXPIRED),
 
     /**
      * Balance 和 Position 更新推送
@@ -38,7 +39,7 @@ public enum AccountEventType {
      * 当用户某逐仓仓持仓发生"FUNDING FEE"时，事件ACCOUNT_UPDATE将只会推送相关的用户资产余额信息B
      * (仅推送"FUNDING FEE"所使用的资产余额信息)，和相关的持仓信息P(仅推送这笔"FUNDING FEE"发生所在的持仓信息)，其余持仓信息不会被推送。
      */
-    ACCOUNT_UPDATE("ACCOUNT_UPDATE"),
+    ACCOUNT_UPDATE("ACCOUNT_UPDATE", AccountEventConverter.Converter.ACCOUNT_UPDATE),
 
     /**
      * 追加保证金通知
@@ -49,7 +50,7 @@ public enum AccountEventType {
      * 此消息仅作为风险指导信息，不建议用于投资策略。
      * 在大波动市场行情下，不排除此消息发出的同时用户仓位已被强平的可能。
      */
-    MARGIN_CALL("MARGIN_CALL"),
+    MARGIN_CALL("MARGIN_CALL", AccountEventConverter.Converter.MARGIN_CALL),
 
     /**
      * 订单交易更新推送
@@ -58,14 +59,14 @@ public enum AccountEventType {
      * <p>
      * 当有新订单创建、订单有新成交或者新的状态变化时会推送此类事件 事件类型统一为 ORDER_TRADE_UPDATE
      */
-    ORDER_TRADE_UPDATE("ORDER_TRADE_UPDATE"),
+    ORDER_TRADE_UPDATE("ORDER_TRADE_UPDATE", AccountEventConverter.Converter.ORDER_TRADE_UPDATE),
 
     /**
      * 精简交易推送
      * <p>
      * 相比原有的ORDER_TRADE_UPDATE流减少了数据延迟，但该交易推送仅推送和交易相关的字段
      */
-    ORDER_TRADE_UPDATE_LITE("TRADE_LITE"),
+    ORDER_TRADE_UPDATE_LITE("TRADE_LITE", AccountEventConverter.Converter.TRADE_LITE),
 
     /**
      * 杠杆倍数等账户配置 更新推送
@@ -78,28 +79,28 @@ public enum AccountEventType {
      * 当用户联合保证金状态发生变化时推送消息体会包含对象ai表示用户账户配置，其中j代表用户联合保证金状态
      * </p>
      */
-    ACCOUNT_CONFIG_UPDATE("ACCOUNT_CONFIG_UPDATE"),
+    ACCOUNT_CONFIG_UPDATE("ACCOUNT_CONFIG_UPDATE", AccountEventConverter.Converter.ACCOUNT_CONFIG_UPDATE),
 
     /**
      * 策略交易更新推送
      * <p>事件描述</p>
      * <p>STRATEGY_UPDATE 在策略交易创建、取消、失效等等时候更新。</p>
      */
-    STRATEGY_UPDATE("STRATEGY_UPDATE"),
+    STRATEGY_UPDATE("STRATEGY_UPDATE", AccountEventConverter.Converter.STRATEGY_UPDATE),
 
     /**
      * 网格更新推送
      * <p>事件描述</p>
      * <p>GRID_UPDATE 在网格子订单有部份或是完全成交时更新。</p>
      */
-    GRID_UPDATE("GRID_UPDATE"),
+    GRID_UPDATE("GRID_UPDATE", AccountEventConverter.Converter.GRID_UPDATE),
 
     /**
      * 条件订单(TP/SL)触发后拒绝更新推送
      * <p>事件描述</p>
      * <p>CONDITIONAL_ORDER_TRIGGER_REJECT 在止盈止损单触发后被拒绝时推送</p>
      */
-    CONDITIONAL_ORDER_TRIGGER_REJECT("CONDITIONAL_ORDER_TRIGGER_REJECT"),
+    CONDITIONAL_ORDER_TRIGGER_REJECT("CONDITIONAL_ORDER_TRIGGER_REJECT", AccountEventConverter.Converter.CONDITIONAL_ORDER_TRIGGER_REJECT),
     ;
 
     public static final Map<String, AccountEventType> STATUS_MAP = new HashMap<>();
@@ -112,9 +113,11 @@ public enum AccountEventType {
 
     private final String description;
 
+    private final AccountEventConverter.Converter converter;
 
-    AccountEventType(String description) {
+    AccountEventType(String description, AccountEventConverter.Converter converter) {
         this.description = description;
+        this.converter = converter;
     }
 
 }

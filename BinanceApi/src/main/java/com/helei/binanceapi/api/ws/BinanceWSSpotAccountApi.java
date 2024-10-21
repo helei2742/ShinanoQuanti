@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.helei.binanceapi.BinanceWSApiClient;
 import com.helei.binanceapi.base.AbstractBinanceWSApi;
 import com.helei.binanceapi.constants.command.AccountCommandType;
-import com.helei.binanceapi.dto.ASKey;
+import com.helei.dto.ASKey;
 import com.helei.dto.WebSocketCommandBuilder;
 import lombok.extern.slf4j.Slf4j;
 
