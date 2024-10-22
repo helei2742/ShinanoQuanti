@@ -1,4 +1,4 @@
-package com.helei.cexapi.binanceapi;
+package com.helei.cexapi;
 
 import com.helei.binanceapi.BinanceWSAccountStreamClient;
 import com.helei.binanceapi.BinanceWSApiClient;
@@ -97,3 +97,4 @@ class BinanceWSAccountStreamClientTest {
 
     }
 }
+

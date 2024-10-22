@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @Data
 @AllArgsConstructor
@@ -22,6 +23,11 @@ public class UserInfo {
      * 验证key
      */
     private ASKey asKey;
+
+    /**
+     * 是否可用
+     */
+    private final AtomicBoolean usable = new AtomicBoolean(false);
 
     /**
      * 订阅的交易对

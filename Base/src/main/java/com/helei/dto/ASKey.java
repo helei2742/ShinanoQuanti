@@ -5,10 +5,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ASKey {
+public class ASKey implements Serializable {
 
     public static final ASKey EMPTY_ASKEY = new ASKey();
 

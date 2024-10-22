@@ -34,3 +34,6 @@ build/
 
 *.txt
 *.log
+
+/log/
+**/logs/

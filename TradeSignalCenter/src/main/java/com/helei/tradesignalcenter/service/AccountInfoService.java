@@ -1,9 +1,8 @@
-package com.helei.tradesignalcenter.resolvestream;
+
+package com.helei.tradesignalcenter.service;
 
 
 import com.alibaba.fastjson.JSONObject;
-import com.helei.binanceapi.BinanceWSApiClient;
-import com.helei.binanceapi.api.ws.BinanceWSContractAccountApi;
 import com.helei.dto.ASKey;
 import com.helei.dto.account.AccountLocationConfig;
 import com.helei.dto.account.UserInfo;
@@ -14,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+
 
 /**
  * 账户信息服务
@@ -31,14 +31,6 @@ public class AccountInfoService {
      */
     private final Map<String, List<String>> symbol2UIdsMap = new HashMap<>();
 
-    /**
-     * 账户api
-     */
-    private final BinanceWSContractAccountApi accountApi;
-
-    public AccountInfoService(BinanceWSApiClient binanceWSApiClient) {
-        this.accountApi = binanceWSApiClient.getContractAccountApi();
-    }
 
     /**
      * 获取订阅 symbol 交易对的账户的最新信息
@@ -48,12 +40,6 @@ public class AccountInfoService {
     public List<CompletableFuture<JSONObject>> getNewestSubscribedAccount(String symbol) {
 
         List<CompletableFuture<JSONObject>> list = new ArrayList<>();
-        for (String accountId : symbol2UIdsMap.get(symbol)) {
-            ASKey asKey = uid2UserInfo.get(accountId).getAsKey();
-
-            CompletableFuture<JSONObject> future = accountApi.accountStatus( asKey);
-            list.add(future);
-        }
 
         return list;
     }

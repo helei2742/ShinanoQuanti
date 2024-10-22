@@ -76,6 +76,10 @@ public abstract class AbstractWebsocketClient<P, T> {
     @Getter
     private final AtomicBoolean isRunning = new AtomicBoolean(false);
 
+    @Setter
+    @Getter
+    private String name;
+
     private Bootstrap bootstrap;
 
     private EventLoopGroup eventLoopGroup;
@@ -183,7 +187,7 @@ public abstract class AbstractWebsocketClient<P, T> {
                     reconnectTimes.decrementAndGet();
                 }, 60, TimeUnit.SECONDS);
 
-                log.info("start connect [{}], current times [{}]", uri, reconnectTimes.get());
+                log.info("start connect client [{}], url[{}], current times [{}]", name, url, reconnectTimes.get());
                 CountDownLatch latch = new CountDownLatch(1);
 
 
@@ -193,9 +197,11 @@ public abstract class AbstractWebsocketClient<P, T> {
                         // 8. 等待 WebSocket 握手完成
                         handler.handshakeFuture().sync();
 
+                        channel.attr(NettyConstants.CLIENT_NAME).set(name);
+
                         isSuccess.set(true);
                     } catch (Exception e) {
-                        log.error("connect [{}] error, times [{}]", uri, reconnectTimes.get(), e);
+                        log.error("connect client [{}], url[{}] error, times [{}]", name, url, reconnectTimes.get(), e);
                     }
                     latch.countDown();
                 }, NettyConstants.RECONNECT_DELAY_SECONDS, TimeUnit.SECONDS);
@@ -203,12 +209,12 @@ public abstract class AbstractWebsocketClient<P, T> {
                 try {
                     latch.await();
                 } catch (InterruptedException e) {
-                    log.error("connect [{}] error, times [{}]", uri, reconnectTimes.get(), e);
+                    log.error("connect client [{}], url[{}] error, times [{}]", name, url, reconnectTimes.get(), e);
                 }
 
                 if (isSuccess.get()) {
 
-                    log.info("connect [{}] success, current times [{}]", uri, reconnectTimes.get());
+                    log.info("connect client [{}], url[{}] success, current times [{}]", name, url, reconnectTimes.get());
                     isRunning.set(true);
                     break;
                 }
@@ -226,14 +232,17 @@ public abstract class AbstractWebsocketClient<P, T> {
      * 关闭WebSocketClient
      */
     public void close() {
-        log.info("start close websocket client");
+        log.info("start close websocket client [{}]", name);
         if (channel != null) {
             channel.close();
         }
         if (eventLoopGroup != null) {
             eventLoopGroup.shutdownGracefully();
         }
-        log.info("web socket client closed");
+
+        reconnectTimes.set(0);
+        isRunning.set(false);
+        log.info("web socket client [{}] closed", name);
     }
 
 
@@ -265,13 +274,10 @@ public abstract class AbstractWebsocketClient<P, T> {
     public void sendRequest(P request, Consumer<T> callback, VirtualThreadTaskExecutor executorService) {
         boolean flag = requestResponseHandler.registryRequest(getIdFromRequest(request), response -> {
             if (executorService == null) {
-                if (callbackInvoker == null) { //netty线程处理
+                //此类线程处理
+                callbackInvoker.submit(() -> {
                     callback.accept(response);
-                } else { //此类线程处理
-                    callbackInvoker.submit(() -> {
-                        callback.accept(response);
-                    });
-                }
+                });
             } else { //参数线程池处理
                 executorService.submit(() -> {
                     callback.accept(response);
@@ -331,7 +337,7 @@ public abstract class AbstractWebsocketClient<P, T> {
      * 发送ping
      */
     public void sendPing() {
-        log.info("send ping");
+        log.info("client [{}] send ping {}", name, url);
         channel.writeAndFlush(new PingWebSocketFrame());
     }
 
@@ -339,7 +345,7 @@ public abstract class AbstractWebsocketClient<P, T> {
      * 发送pong
      */
     public void sendPong() {
-        log.info("send pong");
+        log.info("client [{}] send pong {}", name, url);
         channel.writeAndFlush(new PongWebSocketFrame());
     }
 

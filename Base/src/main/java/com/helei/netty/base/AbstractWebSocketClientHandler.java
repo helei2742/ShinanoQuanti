@@ -1,6 +1,6 @@
-
 package com.helei.netty.base;
 
+import com.helei.netty.NettyConstants;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPromise;
@@ -49,19 +49,21 @@ public abstract class AbstractWebSocketClientHandler<P, T> extends SimpleChannel
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
-        log.info("WebSocket Client connected!");
-        handshaker.handshake(ctx.channel());
+        Channel channel = ctx.channel();
+        log.info("WebSocket Client [{}] connected!", websocketClient.getName());
+        channel.attr(NettyConstants.CLIENT_NAME).set(websocketClient.getName());
+        handshaker.handshake(channel);
     }
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) {
-        log.info("WebSocket Client disconnected!");
+        log.info("WebSocket Client [{}] disconnected!", ctx.channel().attr(NettyConstants.CLIENT_NAME).get());
         websocketClient.getIsRunning().set(false);
     }
 
     @Override
     public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
-        log.info("WebSocket Client unregistered!, start reconnect");
+        log.info("WebSocket Client [{}] unregistered!, start reconnect", ctx.channel().attr(NettyConstants.CLIENT_NAME).get());
 
         websocketClient.reconnect();
     }
@@ -74,10 +76,10 @@ public abstract class AbstractWebSocketClientHandler<P, T> extends SimpleChannel
             if (msg instanceof FullHttpResponse response) {
                 try {
                     handshaker.finishHandshake(ch, response);
-                    System.out.println("WebSocket Handshake complete!");
+                    log.info("WebSocket client [{}] Handshake complete!", ch.attr(NettyConstants.CLIENT_NAME).get());
                     handshakeFuture.setSuccess();
                 } catch (WebSocketHandshakeException e) {
-                    System.out.println("WebSocket Handshake failed!");
+                    log.info("WebSocket client [{}] Handshake failed!", ch.attr(NettyConstants.CLIENT_NAME).get());
                     handshakeFuture.setFailure(e);
                 }
                 return;
@@ -90,16 +92,15 @@ public abstract class AbstractWebSocketClientHandler<P, T> extends SimpleChannel
                             ", content=" + response.content().toString(CharsetUtil.UTF_8) + ')');
         } else if (msg instanceof WebSocketFrame frame) {
             if (frame instanceof TextWebSocketFrame textFrame) {
-                log.debug("websocket client 接收到的消息：{}", textFrame.text());
+                log.debug("websocket client [{}] 接收到的消息：{}", ch.attr(NettyConstants.CLIENT_NAME).get(), textFrame.text());
 
                 whenReceiveMessage(textFrame.text());
 
             } else if (frame instanceof PongWebSocketFrame) {
-                log.info("WebSocket Client received pong");
+                log.info("WebSocket Client [{}] received pong", ch.attr(NettyConstants.CLIENT_NAME).get());
             } else if (frame instanceof PingWebSocketFrame) {
-                log.info("WebSocket Client received ping");
+                log.info("WebSocket Client [{}] received ping", ch.attr(NettyConstants.CLIENT_NAME).get());
                 websocketClient.sendPong();
-                log.info("send pong");
             } else if (frame instanceof CloseWebSocketFrame) {
                 log.info("websocket client关闭");
                 ch.close();

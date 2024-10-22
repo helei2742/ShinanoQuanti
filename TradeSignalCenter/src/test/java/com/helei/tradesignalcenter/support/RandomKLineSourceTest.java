@@ -1,3 +1,4 @@
+
 package com.helei.tradesignalcenter.support;
 
 
@@ -8,7 +9,7 @@ import com.helei.constants.TradeSide;
 import com.helei.dto.ASKey;
 import com.helei.binanceapi.constants.BinanceApiUrl;
 import com.helei.tradesignalcenter.resolvestream.*;
-import com.helei.tradesignalcenter.resolvestream.a_datasource.RandomKLineSource;
+        import com.helei.tradesignalcenter.resolvestream.a_datasource.RandomKLineSource;
 import com.helei.dto.account.AccountLocationConfig;
 import com.helei.tradesignalcenter.dto.OriginOrder;
 import com.helei.dto.account.UserInfo;
@@ -29,6 +30,7 @@ import com.helei.tradesignalcenter.resolvestream.c_signal.maker.AbstractSignalMa
 import com.helei.tradesignalcenter.resolvestream.c_signal.maker.BollSignalMaker;
 import com.helei.tradesignalcenter.resolvestream.c_signal.maker.PSTSignalMaker;
 import com.helei.tradesignalcenter.resolvestream.e_order.OrderCommitService;
+import com.helei.tradesignalcenter.service.AccountInfoService;
 import org.apache.flink.api.common.functions.OpenContext;
 import org.apache.flink.streaming.api.TimerService;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
@@ -112,7 +114,7 @@ public class RandomKLineSourceTest {
         String sk = "C1ihCOkWEECpnsbx4HcFLZubOyZX2CvPVaIvxlHtDNwfai8WsEzIxV6rLIizvgl9";
         String ak = "HZzsqyA0uBTC4GzaykzeUL5ml7V0jzGXGwU38WGDUmH8JLzPIw3ZfbGxa4ZzuzFm";
 
-        AccountInfoService accountInfoService = new AccountInfoService(normalClient);
+        AccountInfoService accountInfoService = new AccountInfoService();
         String testId = "testId";
         accountInfoService.getUid2UserInfo().put(testId, new UserInfo(testId, new ASKey(ak, sk), List.of("BTCUSDT"), new AccountLocationConfig(0.2, 10 , 50)));
         accountInfoService.getSymbol2UIdsMap().put("BTCUSDT", List.of(testId));
@@ -199,3 +201,4 @@ public class RandomKLineSourceTest {
     }
 
 }
+

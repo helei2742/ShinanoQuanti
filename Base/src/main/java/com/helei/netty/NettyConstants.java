@@ -11,9 +11,9 @@ public class NettyConstants {
 
 
     /**
-     * 放在netty channel 里的 client id 的 key
+     * 放在netty channel 里的 client_name 的 key
      */
-    public static final AttributeKey<String> ATTRIBUTE_KEY = AttributeKey.valueOf("clientId");
+    public static final AttributeKey<String> CLIENT_NAME = AttributeKey.valueOf("client_name");
 
     /**
      * 请求等待时间

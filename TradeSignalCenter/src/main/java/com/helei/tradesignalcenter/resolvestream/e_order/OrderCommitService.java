@@ -7,7 +7,7 @@ import com.helei.tradesignalcenter.conventor.AccountInfoMapper;
 import com.helei.dto.account.AccountInfo;
 import com.helei.dto.account.AccountLocationConfig;
 import com.helei.tradesignalcenter.dto.OriginOrder;
-import com.helei.tradesignalcenter.resolvestream.AccountInfoService;
+import com.helei.tradesignalcenter.service.AccountInfoService;
 import com.helei.tradesignalcenter.support.OrderBuildSupporter;
 import com.helei.util.CalculatorUtil;
 import lombok.extern.slf4j.Slf4j;
