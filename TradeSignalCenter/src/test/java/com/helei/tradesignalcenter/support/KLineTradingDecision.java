@@ -19,8 +19,11 @@ import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.task.VirtualThreadTaskExecutor;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Arrays;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
@@ -49,19 +52,19 @@ public class KLineTradingDecision {
     @BeforeAll
     public void before() {
         try {
-            streamClient = CEXApiFactory.binanceApiClient(BinanceApiUrl.WS_SPOT_STREAM_URL);
-            normalClient = CEXApiFactory.binanceApiClient(BinanceApiUrl.WS_NORMAL_URL);
+//            streamClient = CEXApiFactory.binanceApiClient(BinanceApiUrl.WS_SPOT_STREAM_URL);
+//            normalClient = CEXApiFactory.binanceApiClient(BinanceApiUrl.WS_NORMAL_URL);
+//
+//            CompletableFuture.allOf(streamClient.connect(), normalClient.connect()).get();
 
-            CompletableFuture.allOf(streamClient.connect(), normalClient.connect()).get();
-
-            dataPublisher = new MemoryKLineDataPublisher(streamClient, normalClient, 100, 200, 3)
-                    .addListenKLine(btcusdt, Arrays.asList(KLineInterval.M_1, KLineInterval.h_2, KLineInterval.m_15))
-                    .addListenKLine(ethusdt, Arrays.asList(KLineInterval.M_1, KLineInterval.d_1, KLineInterval.m_15));
-
-            memoryKLineSource_btc_2h = new MemoryKLineSource(btcusdt, KLineInterval.h_2, LocalDateTime.of(2020, 1, 1, 0, 0), dataPublisher);
-            memoryKLineSource_btc_15m = new MemoryKLineSource(btcusdt, KLineInterval.m_15, LocalDateTime.of(2020, 1, 1, 0, 0), dataPublisher);
-
-            memoryKLineSource_eth = new MemoryKLineSource(ethusdt, KLineInterval.m_15, LocalDateTime.of(2020, 1, 1, 0, 0), dataPublisher);
+//            dataPublisher = new MemoryKLineDataPublisher(streamClient, normalClient, 100, 200, 3)
+//                    .addListenKLine(btcusdt, Arrays.asList(KLineInterval.M_1, KLineInterval.h_2, KLineInterval.m_15))
+//                    .addListenKLine(ethusdt, Arrays.asList(KLineInterval.M_1, KLineInterval.d_1, KLineInterval.m_15));
+//
+//            memoryKLineSource_btc_2h = new MemoryKLineSource(btcusdt, KLineInterval.h_2, LocalDateTime.of(2020, 1, 1, 0, 0), dataPublisher);
+//            memoryKLineSource_btc_15m = new MemoryKLineSource(btcusdt, KLineInterval.m_15, LocalDateTime.of(2020, 1, 1, 0, 0), dataPublisher);
+//
+//            memoryKLineSource_eth = new MemoryKLineSource(ethusdt, KLineInterval.m_15, LocalDateTime.of(2020, 1, 1, 0, 0), dataPublisher);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -89,8 +92,8 @@ public class KLineTradingDecision {
 //        ArrayBlockingQueue<KLine> abq = new ArrayBlockingQueue<>(10);
         AtomicInteger counter = new AtomicInteger();
 
-        new HistoryKLineLoader(200, normalClient, Executors.newFixedThreadPool(2))
-                .startLoad("btcusdt", KLineInterval.m_15, LocalDateTime.of(2020, 1, 1, 0, 0), kLines -> {
+        new HistoryKLineLoader(200, normalClient, new VirtualThreadTaskExecutor())
+                .startLoad("btcusdt", KLineInterval.m_15, LocalDateTime.of(2020, 1, 1, 0, 0).toInstant(ZoneOffset.UTC).toEpochMilli(), kLines -> {
                     System.out.println("get klines count " + kLines.size());
                     for (KLine kLine : kLines) {
                         try {

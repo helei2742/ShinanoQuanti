@@ -2,6 +2,7 @@ package com.helei.binanceapi.base;
 
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.parser.Feature;
 import com.helei.netty.base.AbstractWebSocketClientHandler;
 import lombok.extern.slf4j.Slf4j;
 
@@ -11,7 +12,7 @@ public class AbstractBinanceWSApiClientHandler extends AbstractWebSocketClientHa
 
     @Override
     protected void whenReceiveMessage(String text) {
-        JSONObject message = JSONObject.parseObject(text);
+        JSONObject message = JSONObject.parseObject(text, Feature.AllowArbitraryCommas);
 
         String id = message.getString("id");
         String stream = message.getString("stream");
@@ -27,5 +28,4 @@ public class AbstractBinanceWSApiClientHandler extends AbstractWebSocketClientHa
             websocketClient.submitStreamResponse(stream, message);
         }
     }
-
 }

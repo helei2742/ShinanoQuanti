@@ -6,6 +6,9 @@ import lombok.Getter;
 import java.io.Serial;
 import java.io.Serializable;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Getter
 public enum KLineInterval implements Serializable {
 
@@ -33,6 +36,14 @@ public enum KLineInterval implements Serializable {
     private final String describe;
     private final long second;
 
+
+    public static final Map<String, KLineInterval> STATUS_MAP = new HashMap<>();
+
+    static {
+        for (KLineInterval status : KLineInterval.values()) {
+            STATUS_MAP.put(status.getDescribe(), status);
+        }
+    }
 
     KLineInterval(String describe, long second) {
         this.describe = describe;

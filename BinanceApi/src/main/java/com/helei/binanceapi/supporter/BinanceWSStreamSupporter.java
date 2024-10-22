@@ -8,7 +8,7 @@ import org.springframework.core.task.VirtualThreadTaskExecutor;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.ExecutorService;
+
 
 
 
@@ -54,7 +54,7 @@ public class BinanceWSStreamSupporter {
         }
 
         try {
-            ExecutorService executor = subscribeEntity.getCallbackExecutor();
+            VirtualThreadTaskExecutor executor = subscribeEntity.getCallbackExecutor();
             if (executor != null) {
                 executor.submit(()->{
                     subscribeEntity.getInvocationHandler().invoke(streamName, message);
