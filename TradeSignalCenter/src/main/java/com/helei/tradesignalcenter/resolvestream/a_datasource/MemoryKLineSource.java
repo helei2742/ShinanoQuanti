@@ -4,11 +4,11 @@ import com.helei.constants.KLineInterval;
 import com.helei.dto.KLine;
 import com.helei.tradesignalcenter.util.KLineBuffer;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.flink.api.common.functions.OpenContext;
+import org.springframework.core.task.VirtualThreadTaskExecutor;
 
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 
 /**
@@ -16,32 +16,80 @@ import java.util.UUID;
  */
 @Slf4j
 public class MemoryKLineSource extends BaseKLineSource {
-    private static final Map<String, KLineBuffer> kLineBufferMap = new HashMap<>();
 
+    private transient MemoryKLineDataPublisher dataPublisher;
 
-    private final String id = UUID.randomUUID().toString();
+    private transient KLineBuffer kLineBuffer;
 
+    private transient VirtualThreadTaskExecutor publishExecutor;
+
+    private final long startTime;
+
+    private final String streamUrl;
+
+    private final String requestUrl;
+
+    private final int bufferSize;
+
+    private final int historyLoadBatch;
 
     private final String symbol;
 
+    @Override
+    public void open(OpenContext openContext) throws Exception {
+        publishExecutor = new VirtualThreadTaskExecutor("kline-load-executor");
+
+        log.info("开始初始化KLineDataPublisher");
+        dataPublisher = new MemoryKLineDataPublisher(
+                streamUrl,
+                requestUrl,
+                bufferSize,
+                historyLoadBatch,
+                publishExecutor
+                );
+
+        log.info("开始注册监听的k线");
+        dataPublisher.addListenKLine(symbol, List.of(kLineInterval));
+
+        log.info("监听k线注册成功");
+        kLineBuffer =  dataPublisher.registry(symbol, kLineInterval, startTime);
+    }
 
     public MemoryKLineSource(
             String symbol,
             KLineInterval interval,
-            LocalDateTime startTime,
-            MemoryKLineDataPublisher memoryKLineDataPublisher) {
+            long startTime,
+            String streamUrl,
+            String requestUrl,
+            int bufferSize,
+            int historyLoadBatch
+    ) {
         super(interval);
         this.symbol = symbol;
-        kLineBufferMap.put(id, memoryKLineDataPublisher.registry(symbol, interval, startTime));
+        this.startTime = startTime;
+        this.streamUrl = streamUrl;
+        this.requestUrl = requestUrl;
+        this.bufferSize = bufferSize;
+        this.historyLoadBatch = historyLoadBatch;
     }
 
+    @Override
+    boolean init(SourceContext<KLine> sourceContext) throws ExecutionException, InterruptedException {
+            while (true) {
+                try {
+                    KLine take = kLineBuffer.take();
+
+                    sourceContext.collect(take);
+                } catch (InterruptedException e) {
+                    log.error("取kLine数据发生错误", e);
+                    System.exit(-1);
+                }
+            }
+
+    }
 
     @Override
-    protected KLine loadKLine() throws Exception {
-        KLineBuffer kLineBuffer = kLineBufferMap.get(id);
-        if (kLineBuffer == null) {
-            log.error("didn't registry kline[{}]-[{}] on memoryKLineDataPublisher", symbol, kLineInterval.getDescribe());
-        }
-        return kLineBuffer.take();
+    void refreshState() {
+
     }
 }

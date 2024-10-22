@@ -1,4 +1,3 @@
-
 package com.helei.tradesignalcenter.resolvestream.a_datasource;
 
 import com.helei.constants.KLineInterval;
@@ -8,6 +7,7 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
@@ -29,7 +29,13 @@ public class RandomKLineSource extends BaseKLineSource {
     @Setter
     private boolean isRealTime = false;
 
-    public RandomKLineSource(String symbol, KLineInterval kLineInterval, LocalDateTime startTimeStamp, Double maxPrice, Double minPrice) {
+    public RandomKLineSource(
+            String symbol,
+            KLineInterval kLineInterval,
+            LocalDateTime startTimeStamp,
+            Double maxPrice,
+            Double minPrice
+    ) {
         super(kLineInterval);
         this.symbol = symbol.toUpperCase();
 
@@ -39,7 +45,6 @@ public class RandomKLineSource extends BaseKLineSource {
         this.minPrice = minPrice;
     }
 
-    @Override
     protected KLine loadKLine() throws Exception {
 
         double nextLow = minPrice + (maxPrice - minPrice) * random.nextDouble();
@@ -48,7 +53,6 @@ public class RandomKLineSource extends BaseKLineSource {
         double nextClose = nextLow + (nextHigh - nextLow) * random.nextDouble();
 
         double volume = 10 + (Double.MAX_VALUE / 2 - 10) * random.nextDouble();
-
         long plus = kLineInterval.getSecond() * 1000;
         long openTime = startTimeStamp.get();
 
@@ -65,6 +69,20 @@ public class RandomKLineSource extends BaseKLineSource {
 
         KLine kLine = new KLine(symbol, nextOpen, nextClose, nextHigh, nextLow, volume, openTime, openTime + plus - 1000, !isRealTime, kLineInterval, new HashMap<>());
         return kLine;
+    }
+
+    @Override
+    boolean init(SourceContext<KLine> sourceContext) throws Exception {
+
+        while (true) {
+            KLine kLine = loadKLine();
+            sourceContext.collect(kLine);
+        }
+    }
+
+    @Override
+    void refreshState() {
+
     }
 }
 

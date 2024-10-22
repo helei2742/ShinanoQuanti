@@ -3,6 +3,7 @@ package com.helei.tradesignalcenter.resolvestream.a_datasource;
 
 import com.helei.binanceapi.BinanceWSApiClient;
 import com.helei.binanceapi.api.ws.BinanceWSStreamApi;
+import com.helei.cexapi.CEXApiFactory;
 import com.helei.constants.KLineInterval;
 import com.helei.constants.WebSocketStreamParamKey;
 import com.helei.binanceapi.constants.WebSocketStreamType;
@@ -12,10 +13,14 @@ import com.helei.dto.KLine;
 import com.helei.tradesignalcenter.util.KLineBuffer;
 import com.helei.util.CustomBlockingQueue;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.task.VirtualThreadTaskExecutor;
 
 
+import javax.net.ssl.SSLException;
+import java.net.URISyntaxException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.*;
 
 
@@ -29,12 +34,12 @@ import java.util.concurrent.*;
 @Slf4j
 public class MemoryKLineDataPublisher implements KLineDataPublisher {
 
-    private final ExecutorService publishExecutor;
+    private final VirtualThreadTaskExecutor publishExecutor;
 
     /**
      * 获取流实时数据
      */
-    private final BinanceWSStreamApi.StreamCommandBuilder streamCommandBuilder;
+    private final BinanceWSStreamApi streamApi;
 
     /**
      * 普通api 用于获取历史数据
@@ -50,28 +55,56 @@ public class MemoryKLineDataPublisher implements KLineDataPublisher {
 
     /**
      * 加载发布k线数据
+     * @param streamUrl        streamUrl
+     * @param requestUrl       requestUrl
+     * @param bufferSize       实时数据缓存区大小
+     * @param historyLoadBatch 历史数据一次拉取的批大小
+     * @param publishExecutor     处理线程池，由于registry()返回的KLineBuffer()是有界的，长时间不消费可能会导致处理的线程池县城被长期阻塞。
+     */
+    public MemoryKLineDataPublisher(
+            String streamUrl,
+            String requestUrl,
+            int bufferSize,
+            int historyLoadBatch,
+            VirtualThreadTaskExecutor publishExecutor
+    ) throws URISyntaxException, SSLException, ExecutionException, InterruptedException {
+        this(
+                CEXApiFactory.binanceApiClient(streamUrl),
+                CEXApiFactory.binanceApiClient(requestUrl),
+                bufferSize,
+                historyLoadBatch,
+                publishExecutor
+        );
+    }
+
+    /**
+     * 加载发布k线数据
      *
      * @param streamClient     streamClient
      * @param normalClient     normalClient
      * @param bufferSize       实时数据缓存区大小
      * @param historyLoadBatch 历史数据一次拉取的批大小
-     * @param executorSize     处理线程池大小，由于registry()返回的KLineBuffer()是有界的，长时间不消费可能会导致处理的线程池县城被长期阻塞。
+     * @param publishExecutor     处理线程池，由于registry()返回的KLineBuffer()是有界的，长时间不消费可能会导致处理的线程池县城被长期阻塞。
      */
     public MemoryKLineDataPublisher(
             BinanceWSApiClient streamClient,
             BinanceWSApiClient normalClient,
             int bufferSize,
             int historyLoadBatch,
-            int executorSize
-    ) {
-        this.publishExecutor = Executors.newFixedThreadPool(executorSize);
+            VirtualThreadTaskExecutor publishExecutor
+    ) throws URISyntaxException, SSLException, ExecutionException, InterruptedException {
+        CompletableFuture.allOf(streamClient.connect(), normalClient.connect()).get();
 
+        this.publishExecutor = publishExecutor;
+        streamClient.setName("实时k线获取客户端-" + UUID.randomUUID().toString().substring(0, 8));
+        normalClient.setName("历史k线获取客户端-" + UUID.randomUUID().toString().substring(0, 8));
         this.historyKLineLoader = new HistoryKLineLoader(historyLoadBatch, normalClient, publishExecutor);
-        streamCommandBuilder = streamClient
-                .getStreamApi()
-                .builder();
+
+        streamApi = streamClient.getStreamApi();
 
         this.bufferSize = bufferSize;
+
+        log.info("初始化MemoryKLineDataPublisher成功");
     }
 
     /**
@@ -86,6 +119,7 @@ public class MemoryKLineDataPublisher implements KLineDataPublisher {
             String symbol,
             List<KLineInterval> intervalList
     ) {
+        BinanceWSStreamApi.StreamCommandBuilder streamCommandBuilder = streamApi.builder();
         streamCommandBuilder.symbol(symbol);
 
         intervalList.forEach(kLineInterval -> {
@@ -123,7 +157,7 @@ public class MemoryKLineDataPublisher implements KLineDataPublisher {
     private void dispatchKLineData(String key, KLine kLine) {
         CustomBlockingQueue<KLine> buffer = realTimeKLineBufferMap.get(key);
         if (buffer == null) {
-            log.warn("no kline data buffer [{}}", key);
+            log.warn("no kline data buffer [{}]", key);
         } else {
             buffer.offer(kLine);
         }
@@ -137,7 +171,7 @@ public class MemoryKLineDataPublisher implements KLineDataPublisher {
      * @param interval interval
      * @return SubscribeData
      */
-    public KLineBuffer registry(String symbol, KLineInterval interval, LocalDateTime startTime) {
+    public KLineBuffer registry(String symbol, KLineInterval interval, long startTime) {
 
         String bufferKey = getKLineMapKey(symbol, interval);
 
@@ -166,7 +200,7 @@ public class MemoryKLineDataPublisher implements KLineDataPublisher {
         ).thenAcceptAsync((endTime) -> {
             try {
                 KLine kLine = null;
-                while ((kLine = buffer.take()) != null && !KLine.STREAM_END_KLINE.equals(kLine)){
+                while ((kLine = buffer.take()) != null && !KLine.STREAM_END_KLINE.equals(kLine)) {
                     kb.put(kLine);
                     log.debug("put real time kline, current kline buffer size[{}]", kb.size());
                 }

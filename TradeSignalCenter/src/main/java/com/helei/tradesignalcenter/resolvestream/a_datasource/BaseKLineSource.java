@@ -2,9 +2,11 @@ package com.helei.tradesignalcenter.resolvestream.a_datasource;
 
 import com.helei.constants.KLineInterval;
 import com.helei.dto.KLine;
-import org.apache.flink.streaming.api.functions.source.SourceFunction;
+import org.apache.flink.streaming.api.functions.source.RichSourceFunction;
 
-public abstract class BaseKLineSource implements SourceFunction<KLine> {
+import java.util.concurrent.TimeUnit;
+
+public abstract class BaseKLineSource extends RichSourceFunction<KLine> {
     private volatile boolean isRunning = true;
 
     public final KLineInterval kLineInterval;
@@ -15,22 +17,23 @@ public abstract class BaseKLineSource implements SourceFunction<KLine> {
 
     @Override
     public void run(SourceContext<KLine> sourceContext) throws Exception {
+        isRunning = init(sourceContext);
         while (isRunning) {
-            KLine kLine = loadKLine();
+            TimeUnit.MINUTES.sleep(50);
 
-            if (kLine != null) {
-                sourceContext.collect(kLine);
-            }
+            refreshState();
         }
     }
-
-    protected abstract KLine loadKLine() throws Exception;
-
 
     @Override
     public void cancel() {
         isRunning = false;
     }
+
+    abstract boolean init(SourceContext<KLine> sourceContext) throws Exception;
+
+    abstract void refreshState();
+
 }
 
 

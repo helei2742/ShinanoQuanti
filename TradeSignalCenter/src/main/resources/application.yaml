@@ -12,3 +12,6 @@ asKey:
 spring:
   application:
     name: TradeSignalCenter
+
+classloader:
+  check-leaked-classloader: false

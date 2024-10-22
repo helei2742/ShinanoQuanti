@@ -24,6 +24,7 @@ public class FlinkConfig {
         // 设置固定的网络内存大小，例如 128 MB
         config.set(TaskManagerOptions.NETWORK_MEMORY_MIN, MemorySize.ofMebiBytes(1024));
 
+        config.setString("classloader.check-leaked-classloader", "false");
 
         // 创建 Flink 流执行环境
         StreamExecutionEnvironment env = StreamExecutionEnvironment
