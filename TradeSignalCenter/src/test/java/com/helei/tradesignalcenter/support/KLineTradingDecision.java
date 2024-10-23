@@ -83,7 +83,7 @@ public class KLineTradingDecision {
     @Test
     public void testPST() {
 
-        DataStreamSource<KLine> streamSource = env.addSource(memoryKLineSource_btc_2h);
+        DataStreamSource<KLine> streamSource = env.addSource(memoryKLineSource_btc_2h).setParallelism(1);
         streamSource.print();
 
         env.execute("123");

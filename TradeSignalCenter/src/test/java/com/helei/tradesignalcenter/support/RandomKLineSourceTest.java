@@ -78,9 +78,9 @@ public class RandomKLineSourceTest {
 
             normalClient.connect().get();
 
-            btc_1h_source = new RandomKLineSource(btcusdt, KLineInterval.h_1, LocalDateTime.of(2022, 10, 3, 0, 0), 2000.0, 19000.0);
-            btc_15m_source = new RandomKLineSource(btcusdt, KLineInterval.m_15, LocalDateTime.of(2022, 10, 3, 0, 0), 2000.0, 19000.0);
-            btc_1m_source = new RandomKLineSource(btcusdt, KLineInterval.m_1, LocalDateTime.of(2022, 10, 3, 0, 0), 2000.0, 19000.0);
+            btc_1h_source = new RandomKLineSource(btcusdt, List.of(KLineInterval.h_1), LocalDateTime.of(2022, 10, 3, 0, 0), 2000.0, 19000.0);
+            btc_15m_source = new RandomKLineSource(btcusdt, List.of(KLineInterval.m_15), LocalDateTime.of(2022, 10, 3, 0, 0), 2000.0, 19000.0);
+            btc_1m_source = new RandomKLineSource(btcusdt,List.of( KLineInterval.m_1), LocalDateTime.of(2022, 10, 3, 0, 0), 2000.0, 19000.0);
 
         } catch (Exception e) {
             e.printStackTrace();

@@ -136,12 +136,12 @@ public class TradeSignalService {
             //1. 使用自定义 SourceFunction 生成 K 线数据流
             KeyedStream<KLine, String> kLineStream = env.addSource(kLineSource).keyBy(KLine::getStreamKey);
 
-            kLineStream.print();
+
             // 2.指标处理，串行
             for (BaseIndicatorCalculator<?> calculator : indicatorCalList) {
                 kLineStream = kLineStream.process(calculator).keyBy(KLine::getStreamKey);
             }
-            kLineStream.print();
+
             if (signalMakers.isEmpty()) {
                 throw new IllegalArgumentException("没有信号生成器");
             }
@@ -173,7 +173,7 @@ public class TradeSignalService {
 //            signalStream.print();
             return kLineStream
                     .connect(signalStream.keyBy(signal -> signal.getKLine().getStreamKey()))
-                    .process(new SignalSplitResolver((long) (kLineSource.kLineInterval.getSecond() * groupWindowRatioOfKLine * 1000)));
+                    .process(new SignalSplitResolver(groupWindowRatioOfKLine));
         }
     }
 

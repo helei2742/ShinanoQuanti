@@ -40,17 +40,16 @@ class MemoryKLineSourceTest {
     public void test1() throws Exception {
         MemoryKLineSource kLineSource = new MemoryKLineSource(
                 "BTCUSDT",
-                KLineInterval.h_1,
-                LocalDateTime.of(2000, 1, 1, 1, 1).toInstant(ZoneOffset.UTC).toEpochMilli(),
+                List.of(KLineInterval.h_1),
+                LocalDateTime.of(2020, 1, 1, 1, 1).toInstant(ZoneOffset.UTC).toEpochMilli(),
                 BinanceApiUrl.WS_SPOT_STREAM_URL,
                 BinanceApiUrl.WS_NORMAL_URL,
-                100,
                 200
         );
 
-        DataStreamSource<KLine> streamSource = env.addSource(kLineSource);
+        DataStreamSource<KLine> streamSource = env.addSource(kLineSource).setParallelism(1);;
 
-        streamSource.print();
+        streamSource.print().setParallelism(1);;
 
         env.execute("test kline");
         TimeUnit.MINUTES.sleep(1000);
