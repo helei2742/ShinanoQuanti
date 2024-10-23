@@ -1,16 +1,17 @@
 package com.helei.tradesignalcenter.resolvestream.b_indicator.calculater;
 
-        import com.helei.dto.KLine;
-        import com.helei.dto.indicator.RSI;
-        import com.helei.dto.indicator.config.RSIConfig;
-        import com.helei.util.CalculatorUtil;
-        import org.apache.flink.api.common.state.ValueState;
-        import org.apache.flink.api.common.state.ValueStateDescriptor;
-        import org.apache.flink.configuration.Configuration;
+import com.helei.dto.KLine;
+import com.helei.dto.indicator.RSI;
+import com.helei.dto.indicator.config.RSIConfig;
+import com.helei.util.CalculatorUtil;
+import org.apache.flink.api.common.functions.RuntimeContext;
+import org.apache.flink.api.common.state.ValueState;
+import org.apache.flink.api.common.state.ValueStateDescriptor;
+import org.apache.flink.configuration.Configuration;
 
-        import java.io.IOException;
+import java.io.IOException;
 
-public class RSICalculator extends BaseIndicatorCalculator<RSI>{
+public class RSICalculator extends BaseIndicatorCalculator<RSI> {
     private final int period;
 
     private ValueState<Double> rsiState;
@@ -21,8 +22,8 @@ public class RSICalculator extends BaseIndicatorCalculator<RSI>{
     }
 
     @Override
-    public void open(Configuration parameters) throws Exception {
-        rsiState = getRuntimeContext().getState(new ValueStateDescriptor<>(indicatorConfig.getIndicatorName() + "_rsiState", Double.class));
+    public void open(Configuration parameters, RuntimeContext runtimeContext) throws Exception {
+        rsiState = runtimeContext.getState(new ValueStateDescriptor<>(indicatorConfig.getIndicatorName() + "_rsiState", Double.class));
     }
 
 //    @Override

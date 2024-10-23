@@ -1,5 +1,6 @@
 package com.helei.tradesignalcenter.resolvestream.c_signal;
 
+import com.helei.constants.KLineInterval;
 import com.helei.dto.KLine;
 import com.helei.dto.TradeSignal;
 import lombok.extern.slf4j.Slf4j;
@@ -65,6 +66,7 @@ public class SignalSplitResolver extends KeyedCoProcessFunction<String, KLine, T
         timebaseState = getRuntimeContext().getState(new ValueStateDescriptor<>("timebaseState", TypeInformation.of(new TypeHint<>() {})));
         sendWindowStartState = getRuntimeContext().getState(new ValueStateDescriptor<>("sendWindowStartState", BasicTypeInfo.LONG_TYPE_INFO));
         windowStartState = getRuntimeContext().getState(new ValueStateDescriptor<>("windowStartState", BasicTypeInfo.LONG_TYPE_INFO));
+        windowLengthState = getRuntimeContext().getState(new ValueStateDescriptor<>("windowLengthState", BasicTypeInfo.LONG_TYPE_INFO));
     }
 
 

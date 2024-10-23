@@ -89,6 +89,7 @@ public class MemoryKLineSource extends BaseKLineSource {
 
             historyKLineLoader.startLoad(getSymbol(), interval, startTime, kLines -> {
                 for (KLine kLine : kLines) {
+                    kLine.setKLineInterval(interval);
                     sourceContext.collect(kLine);
                 }
             }).thenAcceptAsync((endTime) -> {

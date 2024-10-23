@@ -12,7 +12,6 @@ import java.util.Map;
 @Getter
 public enum KLineInterval implements Serializable {
 
-
     m_1("1m", 60),
     m_3("3m", 3 * 60),
     m_5("5m", 5 * 60),
@@ -31,7 +30,7 @@ public enum KLineInterval implements Serializable {
     ;
 
     @Serial
-    private static final long serialVersionUID = 8882388L; // 显式声明 serialVersionUID
+    private static final long serialVersionUID = 1233123123213L; // 显式声明 serialVersionUID
 
     private final String describe;
     private final long second;

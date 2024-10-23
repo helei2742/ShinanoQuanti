@@ -6,6 +6,7 @@ import com.helei.dto.KLine;
 import com.helei.dto.indicator.PST;
 import com.helei.dto.indicator.config.PSTConfig;
 import com.helei.util.CalculatorUtil;
+import org.apache.flink.api.common.functions.RuntimeContext;
 import org.apache.flink.api.common.state.ListState;
 import org.apache.flink.api.common.state.ListStateDescriptor;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
@@ -35,8 +36,8 @@ public class PSTCalculator extends BaseIndicatorCalculator<PST> {
     }
 
     @Override
-    public void open(Configuration parameters) throws Exception {
-        this.windowDataState = getRuntimeContext().getListState(new ListStateDescriptor<>(indicatorConfig.getIndicatorName() + "-WindowData", TypeInformation.of(KLine.class)));
+    public void open(Configuration parameters, RuntimeContext runtimeContext) throws Exception {
+        this.windowDataState = runtimeContext.getListState(new ListStateDescriptor<>(indicatorConfig.getIndicatorName() + "-WindowData", TypeInformation.of(KLine.class)));
     }
 
     @Override
