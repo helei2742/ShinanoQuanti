@@ -2,14 +2,12 @@
 package com.helei.tradesignalcenter.support;
 
 
-import com.helei.cexapi.CEXApiFactory;
-import com.helei.binanceapi.BinanceWSApiClient;
 import com.helei.constants.KLineInterval;
 import com.helei.constants.TradeSide;
 import com.helei.dto.ASKey;
 import com.helei.binanceapi.constants.BinanceApiUrl;
 import com.helei.tradesignalcenter.resolvestream.*;
-        import com.helei.tradesignalcenter.resolvestream.a_datasource.RandomKLineSource;
+import com.helei.tradesignalcenter.resolvestream.a_datasource.RandomKLineSource;
 import com.helei.dto.account.AccountLocationConfig;
 import com.helei.tradesignalcenter.dto.OriginOrder;
 import com.helei.dto.account.UserInfo;
@@ -67,11 +65,10 @@ public class RandomKLineSourceTest {
     private static RandomKLineSource randomKLineSource;
 
 
-
     @BeforeAll
     public static void before() {
         try {
-            randomKLineSource = new RandomKLineSource(btcusdt,List.of(KLineInterval.d_1),
+            randomKLineSource = new RandomKLineSource(btcusdt, List.of(KLineInterval.d_1),
                     LocalDateTime.of(2022, 10, 3, 0, 0), 2000.0, 19000.0);
 
         } catch (Exception e) {
@@ -107,7 +104,7 @@ public class RandomKLineSourceTest {
 
         AccountInfoService accountInfoService = new AccountInfoService();
         String testId = "testId";
-        accountInfoService.getUid2UserInfo().put(testId, new UserInfo(testId, new ASKey(ak, sk), List.of("BTCUSDT"), new AccountLocationConfig(0.2, 10 , 50)));
+        accountInfoService.getUid2UserInfo().put(testId, new UserInfo(testId, new ASKey(ak, sk), List.of("BTCUSDT"), new AccountLocationConfig(0.2, 10, 50)));
         accountInfoService.getSymbol2UIdsMap().put("BTCUSDT", List.of(testId));
         OrderCommitService orderCommitService = new OrderCommitService(accountInfoService, new LimitOrderBuildSupporter());
 
@@ -124,10 +121,10 @@ public class RandomKLineSourceTest {
                 .addKLineSource(randomKLineSource)
                 .addIndicator(new PSTCalculator(pstConfig))
                 .addIndicator(new MACDCalculator(new MACDConfig(12, 26, 9)))
-                .addIndicator(new BollCalculator(bollConfig))
+//                .addIndicator(new BollCalculator(bollConfig))
                 .addSignalMaker(new BollSignalMaker(bollConfig))
                 .addSignalMaker(new PSTSignalMaker(pstConfig))
-                .addSignalMaker(new AbstractSignalMaker(true){
+                .addSignalMaker(new AbstractSignalMaker(true) {
 
                     @Override
                     public void onOpen(OpenContext openContext) throws Exception {

@@ -2,10 +2,15 @@ package com.helei.tradesignalcenter.resolvestream.b_indicator;
 
 import com.helei.dto.KLine;
 import com.helei.dto.indicator.Indicator;
+import com.helei.dto.indicator.MA;
+import com.helei.dto.indicator.config.MAConfig;
 import com.helei.tradesignalcenter.resolvestream.b_indicator.calculater.BaseIndicatorCalculator;
+import com.helei.util.CalculatorUtil;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.flink.api.common.state.ValueState;
+import org.apache.flink.api.common.state.ValueStateDescriptor;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.functions.KeyedProcessFunction;
 import org.apache.flink.util.Collector;
@@ -27,6 +32,9 @@ public class IndicatorProcessFunction extends KeyedProcessFunction<String, KLine
      */
     private final BaseIndicatorCalculator<? extends Indicator>[] indicatorCalList;
 
+    private final int period = 15;
+
+    private transient ValueState<Double> maState;
 
     public IndicatorProcessFunction(BaseIndicatorCalculator<? extends Indicator>[] indicatorCalList) {
         this.indicatorCalList = indicatorCalList;
@@ -38,6 +46,8 @@ public class IndicatorProcessFunction extends KeyedProcessFunction<String, KLine
         for (BaseIndicatorCalculator<?> calculator : indicatorCalList) {
             calculator.open(parameters, getRuntimeContext());
         }
+
+//        this.maState = getRuntimeContext().getState(new ValueStateDescriptor<>("maState", Double.class));
     }
 
     @Override
@@ -68,5 +78,17 @@ public class IndicatorProcessFunction extends KeyedProcessFunction<String, KLine
                         collector.collect(kLine);
                     }
                 });
+//        Double ma = this.maState.value();
+//        Double close = kLine.getClose();
+//
+//        if (ma == null) {
+//            ma = close;
+//        }
+//
+//        ma = CalculatorUtil.calculateMA(close, ma, period);
+//
+//        maState.update(ma);
+//
+//        kLine.getIndicators().put(new MAConfig(15),  new MA(ma));
     }
 }

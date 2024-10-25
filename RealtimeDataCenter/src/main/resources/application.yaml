@@ -1,0 +1,29 @@
+
+spring:
+  kafka:
+    bootstrap-servers: 192.168.1.2:9092 # Kafka服务器地址
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
+shinano:
+  quantity:
+    realtime:
+      base:
+        kafka-kline-num-partitions: 2
+        kafka-kline-replication-factor: 1
+
+      spot:
+        listen-kline:
+          - BTCUSDT@1m,15m,1h,24h
+          - ETHUSDT@1m,15m,1h,24h
+        clientListenKLineMaxCount: 15
+      contract:
+        listen-kline:
+          - BTCUSDT@1m
+#          - ETHUSDT@1m,15m,1h,24h
+        clientListenKLineMaxCount: 15
+
+    url:
+      binance-api-url:
+        u-contract-stream-url: wss://fstream.binance.com/stream

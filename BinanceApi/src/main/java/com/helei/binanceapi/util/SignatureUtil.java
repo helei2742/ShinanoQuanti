@@ -1,16 +1,12 @@
 package com.helei.binanceapi.util;
 
 
-import cn.hutool.crypto.digest.HMac;
 import com.alibaba.fastjson.JSONObject;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
 
 /**
  * 处理secret key签名相关
