@@ -7,7 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-
+import java.util.concurrent.ExecutorService;
 
 
 @Slf4j
@@ -52,7 +52,7 @@ public class BinanceWSStreamSupporter {
         }
 
         try {
-            VirtualThreadTaskExecutor executor = subscribeEntity.getCallbackExecutor();
+            ExecutorService executor = subscribeEntity.getCallbackExecutor();
             if (executor != null) {
                 executor.submit(()->{
                     subscribeEntity.getInvocationHandler().invoke(streamName, message);
