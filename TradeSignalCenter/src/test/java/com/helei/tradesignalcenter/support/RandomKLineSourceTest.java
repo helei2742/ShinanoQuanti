@@ -2,14 +2,12 @@
 package com.helei.tradesignalcenter.support;
 
 
-import com.helei.cexapi.CEXApiFactory;
-import com.helei.binanceapi.BinanceWSApiClient;
 import com.helei.constants.KLineInterval;
 import com.helei.constants.TradeSide;
 import com.helei.dto.ASKey;
 import com.helei.binanceapi.constants.BinanceApiUrl;
 import com.helei.tradesignalcenter.resolvestream.*;
-        import com.helei.tradesignalcenter.resolvestream.a_datasource.RandomKLineSource;
+import com.helei.tradesignalcenter.resolvestream.a_datasource.RandomKLineSource;
 import com.helei.dto.account.AccountLocationConfig;
 import com.helei.tradesignalcenter.dto.OriginOrder;
 import com.helei.dto.account.UserInfo;
@@ -38,49 +36,32 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
-@SpringBootTest
 public class RandomKLineSourceTest {
     private static final Logger log = LoggerFactory.getLogger(RandomKLineSourceTest.class);
     private static String btcusdt = "btcusdt";
 
     private static String ethusdt = "ethusdt";
 
-    private static RandomKLineSource btc_1h_source;
-    private static RandomKLineSource btc_15m_source;
-    private static RandomKLineSource btc_1m_source;
-
-    private static BinanceWSApiClient normalClient;
-
-    @Autowired
-    @Qualifier("flinkEnv")
     private StreamExecutionEnvironment env;
 
-    @Autowired
-    @Qualifier("flinkEnv2")
     private StreamExecutionEnvironment env2;
 
 
+    private static RandomKLineSource randomKLineSource;
 
 
     @BeforeAll
     public static void before() {
         try {
-            normalClient = CEXApiFactory.binanceApiClient(BinanceApiUrl.WS_NORMAL_URL);
-
-            normalClient.connect().get();
-
-            btc_1h_source = new RandomKLineSource(btcusdt, KLineInterval.h_1, LocalDateTime.of(2022, 10, 3, 0, 0), 2000.0, 19000.0);
-            btc_15m_source = new RandomKLineSource(btcusdt, KLineInterval.m_15, LocalDateTime.of(2022, 10, 3, 0, 0), 2000.0, 19000.0);
-            btc_1m_source = new RandomKLineSource(btcusdt, KLineInterval.m_1, LocalDateTime.of(2022, 10, 3, 0, 0), 2000.0, 19000.0);
+            randomKLineSource = new RandomKLineSource(btcusdt, List.of(KLineInterval.d_1),
+                    LocalDateTime.of(2022, 10, 3, 0, 0), 2000.0, 19000.0);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -92,9 +73,8 @@ public class RandomKLineSourceTest {
         PSTConfig pstConfig = new PSTConfig(60, 3, 3);
         BollConfig bollConfig = new BollConfig(15);
 
-        btc_1h_source.setRealTime(true);
-        btc_15m_source.setRealTime(true);
-        btc_1m_source.setRealTime(true);
+        randomKLineSource.setRealTime(false);
+
 
         TradeSignalService tradeSignalService = buildTradeSignalService(pstConfig, bollConfig);
         DecisionMakerService decisionMakerService = new DecisionMakerService(new AbstractDecisionMaker("测试用决策生成器") {
@@ -116,7 +96,7 @@ public class RandomKLineSourceTest {
 
         AccountInfoService accountInfoService = new AccountInfoService();
         String testId = "testId";
-        accountInfoService.getUid2UserInfo().put(testId, new UserInfo(testId, new ASKey(ak, sk), List.of("BTCUSDT"), new AccountLocationConfig(0.2, 10 , 50)));
+        accountInfoService.getUid2UserInfo().put(testId, new UserInfo(testId, new ASKey(ak, sk), List.of("BTCUSDT"), new AccountLocationConfig(0.2, 10, 50)));
         accountInfoService.getSymbol2UIdsMap().put("BTCUSDT", List.of(testId));
         OrderCommitService orderCommitService = new OrderCommitService(accountInfoService, new LimitOrderBuildSupporter());
 
@@ -130,14 +110,13 @@ public class RandomKLineSourceTest {
                 .builder(env)
                 .buildResolver()
                 .setWindowLengthRationOfKLine(1.0 / 60)
-                .addKLineSource(btc_1m_source)
+                .addKLineSource(randomKLineSource)
                 .addIndicator(new PSTCalculator(pstConfig))
                 .addIndicator(new MACDCalculator(new MACDConfig(12, 26, 9)))
-                .addIndicator(new BollCalculator(bollConfig))
+//                .addIndicator(new BollCalculator(bollConfig))
                 .addSignalMaker(new BollSignalMaker(bollConfig))
                 .addSignalMaker(new PSTSignalMaker(pstConfig))
                 .addSignalMaker(new AbstractSignalMaker(true) {
-                    private Random random = new Random();
 
                     @Override
                     public void onOpen(OpenContext openContext) throws Exception {
@@ -146,56 +125,40 @@ public class RandomKLineSourceTest {
 
                     @Override
                     protected TradeSignal resolveHistoryKLine(KLine kLine, TimerService timerService) throws Exception {
-                        if (random.nextBoolean()) {
-                            return null;
-                        }
-                        return TradeSignal.builder().description("这是一条测试信号1h").name("测试信号1h").tradeSide(TradeSide.BUY).build();
+                        System.out.println(Instant.ofEpochMilli(kLine.getOpenTime()) + " - " + kLine.getIndicators());
+                        return null;
                     }
 
                     @Override
                     protected TradeSignal resolveRealTimeKLine(KLine kLine, TimerService timerService) throws Exception {
-                        if (random.nextBoolean()) {
-                            return null;
-                        }
-
-                        return TradeSignal.builder().description("这是一条测试信号1h").name("测试信号1h").tradeSide(TradeSide.BUY).build();
+                        return null;
                     }
                 })
-                .addInService()
-
-                .buildResolver()
-                .setWindowLengthRationOfKLine(1.0 / 15)
-                .addKLineSource(btc_15m_source)
-                .addIndicator(new PSTCalculator(pstConfig))
-                .addIndicator(new MACDCalculator(new MACDConfig(12, 26, 9)))
-                .addIndicator(new BollCalculator(bollConfig))
-                .addSignalMaker(new BollSignalMaker(bollConfig))
-                .addSignalMaker(new PSTSignalMaker(pstConfig))
-                .addSignalMaker(new AbstractSignalMaker(true) {
-                    private Random random = new Random();
-
-                    @Override
-                    public void onOpen(OpenContext openContext) throws Exception {
-
-                    }
-
-                    @Override
-                    protected TradeSignal resolveHistoryKLine(KLine kLine, TimerService timerService) throws Exception {
-                        if (random.nextBoolean()) {
-                            return null;
-                        }
-                        return TradeSignal.builder().description("这是一条测试信号").name("测试信号15m").tradeSide(TradeSide.BUY).build();
-                    }
-
-                    @Override
-                    protected TradeSignal resolveRealTimeKLine(KLine kLine, TimerService timerService) throws Exception {
-                        if (random.nextBoolean()) {
-                            return null;
-                        }
-
-                        return TradeSignal.builder().description("这是一条测试信号").name("测试信号15m").tradeSide(TradeSide.BUY).build();
-                    }
-                })
+//                .addSignalMaker(new AbstractSignalMaker(true) {
+//                    private Random random = new Random();
+//
+//                    @Override
+//                    public void onOpen(OpenContext openContext) throws Exception {
+//
+//                    }
+//
+//                    @Override
+//                    protected TradeSignal resolveHistoryKLine(KLine kLine, TimerService timerService) throws Exception {
+//                        if (random.nextBoolean()) {
+//                            return null;
+//                        }
+//                        return TradeSignal.builder().description("这是一条测试信号1h").name("测试信号1h").tradeSide(TradeSide.BUY).build();
+//                    }
+//
+//                    @Override
+//                    protected TradeSignal resolveRealTimeKLine(KLine kLine, TimerService timerService) throws Exception {
+//                        if (random.nextBoolean()) {
+//                            return null;
+//                        }
+//
+//                        return TradeSignal.builder().description("这是一条测试信号1h").name("测试信号1h").tradeSide(TradeSide.BUY).build();
+//                    }
+//                })
                 .addInService()
                 .build();
     }

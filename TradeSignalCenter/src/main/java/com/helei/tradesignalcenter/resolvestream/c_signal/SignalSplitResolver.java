@@ -1,5 +1,6 @@
 package com.helei.tradesignalcenter.resolvestream.c_signal;
 
+import com.helei.constants.KLineInterval;
 import com.helei.dto.KLine;
 import com.helei.dto.TradeSignal;
 import lombok.extern.slf4j.Slf4j;
@@ -23,9 +24,9 @@ import java.util.*;
 public class SignalSplitResolver extends KeyedCoProcessFunction<String, KLine, TradeSignal, Tuple2<KLine, List<TradeSignal>>> {
 
     /**
-     * 发送窗口长度
+     * 发送窗口占k线的比例
      */
-    private final long sendWindowLength;
+    private final double groupWindowRatioOfKLine;
 
     /**
      * 存储当前收到的信号
@@ -49,19 +50,23 @@ public class SignalSplitResolver extends KeyedCoProcessFunction<String, KLine, T
      */
     private ValueState<Long> windowStartState;
 
+    /**
+     * 窗口长度
+     */
+    private ValueState<Long> windowLengthState;
 
-    public SignalSplitResolver(Long sendWindowLength) {
-        this.sendWindowLength = sendWindowLength;
+    public SignalSplitResolver(double groupWindowRatioOfKLine) {
+        this.groupWindowRatioOfKLine = groupWindowRatioOfKLine;
     }
 
 
     @Override
     public void open(Configuration parameters) throws Exception {
         timebaseSignalListState = getRuntimeContext().getListState(new ListStateDescriptor<>("timebaseSignalListState", TypeInformation.of(TradeSignal.class)));
-        timebaseState = getRuntimeContext().getState(new ValueStateDescriptor<>("timebaseState", TypeInformation.of(new TypeHint<Tuple2<Long, Long>>() {
-        })));
+        timebaseState = getRuntimeContext().getState(new ValueStateDescriptor<>("timebaseState", TypeInformation.of(new TypeHint<>() {})));
         sendWindowStartState = getRuntimeContext().getState(new ValueStateDescriptor<>("sendWindowStartState", BasicTypeInfo.LONG_TYPE_INFO));
         windowStartState = getRuntimeContext().getState(new ValueStateDescriptor<>("windowStartState", BasicTypeInfo.LONG_TYPE_INFO));
+        windowLengthState = getRuntimeContext().getState(new ValueStateDescriptor<>("windowLengthState", BasicTypeInfo.LONG_TYPE_INFO));
     }
 
 
@@ -81,7 +86,7 @@ public class SignalSplitResolver extends KeyedCoProcessFunction<String, KLine, T
         if (sendWindowStart != null) {
             for (TradeSignal signal : signalList) {//当前k在基线时间内有信号
                 //只添加在当前发送窗口的
-                if (signal.getCreateTime() >= sendWindowStart && signal.getCreateTime() <= sendWindowStart + sendWindowLength) {
+                if (signal.getCreateTime() >= sendWindowStart && signal.getCreateTime() <= sendWindowStart + windowLengthState.value()) {
                     needSendSignal.add(signal);
                 }
             }
@@ -116,13 +121,21 @@ public class SignalSplitResolver extends KeyedCoProcessFunction<String, KLine, T
      * @throws IOException IOException
      */
     private Long getWindowStart(KLine kLine, long currentTime) throws IOException {
+        //1. 获取窗口长度
+        Long sendWindowLength = windowLengthState.value();
+        if (sendWindowLength == null) {
+            sendWindowLength = (long) (kLine.getKLineInterval().getSecond() * groupWindowRatioOfKLine * 1000);
+            windowLengthState.update(sendWindowLength);
+        }
+
+        //2. 获取时间基线，当前K线open时间和当前时间
         Tuple2<Long, Long> timebase = timebaseState.value();
         if (timebase == null || kLine.isEnd()) {
             timebase = new Tuple2<>(kLine.getOpenTime(), currentTime);
         }
         timebaseState.update(timebase);
 
-
+        //3. 确定窗口的开始和发送窗口的开始
         Long lastWindowStart = windowStartState.value();
         Long windowStart = (Long) timebase.getField(0) + (currentTime - (Long) timebase.getField(1)) / sendWindowLength * sendWindowLength;
         windowStartState.update(windowStart);
@@ -131,7 +144,7 @@ public class SignalSplitResolver extends KeyedCoProcessFunction<String, KLine, T
             lastWindowStart = windowStart;
         }
 
-        //根据窗口其实位置是否发生变化，设置是否能够发送信号的状态
+        //4.根据窗口其实位置是否发生变化，设置是否能够发送信号的状态
         if (!windowStart.equals(lastWindowStart)) {
             sendWindowStartState.update(lastWindowStart);
         } else {

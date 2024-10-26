@@ -1,8 +1,10 @@
 package com.helei.tradesignalcenter.resolvestream.c_signal;
 
+import com.helei.dto.indicator.Indicator;
 import com.helei.tradesignalcenter.resolvestream.a_datasource.BaseKLineSource;
 import com.helei.dto.KLine;
 import com.helei.dto.TradeSignal;
+import com.helei.tradesignalcenter.resolvestream.b_indicator.IndicatorProcessFunction;
 import com.helei.tradesignalcenter.resolvestream.b_indicator.calculater.BaseIndicatorCalculator;
 import com.helei.tradesignalcenter.resolvestream.c_signal.maker.AbstractSignalMaker;
 import lombok.Getter;
@@ -101,7 +103,7 @@ public class TradeSignalService {
         /**
          * 指标计算器
          */
-        private final List<BaseIndicatorCalculator> indicatorCalList;
+        private final List<BaseIndicatorCalculator<? extends Indicator>> indicatorCalList;
 
         /**
          * 信号处理器
@@ -135,13 +137,16 @@ public class TradeSignalService {
 
             //1. 使用自定义 SourceFunction 生成 K 线数据流
             KeyedStream<KLine, String> kLineStream = env.addSource(kLineSource).keyBy(KLine::getStreamKey);
-
-            kLineStream.print();
-            // 2.指标处理，串行
-            for (BaseIndicatorCalculator<?> calculator : indicatorCalList) {
-                kLineStream = kLineStream.process(calculator).keyBy(KLine::getStreamKey);
+            BaseIndicatorCalculator[] arr = new BaseIndicatorCalculator[indicatorCalList.size()];
+            for (int i = 0; i < indicatorCalList.size(); i++) {
+                arr[i] = indicatorCalList.get(i);
             }
-            kLineStream.print();
+            // 2.指标处理，串行
+            kLineStream = kLineStream
+                    .process(new IndicatorProcessFunction(arr))
+                    .keyBy(KLine::getStreamKey);
+
+
             if (signalMakers.isEmpty()) {
                 throw new IllegalArgumentException("没有信号生成器");
             }
@@ -173,7 +178,7 @@ public class TradeSignalService {
 //            signalStream.print();
             return kLineStream
                     .connect(signalStream.keyBy(signal -> signal.getKLine().getStreamKey()))
-                    .process(new SignalSplitResolver((long) (kLineSource.kLineInterval.getSecond() * groupWindowRatioOfKLine * 1000)));
+                    .process(new SignalSplitResolver(groupWindowRatioOfKLine));
         }
     }
 
@@ -241,7 +246,7 @@ public class TradeSignalService {
          * @param calculator 指标计算器
          * @return this
          */
-        public TradeSignalStreamResolverBuilder addIndicator(BaseIndicatorCalculator calculator) {
+        public TradeSignalStreamResolverBuilder addIndicator(BaseIndicatorCalculator<? extends Indicator> calculator) {
             tradeSignalStreamResolver.getIndicatorCalList().add(calculator);
             return this;
         }

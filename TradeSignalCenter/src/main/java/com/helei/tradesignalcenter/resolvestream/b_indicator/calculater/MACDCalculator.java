@@ -1,15 +1,16 @@
-
 package com.helei.tradesignalcenter.resolvestream.b_indicator.calculater;
 
-        import com.helei.dto.KLine;
-        import com.helei.dto.indicator.MACD;
-        import com.helei.dto.indicator.config.MACDConfig;
-        import com.helei.util.CalculatorUtil;
-        import org.apache.flink.api.common.state.ValueState;
-        import org.apache.flink.api.common.state.ValueStateDescriptor;
-        import org.apache.flink.api.common.typeinfo.TypeInformation;
+import com.helei.dto.KLine;
+import com.helei.dto.indicator.MACD;
+import com.helei.dto.indicator.config.MACDConfig;
+import com.helei.util.CalculatorUtil;
+import org.apache.flink.api.common.functions.RuntimeContext;
+import org.apache.flink.api.common.state.ValueState;
+import org.apache.flink.api.common.state.ValueStateDescriptor;
+import org.apache.flink.api.common.typeinfo.TypeInformation;
+import org.apache.flink.configuration.Configuration;
 
-        import java.io.IOException;
+import java.io.IOException;
 
 public class MACDCalculator extends BaseIndicatorCalculator<MACD> {
     private final int ema1Period;
@@ -30,9 +31,9 @@ public class MACDCalculator extends BaseIndicatorCalculator<MACD> {
 
 
     @Override
-    public void open(org.apache.flink.configuration.Configuration parameters) throws Exception {
+    public void open(Configuration parameters, RuntimeContext runtimeContext) throws Exception {
         ValueStateDescriptor<MACD> descriptor = new ValueStateDescriptor<>("macdState", TypeInformation.of(MACD.class));
-        macdState = getRuntimeContext().getState(descriptor);
+        macdState = runtimeContext.getState(descriptor);
     }
 
 //    @Override

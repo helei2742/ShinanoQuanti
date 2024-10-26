@@ -14,8 +14,6 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class RandomKLineSource extends BaseKLineSource {
 
-    private final String symbol;
-
     private final AtomicLong startTimeStamp;
 
     private final Random random = new Random();
@@ -31,13 +29,12 @@ public class RandomKLineSource extends BaseKLineSource {
 
     public RandomKLineSource(
             String symbol,
-            KLineInterval kLineInterval,
+            List<KLineInterval> kLineInterval,
             LocalDateTime startTimeStamp,
             Double maxPrice,
             Double minPrice
     ) {
-        super(kLineInterval);
-        this.symbol = symbol.toUpperCase();
+        super(kLineInterval, symbol);
 
         this.startTimeStamp = new AtomicLong(startTimeStamp.toInstant(ZoneOffset.UTC).toEpochMilli());
         realTimer = new AtomicLong(startTimeStamp.toInstant(ZoneOffset.UTC).toEpochMilli());
@@ -45,7 +42,7 @@ public class RandomKLineSource extends BaseKLineSource {
         this.minPrice = minPrice;
     }
 
-    protected KLine loadKLine() throws Exception {
+    protected KLine loadKLine(KLineInterval kLineInterval) throws Exception {
 
         double nextLow = minPrice + (maxPrice - minPrice) * random.nextDouble();
         double nextHigh = nextLow + (maxPrice - nextLow) * random.nextDouble();
@@ -67,16 +64,18 @@ public class RandomKLineSource extends BaseKLineSource {
 
         TimeUnit.MILLISECONDS.sleep(200);
 
-        KLine kLine = new KLine(symbol, nextOpen, nextClose, nextHigh, nextLow, volume, openTime, openTime + plus - 1000, !isRealTime, kLineInterval, new HashMap<>());
+        KLine kLine = new KLine(getSymbol(), nextOpen, nextClose, nextHigh, nextLow, volume, openTime, openTime + plus - 1000, !isRealTime, kLineInterval, new HashMap<>());
         return kLine;
     }
 
     @Override
-    boolean init(SourceContext<KLine> sourceContext) throws Exception {
+    boolean loadData(SourceContext<KLine> sourceContext) throws Exception {
 
         while (true) {
-            KLine kLine = loadKLine();
-            sourceContext.collect(kLine);
+            for (KLineInterval interval : getIntervals()) {
+                KLine kLine = loadKLine(interval);
+                sourceContext.collect(kLine);
+            }
         }
     }
 

@@ -1,14 +1,14 @@
-
 package com.helei.tradesignalcenter.resolvestream.b_indicator.calculater;
 
-        import com.helei.dto.KLine;
-        import com.helei.dto.indicator.Boll;
-        import com.helei.dto.indicator.config.BollConfig;
-        import org.apache.flink.api.common.state.ListState;
-        import org.apache.flink.api.common.state.ListStateDescriptor;
-        import org.apache.flink.configuration.Configuration;
+import com.helei.dto.KLine;
+import com.helei.dto.indicator.Boll;
+import com.helei.dto.indicator.config.BollConfig;
+import org.apache.flink.api.common.functions.RuntimeContext;
+import org.apache.flink.api.common.state.ListState;
+import org.apache.flink.api.common.state.ListStateDescriptor;
+import org.apache.flink.configuration.Configuration;
 
-        import java.util.LinkedList;
+import java.util.LinkedList;
 
 public class BollCalculator extends BaseIndicatorCalculator<Boll> {
 
@@ -22,9 +22,9 @@ public class BollCalculator extends BaseIndicatorCalculator<Boll> {
     }
 
     @Override
-    public void open(Configuration parameters) throws Exception {
+    public void open(Configuration parameters, RuntimeContext runtimeContext) throws Exception {
 
-        priceListState = getRuntimeContext().getListState(new ListStateDescriptor<>("priceListState", Double.class));
+        priceListState = runtimeContext.getListState(new ListStateDescriptor<>("priceListState", Double.class));
     }
 
     @Override

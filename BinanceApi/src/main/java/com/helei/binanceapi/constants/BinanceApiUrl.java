@@ -19,7 +19,7 @@ public class BinanceApiUrl {
     /**
      * u本位合约的市场数据推送url
      */
-    public static final String WS_U_CONTRACT_STREAM_URL = "wss://fstream.binance.com/ws";
+    public static final String WS_U_CONTRACT_STREAM_URL = "wss://fstream.binance.com";
 
     /**
      * web socket api 的url, 实时推送

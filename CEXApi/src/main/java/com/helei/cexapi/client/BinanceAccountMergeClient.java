@@ -9,16 +9,12 @@ import com.helei.binanceapi.supporter.IpWeightSupporter;
 import com.helei.dto.ASKey;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.task.VirtualThreadTaskExecutor;
 
 import java.net.InetSocketAddress;
 import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.*;
 import java.util.function.Consumer;
 
 
@@ -38,7 +34,7 @@ public class BinanceAccountMergeClient {
      * 处理相关异步任务的线程池
      */
     @Getter
-    private final VirtualThreadTaskExecutor publishExecutor = new VirtualThreadTaskExecutor();
+    private final ExecutorService publishExecutor = Executors.newVirtualThreadPerTaskExecutor();
 
     /**
      * 记录已有的账户信息推送连接

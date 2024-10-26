@@ -13,12 +13,10 @@ import com.helei.dto.KLine;
 import com.helei.tradesignalcenter.util.KLineBuffer;
 import com.helei.util.CustomBlockingQueue;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.task.VirtualThreadTaskExecutor;
 
 
 import javax.net.ssl.SSLException;
 import java.net.URISyntaxException;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.*;
@@ -34,7 +32,7 @@ import java.util.concurrent.*;
 @Slf4j
 public class MemoryKLineDataPublisher implements KLineDataPublisher {
 
-    private final VirtualThreadTaskExecutor publishExecutor;
+    private final ExecutorService publishExecutor;
 
     /**
      * 获取流实时数据
@@ -66,7 +64,7 @@ public class MemoryKLineDataPublisher implements KLineDataPublisher {
             String requestUrl,
             int bufferSize,
             int historyLoadBatch,
-            VirtualThreadTaskExecutor publishExecutor
+            ExecutorService publishExecutor
     ) throws URISyntaxException, SSLException, ExecutionException, InterruptedException {
         this(
                 CEXApiFactory.binanceApiClient(streamUrl),
@@ -91,8 +89,10 @@ public class MemoryKLineDataPublisher implements KLineDataPublisher {
             BinanceWSApiClient normalClient,
             int bufferSize,
             int historyLoadBatch,
-            VirtualThreadTaskExecutor publishExecutor
+            ExecutorService publishExecutor
     ) throws URISyntaxException, SSLException, ExecutionException, InterruptedException {
+        CompletableFuture.allOf(streamClient.connect(), normalClient.connect()).get();
+
         this.publishExecutor = publishExecutor;
         streamClient.setName("实时k线获取客户端-" + UUID.randomUUID().toString().substring(0, 8));
         normalClient.setName("历史k线获取客户端-" + UUID.randomUUID().toString().substring(0, 8));
@@ -101,8 +101,6 @@ public class MemoryKLineDataPublisher implements KLineDataPublisher {
         streamApi = streamClient.getStreamApi();
 
         this.bufferSize = bufferSize;
-
-        CompletableFuture.allOf(streamClient.connect(), normalClient.connect()).get();
 
         log.info("初始化MemoryKLineDataPublisher成功");
     }

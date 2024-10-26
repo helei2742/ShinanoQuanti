@@ -13,9 +13,7 @@ import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.test.context.SpringBootTest;
+
 
 import java.net.InetSocketAddress;
 import java.util.List;
@@ -23,14 +21,9 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 
-@SpringBootTest
 class BinanceAccountEventSourceTest {
 
-    @Autowired
-    @Qualifier("flinkEnv")
     private StreamExecutionEnvironment env;
-    @Autowired
-    @Qualifier("flinkEnv2")
     private StreamExecutionEnvironment env2;
 
 

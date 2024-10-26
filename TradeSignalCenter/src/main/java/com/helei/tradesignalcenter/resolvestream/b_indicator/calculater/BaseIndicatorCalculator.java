@@ -1,33 +1,29 @@
-
 package com.helei.tradesignalcenter.resolvestream.b_indicator.calculater;
 
-        import com.helei.dto.KLine;
-        import com.helei.dto.indicator.Indicator;
-        import com.helei.dto.indicator.config.IndicatorConfig;
-        import lombok.extern.slf4j.Slf4j;
-        import org.apache.flink.streaming.api.functions.KeyedProcessFunction;
-        import org.apache.flink.util.Collector;
+import com.helei.dto.KLine;
+import com.helei.dto.indicator.Indicator;
+import com.helei.dto.indicator.config.IndicatorConfig;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.flink.api.common.functions.RuntimeContext;
+import org.apache.flink.configuration.Configuration;
+
+import java.io.Serializable;
 
 
+@Getter
 @Slf4j
-public abstract class BaseIndicatorCalculator<T extends Indicator> extends KeyedProcessFunction<String, KLine, KLine> {
+public abstract class BaseIndicatorCalculator<T extends Indicator> implements Serializable {
 
-    protected final IndicatorConfig indicatorConfig;
+    protected final IndicatorConfig<T> indicatorConfig;
 
-    protected BaseIndicatorCalculator(IndicatorConfig indicatorConfig) {
+    protected BaseIndicatorCalculator(IndicatorConfig<T> indicatorConfig) {
         this.indicatorConfig = indicatorConfig;
     }
 
-    @Override
-    public void processElement(KLine kLine, KeyedProcessFunction<String, KLine, KLine>.Context context, Collector<KLine> collector) throws Exception {
-        try {
-            T Indicator = calculateInKLine(kLine);
-            kLine.getIndicators().put(indicatorConfig, Indicator);
-            collector.collect(kLine);
-        } catch (Exception e) {
-            log.error("calculate indicator error", e);
-            throw new RuntimeException(e);
-        }
+
+    public void open(Configuration parameters, RuntimeContext runtimeContext) throws Exception {
+
     }
 
     /**

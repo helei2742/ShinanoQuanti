@@ -1,17 +1,18 @@
 package com.helei.tradesignalcenter.resolvestream.b_indicator.calculater;
 
-        import com.helei.dto.KLine;
-        import com.helei.dto.indicator.EMA;
-        import com.helei.dto.indicator.config.EMAConfig;
-        import com.helei.util.CalculatorUtil;
-        import org.apache.flink.api.common.state.ValueState;
-        import org.apache.flink.api.common.state.ValueStateDescriptor;
-        import org.apache.flink.configuration.Configuration;
+import com.helei.dto.KLine;
+import com.helei.dto.indicator.EMA;
+import com.helei.dto.indicator.config.EMAConfig;
+import com.helei.util.CalculatorUtil;
+import org.apache.flink.api.common.functions.RuntimeContext;
+import org.apache.flink.api.common.state.ValueState;
+import org.apache.flink.api.common.state.ValueStateDescriptor;
+import org.apache.flink.configuration.Configuration;
 
-        import java.io.IOException;
+import java.io.IOException;
 
 
-public class EMACalculator extends BaseIndicatorCalculator<EMA>{
+public class EMACalculator extends BaseIndicatorCalculator<EMA> {
     private final int period;
 
     private ValueState<Double> emaState;
@@ -22,8 +23,8 @@ public class EMACalculator extends BaseIndicatorCalculator<EMA>{
     }
 
     @Override
-    public void open(Configuration parameters) throws Exception {
-        emaState = getRuntimeContext().getState(new ValueStateDescriptor<>("emaState", Double.class));
+    public void open(Configuration parameters, RuntimeContext runtimeContext) throws Exception {
+        emaState = runtimeContext.getState(new ValueStateDescriptor<>("emaState", Double.class));
     }
 
 
