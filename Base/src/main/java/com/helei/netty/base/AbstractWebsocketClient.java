@@ -21,7 +21,6 @@ import io.netty.handler.timeout.IdleStateHandler;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.task.VirtualThreadTaskExecutor;
 
 import javax.net.ssl.SSLException;
 import java.net.InetSocketAddress;
@@ -57,7 +56,7 @@ public abstract class AbstractWebsocketClient<P, T> {
     /**
      * 执行回调的线程池
      */
-    protected final VirtualThreadTaskExecutor callbackInvoker;
+    protected final ExecutorService callbackInvoker;
 
     /**
      * 代理
@@ -104,7 +103,7 @@ public abstract class AbstractWebsocketClient<P, T> {
         this.handler = handler;
         this.handler.websocketClient = this;
 
-        this.callbackInvoker = new VirtualThreadTaskExecutor();
+        this.callbackInvoker = Executors.newVirtualThreadPerTaskExecutor();
 
         requestResponseHandler = new RequestResponseHandler<>();
     }
@@ -271,7 +270,7 @@ public abstract class AbstractWebsocketClient<P, T> {
      * @param callback        请求结果的回调
      * @param executorService 执行回调的线程池，传入为空则会尝试使用本类的线程池以及netty线程池
      */
-    public void sendRequest(P request, Consumer<T> callback, VirtualThreadTaskExecutor executorService) {
+    public void sendRequest(P request, Consumer<T> callback, ExecutorService executorService) {
         boolean flag = requestResponseHandler.registryRequest(getIdFromRequest(request), response -> {
             if (executorService == null) {
                 //此类线程处理

@@ -5,11 +5,10 @@ import com.helei.binanceapi.base.SubscribeResultInvocationHandler;
 import com.helei.binanceapi.constants.WebSocketStreamType;
 import com.helei.dto.ASKey;
 import lombok.*;
-import org.springframework.core.task.VirtualThreadTaskExecutor;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 
 
 /**
@@ -40,7 +39,7 @@ public class StreamSubscribeEntity {
     /**
      * 执行回调的线程池
      */
-    private VirtualThreadTaskExecutor callbackExecutor;
+    private ExecutorService callbackExecutor;
 
     /**
      * 参数

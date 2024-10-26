@@ -12,13 +12,15 @@ import com.helei.dto.KLine;
 import com.helei.tradesignalcenter.conventor.KLineMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.flink.api.common.functions.OpenContext;
-import org.springframework.core.task.VirtualThreadTaskExecutor;
+
 
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 
 /**
@@ -38,7 +40,7 @@ public class MemoryKLineSource extends BaseKLineSource {
     private transient BinanceWSApiClient normalApiClient;
 
 
-    private transient VirtualThreadTaskExecutor publishExecutor;
+    private transient ExecutorService publishExecutor;
 
     private final long startTime;
 
@@ -51,7 +53,7 @@ public class MemoryKLineSource extends BaseKLineSource {
 
     @Override
     public void open(OpenContext openContext) throws Exception {
-        publishExecutor = new VirtualThreadTaskExecutor("kline-load-executor");
+        publishExecutor = Executors.newVirtualThreadPerTaskExecutor();
 
         // Step 1: 初始化ApiClient
         normalApiClient = CEXApiFactory.binanceApiClient(requestUrl);

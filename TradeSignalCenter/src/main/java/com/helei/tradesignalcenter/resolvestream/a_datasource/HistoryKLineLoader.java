@@ -6,7 +6,6 @@ import com.helei.constants.KLineInterval;
 import com.helei.tradesignalcenter.conventor.KLineMapper;
 import com.helei.dto.KLine;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.task.VirtualThreadTaskExecutor;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -27,12 +26,12 @@ public class HistoryKLineLoader {
 
     private final int limit;
 
-    private final VirtualThreadTaskExecutor loadThreadPool;
+    private final ExecutorService loadThreadPool;
 
     public HistoryKLineLoader(
             int limit,
             BinanceWSApiClient binanceWSApiClient,
-            VirtualThreadTaskExecutor loadThreadPool
+            ExecutorService loadThreadPool
     ) {
         this.limit = limit;
         this.binanceWSApiClient = binanceWSApiClient;

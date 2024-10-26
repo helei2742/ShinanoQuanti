@@ -8,7 +8,6 @@ import com.helei.binanceapi.base.SubscribeResultInvocationHandler;
 import com.helei.binanceapi.constants.WebSocketStreamType;
 import com.helei.dto.ASKey;
 import com.helei.binanceapi.dto.StreamSubscribeEntity;
-import org.springframework.core.task.VirtualThreadTaskExecutor;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -91,7 +90,7 @@ public class BinanceWSStreamApi extends AbstractBinanceWSApi {
         public StreamCommandBuilder addSubscribeEntity(
                 WebSocketStreamType subscribeType,
                 SubscribeResultInvocationHandler invocationHandler,
-                VirtualThreadTaskExecutor executorService,
+                ExecutorService executorService,
                 Map<String, Object> params
         ) {
             return addSubscribeEntity(subscribeType, invocationHandler, executorService, null, params);
@@ -107,7 +106,7 @@ public class BinanceWSStreamApi extends AbstractBinanceWSApi {
         public StreamCommandBuilder addSubscribeEntity(
                 WebSocketStreamType subscribeType,
                 SubscribeResultInvocationHandler invocationHandler,
-                VirtualThreadTaskExecutor executorService,
+                ExecutorService executorService,
                 ASKey asKey,
                 Map<String, Object> params
         ) {

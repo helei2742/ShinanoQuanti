@@ -14,18 +14,19 @@ import org.apache.flink.api.common.state.ValueStateDescriptor;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.functions.KeyedProcessFunction;
 import org.apache.flink.util.Collector;
-import org.springframework.core.task.VirtualThreadTaskExecutor;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Slf4j
 @Getter
 @Setter
 public class IndicatorProcessFunction extends KeyedProcessFunction<String, KLine, KLine> {
 
-    private transient VirtualThreadTaskExecutor executor;
+    private transient ExecutorService executor;
 
     /**
      * 指标计算器
@@ -42,7 +43,7 @@ public class IndicatorProcessFunction extends KeyedProcessFunction<String, KLine
 
     @Override
     public void open(Configuration parameters) throws Exception {
-        executor = new VirtualThreadTaskExecutor();
+        executor = Executors.newVirtualThreadPerTaskExecutor();
         for (BaseIndicatorCalculator<?> calculator : indicatorCalList) {
             calculator.open(parameters, getRuntimeContext());
         }

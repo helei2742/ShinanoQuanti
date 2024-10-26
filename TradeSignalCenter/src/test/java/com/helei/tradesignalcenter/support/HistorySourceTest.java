@@ -6,16 +6,12 @@ import com.helei.binanceapi.constants.BinanceApiUrl;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
+
 public class HistorySourceTest {
     private static BinanceWSApiClient binanceWSApiClient = null;
 
-    @Autowired
-    @Qualifier("flinkEnv")
+
     private StreamExecutionEnvironment env;
 
     @BeforeAll

@@ -5,9 +5,9 @@ import com.helei.binanceapi.base.BinanceRestApiClient;
 import com.helei.dto.ASKey;
 import com.helei.binanceapi.supporter.IpWeightSupporter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.task.VirtualThreadTaskExecutor;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
 
 /**
  *
@@ -16,7 +16,7 @@ import java.util.concurrent.CompletableFuture;
 public class BinanceListenKeyApi extends BinanceRestApiClient {
 
     public BinanceListenKeyApi(
-            VirtualThreadTaskExecutor executor,
+            ExecutorService executor,
             String baseUrl,
             IpWeightSupporter ipWeightSupporter
     ) {

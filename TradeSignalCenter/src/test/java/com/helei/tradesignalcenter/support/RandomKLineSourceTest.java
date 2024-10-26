@@ -36,9 +36,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -46,19 +43,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
-@SpringBootTest
 public class RandomKLineSourceTest {
     private static final Logger log = LoggerFactory.getLogger(RandomKLineSourceTest.class);
     private static String btcusdt = "btcusdt";
 
     private static String ethusdt = "ethusdt";
 
-    @Autowired
-    @Qualifier("flinkEnv")
     private StreamExecutionEnvironment env;
 
-    @Autowired
-    @Qualifier("flinkEnv2")
     private StreamExecutionEnvironment env2;
 
 

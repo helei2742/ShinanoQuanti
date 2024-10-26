@@ -17,10 +17,6 @@ import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.core.task.VirtualThreadTaskExecutor;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -33,7 +29,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 
 @Slf4j
-@SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class KLineTradingDecision {
     private MemoryKLineDataPublisher dataPublisher;
@@ -71,11 +66,7 @@ public class KLineTradingDecision {
         }
     }
 
-    @Autowired
-    @Qualifier("flinkEnv")
     private StreamExecutionEnvironment env;
-    @Autowired
-    @Qualifier("flinkEnv2")
     private StreamExecutionEnvironment env2;
 
 
@@ -98,7 +89,7 @@ public class KLineTradingDecision {
 //        ArrayBlockingQueue<KLine> abq = new ArrayBlockingQueue<>(10);
         AtomicInteger counter = new AtomicInteger();
 
-        new HistoryKLineLoader(200, normalClient, new VirtualThreadTaskExecutor())
+        new HistoryKLineLoader(200, normalClient, Executors.newVirtualThreadPerTaskExecutor())
                 .startLoad("btcusdt", KLineInterval.m_15, LocalDateTime.of(2020, 1, 1, 0, 0).toInstant(ZoneOffset.UTC).toEpochMilli(), kLines -> {
                     System.out.println("get klines count " + kLines.size());
                     for (KLine kLine : kLines) {

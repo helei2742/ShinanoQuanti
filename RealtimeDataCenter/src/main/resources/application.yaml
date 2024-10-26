@@ -20,8 +20,8 @@ shinano:
         clientListenKLineMaxCount: 15
       contract:
         listen-kline:
-          - BTCUSDT@1m
-#          - ETHUSDT@1m,15m,1h,24h
+          - BTCUSDT@1m,15m,1h,1d
+          - ETHUSDT@1m,15m,1h,1d
         clientListenKLineMaxCount: 15
 
     url:

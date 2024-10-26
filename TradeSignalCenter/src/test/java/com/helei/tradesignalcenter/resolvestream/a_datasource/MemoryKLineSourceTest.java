@@ -17,9 +17,7 @@ import org.apache.flink.util.Collector;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.test.context.SpringBootTest;
+
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -30,11 +28,8 @@ import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
 class MemoryKLineSourceTest {
 
-    @Autowired
-    @Qualifier("flinkEnv")
     private StreamExecutionEnvironment env;
 
 

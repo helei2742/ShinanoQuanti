@@ -4,13 +4,11 @@ import com.helei.cexapi.CEXApiFactory;
 import com.helei.binanceapi.BinanceWSApiClient;
 import com.helei.binanceapi.constants.BinanceApiUrl;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.net.ssl.SSLException;
 import java.net.URISyntaxException;
 import java.util.concurrent.TimeUnit;
 
-@SpringBootTest
 public class WebSocketClientTest {
 
 

@@ -6,15 +6,15 @@ import com.helei.binanceapi.supporter.IpWeightSupporter;
 import com.helei.binanceapi.util.SignatureUtil;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
-import org.springframework.core.task.VirtualThreadTaskExecutor;
 
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
 
 @Slf4j
 public class BinanceRestApiClient {
 
-    protected final VirtualThreadTaskExecutor executor;
+    protected final ExecutorService executor;
 
     private final String baseUrl;
 
@@ -24,7 +24,7 @@ public class BinanceRestApiClient {
 
 
     public BinanceRestApiClient(
-            VirtualThreadTaskExecutor executor,
+            ExecutorService executor,
             String baseUrl,
             IpWeightSupporter ipWeightSupporter
     ) {

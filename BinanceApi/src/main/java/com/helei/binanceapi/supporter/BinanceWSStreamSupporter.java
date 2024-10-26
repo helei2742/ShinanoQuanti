@@ -3,13 +3,11 @@ package com.helei.binanceapi.supporter;
 import com.alibaba.fastjson.JSONObject;
 import com.helei.binanceapi.dto.StreamSubscribeEntity;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.task.VirtualThreadTaskExecutor;
 
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-
-
+import java.util.concurrent.ExecutorService;
 
 
 @Slf4j
@@ -45,7 +43,7 @@ public class BinanceWSStreamSupporter {
      * @param message         message
      * @param callbackInvoker callbackInvoker
      */
-    public void publishStreamResponse(String streamName, JSONObject message, VirtualThreadTaskExecutor callbackInvoker) {
+    public void publishStreamResponse(String streamName, JSONObject message, ExecutorService callbackInvoker) {
 
         StreamSubscribeEntity subscribeEntity = subscribeMap.get(streamName);
         if (subscribeEntity == null) {
@@ -54,7 +52,7 @@ public class BinanceWSStreamSupporter {
         }
 
         try {
-            VirtualThreadTaskExecutor executor = subscribeEntity.getCallbackExecutor();
+            ExecutorService executor = subscribeEntity.getCallbackExecutor();
             if (executor != null) {
                 executor.submit(()->{
                     subscribeEntity.getInvocationHandler().invoke(streamName, message);
