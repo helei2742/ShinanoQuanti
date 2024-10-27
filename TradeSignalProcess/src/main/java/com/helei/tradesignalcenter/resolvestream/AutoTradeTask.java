@@ -52,15 +52,13 @@ public class AutoTradeTask {
         //1.信号服务
         KeyedStream<Tuple2<KLine, List<TradeSignal>>, String> symbolGroupSignalStream = tradeSignalService.getSymbolGroupSignalStream();
 
+        symbolGroupSignalStream.print();
         //2.决策服务
-        DataStream<OriginOrder> originOrderStream = decisionMakerService.decision(symbolGroupSignalStream);
+//        DataStream<OriginOrder> originOrderStream = decisionMakerService.decision(symbolGroupSignalStream);
 
         //3订单提交服务
-        DataStream<BaseOrder> commitedOrderStream = orderCommitService.commitOrder(originOrderStream);
+//        DataStream<BaseOrder> commitedOrderStream = orderCommitService.commitOrder(originOrderStream);
 
-        //4已提交订单入库
-        //TODO
-        commitedOrderStream.print();
 
         tradeSignalService.getEnv().execute(name);
     }

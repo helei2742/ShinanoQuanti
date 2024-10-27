@@ -1,4 +1,4 @@
-package com.helei.netty.serializer;
+package com.helei.util;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;

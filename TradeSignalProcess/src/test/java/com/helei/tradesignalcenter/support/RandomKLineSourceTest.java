@@ -5,7 +5,7 @@ package com.helei.tradesignalcenter.support;
 import com.helei.constants.KLineInterval;
 import com.helei.constants.TradeSide;
 import com.helei.dto.ASKey;
-import com.helei.binanceapi.constants.BinanceApiUrl;
+import com.helei.tradesignalcenter.config.FlinkConfig;
 import com.helei.tradesignalcenter.resolvestream.*;
 import com.helei.tradesignalcenter.resolvestream.a_datasource.RandomKLineSource;
 import com.helei.dto.account.AccountLocationConfig;
@@ -31,6 +31,7 @@ import com.helei.tradesignalcenter.resolvestream.e_order.OrderCommitService;
 import com.helei.tradesignalcenter.service.AccountInfoService;
 import org.apache.flink.api.common.functions.OpenContext;
 import org.apache.flink.streaming.api.TimerService;
+import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -42,6 +43,8 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 public class RandomKLineSourceTest {
     private static final Logger log = LoggerFactory.getLogger(RandomKLineSourceTest.class);
@@ -49,9 +52,9 @@ public class RandomKLineSourceTest {
 
     private static String ethusdt = "ethusdt";
 
-    private StreamExecutionEnvironment env;
+    private static StreamExecutionEnvironment env;
 
-    private StreamExecutionEnvironment env2;
+    private static StreamExecutionEnvironment env2;
 
 
     private static RandomKLineSource randomKLineSource;
@@ -60,8 +63,9 @@ public class RandomKLineSourceTest {
     @BeforeAll
     public static void before() {
         try {
-            randomKLineSource = new RandomKLineSource(btcusdt, List.of(KLineInterval.d_1),
-                    LocalDateTime.of(2022, 10, 3, 0, 0), 2000.0, 19000.0);
+            env = FlinkConfig.streamExecutionEnvironment();
+            randomKLineSource = new RandomKLineSource(btcusdt, Set.of(KLineInterval.m_1),
+                    LocalDateTime.of(2022, 10, 27, 22, 0), 2000.0, 19000.0);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -69,11 +73,19 @@ public class RandomKLineSourceTest {
     }
 
     @Test
+    public void testRandomKLineSource() throws Exception {
+        DataStreamSource<KLine> streamSource = env.addSource(randomKLineSource);
+
+        streamSource.print();
+
+        env.execute();
+        TimeUnit.MINUTES.sleep(1000);
+    }
+
+    @Test
     public void testAutoTradeV2() throws Exception {
         PSTConfig pstConfig = new PSTConfig(60, 3, 3);
         BollConfig bollConfig = new BollConfig(15);
-
-        randomKLineSource.setRealTime(false);
 
 
         TradeSignalService tradeSignalService = buildTradeSignalService(pstConfig, bollConfig);
@@ -113,7 +125,7 @@ public class RandomKLineSourceTest {
                 .addKLineSource(randomKLineSource)
                 .addIndicator(new PSTCalculator(pstConfig))
                 .addIndicator(new MACDCalculator(new MACDConfig(12, 26, 9)))
-//                .addIndicator(new BollCalculator(bollConfig))
+                .addIndicator(new BollCalculator(bollConfig))
                 .addSignalMaker(new BollSignalMaker(bollConfig))
                 .addSignalMaker(new PSTSignalMaker(pstConfig))
                 .addSignalMaker(new AbstractSignalMaker(true) {

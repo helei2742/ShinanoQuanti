@@ -21,8 +21,6 @@ import java.util.stream.Collectors;
 /**
  * 历史k线数据源
  */
-@Deprecated
-
 @Slf4j
 public class HistoryKLineLoader {
     private final transient Semaphore semaphore;

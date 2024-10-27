@@ -5,17 +5,14 @@ import com.helei.constants.KLineInterval;
 import com.helei.constants.TradeType;
 import com.helei.dto.KLine;
 import com.helei.tradesignalcenter.config.TradeSignalConfig;
-import com.helei.tradesignalcenter.serialization.KafkaKLineSchema;
 import com.helei.util.KafkaUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.flink.kafka.shaded.org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.flink.kafka.shaded.org.apache.kafka.clients.consumer.KafkaConsumer;
-import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer;
 
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
-import java.util.function.Consumer;
 
 
 /**

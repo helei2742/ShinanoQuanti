@@ -1,12 +1,14 @@
 package com.helei.dto.indicator.config;
 
-        import com.helei.dto.indicator.MA;
-        import lombok.EqualsAndHashCode;
-        import lombok.Getter;
+import com.helei.dto.indicator.MA;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 
+@ToString
 @Getter
 @EqualsAndHashCode(callSuper = false)
-public class MAConfig extends IndicatorConfig<MA>{
+public class MAConfig extends IndicatorConfig<MA> {
     private final int period;
 
     public MAConfig(final int period) {

@@ -1,5 +1,10 @@
 package com.helei.tradesignalcenter.config;
 
+import com.helei.dto.KLine;
+import com.helei.tradesignalcenter.serialization.KLineSerializer;
+import org.apache.flink.api.common.ExecutionConfig;
+import org.apache.flink.api.common.typeinfo.TypeInformation;
+import org.apache.flink.api.common.typeutils.TypeSerializer;
 import org.apache.flink.configuration.MemorySize;
 import org.apache.flink.configuration.TaskManagerOptions;
 import org.apache.flink.streaming.api.TimeCharacteristic;
@@ -30,6 +35,8 @@ public class FlinkConfig {
 //                .createRemoteEnvironment(jobManagerHost, jobManagerPort);
         // 可选的其他配置
         // env.setParallelism(4);  // 设置并行度
+        ExecutionConfig executionConfig = env.getConfig();
+
         return env;
     }
 

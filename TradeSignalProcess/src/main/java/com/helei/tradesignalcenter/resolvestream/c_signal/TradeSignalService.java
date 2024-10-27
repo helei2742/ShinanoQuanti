@@ -4,6 +4,7 @@ import com.helei.dto.indicator.Indicator;
 import com.helei.tradesignalcenter.resolvestream.a_datasource.BaseKLineSource;
 import com.helei.dto.KLine;
 import com.helei.dto.TradeSignal;
+import com.helei.tradesignalcenter.resolvestream.a_klinesource.KLineHisAndRTSource;
 import com.helei.tradesignalcenter.resolvestream.b_indicator.IndicatorProcessFunction;
 import com.helei.tradesignalcenter.resolvestream.b_indicator.calculater.BaseIndicatorCalculator;
 import com.helei.tradesignalcenter.resolvestream.c_signal.maker.AbstractSignalMaker;
@@ -98,7 +99,7 @@ public class TradeSignalService {
         /**
          * k线数据源
          */
-        private BaseKLineSource kLineSource;
+        private KLineHisAndRTSource kLineSource;
 
         /**
          * 指标计算器
@@ -137,13 +138,14 @@ public class TradeSignalService {
 
             //1. 使用自定义 SourceFunction 生成 K 线数据流
             KeyedStream<KLine, String> kLineStream = env.addSource(kLineSource).keyBy(KLine::getStreamKey);
-            BaseIndicatorCalculator[] arr = new BaseIndicatorCalculator[indicatorCalList.size()];
+            BaseIndicatorCalculator<?>[] arr = new BaseIndicatorCalculator[indicatorCalList.size()];
             for (int i = 0; i < indicatorCalList.size(); i++) {
                 arr[i] = indicatorCalList.get(i);
             }
             // 2.指标处理，串行
             kLineStream = kLineStream
                     .process(new IndicatorProcessFunction(arr))
+                    .setParallelism(1)
                     .keyBy(KLine::getStreamKey);
 
 
@@ -222,7 +224,7 @@ public class TradeSignalService {
          * @param kLineSource 数据源
          * @return this
          */
-        public TradeSignalStreamResolverBuilder addKLineSource(BaseKLineSource kLineSource) {
+        public TradeSignalStreamResolverBuilder addKLineSource(KLineHisAndRTSource kLineSource) {
             tradeSignalStreamResolver.kLineSource = kLineSource;
             return this;
         }

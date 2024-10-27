@@ -34,17 +34,12 @@ import java.util.concurrent.*;
  * <p>2.实时数据在启动时就通过KafkaConsumer开始统一获取，只是要等到历史数据获取完毕才写入flink source</p>
  */
 @Slf4j
-public class BinanceKLineHisAndReTSource extends KLineHisAndRTSource {
+public class BinanceKLineHisAndRTSource extends KLineHisAndRTSource {
 
     /**
      * 相关回调执行的线程池
      */
     private transient ExecutorService executor;
-
-    /**
-     * k线数据缓冲区
-     */
-    private transient BlockingQueue<KLine> buffer;
 
     /**
      * 已加载完毕的历史k线
@@ -57,7 +52,7 @@ public class BinanceKLineHisAndReTSource extends KLineHisAndRTSource {
     private final BinanceApiConfig binanceApiConfig;
 
 
-    protected BinanceKLineHisAndReTSource(
+    protected BinanceKLineHisAndRTSource(
             String symbol,
             Set<KLineInterval> kLineIntervals,
             long startTime
@@ -67,14 +62,13 @@ public class BinanceKLineHisAndReTSource extends KLineHisAndRTSource {
     }
 
     @Override
-    public void open(Configuration parameters) throws Exception {
+    public void onOpen(Configuration parameters) throws Exception {
         historyLoadedIntervals = new ConcurrentHashSet<>();
         executor = Executors.newVirtualThreadPerTaskExecutor();
-        buffer = new LinkedBlockingQueue<>();
     }
 
     @Override
-    public void run(SourceContext<KLine> sourceContext) throws Exception {
+    public void loadDataInBuffer(BlockingQueue<KLine> buffer) {
 
         int batchSize = tradeSignalConfig.getHistoryKLineBatchSize();
         TradeType tradeType = tradeSignalConfig.getTrade_type();
@@ -146,17 +140,6 @@ public class BinanceKLineHisAndReTSource extends KLineHisAndRTSource {
             log.error("加载实时数据出错", e);
             return null;
         });
-
-
-        //Step 4: 阻塞获取，等待结束
-        while (isRunning) {
-            KLine kLine = buffer.poll(50, TimeUnit.MINUTES);
-            if (kLine != null) {
-                synchronized (sourceContext.getCheckpointLock()) {
-                    sourceContext.collect(kLine);
-                }
-            }
-        }
     }
 
     /**
@@ -217,11 +200,6 @@ public class BinanceKLineHisAndReTSource extends KLineHisAndRTSource {
         return new HistoryKLineLoader(batchSize, binanceUContractMarketRestApi, executor);
     }
 
-    @Override
-    public void cancel() {
-        isRunning = false;
-        log.info("kline source [{}] closed", symbol);
-    }
 
 
     /**

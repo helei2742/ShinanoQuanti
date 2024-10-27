@@ -4,7 +4,11 @@ import cn.hutool.core.util.BooleanUtil;
 import com.helei.constants.KLineInterval;
 import com.helei.dto.KLine;
 import com.helei.tradesignalcenter.config.FlinkConfig;
+import com.helei.tradesignalcenter.constants.KLineTypeInfo;
 import org.apache.flink.api.common.functions.OpenContext;
+import org.apache.flink.api.common.typeinfo.TypeHint;
+import org.apache.flink.api.common.typeinfo.TypeInformation;
+import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.functions.ProcessFunction;
@@ -17,9 +21,7 @@ import java.time.ZoneOffset;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-class BinanceKLineHisAndReTSourceTest {
+class BinanceKLineHisAndRTSourceTest {
 
     private static StreamExecutionEnvironment env;
 
@@ -33,13 +35,13 @@ class BinanceKLineHisAndReTSourceTest {
 
     @Test
     public void testHisAndReTSource() throws Exception {
-        BinanceKLineHisAndReTSource source = new BinanceKLineHisAndReTSource(
+        BinanceKLineHisAndRTSource source = new BinanceKLineHisAndRTSource(
                 symbol,
                 Set.of(KLineInterval.m_1),
                 LocalDateTime.of(2024, 10, 27, 21, 0).toInstant(ZoneOffset.UTC).toEpochMilli()
         );
 
-        DataStreamSource<KLine> stream = env.addSource(source);
+        DataStream<KLine> stream = env.addSource(source).returns(new KLineTypeInfo());
 
         stream.process(new ProcessFunction<KLine, Object>() {
             @Override
@@ -49,9 +51,9 @@ class BinanceKLineHisAndReTSourceTest {
 
             @Override
             public void processElement(KLine kLine, ProcessFunction<KLine, Object>.Context context, Collector<Object> collector) throws Exception {
-                if (BooleanUtil.isFalse(kLine.isEnd())) {
-//                    System.out.println(kLine);
-                }
+//                if (BooleanUtil.isFalse(kLine.isEnd())) {
+                    System.out.println(kLine);
+//                }
             }
         }).setParallelism(1);
 

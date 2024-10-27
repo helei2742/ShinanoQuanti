@@ -30,7 +30,7 @@ public class KLine implements Serializable {
     /**
      * symbol
      */
-    private String symbol;
+    private String symbol = "";
 
     /**
      * 开盘价格
@@ -95,6 +95,9 @@ public class KLine implements Serializable {
      * @return stream流名称
      */
     public String getStreamKey() {
+        if (kLineInterval == null) {
+            System.out.println("---");
+        }
         return symbol + "@kline_" + kLineInterval.getDescribe();
     }
 

@@ -1,21 +1,25 @@
 package com.helei.tradesignalcenter.resolvestream.a_datasource;
 
+import cn.hutool.core.collection.ConcurrentHashSet;
 import com.helei.constants.KLineInterval;
 import com.helei.dto.KLine;
+import com.helei.tradesignalcenter.resolvestream.a_klinesource.KLineHisAndRTSource;
 import lombok.Setter;
+import org.apache.flink.configuration.Configuration;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
+import java.util.Set;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicLong;
 
 
-public class RandomKLineSource extends BaseKLineSource {
+public class RandomKLineSource extends KLineHisAndRTSource {
+    private transient ExecutorService executorService;
 
-    private final AtomicLong startTimeStamp;
+    private final ConcurrentHashMap<KLineInterval, Long> startTimeStampMap;
 
     private final Random random = new Random();
 
@@ -23,22 +27,28 @@ public class RandomKLineSource extends BaseKLineSource {
 
     private final Double minPrice;
 
+    private final ConcurrentHashMap<KLineInterval, Long> realTimerMap;
 
-    private final AtomicLong realTimer;
-    @Setter
-    private boolean isRealTime = false;
 
     public RandomKLineSource(
             String symbol,
-            List<KLineInterval> kLineInterval,
+            Set<KLineInterval> kLineInterval,
             LocalDateTime startTimeStamp,
             Double maxPrice,
             Double minPrice
     ) {
-        super(kLineInterval, symbol);
+        super(symbol, kLineInterval, startTimeStamp.toInstant(ZoneOffset.UTC).toEpochMilli());
 
-        this.startTimeStamp = new AtomicLong(startTimeStamp.toInstant(ZoneOffset.UTC).toEpochMilli());
-        realTimer = new AtomicLong(startTimeStamp.toInstant(ZoneOffset.UTC).toEpochMilli());
+        long epochMilli = startTimeStamp.toInstant(ZoneOffset.UTC).toEpochMilli();
+        if (epochMilli > System.currentTimeMillis()) {
+            epochMilli = System.currentTimeMillis();
+        }
+        this.startTimeStampMap = new ConcurrentHashMap<>();
+        realTimerMap = new ConcurrentHashMap<>();
+        for (KLineInterval lineInterval : kLineInterval) {
+            this.startTimeStampMap.put(lineInterval, epochMilli);
+            realTimerMap.put(lineInterval, epochMilli);
+        }
         this.maxPrice = maxPrice;
         this.minPrice = minPrice;
     }
@@ -52,37 +62,52 @@ public class RandomKLineSource extends BaseKLineSource {
 
         double volume = 10 + (Double.MAX_VALUE / 2 - 10) * random.nextDouble();
         long plus = kLineInterval.getSecond() * 1000;
-        long openTime = startTimeStamp.get();
+        long openTime = startTimeStampMap.get(kLineInterval);
 
+        realTimerMap.computeIfPresent(kLineInterval, (k,v)->v + 200);
+        long curTime = realTimerMap.get(kLineInterval);
+
+        boolean isRealTime = curTime > System.currentTimeMillis() - kLineInterval.getSecond() * 1000;
         if (isRealTime) {
-            long curTime = realTimer.addAndGet(200);
             if (curTime >= openTime + plus) {
-                openTime = startTimeStamp.addAndGet(plus);
+                openTime += plus;
+                startTimeStampMap.put(kLineInterval, openTime);
             }
         } else {
-            openTime = startTimeStamp.addAndGet(plus);
+            openTime += plus;
+            startTimeStampMap.put(kLineInterval, openTime);
         }
 
-        TimeUnit.MILLISECONDS.sleep(200);
 
-        KLine kLine = new KLine(getSymbol(), nextOpen, nextClose, nextHigh, nextLow, volume, openTime, openTime + plus - 1000, !isRealTime, kLineInterval, new HashMap<>());
+        KLine kLine = new KLine(symbol, nextOpen, nextClose, nextHigh, nextLow, volume, openTime,
+                openTime + plus - 1000, !isRealTime, kLineInterval, new HashMap<>());
         return kLine;
     }
 
     @Override
-    boolean loadData(SourceContext<KLine> sourceContext) throws Exception {
-
-        while (true) {
-            for (KLineInterval interval : getIntervals()) {
-                KLine kLine = loadKLine(interval);
-                sourceContext.collect(kLine);
-            }
-        }
+    protected void onOpen(Configuration parameters) throws Exception {
+        executorService = Executors.newVirtualThreadPerTaskExecutor();
     }
 
     @Override
-    void refreshState() {
-
+    protected void loadDataInBuffer(BlockingQueue<KLine> buffer) {
+        for (KLineInterval interval : intervals) {
+            CompletableFuture.runAsync(()->{
+                while (true) {
+                    try {
+                        TimeUnit.MILLISECONDS.sleep(200);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                    try {
+                        buffer.put(loadKLine(interval));
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }, executorService);
+        }
     }
+
 }
 
