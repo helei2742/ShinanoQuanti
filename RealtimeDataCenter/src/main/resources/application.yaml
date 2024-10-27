@@ -10,7 +10,7 @@ shinano:
   quantity:
     realtime:
       base:
-        kafka-kline-num-partitions: 2
+        kafka-kline-num-partitions: 1
         kafka-kline-replication-factor: 1
 
       spot:

@@ -1,0 +1,26 @@
+shinano:
+  quantity:
+    api:
+      binance:
+        test_net:
+          spot:
+            rest_api_url: https://testnet.binance.vision/api
+            ws_market_url: wss://testnet.binance.vision/ws-api/v3
+            ws_market_stream_url: wss://testnet.binance.vision/ws
+            ws_account_info_stream_url: wss://stream.binance.com:9443/ws
+          u_contract:
+            rest_api_url: https://testnet.binancefuture.com
+            ws_market_url: wss://testnet.binancefuture.com/ws-fapi/v1
+            ws_market_stream_url: wss://stream.binancefuture.com/ws
+            ws_account_info_stream_url: wss://fstream.binancefuture.com/ws
+        normal:
+          spot:
+            rest_api_url: https://data-api.binance.vision
+            ws_market_url: wss://ws-api.binance.com:443/ws-api/v3
+            ws_market_stream_url: wss://stream.binance.com:9443/ws
+            ws_account_info_stream_url: wss://stream.binance.com:9443/ws
+          u_contract:
+            rest_api_url: https://fapi.binance.com
+            ws_market_url: wss://ws-fapi.binance.com/ws-fapi/v1
+            ws_market_stream_url: wss://fstream.binance.com/ws
+            ws_account_info_stream_url: wss://fstream.binance.com/ws

@@ -18,7 +18,7 @@ class BinanceWSApiClientTest {
     public static void before() {
         try {
             binanceWSApiClient = CEXApiFactory.binanceApiClient(BinanceApiUrl.WS_SPOT_STREAM_URL);
-            binanceWSApiClient.connect();
+            binanceWSApiClient.connect().get();
         } catch (Exception e) {
             e.printStackTrace();
         }

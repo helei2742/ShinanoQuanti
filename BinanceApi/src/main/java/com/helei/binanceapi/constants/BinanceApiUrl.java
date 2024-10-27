@@ -1,5 +1,6 @@
 package com.helei.binanceapi.constants;
 
+@Deprecated
 public class BinanceApiUrl {
 
 

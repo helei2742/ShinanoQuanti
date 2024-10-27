@@ -11,7 +11,7 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>TradeSignalCenter</module>
+        <module>TradeSignalProcess</module>
         <module>CEXApi</module>
         <module>Base</module>
         <module>BinanceApi</module>

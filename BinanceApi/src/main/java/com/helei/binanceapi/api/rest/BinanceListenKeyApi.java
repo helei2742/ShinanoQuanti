@@ -1,6 +1,7 @@
 package com.helei.binanceapi.api.rest;
 
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSONObject;
 import com.helei.binanceapi.base.BinanceRestApiClient;
 import com.helei.dto.ASKey;
 import com.helei.binanceapi.supporter.IpWeightSupporter;
@@ -45,9 +46,10 @@ public class BinanceListenKeyApi extends BinanceRestApiClient {
                 1,
                 asKey
         ).thenApplyAsync(resp -> {
+            JSONObject jb = JSONObject.parseObject(resp);
             log.info("请求获取listenKey成功，响应结果:[{}]", resp);
             if (resp != null) {
-                return resp.getString("listenKey");
+                return jb.getString("listenKey");
             }
             return null;
         }, executor);
@@ -71,9 +73,10 @@ public class BinanceListenKeyApi extends BinanceRestApiClient {
                 1,
                 asKey
         ).thenApplyAsync(resp -> {
+            JSONObject jb = JSONObject.parseObject(resp);
             log.info("延长listenKey成功，响应结果:[{}]", resp);
             if (resp != null) {
-                return resp.getString("listenKey");
+                return jb.getString("listenKey");
             }
             return null;
         }, executor);

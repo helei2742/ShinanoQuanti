@@ -168,7 +168,7 @@ public abstract class AbstractWebsocketClient<P, T> {
     public CompletableFuture<Void> connect() throws SSLException, URISyntaxException {
         log.info("开始初始化WS客户端");
         init();
-        log.info("初始化WS客户端完成，开始链接服务器");
+        log.info("初始化WS客户端完成，开始链接服务器 [{}]", url);
 
         return reconnect();
     }

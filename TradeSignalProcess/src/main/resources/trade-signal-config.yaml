@@ -1,0 +1,22 @@
+shinano:
+  quantity:
+    # 信号生成服务配置
+    trade_signal_maker:
+      # 运行环境
+      run_env: NORMAL
+      # 交易类型
+      trade_type: CONTRACT
+      # 历史k线加载批大小
+      historyKLineBatchSize: 200
+      # 批加载的网络并发度
+      batchLoadConcurrent: 10
+      # 实时数据配置
+      realtime:
+        # kafka配置
+        kafka:
+          bootstrapServer: 192.168.1.2:9092
+          groupId: trade_signal_app_test
+        # flink配置
+        flink:
+          jobManagerHost: 192.168.1.2
+          jobManagerPort: 8081

@@ -5,10 +5,12 @@ import com.helei.binanceapi.BinanceWSApiClient;
 import com.helei.binanceapi.base.AbstractBinanceWSApi;
 import com.helei.constants.KLineInterval;
 import com.helei.binanceapi.constants.command.MarketCommandType;
+import com.helei.dto.ASKey;
 import com.helei.dto.WebSocketCommandBuilder;
 import lombok.extern.slf4j.Slf4j;
 
 import java.net.URISyntaxException;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 
@@ -127,14 +129,13 @@ public class BinanceWSMarketApi extends AbstractBinanceWSApi {
      * @param interval        interval
      * @param startTimeSecond startTimeSecond
      * @param limit           limit
-     * @param callback        callback
+     * @return result
      */
-    public void queryHistoryKLine(
+    public CompletableFuture<JSONObject> queryHistoryKLine(
             String symbol,
             KLineInterval interval,
             long startTimeSecond,
-            int limit,
-            Consumer<JSONObject> callback
+            int limit
     ) {
         JSONObject command = WebSocketCommandBuilder
                 .builder()
@@ -145,6 +146,6 @@ public class BinanceWSMarketApi extends AbstractBinanceWSApi {
                 .addParam("limit", limit)
                 .build();
 
-        binanceWSApiClient.sendRequest(2, command, callback);
+        return binanceWSApiClient.sendRequest(2, command, ASKey.EMPTY_ASKEY);
     }
 }

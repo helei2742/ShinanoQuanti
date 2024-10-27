@@ -2,6 +2,7 @@ package com.helei.constants;
 
 import lombok.Getter;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,7 +10,7 @@ import java.util.Map;
  *
  */
 @Getter
-public enum TradeType {
+public enum TradeType implements Serializable {
     SPOT("SPOT"),
     CONTRACT("CONTRACT"),
 
