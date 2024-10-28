@@ -18,8 +18,6 @@ public abstract class IndicatorConfig<T> implements Serializable{
 
     public final String name;
 
-    public final JSONObject config = new JSONObject();
-    ;
 
     protected IndicatorConfig(Class<T> indicatorClass) {
         this.indicatorClass = indicatorClass;

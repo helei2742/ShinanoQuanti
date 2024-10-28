@@ -6,12 +6,14 @@ import com.helei.dto.indicator.Indicator;
 import com.helei.dto.indicator.MA;
 import com.helei.dto.indicator.config.IndicatorConfig;
 import com.helei.dto.indicator.config.MAConfig;
+import org.apache.flink.api.common.typeutils.SimpleTypeSerializerSnapshot;
 import org.apache.flink.api.common.typeutils.TypeSerializer;
 import org.apache.flink.api.common.typeutils.TypeSerializerSnapshot;
 import org.apache.flink.core.memory.DataInputView;
 import org.apache.flink.core.memory.DataInputViewStreamWrapper;
 import org.apache.flink.core.memory.DataOutputView;
 import org.apache.flink.core.memory.DataOutputViewStreamWrapper;
+import org.apache.flink.runtime.state.JavaSerializer;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -57,22 +59,22 @@ public class KLineSerializer extends TypeSerializer<KLine> {
         target.writeLong(kLine.getOpenTime());
         target.writeLong(kLine.getCloseTime());
         target.writeBoolean(kLine.isEnd());
-        target.writeUTF(kLine.getKLineInterval().getDescribe());
+//        target.writeUTF(kLine.getKLineInterval().getDescribe());
 
-        int size = kLine.getIndicators().size();
-        target.writeInt(size);
-
-        try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-             ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
-        ) {
-            for (Map.Entry<IndicatorConfig<? extends Indicator>, Indicator> entry : kLine.getIndicators().entrySet()) {
-                objectOutputStream.writeObject(entry.getKey());
-                objectOutputStream.writeObject(entry.getValue());
-                objectOutputStream.flush();
-            }
-            byte[] byteArray = byteArrayOutputStream.toByteArray();
-            target.writeUTF(Base64.getEncoder().encodeToString(byteArray));
-        }
+//        int size = kLine.getIndicators().size();
+//        target.writeInt(size);
+//
+//        try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+//             ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
+//        ) {
+//            for (Map.Entry<IndicatorConfig<? extends Indicator>, Indicator> entry : kLine.getIndicators().entrySet()) {
+//                objectOutputStream.writeObject(entry.getKey());
+//                objectOutputStream.writeObject(entry.getValue());
+//                objectOutputStream.flush();
+//            }
+//            byte[] byteArray = byteArrayOutputStream.toByteArray();
+//            target.writeUTF(Base64.getEncoder().encodeToString(byteArray));
+//        }
     }
 
     @Override
@@ -88,21 +90,21 @@ public class KLineSerializer extends TypeSerializer<KLine> {
         boolean end = source.readBoolean();
 
         KLineInterval kLineInterval = KLineInterval.STATUS_MAP.get(source.readUTF());
-        int size = source.readInt();
-        String base64Str = source.readUTF();
-        byte[] bytes = Base64.getDecoder().decode(base64Str);
-
-        HashMap<IndicatorConfig<? extends Indicator>, Indicator> indicators = new HashMap<>();
-        try (ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
-             ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream)) {
-            for (int i = 0; i < size; i++) {
-                IndicatorConfig<? extends Indicator> key = (IndicatorConfig<? extends Indicator>) objectInputStream.readObject();
-                Indicator value = (Indicator) objectInputStream.readObject();
-                indicators.put(key, value);
-            }
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+//        int size = source.readInt();
+//        String base64Str = source.readUTF();
+//        byte[] bytes = Base64.getDecoder().decode(base64Str);
+//
+//        HashMap<IndicatorConfig<? extends Indicator>, Indicator> indicators = new HashMap<>();
+//        try (ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
+//             ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream)) {
+//            for (int i = 0; i < size; i++) {
+//                IndicatorConfig<? extends Indicator> key = (IndicatorConfig<? extends Indicator>) objectInputStream.readObject();
+//                Indicator value = (Indicator) objectInputStream.readObject();
+//                indicators.put(key, value);
+//            }
+//        } catch (ClassNotFoundException e) {
+//            throw new RuntimeException(e);
+//        }
 
 
         return KLine.builder()
@@ -115,8 +117,8 @@ public class KLineSerializer extends TypeSerializer<KLine> {
                 .openTime(openTime)
                 .closeTime(closeTime)
                 .end(end)
-                .kLineInterval(kLineInterval)
-                .indicators(indicators)
+//                .kLineInterval(kLineInterval)
+//                .indicators(indicators)
                 .build();
     }
 
@@ -147,7 +149,7 @@ public class KLineSerializer extends TypeSerializer<KLine> {
 
     @Override
     public TypeSerializerSnapshot<KLine> snapshotConfiguration() {
-        return null;
+        return new JavaSerializer.JavaSerializerSnapshot<>();
     }
 
     public static void main(String[] args) throws IOException {
@@ -191,29 +193,29 @@ public class KLineSerializer extends TypeSerializer<KLine> {
 //        } catch (ClassNotFoundException e) {
 //            throw new RuntimeException(e);
 //        }
-
-        MAConfig maConfig = new MAConfig(12);
-        KLine build = KLine.builder().build();
-        build.setKLineInterval(KLineInterval.d_1);
-        build.setIndicators(new HashMap<>());
-        build.getIndicators().put(maConfig, new MA(123.2));
-
-        // 创建一个 DataOutputView，写入序列化数据
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        DataOutputView outputView = new DataOutputViewStreamWrapper(byteArrayOutputStream);
-
-        KLineSerializer serializer = new KLineSerializer();
-        // 序列化对象
-        serializer.serialize(build, outputView);
-
-        // 将序列化数据输入到 DataInputView 以反序列化
-        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
-        DataInputView inputView = new DataInputViewStreamWrapper(byteArrayInputStream);
-
-        // 反序列化对象
-        KLine deserializedKLine = serializer.deserialize(inputView);
-
-        // 验证原对象和反序列化对象是否相等
-        System.out.println(deserializedKLine);
+//
+//        MAConfig maConfig = new MAConfig(12);
+//        KLine build = KLine.builder().build();
+//        build.setKLineInterval(KLineInterval.d_1);
+//        build.setIndicators(new HashMap<>());
+//        build.getIndicators().put(maConfig, new MA(123.2));
+//
+//        // 创建一个 DataOutputView，写入序列化数据
+//        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+//        DataOutputView outputView = new DataOutputViewStreamWrapper(byteArrayOutputStream);
+//
+//        KLineSerializer serializer = new KLineSerializer();
+//        // 序列化对象
+//        serializer.serialize(build, outputView);
+//
+//        // 将序列化数据输入到 DataInputView 以反序列化
+//        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
+//        DataInputView inputView = new DataInputViewStreamWrapper(byteArrayInputStream);
+//
+//        // 反序列化对象
+//        KLine deserializedKLine = serializer.deserialize(inputView);
+//
+//        // 验证原对象和反序列化对象是否相等
+//        System.out.println(deserializedKLine);
     }
 }

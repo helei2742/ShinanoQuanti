@@ -1,10 +1,15 @@
 package com.helei.tradesignalcenter.config;
 
+import com.esotericsoftware.kryo.serializers.DefaultSerializers;
+import com.esotericsoftware.kryo.serializers.JavaSerializer;
+import com.helei.dto.IndicatorMap;
 import com.helei.dto.KLine;
+import com.helei.tradesignalcenter.serialization.IndicatorMapSerializer;
 import com.helei.tradesignalcenter.serialization.KLineSerializer;
 import org.apache.flink.api.common.ExecutionConfig;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
 import org.apache.flink.api.common.typeutils.TypeSerializer;
+
 import org.apache.flink.configuration.MemorySize;
 import org.apache.flink.configuration.TaskManagerOptions;
 import org.apache.flink.streaming.api.TimeCharacteristic;
@@ -36,7 +41,9 @@ public class FlinkConfig {
         // 可选的其他配置
         // env.setParallelism(4);  // 设置并行度
         ExecutionConfig executionConfig = env.getConfig();
-
+//        executionConfig.registerTypeWithKryoSerializer(KLineInterval.class, DefaultSerializers.EnumSerializer.class);
+        executionConfig.registerTypeWithKryoSerializer(IndicatorMap.class, IndicatorMapSerializer.class);
+        // 注册 Java 序列化器
         return env;
     }
 

@@ -16,6 +16,16 @@ public class TradeSignalConfig implements Serializable {
     public static final TradeSignalConfig TRADE_SIGNAL_CONFIG;
 
     /**
+     * 信号名
+     */
+    private String name;
+
+    /**
+     * 信号交易对
+     */
+    private String symbol;
+
+    /**
      * 运行环境，测试网或者普通网
      */
     private RunEnv run_env;
@@ -61,6 +71,9 @@ public class TradeSignalConfig implements Serializable {
 
     private TradeSignalConfig() {}
 
+    public String getSinkTopic() {
+        return run_env.name() + "." + trade_type + "." + symbol + "." + name;
+    }
 
 
     @Data

@@ -8,7 +8,6 @@ import lombok.*;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.Instant;
-import java.util.HashMap;
 
 /**
  * K线实体类
@@ -76,18 +75,16 @@ public class KLine implements Serializable {
     /**
      * k线频率
      */
-    private KLineInterval kLineInterval;
+    private String kLineInterval;
 
     /**
      * 存放各种指标以及他的值
      */
-    private HashMap<IndicatorConfig<? extends Indicator>, Indicator> indicators = new HashMap<>();
+    private IndicatorMap indicators = new IndicatorMap();
 
 
     public <T extends Indicator> T getIndicator(IndicatorConfig<T> config) {
-        Indicator indicator = indicators.get(config);
-        if (indicator == null) return null;
-        return (T) indicator;
+        return indicators.getIndicator(config);
     }
 
     /**
@@ -98,9 +95,12 @@ public class KLine implements Serializable {
         if (kLineInterval == null) {
             System.out.println("---");
         }
-        return symbol + "@kline_" + kLineInterval.getDescribe();
+        return symbol + "@kline_" + kLineInterval;
     }
 
+    public static String getKLineStreamKey(String symbol, String kLineInterval) {
+        return symbol + "@kline_" + kLineInterval;
+    }
 
     @Override
     public String toString() {
@@ -120,6 +120,14 @@ public class KLine implements Serializable {
 
     public KLine clone() {
         return KLine.builder().symbol(symbol).open(open).close(close).high(high).low(low).volume(volume).openTime(openTime).closeTime(closeTime).end(end).indicators(indicators).kLineInterval(kLineInterval).build();
+    }
+
+    public void setKLineInterval(KLineInterval interval) {
+        this.kLineInterval = interval.getDescribe();
+    }
+
+    public void setKLineInterval(String interval) {
+        this.kLineInterval = interval;
     }
 }
 

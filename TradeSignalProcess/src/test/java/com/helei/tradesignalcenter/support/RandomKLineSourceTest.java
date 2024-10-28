@@ -4,31 +4,27 @@ package com.helei.tradesignalcenter.support;
 
 import com.helei.constants.KLineInterval;
 import com.helei.constants.TradeSide;
-import com.helei.dto.ASKey;
+import com.helei.dto.IndicatorMap;
 import com.helei.tradesignalcenter.config.FlinkConfig;
-import com.helei.tradesignalcenter.resolvestream.*;
-import com.helei.tradesignalcenter.resolvestream.a_datasource.RandomKLineSource;
-import com.helei.dto.account.AccountLocationConfig;
+import com.helei.tradesignalcenter.stream.*;
+import com.helei.tradesignalcenter.stream.a_datasource.RandomKLineSource;
 import com.helei.tradesignalcenter.dto.OriginOrder;
-import com.helei.dto.account.UserInfo;
 import com.helei.dto.KLine;
 import com.helei.dto.TradeSignal;
-import com.helei.tradesignalcenter.resolvestream.c_signal.TradeSignalService;
-import com.helei.tradesignalcenter.resolvestream.d_decision.DecisionMakerService;
-import com.helei.tradesignalcenter.resolvestream.d_decision.maker.AbstractDecisionMaker;
+import com.helei.tradesignalcenter.stream.c_signal.TradeSignalService;
+import com.helei.tradesignalcenter.stream.d_decision.AbstractDecisionMaker;
 import com.helei.dto.indicator.Indicator;
-import com.helei.tradesignalcenter.resolvestream.b_indicator.calculater.BollCalculator;
-import com.helei.tradesignalcenter.resolvestream.b_indicator.calculater.MACDCalculator;
-import com.helei.tradesignalcenter.resolvestream.b_indicator.calculater.PSTCalculator;
+import com.helei.tradesignalcenter.stream.b_indicator.calculater.BollCalculator;
+import com.helei.tradesignalcenter.stream.b_indicator.calculater.MACDCalculator;
+//import com.helei.tradesignalcenter.stream.b_indicator.calculater.PSTCalculator;
 import com.helei.dto.indicator.config.BollConfig;
 import com.helei.dto.indicator.config.IndicatorConfig;
 import com.helei.dto.indicator.config.MACDConfig;
 import com.helei.dto.indicator.config.PSTConfig;
-import com.helei.tradesignalcenter.resolvestream.c_signal.maker.AbstractSignalMaker;
-import com.helei.tradesignalcenter.resolvestream.c_signal.maker.BollSignalMaker;
-import com.helei.tradesignalcenter.resolvestream.c_signal.maker.PSTSignalMaker;
-import com.helei.tradesignalcenter.resolvestream.e_order.OrderCommitService;
-import com.helei.tradesignalcenter.service.AccountInfoService;
+import com.helei.tradesignalcenter.stream.c_signal.maker.AbstractSignalMaker;
+import com.helei.tradesignalcenter.stream.c_signal.maker.BollSignalMaker;
+//import com.helei.tradesignalcenter.stream.c_signal.maker.PSTSignalMaker;
+import com.helei.tradesignalcenter.stream.e_order.KafkaOriginOrderCommitter;
 import org.apache.flink.api.common.functions.OpenContext;
 import org.apache.flink.streaming.api.TimerService;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
@@ -42,7 +38,6 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -89,9 +84,9 @@ public class RandomKLineSourceTest {
 
 
         TradeSignalService tradeSignalService = buildTradeSignalService(pstConfig, bollConfig);
-        DecisionMakerService decisionMakerService = new DecisionMakerService(new AbstractDecisionMaker("测试用决策生成器") {
+        AbstractDecisionMaker<OriginOrder> abstractDecisionMaker = new AbstractDecisionMaker<>("测试用决策生成器") {
             @Override
-            protected OriginOrder decisionAndBuilderOrder(String symbol, List<TradeSignal> windowSignal, HashMap<IndicatorConfig<? extends Indicator>, Indicator> indicatorMap) {
+            protected OriginOrder decisionAndBuilderOrder(String symbol, List<TradeSignal> windowSignal, IndicatorMap indicatorMap) {
                 log.info("收到信号【{}】\n{}", symbol, windowSignal);
                 return OriginOrder
                         .builder()
@@ -101,19 +96,12 @@ public class RandomKLineSourceTest {
 //                        .stopPrice(BigDecimal.valueOf(windowSignal.getFirst().getStopPrice()))
                         .build();
             }
-        });
+        };
 
-        String sk = "C1ihCOkWEECpnsbx4HcFLZubOyZX2CvPVaIvxlHtDNwfai8WsEzIxV6rLIizvgl9";
-        String ak = "HZzsqyA0uBTC4GzaykzeUL5ml7V0jzGXGwU38WGDUmH8JLzPIw3ZfbGxa4ZzuzFm";
-
-        AccountInfoService accountInfoService = new AccountInfoService();
-        String testId = "testId";
-        accountInfoService.getUid2UserInfo().put(testId, new UserInfo(testId, new ASKey(ak, sk), List.of("BTCUSDT"), new AccountLocationConfig(0.2, 10, 50)));
-        accountInfoService.getSymbol2UIdsMap().put("BTCUSDT", List.of(testId));
-        OrderCommitService orderCommitService = new OrderCommitService(accountInfoService, new LimitOrderBuildSupporter());
-
-
-        AutoTradeTask autoTradeTask = new AutoTradeTask(tradeSignalService, decisionMakerService, orderCommitService);
+        AutoTradeTask<OriginOrder> autoTradeTask = new AutoTradeTask<OriginOrder>(
+                tradeSignalService,
+                abstractDecisionMaker,
+                null);
         autoTradeTask.execute("test");
     }
 
@@ -123,11 +111,12 @@ public class RandomKLineSourceTest {
                 .buildResolver()
                 .setWindowLengthRationOfKLine(1.0 / 60)
                 .addKLineSource(randomKLineSource)
-                .addIndicator(new PSTCalculator(pstConfig))
+//                .addIndicator(new PSTCalculator(pstConfig))
                 .addIndicator(new MACDCalculator(new MACDConfig(12, 26, 9)))
-                .addIndicator(new BollCalculator(bollConfig))
+                .addIndicator(new MACDCalculator(new MACDConfig(12, 8, 9)))
+//                .addIndicator(new BollCalculator(bollConfig))
                 .addSignalMaker(new BollSignalMaker(bollConfig))
-                .addSignalMaker(new PSTSignalMaker(pstConfig))
+//                .addSignalMaker(new PSTSignalMaker(pstConfig))
                 .addSignalMaker(new AbstractSignalMaker(true) {
 
                     @Override
@@ -176,4 +165,3 @@ public class RandomKLineSourceTest {
     }
 
 }
-

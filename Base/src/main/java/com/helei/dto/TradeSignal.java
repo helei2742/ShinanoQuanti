@@ -1,5 +1,6 @@
 package com.helei.dto;
 
+import com.helei.constants.KLineInterval;
 import com.helei.constants.TradeSide;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,7 +32,14 @@ public class TradeSignal {
     /**
      * 发出这个信号的k线
      */
-    private KLine kLine;
+    private String symbol;
+
+    private String interval;
+
+    private boolean isEnd;
+
+    private long closeTime;
+
 
     /**
      * 当前时间
@@ -69,22 +77,11 @@ public class TradeSignal {
      * @return streamName
      */
     public String getStreamKey() {
-        return kLine.getSymbol();
+        return symbol;
     }
 
 
-    @Override
-    public String toString() {
-        return "TradeSignal{" +
-                "name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", kLine=" + kLine +
-                ", createTime=" + (createTime == null ? "null" : Instant.ofEpochMilli(createTime)) +
-                ", tradeSide=" + tradeSide +
-                ", currentPrice=" + currentPrice +
-                ", targetPrice=" + targetPrice +
-                ", stopPrice=" + stopPrice +
-                ", isExpire=" + isExpire +
-                '}';
+    public String getKlineStreamKey() {
+        return KLine.getKLineStreamKey(symbol, interval);
     }
 }

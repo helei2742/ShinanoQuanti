@@ -60,8 +60,8 @@
 	<!-- Flink specific logging configuration -->
 	<!-- 将 Flink 日志设置为 WARN 或关闭 -->
 	<logger name="org.apache.flink" level="WARN"/>
-	<logger name="org.apache.flink.runtime" level="OFF"/>
-	<logger name="org.apache.flink.connector" level="OFF"/>
+	<logger name="org.apache.flink.runtime" level="ERRor"/>
+	<logger name="org.apache.flink.connector" level="ERRor"/>
 	<root level="INFO">
 		<appender-ref ref="STDOUT" />
 		<appender-ref ref="INFO_FILE" />
