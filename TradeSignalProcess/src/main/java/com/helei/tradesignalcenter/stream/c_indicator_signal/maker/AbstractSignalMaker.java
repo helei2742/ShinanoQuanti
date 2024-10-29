@@ -1,8 +1,8 @@
-package com.helei.tradesignalcenter.stream.c_signal.maker;
+package com.helei.tradesignalcenter.stream.c_indicator_signal.maker;
 
 import cn.hutool.core.util.BooleanUtil;
+import com.helei.dto.IndicatorSignal;
 import com.helei.dto.KLine;
-import com.helei.dto.TradeSignal;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.flink.api.common.functions.OpenContext;
 import org.apache.flink.api.common.state.ValueState;
@@ -25,7 +25,7 @@ import java.io.IOException;
  * 实时数据，用于决策是否产出信号
  */
 @Slf4j
-public abstract class AbstractSignalMaker extends KeyedProcessFunction<String, KLine, TradeSignal> {
+public abstract class AbstractSignalMaker extends KeyedProcessFunction<String, KLine, IndicatorSignal> {
 
     /**
      * 是否是一条k线只发出一个信号
@@ -70,35 +70,32 @@ public abstract class AbstractSignalMaker extends KeyedProcessFunction<String, K
     }
 
     @Override
-    public void processElement(KLine kLine, KeyedProcessFunction<String, KLine, TradeSignal>.Context context, Collector<TradeSignal> collector) throws Exception {
+    public void processElement(KLine kLine, KeyedProcessFunction<String, KLine, IndicatorSignal>.Context context, Collector<IndicatorSignal> collector) throws Exception {
 
         //更新历史k，实时k
         updateCurKLine(kLine, context.timerService().currentProcessingTime());
 
         try {
 
-            TradeSignal tradeSignal;
+            IndicatorSignal indicatorSignal;
 
             if (BooleanUtil.isTrue(kLine.isEnd())) { //历史k线发出的信号打上标识
-                tradeSignal = resolveHistoryKLine(kLine, context.timerService());
+                indicatorSignal = resolveHistoryKLine(kLine, context.timerService());
             } else {
-                tradeSignal = resolveRealTimeKLine(kLine, context.timerService());
+                indicatorSignal = resolveRealTimeKLine(kLine, context.timerService());
             }
-            if (tradeSignal == null) return;
+            if (indicatorSignal == null) return;
 
-            setSignalCreateTIme(tradeSignal, context.timerService().currentProcessingTime());
+            setSignalCreateTIme(indicatorSignal, context.timerService().currentProcessingTime());
 
-            tradeSignal.setSymbol(kLine.getSymbol());
-            tradeSignal.setInterval(kLine.getKLineInterval());
-            tradeSignal.setEnd(kLine.isEnd());
-            tradeSignal.setCloseTime(kLine.getCloseTime());
+            indicatorSignal.setKLine(kLine);
 
 //            if (isAKLineSendOneSignal && BooleanUtil.isTrue(isCurSendSignal.value())) {
 //                //当前k线发送过信号
 //                log.debug("this kLine sent signal, cancel send this time");
 //            } else {
 //                isCurSendSignal.update(true);
-            collector.collect(tradeSignal);
+            collector.collect(indicatorSignal);
 
 //                log.debug("signal maker send a signal: [{}]", tradeSignal);
 //            }
@@ -110,13 +107,13 @@ public abstract class AbstractSignalMaker extends KeyedProcessFunction<String, K
 
 
     @Override
-    public void onTimer(long timestamp, KeyedProcessFunction<String, KLine, TradeSignal>.OnTimerContext ctx, Collector<TradeSignal> out) throws Exception {
-        TradeSignal tradeSignal = onTimerInvoke();
-        if (tradeSignal != null) {
-            log.info("signal maker send a timer signal: [{}]", tradeSignal);
+    public void onTimer(long timestamp, KeyedProcessFunction<String, KLine, IndicatorSignal>.OnTimerContext ctx, Collector<IndicatorSignal> out) throws Exception {
+        IndicatorSignal indicatorSignal = onTimerInvoke();
+        if (indicatorSignal != null) {
+            log.info("signal maker send a timer signal: [{}]", indicatorSignal);
 
-            tradeSignal.setCreateTime(tradeSignal.isEnd() ? tradeSignal.getCloseTime() : ctx.timerService().currentProcessingTime());
-            out.collect(tradeSignal);
+            indicatorSignal.setCreateTime(indicatorSignal.getKLine().isEnd() ? indicatorSignal.getKLine().getCloseTime() : ctx.timerService().currentProcessingTime());
+            out.collect(indicatorSignal);
         }
     }
 
@@ -136,7 +133,7 @@ public abstract class AbstractSignalMaker extends KeyedProcessFunction<String, K
      * @param kLine        已完结的k线数据
      * @param timerService timerService
      */
-    protected abstract TradeSignal resolveHistoryKLine(KLine kLine, TimerService timerService) throws Exception;
+    protected abstract IndicatorSignal resolveHistoryKLine(KLine kLine, TimerService timerService) throws Exception;
 
     /**
      * 产生信号
@@ -145,7 +142,7 @@ public abstract class AbstractSignalMaker extends KeyedProcessFunction<String, K
      * @param timerService timerService
      * @return 交易信号
      */
-    protected abstract TradeSignal resolveRealTimeKLine(KLine kLine, TimerService timerService) throws Exception;
+    protected abstract IndicatorSignal resolveRealTimeKLine(KLine kLine, TimerService timerService) throws Exception;
 
 
     /**
@@ -154,7 +151,7 @@ public abstract class AbstractSignalMaker extends KeyedProcessFunction<String, K
      * @return TradeSignal
      * @throws IOException IOException
      */
-    protected TradeSignal onTimerInvoke() throws Exception {
+    protected IndicatorSignal onTimerInvoke() throws Exception {
         return null;
     }
 
@@ -190,7 +187,7 @@ public abstract class AbstractSignalMaker extends KeyedProcessFunction<String, K
      * @param currentTime 当前时间
      * @return 创建时间
      */
-    public long setSignalCreateTIme(TradeSignal tradeSignal, long currentTime) throws IOException {
+    public long setSignalCreateTIme(IndicatorSignal indicatorSignal, long currentTime) throws IOException {
         Tuple2<Long, Long> timebase = timebaseState.value();
         if (timebase == null) {
             log.error("获取timebase错误，当前timebase不应为null");
@@ -198,9 +195,8 @@ public abstract class AbstractSignalMaker extends KeyedProcessFunction<String, K
         }
         long createTime = (long) timebase.getField(0) + (currentTime - (long) timebase.getField(1));
         //设置创建时间, 历史k线得到的信号，时间为这个k的结束时间
-        tradeSignal.setCreateTime(createTime);
+        indicatorSignal.setCreateTime(createTime);
 
         return createTime;
     }
 }
-

@@ -75,7 +75,7 @@ public class KLine implements Serializable {
     /**
      * k线频率
      */
-    private String kLineInterval;
+    private KLineInterval kLineInterval;
 
     /**
      * 存放各种指标以及他的值
@@ -92,14 +92,11 @@ public class KLine implements Serializable {
      * @return stream流名称
      */
     public String getStreamKey() {
-        if (kLineInterval == null) {
-            System.out.println("---");
-        }
-        return symbol + "@kline_" + kLineInterval;
+        return  getKLineStreamKey(symbol, kLineInterval);
     }
 
-    public static String getKLineStreamKey(String symbol, String kLineInterval) {
-        return symbol + "@kline_" + kLineInterval;
+    public static String getKLineStreamKey(String symbol, KLineInterval kLineInterval) {
+        return symbol + "@kline_" + kLineInterval.getDescribe();
     }
 
     @Override
@@ -122,12 +119,4 @@ public class KLine implements Serializable {
         return KLine.builder().symbol(symbol).open(open).close(close).high(high).low(low).volume(volume).openTime(openTime).closeTime(closeTime).end(end).indicators(indicators).kLineInterval(kLineInterval).build();
     }
 
-    public void setKLineInterval(KLineInterval interval) {
-        this.kLineInterval = interval.getDescribe();
-    }
-
-    public void setKLineInterval(String interval) {
-        this.kLineInterval = interval;
-    }
 }
-

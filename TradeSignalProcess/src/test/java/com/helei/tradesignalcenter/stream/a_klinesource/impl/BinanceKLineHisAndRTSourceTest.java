@@ -3,7 +3,6 @@ package com.helei.tradesignalcenter.stream.a_klinesource.impl;
 import com.helei.constants.KLineInterval;
 import com.helei.dto.KLine;
 import com.helei.tradesignalcenter.config.FlinkConfig;
-import com.helei.tradesignalcenter.constants.KLineTypeInfo;
 import org.apache.flink.api.common.functions.OpenContext;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
@@ -37,7 +36,7 @@ class BinanceKLineHisAndRTSourceTest {
                 LocalDateTime.of(2024, 10, 27, 21, 0).toInstant(ZoneOffset.UTC).toEpochMilli()
         );
 
-        DataStream<KLine> stream = env.addSource(source).returns(new KLineTypeInfo());
+        DataStream<KLine> stream = env.addSource(source);
 
         stream.process(new ProcessFunction<KLine, Object>() {
             @Override
@@ -48,7 +47,7 @@ class BinanceKLineHisAndRTSourceTest {
             @Override
             public void processElement(KLine kLine, ProcessFunction<KLine, Object>.Context context, Collector<Object> collector) throws Exception {
 //                if (BooleanUtil.isFalse(kLine.isEnd())) {
-                    System.out.println(kLine);
+                System.out.println(kLine);
 //                }
             }
         }).setParallelism(1);

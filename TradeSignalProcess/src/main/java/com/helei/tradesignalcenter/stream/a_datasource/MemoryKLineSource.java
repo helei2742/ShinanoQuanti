@@ -10,6 +10,7 @@ import com.helei.constants.WebSocketStreamParamKey;
 import com.helei.dto.KLine;
 
 import com.helei.binanceapi.supporter.KLineMapper;
+import com.helei.tradesignalcenter.stream.a_klinesource.HistoryKLineLoader;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.flink.api.common.functions.OpenContext;
 

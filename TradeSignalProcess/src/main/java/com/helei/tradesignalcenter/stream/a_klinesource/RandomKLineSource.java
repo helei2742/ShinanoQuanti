@@ -1,14 +1,12 @@
-package com.helei.tradesignalcenter.stream.a_datasource;
+package com.helei.tradesignalcenter.stream.a_klinesource;
 
 import com.helei.constants.KLineInterval;
 import com.helei.dto.IndicatorMap;
 import com.helei.dto.KLine;
-import com.helei.tradesignalcenter.stream.a_klinesource.KLineHisAndRTSource;
 import org.apache.flink.configuration.Configuration;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.HashMap;
 import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.*;
@@ -78,7 +76,7 @@ public class RandomKLineSource extends KLineHisAndRTSource {
 
 
         KLine kLine = new KLine(symbol, nextOpen, nextClose, nextHigh, nextLow, volume, openTime,
-                openTime + plus - 1000, !isRealTime, kLineInterval.getDescribe(), new IndicatorMap());
+                openTime + plus - 1000, !isRealTime, kLineInterval, new IndicatorMap());
         return kLine;
     }
 
@@ -108,4 +106,3 @@ public class RandomKLineSource extends KLineHisAndRTSource {
     }
 
 }
-

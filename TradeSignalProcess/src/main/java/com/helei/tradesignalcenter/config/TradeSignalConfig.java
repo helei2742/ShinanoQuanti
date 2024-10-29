@@ -71,8 +71,12 @@ public class TradeSignalConfig implements Serializable {
 
     private TradeSignalConfig() {}
 
+    /**
+     * 获取最终交易信号写入到kafka到topic
+     * @return topic
+     */
     public String getSinkTopic() {
-        return run_env.name() + "." + trade_type + "." + symbol + "." + name;
+        return (run_env.name() + "." + trade_type + "." + symbol + "." + name).toLowerCase();
     }
 
 
@@ -88,6 +92,21 @@ public class TradeSignalConfig implements Serializable {
 
     @Data
     public static class RealtimeKafkaConfig  implements Serializable  {
+
+        /**
+         * 输入的配置
+         */
+        private KafkaServerConfig input;
+
+        /**
+         * 输出的配置
+         */
+        private KafkaServerConfig output;
+
+    }
+
+    @Data
+    public static class KafkaServerConfig  implements Serializable  {
         /**
          * kafka集群连接地址
          */
@@ -97,6 +116,11 @@ public class TradeSignalConfig implements Serializable {
          * 消费者组名
          */
         private String groupId;
+
+        /**
+         * 事务超时时间，需要比kafka broker 中设置的小
+         */
+        private String transaction_timeout_ms;
     }
 
     @Data
@@ -115,4 +139,5 @@ public class TradeSignalConfig implements Serializable {
     public static void main(String[] args) {
         System.out.println(TRADE_SIGNAL_CONFIG);
     }
+
 }

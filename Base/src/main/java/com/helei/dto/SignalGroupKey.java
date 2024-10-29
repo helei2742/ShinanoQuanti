@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class SignalGroupKey {
     private String symbol;
 
-    private String interval;
+    private KLineInterval interval;
 
     public String getStreamKey() {
         return KLine.getKLineStreamKey(symbol, interval);

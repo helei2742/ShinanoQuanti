@@ -2,11 +2,15 @@ package com.helei.dto.indicator;
 
 import lombok.*;
 
+        import java.io.Serial;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
 public class MACD implements Indicator {
+    @Serial
+    private static final long serialVersionUID = -5187464594186468L; // 显式声明 serialVersionUID
 
     private Double ema1 = 0.0;
 

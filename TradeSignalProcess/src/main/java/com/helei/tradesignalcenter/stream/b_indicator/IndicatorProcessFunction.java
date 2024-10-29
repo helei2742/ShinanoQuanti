@@ -66,26 +66,7 @@ public class IndicatorProcessFunction extends KeyedProcessFunction<String, KLine
             futures.add(future);
         }
 
-        CompletableFuture
-                .allOf(futures.toArray(new CompletableFuture[0]))
-                .whenComplete((v, e) -> {
-                    if (e != null) {
-                        log.error("计算指标发生错误", e);
-                    } else {
-                        collector.collect(kLine);
-                    }
-                });
-//        Double ma = this.maState.value();
-//        Double close = kLine.getClose();
-//
-//        if (ma == null) {
-//            ma = close;
-//        }
-//
-//        ma = CalculatorUtil.calculateMA(close, ma, period);
-//
-//        maState.update(ma);
-//
-//        kLine.getIndicators().put(new MAConfig(15),  new MA(ma));
+        futures.forEach(CompletableFuture::join);
+        collector.collect(kLine);
     }
 }

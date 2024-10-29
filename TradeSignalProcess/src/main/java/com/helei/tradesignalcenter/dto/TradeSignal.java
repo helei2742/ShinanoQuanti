@@ -14,12 +14,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @EqualsAndHashCode
 @Builder
-public class OriginOrder {
-
-    /**
-     * 系统中的订单id
-     */
-    private String orderId;
+public class TradeSignal {
 
     /**
      * 交易对
@@ -45,6 +40,16 @@ public class OriginOrder {
      * 止损价格
      */
     private BigDecimal stopPrice;
+
+    /**
+     * 信号创建时间戳
+     */
+    private long createTimestamp;
+
+    /**
+     * 信号创建的k线open时间
+     */
+    private long createKLineOpenTimestamp;
 }
 
 

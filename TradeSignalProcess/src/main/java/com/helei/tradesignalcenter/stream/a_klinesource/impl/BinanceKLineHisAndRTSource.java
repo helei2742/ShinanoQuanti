@@ -9,7 +9,7 @@ import com.helei.constants.KLineInterval;
 import com.helei.constants.TradeType;
 import com.helei.dto.KLine;
 import com.helei.tradesignalcenter.constants.RunEnv;
-import com.helei.tradesignalcenter.stream.a_datasource.HistoryKLineLoader;
+import com.helei.tradesignalcenter.stream.a_klinesource.HistoryKLineLoader;
 import com.helei.tradesignalcenter.stream.a_klinesource.KLineHisAndRTSource;
 import com.helei.tradesignalcenter.stream.a_klinesource.KafkaRealTimeSourceFactory;
 import lombok.extern.slf4j.Slf4j;
@@ -44,7 +44,7 @@ public class BinanceKLineHisAndRTSource extends KLineHisAndRTSource {
     /**
      * 已加载完毕的历史k线
      */
-    private transient ConcurrentHashSet<String> historyLoadedIntervals;
+    private transient ConcurrentHashSet<KLineInterval> historyLoadedIntervals;
 
     /**
      * binance api config
@@ -100,7 +100,7 @@ public class BinanceKLineHisAndRTSource extends KLineHisAndRTSource {
                             log.error("加载历史k线数据出错", e);
                             System.exit(-1);
                         }
-                        return interval.getDescribe();
+                        return interval;
                     }, executor)
                     .thenAcceptAsync(itv -> {
                         //Step 2.2: 历史k线获取完毕后记录状态
@@ -130,7 +130,7 @@ public class BinanceKLineHisAndRTSource extends KLineHisAndRTSource {
                 for (ConsumerRecord<String, KLine> record : records) {
                     KLine kline = record.value();
                     // 只有当历史k线数据加载完毕，才会向写入buffer中加入实时数据
-                    String kLineInterval = kline.getKLineInterval();
+                    KLineInterval kLineInterval = kline.getKLineInterval();
                     if ((kLineInterval != null && historyLoadedIntervals.contains(kLineInterval))) {
                         buffer.add(kline);
                     }

@@ -10,6 +10,7 @@ import com.helei.binanceapi.constants.WebSocketStreamType;
 import com.helei.binanceapi.dto.StreamSubscribeEntity;
 import com.helei.binanceapi.supporter.KLineMapper;
 import com.helei.dto.KLine;
+import com.helei.tradesignalcenter.stream.a_klinesource.HistoryKLineLoader;
 import com.helei.tradesignalcenter.util.KLineBuffer;
 import com.helei.util.CustomBlockingQueue;
 import lombok.extern.slf4j.Slf4j;
@@ -136,7 +137,7 @@ public class MemoryKLineDataPublisher implements KLineDataPublisher {
                             .invocationHandler((streamName, result) -> {
                                 //分发订阅的k线
                                 KLine kLine = KLineMapper.mapJsonToKLine(result);
-                                kLine.setKLineInterval(kLineInterval.getDescribe());
+                                kLine.setKLineInterval(kLineInterval);
                                 dispatchKLineData(key, kLine);
                             })
                             .callbackExecutor(publishExecutor)
@@ -189,7 +190,7 @@ public class MemoryKLineDataPublisher implements KLineDataPublisher {
                 kLineList -> {
                     try {
                         for (KLine kLine : kLineList) {
-                            kLine.setKLineInterval(interval.getDescribe());
+                            kLine.setKLineInterval(interval);
                             kb.put(kLine);
                         }
                     } catch (InterruptedException e) {

@@ -3,19 +3,20 @@ package com.helei.dto;
 import com.helei.dto.indicator.Indicator;
 import com.helei.dto.indicator.config.IndicatorConfig;
 import lombok.Getter;
-import lombok.ToString;
+import lombok.Setter;
 
-import java.util.HashMap;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
-@ToString
+@Setter
+@Getter
 public class IndicatorMap {
 
-    @Getter
-    private final HashMap<String, Indicator> map;
+    private final ConcurrentHashMap<String, Indicator> map;
 
 
     public IndicatorMap() {
-        this.map = new HashMap<>();
+        this.map = new ConcurrentHashMap<>();
     }
 
 
@@ -30,5 +31,10 @@ public class IndicatorMap {
         map.put(indicatorConfig.getIndicatorName(), indicator);
     }
 
-
+    @Override
+    public String toString() {
+        return "IndicatorMap{" +
+                "map=" + map +
+                '}';
+    }
 }

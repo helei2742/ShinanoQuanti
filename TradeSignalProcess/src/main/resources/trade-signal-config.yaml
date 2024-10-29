@@ -2,6 +2,10 @@ shinano:
   quantity:
     # 信号生成服务配置
     trade_signal_maker:
+      # name
+      name: test
+      # symbol
+      symbol: btcusdt
       # 运行环境
       run_env: NORMAL
       # 交易类型
@@ -14,8 +18,16 @@ shinano:
       realtime:
         # kafka配置
         kafka:
-          bootstrapServer: 192.168.1.2:9092
-          groupId: trade_signal_app_test
+          input:
+            bootstrapServer: 192.168.1.2:9092
+            groupId: trade_signal_app_test
+            transaction_timeout_ms: 900000
+
+          output:
+            bootstrapServer: 192.168.1.2:9092
+            groupId: trade_signal_app_test
+            transaction_timeout_ms: 900000
+
         # flink配置
         flink:
           jobManagerHost: 192.168.1.2

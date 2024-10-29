@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
@@ -15,7 +16,7 @@ import java.time.ZoneOffset;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class TrendLine {
+public class TrendLine implements Serializable {
     private double k;
     private double m;
 

@@ -65,8 +65,8 @@ public class KafkaRealTimeSourceFactory {
                 .map(interval -> KafkaUtil.resolveKafkaTopic(cexType, KafkaUtil.getKLineStreamName(symbol, interval), tradeType))
                 .toList();
 
-        String bootstrapServer = realtimeKafkaConfig.getBootstrapServer();
-        String groupId = realtimeKafkaConfig.getGroupId();
+        String bootstrapServer = realtimeKafkaConfig.getInput().getBootstrapServer();
+        String groupId = realtimeKafkaConfig.getInput().getGroupId();
 
         Properties properties = new Properties();
         properties.setProperty(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServer);

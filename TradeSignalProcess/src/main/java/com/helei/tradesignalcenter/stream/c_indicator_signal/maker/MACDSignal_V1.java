@@ -1,8 +1,8 @@
-package com.helei.tradesignalcenter.stream.c_signal.maker;
+package com.helei.tradesignalcenter.stream.c_indicator_signal.maker;
 
 import com.helei.constants.TradeSide;
+import com.helei.dto.IndicatorSignal;
 import com.helei.dto.KLine;
-import com.helei.dto.TradeSignal;
 import com.helei.dto.indicator.MACD;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.flink.api.common.functions.OpenContext;
@@ -48,7 +48,7 @@ public class MACDSignal_V1 extends AbstractSignalMaker {
 
 
     @Override
-    protected TradeSignal resolveHistoryKLine(KLine kLine, TimerService timerService) throws IOException {
+    protected IndicatorSignal resolveHistoryKLine(KLine kLine, TimerService timerService) throws IOException {
         MACD lastMACD = this.lastMACD.value();
 
         MACD currentMACD = (MACD) kLine.getIndicators().getIndicator(macdName);
@@ -74,7 +74,7 @@ public class MACDSignal_V1 extends AbstractSignalMaker {
     }
 
     @Override
-    protected TradeSignal resolveRealTimeKLine(KLine kLine, TimerService timerService) throws IOException {
+    protected IndicatorSignal resolveRealTimeKLine(KLine kLine, TimerService timerService) throws IOException {
 
         MACD currentMACD = (MACD) kLine.getIndicators().getIndicator(macdName);
         MACD lastMACD = this.lastMACD.value();
@@ -96,7 +96,7 @@ public class MACDSignal_V1 extends AbstractSignalMaker {
      * @param acrossState 交叉形态
      * @return 信号，不适合产生信号则返回null
      */
-    private TradeSignal trySendSignal(KLine kLine, boolean under, int acrossState) throws IOException {
+    private IndicatorSignal trySendSignal(KLine kLine, boolean under, int acrossState) throws IOException {
         // 水下第二次金叉，产出买入信号
         if (under && acrossState == 1 && getUnderGoldAcrossCount() == 1) {
             return sendSignal(kLine, TradeSide.BUY);
@@ -116,8 +116,8 @@ public class MACDSignal_V1 extends AbstractSignalMaker {
      * @return signal
      * @throws IOException IOException
      */
-    private TradeSignal sendSignal(KLine kLine, TradeSide tradeSide) throws IOException {
-        TradeSignal signal = TradeSignal
+    private IndicatorSignal sendSignal(KLine kLine, TradeSide tradeSide) throws IOException {
+        IndicatorSignal signal = IndicatorSignal
                 .builder()
                 .name(macdName)
                 .tradeSide(tradeSide)

@@ -1,8 +1,8 @@
 package com.helei.tradesignalcenter.stream.d_decision;
 
 import com.helei.dto.IndicatorMap;
+import com.helei.dto.IndicatorSignal;
 import com.helei.dto.SignalGroupKey;
-import com.helei.dto.TradeSignal;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -22,14 +22,14 @@ import java.util.List;
 @Slf4j
 @Getter
 @Setter
-public abstract class AbstractDecisionMaker<T> extends KeyedProcessFunction<String, Tuple2<SignalGroupKey, List<TradeSignal>>, T> {
+public abstract class AbstractDecisionMaker<T> extends KeyedProcessFunction<String, Tuple2<SignalGroupKey, List<IndicatorSignal>>, T> {
 
     private final String name;
 
     /**
      * 存放历史信号
      */
-    private MapState<String, Tuple2<SignalGroupKey, List<TradeSignal>>> historySignalMapState;
+    private MapState<String, Tuple2<SignalGroupKey, List<IndicatorSignal>>> historySignalMapState;
 
     protected AbstractDecisionMaker(String name) {
         this.name = name;
@@ -42,16 +42,16 @@ public abstract class AbstractDecisionMaker<T> extends KeyedProcessFunction<Stri
     }
 
     @Override
-    public void processElement(Tuple2<SignalGroupKey, List<TradeSignal>> kLineListTuple2, KeyedProcessFunction<String, Tuple2<SignalGroupKey, List<TradeSignal>>, T>.Context context, Collector<T> collector) throws Exception {
+    public void processElement(Tuple2<SignalGroupKey, List<IndicatorSignal>> kLineListTuple2, KeyedProcessFunction<String, Tuple2<SignalGroupKey, List<IndicatorSignal>>, T>.Context context, Collector<T> collector) throws Exception {
 
         SignalGroupKey key = kLineListTuple2.getField(0);
         String symbol = key.getSymbol();
-        List<TradeSignal> signals = kLineListTuple2.getField(1);
+        List<IndicatorSignal> signals = kLineListTuple2.getField(1);
 
         if (signals.isEmpty()) {
             log.debug("[{}] - symbol[{}]时间窗口内没有信号", symbol, name);
         } else {
-            log.info("[{}] - symbol[{}]当前时间窗口，产生[{}]个信号", name, signals, signals.size());
+            log.debug("[{}] - symbol[{}]当前时间窗口，产生[{}]个信号", name, signals, signals.size());
             T out = decisionAndBuilderOrder(symbol, signals, null);
 
             //更新历史信号
@@ -64,7 +64,7 @@ public abstract class AbstractDecisionMaker<T> extends KeyedProcessFunction<Stri
         }
     }
 
-    protected abstract T decisionAndBuilderOrder(String symbol, List<TradeSignal> windowSignal, IndicatorMap indicatorMap);
+    protected abstract T decisionAndBuilderOrder(String symbol, List<IndicatorSignal> windowSignal, IndicatorMap indicatorMap);
 
     /**
      * 取历史信号
@@ -72,7 +72,7 @@ public abstract class AbstractDecisionMaker<T> extends KeyedProcessFunction<Stri
      * @return 历史信号
      * @throws Exception
      */
-    private Tuple2<SignalGroupKey, List<TradeSignal>> getHistorySignal(String kLineStreamKey) throws Exception {
+    private Tuple2<SignalGroupKey, List<IndicatorSignal>> getHistorySignal(String kLineStreamKey) throws Exception {
         return historySignalMapState.get(kLineStreamKey);
     }
 }

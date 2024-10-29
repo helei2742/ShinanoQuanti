@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -17,6 +18,10 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class PST implements Indicator, Serializable {
+
+    @Serial
+    private static final long serialVersionUID = -1451638498435687779L; // 显式声明 serialVersionUID
+
 
     /**
      * 压力线

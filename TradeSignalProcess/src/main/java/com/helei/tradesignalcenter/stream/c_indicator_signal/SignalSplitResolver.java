@@ -1,12 +1,11 @@
-package com.helei.tradesignalcenter.stream.c_signal;
+package com.helei.tradesignalcenter.stream.c_indicator_signal;
 
-import com.helei.constants.KLineInterval;
+import com.helei.dto.IndicatorSignal;
 import com.helei.dto.KLine;
 import com.helei.dto.SignalGroupKey;
-import com.helei.dto.TradeSignal;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.flink.api.common.state.*;
-import org.apache.flink.api.common.typeinfo.BasicTypeInfo;
+        import org.apache.flink.api.common.typeinfo.BasicTypeInfo;
 import org.apache.flink.api.common.typeinfo.TypeHint;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
 import org.apache.flink.api.java.tuple.Tuple2;
@@ -22,7 +21,7 @@ import java.util.*;
  * 信号分片器，将信号按照K线进行分组
  */
 @Slf4j
-public class SignalSplitResolver extends KeyedCoProcessFunction<String, KLine, TradeSignal, Tuple2<SignalGroupKey, List<TradeSignal>>> {
+public class SignalSplitResolver extends KeyedCoProcessFunction<String, KLine, IndicatorSignal, Tuple2<SignalGroupKey, List<IndicatorSignal>>> {
 
     /**
      * 发送窗口占k线的比例
@@ -32,7 +31,7 @@ public class SignalSplitResolver extends KeyedCoProcessFunction<String, KLine, T
     /**
      * 存储当前收到的信号
      */
-    private ListState<TradeSignal> timebaseSignalListState;
+    private ListState<IndicatorSignal> timebaseSignalListState;
 
     /**
      * 时间基线
@@ -63,7 +62,7 @@ public class SignalSplitResolver extends KeyedCoProcessFunction<String, KLine, T
 
     @Override
     public void open(Configuration parameters) throws Exception {
-        timebaseSignalListState = getRuntimeContext().getListState(new ListStateDescriptor<>("timebaseSignalListState", TypeInformation.of(TradeSignal.class)));
+        timebaseSignalListState = getRuntimeContext().getListState(new ListStateDescriptor<>("timebaseSignalListState", TypeInformation.of(IndicatorSignal.class)));
         timebaseState = getRuntimeContext().getState(new ValueStateDescriptor<>("timebaseState", TypeInformation.of(new TypeHint<>() {})));
         sendWindowStartState = getRuntimeContext().getState(new ValueStateDescriptor<>("sendWindowStartState", BasicTypeInfo.LONG_TYPE_INFO));
         windowStartState = getRuntimeContext().getState(new ValueStateDescriptor<>("windowStartState", BasicTypeInfo.LONG_TYPE_INFO));
@@ -72,20 +71,20 @@ public class SignalSplitResolver extends KeyedCoProcessFunction<String, KLine, T
 
 
     @Override
-    public void processElement1(KLine kLine, KeyedCoProcessFunction<String, KLine, TradeSignal, Tuple2<SignalGroupKey, List<TradeSignal>>>.Context context, Collector<Tuple2<SignalGroupKey, List<TradeSignal>>> collector) throws Exception {
+    public void processElement1(KLine kLine, KeyedCoProcessFunction<String, KLine, IndicatorSignal, Tuple2<SignalGroupKey, List<IndicatorSignal>>>.Context context, Collector<Tuple2<SignalGroupKey, List<IndicatorSignal>>> collector) throws Exception {
 
         long startTime = getWindowStart(kLine, context.timerService().currentProcessingTime());
 
 
         //获取发送时间窗口内的信号
-        List<TradeSignal> signalList = getOrInitSignalListState();
+        List<IndicatorSignal> signalList = getOrInitSignalListState();
 
-        List<TradeSignal> needSendSignal = new ArrayList<>();
+        List<IndicatorSignal> needSendSignal = new ArrayList<>();
 
 
         Long sendWindowStart = sendWindowStartState.value();
         if (sendWindowStart != null) {
-            for (TradeSignal signal : signalList) {//当前k在基线时间内有信号
+            for (IndicatorSignal signal : signalList) {//当前k在基线时间内有信号
                 //只添加在当前发送窗口的
                 if (signal.getCreateTime() >= sendWindowStart && signal.getCreateTime() <= sendWindowStart + windowLengthState.value()) {
                     needSendSignal.add(signal);
@@ -103,8 +102,8 @@ public class SignalSplitResolver extends KeyedCoProcessFunction<String, KLine, T
 
 
     @Override
-    public void processElement2(TradeSignal signal, KeyedCoProcessFunction<String, KLine, TradeSignal, Tuple2<SignalGroupKey, List<TradeSignal>>>.Context context, Collector<Tuple2<SignalGroupKey, List<TradeSignal>>> collector) throws Exception {
-        List<TradeSignal> signalList = getOrInitSignalListState();
+    public void processElement2(IndicatorSignal signal, KeyedCoProcessFunction<String, KLine, IndicatorSignal, Tuple2<SignalGroupKey, List<IndicatorSignal>>>.Context context, Collector<Tuple2<SignalGroupKey, List<IndicatorSignal>>> collector) throws Exception {
+        List<IndicatorSignal> signalList = getOrInitSignalListState();
         if (signal.getCreateTime() == null) {
             log.warn("信号没有创建时间，将自动丢弃.[{}]", signal);
             return;
@@ -126,7 +125,7 @@ public class SignalSplitResolver extends KeyedCoProcessFunction<String, KLine, T
         //1. 获取窗口长度
         Long sendWindowLength = windowLengthState.value();
         if (sendWindowLength == null) {
-            sendWindowLength = (long) (KLineInterval.STATUS_MAP.get(kLine.getKLineInterval()).getSecond() * groupWindowRatioOfKLine * 1000);
+            sendWindowLength = (long) (kLine.getKLineInterval().getSecond() * groupWindowRatioOfKLine * 1000);
             windowLengthState.update(sendWindowLength);
         }
 
@@ -163,7 +162,7 @@ public class SignalSplitResolver extends KeyedCoProcessFunction<String, KLine, T
      * @param limitTime  limitTime
      * @throws Exception Exception
      */
-    private void updateSignalListState(List<TradeSignal> signalList, Long limitTime) throws Exception {
+    private void updateSignalListState(List<IndicatorSignal> signalList, Long limitTime) throws Exception {
         signalList.removeIf(signal -> signal.getCreateTime() < limitTime);
         timebaseSignalListState.update(signalList);
     }
@@ -175,9 +174,9 @@ public class SignalSplitResolver extends KeyedCoProcessFunction<String, KLine, T
      * @return SignalList
      * @throws Exception SignalList
      */
-    private List<TradeSignal> getOrInitSignalListState() throws Exception {
-        List<TradeSignal> signals = new ArrayList<>();
-        Iterable<TradeSignal> iterable = timebaseSignalListState.get();
+    private List<IndicatorSignal> getOrInitSignalListState() throws Exception {
+        List<IndicatorSignal> signals = new ArrayList<>();
+        Iterable<IndicatorSignal> iterable = timebaseSignalListState.get();
 
         if (iterable == null) {
             timebaseSignalListState.update(signals);
@@ -185,7 +184,7 @@ public class SignalSplitResolver extends KeyedCoProcessFunction<String, KLine, T
         }
 
         iterable.forEach(signals::add);
-        signals.sort(Comparator.comparing(TradeSignal::getCreateTime));
+        signals.sort(Comparator.comparing(IndicatorSignal::getCreateTime));
         return signals;
     }
 }

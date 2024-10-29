@@ -3,7 +3,7 @@ package com.helei.tradesignalcenter.support;
 
 import com.helei.binanceapi.BinanceWSApiClient;
 import com.helei.constants.KLineInterval;
-import com.helei.tradesignalcenter.stream.a_datasource.HistoryKLineLoader;
+import com.helei.tradesignalcenter.stream.a_klinesource.HistoryKLineLoader;
 import com.helei.tradesignalcenter.stream.a_datasource.MemoryKLineDataPublisher;
 import com.helei.tradesignalcenter.stream.a_datasource.MemoryKLineSource;
 import com.helei.dto.KLine;

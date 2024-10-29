@@ -2,9 +2,9 @@ package com.helei.tradesignalcenter.signal;
 
 
 import com.helei.constants.TradeSide;
+import com.helei.dto.IndicatorSignal;
 import com.helei.dto.KLine;
-import com.helei.dto.TradeSignal;
-import com.helei.tradesignalcenter.stream.c_signal.maker.AbstractSignalMaker;
+import com.helei.tradesignalcenter.stream.c_indicator_signal.maker.AbstractSignalMaker;
 import org.apache.flink.api.common.functions.OpenContext;
 import org.apache.flink.streaming.api.TimerService;
 
@@ -19,8 +19,8 @@ public class TestSignalMaker extends AbstractSignalMaker {
     }
 
     @Override
-    protected TradeSignal resolveHistoryKLine(KLine kLine, TimerService timerService) throws Exception {
-        return TradeSignal.builder()
+    protected IndicatorSignal resolveHistoryKLine(KLine kLine, TimerService timerService) throws Exception {
+        return IndicatorSignal.builder()
                 .name("测试用信号")
                 .description("测试用信号")
                 .tradeSide(TradeSide.BUY)
@@ -31,7 +31,7 @@ public class TestSignalMaker extends AbstractSignalMaker {
     }
 
     @Override
-    protected TradeSignal resolveRealTimeKLine(KLine kLine, TimerService timerService) throws Exception {
-        return TradeSignal.builder().name("测试用信号").tradeSide(TradeSide.BUY).build();
+    protected IndicatorSignal resolveRealTimeKLine(KLine kLine, TimerService timerService) throws Exception {
+        return IndicatorSignal.builder().name("测试用信号").tradeSide(TradeSide.BUY).build();
     }
 }

@@ -1,8 +1,8 @@
-package com.helei.tradesignalcenter.stream.c_signal.maker;
+package com.helei.tradesignalcenter.stream.c_indicator_signal.maker;
 
 import com.helei.constants.TradeSide;
 import com.helei.dto.KLine;
-import com.helei.dto.TradeSignal;
+import com.helei.dto.IndicatorSignal;
 import com.helei.dto.indicator.Boll;
 import com.helei.dto.indicator.config.BollConfig;
 import lombok.extern.slf4j.Slf4j;
@@ -28,13 +28,13 @@ public class BollSignalMaker extends AbstractSignalMaker {
 
 
     @Override
-    protected TradeSignal resolveHistoryKLine(KLine kLine, TimerService timerService) throws IOException {
-        TradeSignal tradeSignal = tryBuildUpDownSignal(kLine);
-        return tradeSignal == null ? tryBuildCenterSignal(kLine) : tradeSignal;
+    protected IndicatorSignal resolveHistoryKLine(KLine kLine, TimerService timerService) throws IOException {
+        IndicatorSignal indicatorSignal = tryBuildUpDownSignal(kLine);
+        return indicatorSignal == null ? tryBuildCenterSignal(kLine) : indicatorSignal;
     }
 
     @Override
-    protected TradeSignal resolveRealTimeKLine(KLine kLine, TimerService timerService) throws IOException {
+    protected IndicatorSignal resolveRealTimeKLine(KLine kLine, TimerService timerService) throws IOException {
         return tryBuildUpDownSignal(kLine);
     }
 
@@ -44,7 +44,7 @@ public class BollSignalMaker extends AbstractSignalMaker {
      * @param kLine kLine
      * @return TradeSignal
      */
-    private TradeSignal tryBuildUpDownSignal(KLine kLine) throws IOException {
+    private IndicatorSignal tryBuildUpDownSignal(KLine kLine) throws IOException {
 
         Boll boll = kLine.getIndicator(bollConfig);
         if (boll == null) return null;
@@ -71,7 +71,7 @@ public class BollSignalMaker extends AbstractSignalMaker {
      * @param kLine kLine
      * @return TradeSignal
      */
-    private TradeSignal tryBuildCenterSignal(KLine kLine) {
+    private IndicatorSignal tryBuildCenterSignal(KLine kLine) {
         Boll curBoll = kLine.getIndicator(bollConfig);
         if (curBoll == null) return null;
 
@@ -86,8 +86,8 @@ public class BollSignalMaker extends AbstractSignalMaker {
         return null;
     }
 
-    private TradeSignal buildSignal(KLine kLine, TradeSide tradeSide, String description, double target, double stop) {
-        return TradeSignal.builder()
+    private IndicatorSignal buildSignal(KLine kLine, TradeSide tradeSide, String description, double target, double stop) {
+        return IndicatorSignal.builder()
                 .name(bollConfig.getIndicatorName())
                 .description(description)
                 .tradeSide(tradeSide)
