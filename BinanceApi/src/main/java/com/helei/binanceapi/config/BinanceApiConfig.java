@@ -2,12 +2,14 @@ package com.helei.binanceapi.config;
 
 
 import com.helei.constants.CEXType;
+import com.helei.constants.RunEnv;
 import com.helei.constants.TradeType;
 import lombok.Data;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.InputStream;
 import java.io.Serializable;
+import java.net.InetSocketAddress;
 import java.util.Map;
 
 @Data
@@ -21,6 +23,8 @@ public class BinanceApiConfig implements Serializable {
     private BinanceURL test_net;
 
     private BinanceURL normal;
+
+    private InetSocketAddress proxy;
 
     static {
         Yaml yaml = new Yaml();
@@ -40,6 +44,18 @@ public class BinanceApiConfig implements Serializable {
         }
     }
 
+    /**
+     * 获取环境url
+     * @param runEnv runEnv
+     * @param tradeType tradeType
+     * @return BinanceTypedUrl
+     */
+    public BinanceTypedUrl getEnvUrlSet(RunEnv runEnv, TradeType tradeType) {
+        return switch (runEnv) {
+            case NORMAL -> normal.getMarketUrlByTradeType(tradeType);
+            case TEST_NET -> test_net.getMarketUrlByTradeType(tradeType);
+        };
+    }
 
     @Data
     public static class BinanceURL implements Serializable  {
@@ -53,17 +69,17 @@ public class BinanceApiConfig implements Serializable {
          */
         private BinanceTypedUrl u_contract;
 
-//        /**
-//         * 根据交易类型获取市场api
-//         * @param tradeType tradeType
-//         * @return market url
-//         */
-//        public String getMarketUrlByTradeType(TradeType tradeType) {
-//            return switch (tradeType) {
-//                case SPOT -> spot.getWs_market_url();
-//                case CONTRACT -> u_contract.getWs_market_url();
-//            };
-//        }
+        /**
+         * 根据交易类型获取市场api
+         * @param tradeType tradeType
+         * @return market url
+         */
+        public BinanceTypedUrl getMarketUrlByTradeType(TradeType tradeType) {
+            return switch (tradeType) {
+                case SPOT -> spot;
+                case CONTRACT -> u_contract;
+            };
+        }
     }
 
     @Data

@@ -22,4 +22,5 @@ public class ApplicationSpringConfig {
         configs.put("bootstrap.servers", bootstrapServers);  // 确保这里是 bootstrap.servers
         return AdminClient.create(configs);
     }
+
 }

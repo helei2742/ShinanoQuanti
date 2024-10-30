@@ -11,7 +11,7 @@ shinano:
           u_contract:
             rest_api_url: https://testnet.binancefuture.com
             ws_market_url: wss://testnet.binancefuture.com/ws-fapi/v1
-            ws_market_stream_url: wss://stream.binancefuture.com/ws
+            ws_market_stream_url: wss://fstream.binancefuture.com/ws
             ws_account_info_stream_url: wss://fstream.binancefuture.com/ws
         normal:
           spot:
@@ -24,3 +24,7 @@ shinano:
             ws_market_url: wss://ws-fapi.binance.com/ws-fapi/v1
             ws_market_stream_url: wss://fstream.binance.com/ws
             ws_account_info_stream_url: wss://fstream.binance.com/ws
+
+    proxy:
+      hostname: 127.0.0.1
+      port: 7890

@@ -1,7 +1,7 @@
 package com.helei.tradesignalcenter.config;
 
 import com.helei.constants.TradeType;
-import com.helei.tradesignalcenter.constants.RunEnv;
+import com.helei.constants.RunEnv;
 import lombok.Data;
 import org.yaml.snakeyaml.Yaml;
 

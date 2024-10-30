@@ -1,10 +1,6 @@
-package com.helei.tradesignalcenter.constants;
-
-import lombok.Getter;
+package com.helei.constants;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 运行环境

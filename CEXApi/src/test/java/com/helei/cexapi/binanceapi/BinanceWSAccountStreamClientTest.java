@@ -17,6 +17,7 @@ import java.net.InetSocketAddress;
 import java.net.URISyntaxException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -32,7 +33,7 @@ class BinanceWSAccountStreamClientTest {
 
     @BeforeAll
     public static void beforAll() throws URISyntaxException, SSLException, ExecutionException, InterruptedException {
-        apiClient = CEXApiFactory.binanceApiClient(BinanceApiUrl.WS_NORMAL_URL_TEST);
+        apiClient = CEXApiFactory.binanceApiClient(BinanceApiUrl.WS_NORMAL_URL_TEST, "BinanceWSAccountStreamClientTest");
         apiClient.connect().get();
 //        String ak = "TUFsFL4YrBsR4fnBqgewxiGfL3Su5L9plcjZuyRO3cq6M1yuwV3eiNX1LcMamYxz";
 //        String sk = "YsLzVacYo8eOGlZZ7RjznyWVjPHltIXzZJz2BrggCmCUDcW75FyFEv0uKyLBVAuU";
@@ -95,5 +96,6 @@ class BinanceWSAccountStreamClientTest {
 
         AccountEvent accountEvent = null;
 
+        TimeUnit.MINUTES.sleep(100);
     }
 }

@@ -10,9 +10,9 @@ import java.util.List;
 @NoArgsConstructor
 @EqualsAndHashCode
 @ToString
-public class AccountInfo {
+public class AccountBalanceInfo {
 
-    private String uId;
+    private String userId;
 
     private String accountType;
 

@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import javax.net.ssl.SSLException;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -32,14 +33,13 @@ public class BinanceKLineRTDataSyncTask extends KLineRTDataSyncTask {
     private final String url;
 
 
-
     public BinanceKLineRTDataSyncTask(
             List<Pair<String, KLineInterval>> listenKLines,
             String url
-    ) throws URISyntaxException, SSLException {
+    ) {
         super(listenKLines);
         this.url = url;
-        streamApiClient = CEXApiFactory.binanceApiClient(url);
+        streamApiClient = CEXApiFactory.binanceApiClient(url, "币安k线实时获取任务-" + UUID.randomUUID().toString().substring(0, 8));
     }
 
 

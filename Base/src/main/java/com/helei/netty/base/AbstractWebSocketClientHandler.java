@@ -97,12 +97,12 @@ public abstract class AbstractWebSocketClientHandler<P, T> extends SimpleChannel
                 whenReceiveMessage(textFrame.text());
 
             } else if (frame instanceof PongWebSocketFrame) {
-                log.info("WebSocket Client [{}] received pong", ch.attr(NettyConstants.CLIENT_NAME).get());
+                log.debug("WebSocket Client [{}] received pong", ch.attr(NettyConstants.CLIENT_NAME).get());
             } else if (frame instanceof PingWebSocketFrame) {
-                log.info("WebSocket Client [{}] received ping", ch.attr(NettyConstants.CLIENT_NAME).get());
+                log.debug("WebSocket Client [{}] received ping", ch.attr(NettyConstants.CLIENT_NAME).get());
                 websocketClient.sendPong();
             } else if (frame instanceof CloseWebSocketFrame) {
-                log.info("websocket client关闭");
+                log.warn("websocket client关闭");
                 ch.close();
             }
         }

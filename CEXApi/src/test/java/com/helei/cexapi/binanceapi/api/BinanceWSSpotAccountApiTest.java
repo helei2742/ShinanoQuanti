@@ -18,7 +18,7 @@ class BinanceWSSpotAccountApiTest {
 
     @BeforeAll
     public static void beforeAll() throws URISyntaxException, SSLException, ExecutionException, InterruptedException {
-        BinanceWSApiClient binanceWSApiClient = CEXApiFactory.binanceApiClient(BinanceApiUrl.WS_NORMAL_URL);
+        BinanceWSApiClient binanceWSApiClient = CEXApiFactory.binanceApiClient(BinanceApiUrl.WS_NORMAL_URL, "BinanceWSSpotAccountApiTest");
         binanceWSSpotAccountApi = binanceWSApiClient.getSpotAccountApi();
         binanceWSApiClient.connect().get();
     }

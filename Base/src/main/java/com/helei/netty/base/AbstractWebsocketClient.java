@@ -336,7 +336,7 @@ public abstract class AbstractWebsocketClient<P, T> {
      * 发送ping
      */
     public void sendPing() {
-        log.info("client [{}] send ping {}", name, url);
+        log.debug("client [{}] send ping {}", name, url);
         channel.writeAndFlush(new PingWebSocketFrame());
     }
 
@@ -344,7 +344,7 @@ public abstract class AbstractWebsocketClient<P, T> {
      * 发送pong
      */
     public void sendPong() {
-        log.info("client [{}] send pong {}", name, url);
+        log.debug("client [{}] send pong {}", name, url);
         channel.writeAndFlush(new PongWebSocketFrame());
     }
 

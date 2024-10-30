@@ -18,6 +18,12 @@ import java.util.function.Consumer;
 @Slf4j
 public class BinanceWSAccountStreamClient extends AbstractBinanceWSApiClient {
 
+
+    /**
+     * stream url
+     */
+    private final String streamUrl;
+
     /**
      * 账户信息的asKey
      */
@@ -50,6 +56,7 @@ public class BinanceWSAccountStreamClient extends AbstractBinanceWSApiClient {
             BinanceWSBaseApi baseApi
     ) throws URISyntaxException {
         super(streamUrl, ipWeightSupporter, null, new BinanceWSAccountStreamClientHandler(whenReceiveEvent));
+        this.streamUrl = streamUrl;
         this.whenReceiveEvent = whenReceiveEvent;
         this.asKey = asKey;
         this.baseApi = baseApi;
@@ -73,10 +80,10 @@ public class BinanceWSAccountStreamClient extends AbstractBinanceWSApiClient {
                         return false;
                     }
                     this.listenKey = listenKey;
-                    super.url = url + "/" + listenKey;
+                    super.url = streamUrl + "/" + listenKey;
                     try {
                         connect().get();
-                        log.info("账户信息流也开启，listenKey = [{}]", listenKey);
+                        log.info("账户信息流已开启，listenKey = [{}]", listenKey);
                         return true;
                     } catch (Exception e) {
                         log.error("连接服务器[{}}发生错误", url, e);
@@ -88,6 +95,7 @@ public class BinanceWSAccountStreamClient extends AbstractBinanceWSApiClient {
 
     /**
      * 延长listenKey的时间
+     *
      * @return future
      */
     public CompletableFuture<String> lengthenListenKey() {
