@@ -34,6 +34,7 @@ public class BinanceWSBaseApi extends AbstractBinanceWSApi {
 
     /**
      * 查询服务端的时间
+     *
      * @param callback callback, 失败则会传入null. 由父类的线程池执行
      */
     public void queryServerTime(Consumer<Long> callback) {
@@ -47,7 +48,7 @@ public class BinanceWSBaseApi extends AbstractBinanceWSApi {
                     log.debug("get server time [{}], request id[{}] success", result, id);
                 } catch (Exception e) {
                     callback.accept(null);
-                    log.error("parse server time error, requestId [{}]", id,e);
+                    log.error("parse server time error, requestId [{}]", id, e);
                 }
             } else {
                 callback.accept(null);
@@ -59,8 +60,9 @@ public class BinanceWSBaseApi extends AbstractBinanceWSApi {
 
     /**
      * 查询交易规范信息,
+     *
      * @param permissions permissions
-     * @param callback callback。失败则会传入null. 由父类的线程池执行
+     * @param callback    callback。失败则会传入null. 由父类的线程池执行
      */
     public void queryExchangeInfo(
             Consumer<JSONObject> callback,
@@ -71,7 +73,8 @@ public class BinanceWSBaseApi extends AbstractBinanceWSApi {
 
     /**
      * 查询交易规范信息,
-     * @param symbols symbols
+     *
+     * @param symbols  symbols
      * @param callback callback。失败则会传入null. 由父类的线程池执行
      */
     public void queryExchangeInfo(
@@ -83,7 +86,8 @@ public class BinanceWSBaseApi extends AbstractBinanceWSApi {
 
     /**
      * 查询交易规范信息, symbol,
-     * @param symbol symbol
+     *
+     * @param symbol   symbol
      * @param callback callback。失败则会传入null. 由父类的线程池执行
      */
     public void queryExchangeInfo(
@@ -96,10 +100,11 @@ public class BinanceWSBaseApi extends AbstractBinanceWSApi {
 
     /**
      * 查询交易规范信息, symbol,symbols,permissions三个参数只能生效一个，从前到后第一个不为空的生效
-     * @param symbol symbol
-     * @param symbols symbols
+     *
+     * @param symbol      symbol
+     * @param symbols     symbols
      * @param permissions permissions
-     * @param callback callback。失败则会传入null. 由父类的线程池执行
+     * @param callback    callback。失败则会传入null. 由父类的线程池执行
      */
     public void queryExchangeInfo(
             String symbol,
@@ -112,11 +117,9 @@ public class BinanceWSBaseApi extends AbstractBinanceWSApi {
         JSONObject jb = new JSONObject();
         if (StrUtil.isNotBlank(symbol)) {
             jb.put("symbol", symbol);
-        }
-        else if (symbols != null && !symbols.isEmpty()) {
+        } else if (symbols != null && !symbols.isEmpty()) {
             jb.put("symbols", symbols);
-        }
-        else if (permissions != null && !permissions.isEmpty()) {
+        } else if (permissions != null && !permissions.isEmpty()) {
             jb.put("permissions", permissions);
         }
         JSONObject command = WebSocketCommandBuilder
@@ -128,53 +131,55 @@ public class BinanceWSBaseApi extends AbstractBinanceWSApi {
     }
 
 
+    /**
+     * 请求listenKey
+     *
+     * @return CompletableFuture<String> listenKey
+     */
+    public CompletableFuture<String> requestListenKey(ASKey asKey) {
+        JSONObject command = WebSocketCommandBuilder.builder()
+                .setCommandType(AccountCommandType.USER_DATA_STREAM_START)
+                .addParam(WebSocketStreamParamKey.API_KEY, asKey.getApiKey())
+                .build();
 
-        /**
-         * 请求listenKey
-         * @return CompletableFuture<String> listenKey
-         */
-        public CompletableFuture<String> requestListenKey(ASKey asKey) {
-            JSONObject command = WebSocketCommandBuilder.builder()
-                    .setCommandType(AccountCommandType.USER_DATA_STREAM_START)
-                    .addParam(WebSocketStreamParamKey.API_KEY, asKey.getApiKey())
-                    .build();
+        log.info("请求获取listenKey， 请求[{}}", command);
+        return binanceWSApiClient.sendRequest(5, command, ASKey.EMPTY_ASKEY)
+                .thenApplyAsync(json -> json.getJSONObject("result").getString("listenKey"));
+    }
 
-            log.info("请求获取listenKey， 请求[{}}", command);
-            return binanceWSApiClient.sendRequest(5, command, ASKey.EMPTY_ASKEY)
-                    .thenApplyAsync(json -> json.getJSONObject("result").getString("listenKey"));
-        }
+    /**
+     * Websocket API延长listenKey有效期
+     * 有效期延长至本次调用后60分钟
+     *
+     * @return CompletableFuture<String> listenKey
+     */
+    public CompletableFuture<String> lengthenListenKey(String listenKey, ASKey asKey) {
+        JSONObject command = WebSocketCommandBuilder.builder()
+                .setCommandType(AccountCommandType.USER_DATA_STREAM_PING)
+                .addParam(WebSocketStreamParamKey.API_KEY, asKey.getApiKey())
+                .addParam(WebSocketStreamParamKey.LISTEN_KEY, listenKey)
+                .build();
 
-        /**
-         * Websocket API延长listenKey有效期
-         * 有效期延长至本次调用后60分钟
-         * @return CompletableFuture<String> listenKey
-         */
-        public CompletableFuture<String> lengthenListenKey(String listenKey, ASKey asKey) {
-            JSONObject command = WebSocketCommandBuilder.builder()
-                    .setCommandType(AccountCommandType.USER_DATA_STREAM_PING)
-                    .addParam(WebSocketStreamParamKey.API_KEY, asKey.getApiKey())
-                    .addParam(WebSocketStreamParamKey.LISTEN_KEY, listenKey)
-                    .build();
+        log.info("请求延长listenKey， 请求[{}}", command);
+        return binanceWSApiClient.sendRequest(5, command, ASKey.EMPTY_ASKEY)
+                .thenApplyAsync(json -> json.getJSONObject("result").getString("listenKey"));
+    }
 
-            log.info("请求获取listenKey， 请求[{}}", command);
-            return binanceWSApiClient.sendRequest(5, command, ASKey.EMPTY_ASKEY)
-                    .thenApplyAsync(json -> json.getJSONObject("result").getString("listenKey"));
-        }
+    /**
+     * Websocket API关闭listenKey
+     *
+     * @return CompletableFuture<String> listenKey
+     */
+    public CompletableFuture<Boolean> closeListenKey(String listenKey, ASKey asKey) {
+        JSONObject command = WebSocketCommandBuilder.builder()
+                .setCommandType(AccountCommandType.USER_DATA_STREAM_CLOSE)
+                .addParam(WebSocketStreamParamKey.API_KEY, asKey.getApiKey())
+                .addParam(WebSocketStreamParamKey.LISTEN_KEY, listenKey)
+                .build();
 
-        /**
-         * Websocket API关闭listenKey
-         * @return CompletableFuture<String> listenKey
-         */
-        public CompletableFuture<Boolean> closeListenKey(String listenKey, ASKey asKey) {
-            JSONObject command = WebSocketCommandBuilder.builder()
-                    .setCommandType(AccountCommandType.USER_DATA_STREAM_CLOSE)
-                    .addParam(WebSocketStreamParamKey.API_KEY, asKey.getApiKey())
-                    .addParam(WebSocketStreamParamKey.LISTEN_KEY, listenKey)
-                    .build();
-
-            log.info("请求获取listenKey， 请求[{}}", command);
-            return binanceWSApiClient.sendRequest(5, command, ASKey.EMPTY_ASKEY)
-                    .thenApplyAsync(json -> json.getInteger("status") == 200);
-        }
+        log.info("请求关闭listenKey， 请求[{}}", command);
+        return binanceWSApiClient.sendRequest(5, command, ASKey.EMPTY_ASKEY)
+                .thenApplyAsync(json -> json.getInteger("status") == 200);
+    }
 
 }

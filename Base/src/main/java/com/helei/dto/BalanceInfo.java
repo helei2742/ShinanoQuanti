@@ -1,13 +1,12 @@
 package com.helei.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AssetInfo {
+public class BalanceInfo {
 
     private String asset;
 

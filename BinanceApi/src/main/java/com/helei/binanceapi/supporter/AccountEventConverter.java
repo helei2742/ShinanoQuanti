@@ -2,11 +2,12 @@ package com.helei.binanceapi.supporter;
 
 import com.alibaba.fastjson.JSONObject;
 import com.helei.binanceapi.constants.TimeInForce;
-import com.helei.binanceapi.constants.order.*;
-import com.helei.binanceapi.constants.strategy.StrategyOPCode;
+import com.helei.binanceapi.constants.order .*;
+        import com.helei.binanceapi.constants.strategy.StrategyOPCode;
 import com.helei.binanceapi.constants.strategy.StrategyStatus;
 import com.helei.binanceapi.constants.strategy.StrategyType;
-import com.helei.binanceapi.dto.accountevent.*;
+import com.helei.binanceapi.dto.accountevent .*;
+        import com.helei.constants.PositionSide;
 import com.helei.constants.TradeSide;
 
 import java.util.ArrayList;
@@ -17,13 +18,13 @@ public interface AccountEventConverter {
 
 
     enum Converter implements AccountEventConverter {
-        LISTEN_KEY_EXPIRED{
+        LISTEN_KEY_EXPIRED {
             @Override
             public AccountEvent convertFromJsonObject(JSONObject jsonObject) {
                 return new ListenKeyExpireEvent(jsonObject.getLong("E"));
             }
         },
-        ACCOUNT_UPDATE{
+        ACCOUNT_UPDATE {
             @Override
             public AccountEvent convertFromJsonObject(JSONObject jsonObject) {
                 BalancePositionUpdateEvent event = new BalancePositionUpdateEvent(jsonObject.getLong("E"));
@@ -63,7 +64,7 @@ public interface AccountEventConverter {
             }
         },
 
-        MARGIN_CALL{
+        MARGIN_CALL {
             @Override
             public AccountEvent convertFromJsonObject(JSONObject jsonObject) {
                 BailNeedEvent event = new BailNeedEvent(jsonObject.getLong("E"));
@@ -85,7 +86,7 @@ public interface AccountEventConverter {
             }
         },
 
-        ORDER_TRADE_UPDATE{
+        ORDER_TRADE_UPDATE {
             @Override
             public AccountEvent convertFromJsonObject(JSONObject jsonObject) {
                 OrderTradeUpdateEvent event = new OrderTradeUpdateEvent(jsonObject.getLong("E"));
@@ -134,7 +135,7 @@ public interface AccountEventConverter {
             }
         },
 
-        TRADE_LITE{
+        TRADE_LITE {
             @Override
             public AccountEvent convertFromJsonObject(JSONObject jsonObject) {
                 OrderTradeUpdateLiteEvent event = new OrderTradeUpdateLiteEvent(jsonObject.getLong("E"));
@@ -153,7 +154,7 @@ public interface AccountEventConverter {
             }
         },
 
-        ACCOUNT_CONFIG_UPDATE{
+        ACCOUNT_CONFIG_UPDATE {
             @Override
             public AccountEvent convertFromJsonObject(JSONObject jsonObject) {
                 AccountConfigUpdateEvent event = new AccountConfigUpdateEvent(jsonObject.getLong("E"));
@@ -178,7 +179,7 @@ public interface AccountEventConverter {
             }
         },
 
-        STRATEGY_UPDATE{
+        STRATEGY_UPDATE {
             @Override
             public AccountEvent convertFromJsonObject(JSONObject jsonObject) {
                 StrategyUpdateEvent event = new StrategyUpdateEvent(jsonObject.getLong("E"));
@@ -197,7 +198,7 @@ public interface AccountEventConverter {
             }
         },
 
-        GRID_UPDATE{
+        GRID_UPDATE {
             @Override
             public AccountEvent convertFromJsonObject(JSONObject jsonObject) {
                 GridUpdateEvent event = new GridUpdateEvent(jsonObject.getLong("E"));
@@ -221,7 +222,7 @@ public interface AccountEventConverter {
             }
         },
 
-        CONDITIONAL_ORDER_TRIGGER_REJECT{
+        CONDITIONAL_ORDER_TRIGGER_REJECT {
             @Override
             public AccountEvent convertFromJsonObject(JSONObject jsonObject) {
                 ConditionalOrderTriggerRejectEvent event = new ConditionalOrderTriggerRejectEvent(jsonObject.getLong("E"));

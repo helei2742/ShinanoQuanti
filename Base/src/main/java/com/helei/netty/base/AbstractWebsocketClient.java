@@ -163,9 +163,16 @@ public abstract class AbstractWebsocketClient<P, T> {
 
     /**
      * 链接服务端
+     *
      * @throws SSLException Exception
      */
     public CompletableFuture<Void> connect() throws SSLException, URISyntaxException {
+        if (isRunning.get()) {
+            log.warn("WS客户端[{}}已链接", url);
+            return CompletableFuture.runAsync(() -> {
+            });
+        }
+
         log.info("开始初始化WS客户端");
         init();
         log.info("初始化WS客户端完成，开始链接服务器 [{}]", url);
@@ -176,7 +183,8 @@ public abstract class AbstractWebsocketClient<P, T> {
 
     /**
      * 重链接
-     * @return  CompletableFuture<Void>
+     *
+     * @return CompletableFuture<Void>
      */
     public CompletableFuture<Void> reconnect() {
         return CompletableFuture.runAsync(() -> {

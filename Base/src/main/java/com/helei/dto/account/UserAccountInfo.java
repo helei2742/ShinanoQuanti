@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.locks.ReentrantLock;
 
 @Data
 @AllArgsConstructor
@@ -56,10 +57,22 @@ public class UserAccountInfo {
     /**
      * 账户仓位设置
      */
-    private AccountLocationConfig accountLocationConfig;
+    private AccountPositionConfig accountPositionConfig;
 
     /**
      * 账户资金信息
      */
-    private AccountBalanceInfo accountBalanceInfo;
+    private final AccountBalanceInfo accountBalanceInfo = new AccountBalanceInfo();
+
+
+    /**
+     * 账户仓位信息
+     */
+    private final AccountPositionInfo accountPositionInfo = new AccountPositionInfo();
+
+    public void setId(long id) {
+        this.id = id;
+        this.accountBalanceInfo.setAccountId(id);
+        this.accountPositionInfo.setAccountId(id);
+    }
 }

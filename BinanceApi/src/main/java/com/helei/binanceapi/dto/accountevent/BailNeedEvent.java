@@ -1,6 +1,6 @@
 package com.helei.binanceapi.dto.accountevent;
 
-import com.helei.binanceapi.constants.order.PositionSide;
+import com.helei.constants.PositionSide;
 import com.helei.binanceapi.constants.AccountEventType;
 import lombok.*;
 
@@ -8,6 +8,13 @@ import java.util.List;
 
 /**
  * 保证金追加通知
+ *
+ * <p>
+ * 当用户持仓风险过高，会推送此消息。
+ * 此消息仅作为风险指导信息，不建议用于投资策略。
+ * 在大波动市场行情下,不排除此消息发出的同时用户仓位已被强平的可能。
+ * 全仓模式下若保证金不足每小时仅会推送一次此事件，不会重复推送；逐仓模式下保证金不足一个交易对每小时仅会推送一次此事件，不会重复推送
+ * </p>
  */
 @Getter
 @Setter

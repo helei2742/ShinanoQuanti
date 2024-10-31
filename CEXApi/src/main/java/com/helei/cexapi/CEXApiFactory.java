@@ -58,7 +58,7 @@ public class CEXApiFactory {
         return client;
     }
 
-    protected static BinanceWSApiClient binanceApiClient(
+    public static BinanceWSApiClient binanceApiClient(
             String url
     ) throws URISyntaxException, SSLException {
 
@@ -83,7 +83,8 @@ public class CEXApiFactory {
 
     /**
      * 创建客户端链接的key，保证同一个名和url只有一个链接
-     * @param url url
+     *
+     * @param url  url
      * @param name name
      * @return String
      */

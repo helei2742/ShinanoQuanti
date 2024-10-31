@@ -1,37 +1,38 @@
 package com.helei.dto.account;
 
-import com.helei.dto.AssetInfo;
+import cn.hutool.core.collection.ConcurrentHashSet;
+import com.helei.dto.BalanceInfo;
+import com.helei.dto.LockObject;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 @ToString
-public class AccountBalanceInfo {
-
-    private String userId;
-
-    private String accountType;
-
-    private Long updateTime;
-
-    private List<AssetInfo> balances;
+public class AccountBalanceInfo extends LockObject {
 
     /**
-     * 获取账户可用的usdt
-     * @return 可用的usdt
+     * 账户id
      */
-    public Double getFreeUsdt() {
-        if (balances == null || balances.isEmpty()) return 0.0;
+    private long accountId;
 
-        for (AssetInfo balance : balances) {
-            if (balance.getAsset().equalsIgnoreCase("usdt")) {
-                return balance.getFree();
-            }
-        }
-        return 0.0;
+    /**
+     * 更新时间
+     */
+    private Long updateTime;
+
+    /**
+     * 资金信息
+     */
+    private ConcurrentHashSet<BalanceInfo> balances = new ConcurrentHashSet<>();
+
+    public synchronized void updateBalanceInfos(List<BalanceInfo> balanceInfos) {
+        balances.clear();
+        balances.addAll(balanceInfos);
     }
 }

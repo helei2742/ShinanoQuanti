@@ -1,10 +1,11 @@
 package com.helei.binanceapi.dto.accountevent;
 
 import com.helei.binanceapi.constants.AccountEventType;
-import com.helei.binanceapi.constants.order.*;
+import com.helei.binanceapi.constants.order .*;
 import com.helei.binanceapi.constants.TimeInForce;
+import com.helei.constants.PositionSide;
 import com.helei.constants.TradeSide;
-import lombok.*;
+import lombok .*;
 
 /**
  * 订单交易更新推送事件
@@ -92,7 +93,7 @@ public class OrderTradeUpdateEvent extends AccountEvent {
          */
         private Double cumulativeFilledQuantity;
         /**
-         *  订单末次成交价格
+         * 订单末次成交价格
          */
         private Double lastFilledPrice;
         /**
@@ -136,7 +137,7 @@ public class OrderTradeUpdateEvent extends AccountEvent {
          */
         private OrderType originalOrderType;
         /**
-         *  持仓方向
+         * 持仓方向
          */
         private PositionSide positionSide;
         /**
@@ -160,7 +161,7 @@ public class OrderTradeUpdateEvent extends AccountEvent {
          */
         private Double realizedProfit;
         /**
-         *  自成交防止模式
+         * 自成交防止模式
          */
         private SelfTradePreventionMode selfTradePreventionMode;
         /**
