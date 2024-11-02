@@ -1,20 +1,21 @@
 package com.helei.dto.account;
 
 
-import cn.hutool.core.collection.ConcurrentHashSet;
 import com.helei.dto.LockObject;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AccountPositionInfo extends LockObject {
+public class AccountPositionInfo extends LockObject implements Serializable {
 
 
     /**
@@ -30,15 +31,19 @@ public class AccountPositionInfo extends LockObject {
     /**
      * 仓位信息
      */
-    private final ConcurrentHashSet<PositionInfo> positions = new ConcurrentHashSet<>();
+    private final ConcurrentHashMap<String, PositionInfo> positions = new ConcurrentHashMap<>();
 
 
     /**
      * 更新仓位信息
      * @param positionInfos positionInfos
      */
-    public synchronized void updatePositionInfos(List<PositionInfo> positionInfos) {
-        this.positions.clear();
-        this.positions.addAll(positionInfos);
+    public void updatePositionInfos(List<PositionInfo> positionInfos) {
+        positionInfos.forEach(positionInfo -> {
+            if (positionInfo.getPosition() == 0) {
+                return;
+            }
+            positions.put(positionInfo.getSymbol(), positionInfo);
+        });
     }
 }

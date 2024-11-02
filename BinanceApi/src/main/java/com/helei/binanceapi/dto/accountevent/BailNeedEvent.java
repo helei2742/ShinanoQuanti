@@ -1,5 +1,6 @@
 package com.helei.binanceapi.dto.accountevent;
 
+import com.helei.constants.MarginMode;
 import com.helei.constants.PositionSide;
 import com.helei.binanceapi.constants.AccountEventType;
 import lombok.*;
@@ -62,9 +63,8 @@ public class BailNeedEvent extends AccountEvent {
 
         /**
          * 保证金模式
-         * TODO 枚举
          */
-        private String mode;
+        private MarginMode marginMode;
 
         /**
          * 保证金

@@ -17,7 +17,7 @@ public interface BalanceInfoMapper {
     @Mappings({
             @Mapping(source = "asset", target = "asset"),
             @Mapping(source = "bailRemoveWalletBalance", target = "free"),
-            @Mapping(target = "locked", expression = "java(changeChangeInfo.getWalletBalance() + changeChangeInfo.getBailRemoveWalletBalance())")
+            @Mapping(target = "locked", expression = "java(changeChangeInfo.getWalletBalance() - changeChangeInfo.getBailRemoveWalletBalance())")
     })
     BalanceInfo convertFromBalanceChangeInfo(BalancePositionUpdateEvent.BalanceChangeInfo changeChangeInfo);
 

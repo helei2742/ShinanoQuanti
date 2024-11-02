@@ -4,13 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 /**
  * 账户仓位设置
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AccountPositionConfig {
+public class AccountPositionConfig implements Serializable {
 
     /**
      * 风险百分比

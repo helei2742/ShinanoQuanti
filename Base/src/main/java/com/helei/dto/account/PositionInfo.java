@@ -1,6 +1,7 @@
 package com.helei.dto.account;
 
 
+import com.helei.constants.MarginMode;
 import com.helei.constants.PositionSide;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -46,9 +47,8 @@ public class PositionInfo implements Serializable {
 
     /**
      * 保证金模式
-     * TODO 切换枚举
      */
-    private String  model;
+    private MarginMode marginMode;
 
     /**
      * 保证金

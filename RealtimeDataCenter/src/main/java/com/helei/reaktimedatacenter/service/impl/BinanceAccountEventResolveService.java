@@ -8,30 +8,37 @@ import com.helei.dto.account.AccountPositionInfo;
 import com.helei.dto.account.PositionInfo;
 import com.helei.dto.account.UserAccountInfo;
 import com.helei.reaktimedatacenter.manager.BinanceAccountClientManager;
+import com.helei.reaktimedatacenter.manager.ExecutorServiceManager;
 import com.helei.reaktimedatacenter.mapper.BalanceInfoMapper;
 import com.helei.reaktimedatacenter.mapper.PositionInfoMapper;
 import com.helei.reaktimedatacenter.service.AccountEventResolveService;
+import com.helei.reaktimedatacenter.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 public class BinanceAccountEventResolveService implements AccountEventResolveService {
 
-    private final ExecutorService eventExecutor = Executors.newVirtualThreadPerTaskExecutor();
 
+    private ExecutorService eventExecutor = null;
 
     @Autowired
     private BinanceAccountClientManager binanceAccountClientManager;
+
+    @Autowired
+    private UserService userService;
+
+
+    @Autowired
+    public BinanceAccountEventResolveService(ExecutorServiceManager executorServiceManager) {
+        this.eventExecutor = executorServiceManager.getEventExecutor();
+    }
 
 
     @Override
@@ -44,6 +51,18 @@ public class BinanceAccountEventResolveService implements AccountEventResolveSer
             future = resolveBailNeedEvent(accountInfo, bailNeedEvent);
         } else if (accountEvent instanceof BalancePositionUpdateEvent balancePositionUpdateEvent) {
             future = resolveBalancePositionUpdateEvent(accountInfo, balancePositionUpdateEvent);
+        } else if (accountEvent instanceof OrderTradeUpdateLiteEvent orderTradeUpdateEvent) {
+            future = resolveOrderTradeUpdateEvent(orderTradeUpdateEvent);
+        } else if (accountEvent instanceof AccountConfigUpdateEvent accountConfigUpdateEvent) {
+            future = resolveAccountConfigUpdateEvent(accountConfigUpdateEvent);
+        } else if (accountEvent instanceof StrategyUpdateEvent strategyUpdateEvent) {
+            future = resolveStrategyUpdateEvent(strategyUpdateEvent);
+        } else if (accountEvent instanceof GridUpdateEvent gridUpdateEvent) {
+            future = resolveGridUpdateEvent(gridUpdateEvent);
+        } else if (accountEvent instanceof ConditionalOrderTriggerRejectEvent conditionalOrderTriggerRejectEvent) {
+            future = resolveConditionalOrderTriggerRejectEvent(conditionalOrderTriggerRejectEvent);
+        } else {
+            log.warn("userId[{}]-accountId[{}]-未知事件 [{}]", accountInfo.getUserId(), accountInfo.getId(), accountEvent);
         }
 
 
@@ -58,6 +77,78 @@ public class BinanceAccountEventResolveService implements AccountEventResolveSer
     }
 
     /**
+     * 条件订单(TP/SL)触发后拒绝更新推送
+     *
+     * @param conditionalOrderTriggerRejectEvent conditionalOrderTriggerRejectEvent
+     * @return CompletableFuture<Void>
+     */
+    private CompletableFuture<Void> resolveConditionalOrderTriggerRejectEvent(ConditionalOrderTriggerRejectEvent conditionalOrderTriggerRejectEvent) {
+        return null;
+    }
+
+
+    /**
+     * 网格更新推送
+     *
+     * @param gridUpdateEvent gridUpdateEvent
+     * @return CompletableFuture<Void>
+     */
+    private CompletableFuture<Void> resolveGridUpdateEvent(GridUpdateEvent gridUpdateEvent) {
+        return null;
+    }
+
+    /**
+     * 策略交易更新推送
+     *
+     * @param strategyUpdateEvent strategyUpdateEvent
+     * @return CompletableFuture<Void>
+     */
+    private CompletableFuture<Void> resolveStrategyUpdateEvent(StrategyUpdateEvent strategyUpdateEvent) {
+        return null;
+    }
+
+
+    /**
+     * 杠杆倍数等账户配置 更新推送
+     *
+     * @param accountConfigUpdateEvent accountConfigUpdateEvent
+     * @return CompletableFuture<Void>
+     */
+    private CompletableFuture<Void> resolveAccountConfigUpdateEvent(AccountConfigUpdateEvent accountConfigUpdateEvent) {
+        return CompletableFuture.runAsync(() -> {
+            //TODO
+
+        }, eventExecutor);
+    }
+
+    /**
+     * 精简交易推送
+     *
+     * @param orderTradeUpdateLiteEvent orderTradeUpdateLiteEvent
+     * @return CompletableFuture<Void>
+     */
+    private CompletableFuture<Void> resolveOrderTradeUpdateLiteEvent(OrderTradeUpdateLiteEvent orderTradeUpdateLiteEvent) {
+        return CompletableFuture.runAsync(() -> {
+            //TODO
+
+        }, eventExecutor);
+    }
+
+    /**
+     * 订单交易更新推送
+     *
+     * @param orderTradeUpdateEvent orderTradeUpdateEvent
+     * @return CompletableFuture<Void>
+     */
+    private CompletableFuture<Void> resolveOrderTradeUpdateEvent(OrderTradeUpdateLiteEvent orderTradeUpdateEvent) {
+        return CompletableFuture.runAsync(() -> {
+            //TODO
+
+        }, eventExecutor);
+    }
+
+
+    /**
      * 处理账户仓位更新事件
      *
      * @param accountInfo                accountInfo
@@ -66,7 +157,6 @@ public class BinanceAccountEventResolveService implements AccountEventResolveSer
      */
     private CompletableFuture<Void> resolveBalancePositionUpdateEvent(UserAccountInfo accountInfo, BalancePositionUpdateEvent balancePositionUpdateEvent) {
 
-        // TODO 更新逻辑有误
         return CompletableFuture.runAsync(() -> {
             // 1.更新仓位信息
             AccountPositionInfo accountPositionInfo = accountInfo.getAccountPositionInfo();
@@ -94,6 +184,9 @@ public class BinanceAccountEventResolveService implements AccountEventResolveSer
             } finally {
                 accountBalanceInfo.unlock();
             }
+
+            // 3.更新数据库和redis中的信息
+            userService.updateUserAccountInfo(accountInfo);
 
             log.info("accountId[{}]信息更新成功，[{}]", accountInfo.getId(), accountInfo);
         }, eventExecutor);

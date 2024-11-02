@@ -1,8 +1,9 @@
 package com.helei.binanceapi.dto.accountevent;
 
+import com.helei.constants.MarginMode;
 import com.helei.constants.PositionSide;
 import com.helei.binanceapi.constants.AccountEventType;
-import lombok .*;
+import lombok.*;
 
 import java.util.List;
 
@@ -60,7 +61,7 @@ public class BalancePositionUpdateEvent extends AccountEvent {
     /**
      * 事件推出原因
      */
-    private String reason;
+    private BPUpdateReason reason;
 
     /**
      * 资金发生变化的信息
@@ -149,9 +150,8 @@ public class BalancePositionUpdateEvent extends AccountEvent {
 
         /**
          * 保证金模式
-         * TODO 切换枚举
          */
-        private String model;
+        private MarginMode marginMode;
 
         /**
          * 保证金
@@ -165,4 +165,94 @@ public class BalancePositionUpdateEvent extends AccountEvent {
 
     }
 
+
+    /**
+     * 资金仓位更新事件的原因
+     */
+    public enum BPUpdateReason {
+        /**
+         * 存款 - 资金存入账户。
+         */
+        DEPOSIT,
+
+        /**
+         * 提款 - 从账户中提取资金。
+         */
+        WITHDRAW,
+
+        /**
+         * 订单 - 由于交易订单引起的余额变化。
+         */
+        ORDER,
+
+        /**
+         * 资金费用 - 由于杠杆或融资费用引起的余额变化。
+         */
+        FUNDING_FEE,
+
+        /**
+         * 提现拒绝 - 提现请求被拒绝后资金返还到账户。
+         */
+        WITHDRAW_REJECT,
+
+        /**
+         * 调整 - 管理员手动调整账户余额。
+         */
+        ADJUSTMENT,
+
+        /**
+         * 保险清算 - 清算账户或保险相关的余额调整。
+         */
+        INSURANCE_CLEAR,
+
+        /**
+         * 管理员存款 - 管理员手动向账户存入资金。
+         */
+        ADMIN_DEPOSIT,
+
+        /**
+         * 管理员提款 - 管理员手动从账户提款。
+         */
+        ADMIN_WITHDRAW,
+
+        /**
+         * 保证金转移 - 保证金账户之间的资金转移。
+         */
+        MARGIN_TRANSFER,
+
+        /**
+         * 保证金类型更改 - 保证金类型更改导致的余额调整。
+         */
+        MARGIN_TYPE_CHANGE,
+
+        /**
+         * 资产转移 - 账户内外的资产转移。
+         */
+        ASSET_TRANSFER,
+
+        /**
+         * 期权权利金费用 - 由于期权权利金导致的费用扣除。
+         */
+        OPTIONS_PREMIUM_FEE,
+
+        /**
+         * 期权结算收益 - 期权交易结算带来的收益。
+         */
+        OPTIONS_SETTLE_PROFIT,
+
+        /**
+         * 自动兑换 - 由于自动兑换货币导致的余额变化。
+         */
+        AUTO_EXCHANGE,
+
+        /**
+         * 币币兑换存款 - 币币兑换后的存款。
+         */
+        COIN_SWAP_DEPOSIT,
+
+        /**
+         * 币币兑换提款 - 币币兑换后的提款。
+         */
+        COIN_SWAP_WITHDRAW
+    }
 }

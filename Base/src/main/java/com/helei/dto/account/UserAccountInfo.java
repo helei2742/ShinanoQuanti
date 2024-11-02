@@ -9,6 +9,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.ReentrantLock;
@@ -17,7 +18,7 @@ import java.util.concurrent.locks.ReentrantLock;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserAccountInfo {
+public class UserAccountInfo implements Serializable {
 
     /**
      * 账户id

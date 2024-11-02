@@ -15,7 +15,6 @@
         <module>CEXApi</module>
         <module>Base</module>
         <module>BinanceApi</module>
-        <module>UserInfoCenter</module>
         <module>RealtimeDataCenter</module>
     </modules>
 
@@ -40,6 +39,9 @@
         <junit.version>5.9.1</junit.version>
         <okhttp.version>4.11.0</okhttp.version>
         <logback.version>1.3.7</logback.version>
+        <redisson.version>3.22.0</redisson.version>
+        <mybatis_plus.version>3.5.3</mybatis_plus.version>
+        <mysql_connection.version>8.0.33</mysql_connection.version>
     </properties>
 
 
@@ -114,6 +116,22 @@
                 <version>${logback.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>org.redisson</groupId>
+                <artifactId>redisson-spring-boot-starter</artifactId>
+                <version>${redisson.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>${mybatis_plus.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql_connection.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

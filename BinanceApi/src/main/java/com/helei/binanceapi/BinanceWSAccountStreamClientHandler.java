@@ -16,7 +16,7 @@ class BinanceWSAccountStreamClientHandler extends AbstractBinanceWSApiClientHand
 
     private final Consumer<AccountEvent> whenReceiveEvent;
 
-    BinanceWSAccountStreamClientHandler( Consumer<AccountEvent> whenReceiveEvent) {
+    BinanceWSAccountStreamClientHandler(Consumer<AccountEvent> whenReceiveEvent) {
         this.whenReceiveEvent = whenReceiveEvent;
     }
 
@@ -27,7 +27,11 @@ class BinanceWSAccountStreamClientHandler extends AbstractBinanceWSApiClientHand
             log.warn("get an response, not stream message! [{}]", text);
         } else if (response.get("e") != null){
             log.debug("get stream message [{}}", text);
-            whenReceiveEvent.accept(AccountEventType.STATUS_MAP.get(response.getString("e")).getConverter().convertFromJsonObject(response));
+            try {
+                whenReceiveEvent.accept(AccountEventType.STATUS_MAP.get(response.getString("e")).getConverter().convertFromJsonObject(response));
+            } catch (Exception e) {
+                log.warn("处理账户事件[{}]出错，", text, e);
+            }
         }
     }
 }

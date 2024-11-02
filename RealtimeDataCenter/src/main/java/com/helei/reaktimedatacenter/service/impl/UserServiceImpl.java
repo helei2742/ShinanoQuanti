@@ -1,12 +1,16 @@
 package com.helei.reaktimedatacenter.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.helei.constants.RunEnv;
 import com.helei.constants.TradeType;
 import com.helei.dto.ASKey;
 import com.helei.dto.account.UserAccountInfo;
 import com.helei.dto.account.UserInfo;
 import com.helei.reaktimedatacenter.service.UserService;
+import com.helei.reaktimedatacenter.supporter.BatchWriteSupporter;
+import com.helei.reaktimedatacenter.util.RedisKeyUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,6 +20,10 @@ import java.util.List;
 @Slf4j
 @Service
 public class UserServiceImpl implements UserService {
+
+
+    @Autowired
+    private BatchWriteSupporter batchWriteSupporter;
 
 
     @Override
@@ -79,4 +87,24 @@ public class UserServiceImpl implements UserService {
         list.add(binance_account);
         return list;
     }
+
+
+    /**
+     * 更新用户账户信息
+     * @param userAccountInfo userAccountInfo
+     */
+    @Override
+    public void updateUserAccountInfo(UserAccountInfo userAccountInfo) {
+        String key = RedisKeyUtil.getUserAccountInfoKey(
+                userAccountInfo.getUserId(),
+                userAccountInfo.getId(),
+                userAccountInfo.getRunEnv(),
+                userAccountInfo.getTradeType()
+        );
+        String value = JSONObject.toJSONString(userAccountInfo);
+
+        log.info("更新账户信息，key[{}], value[{}]", key, value);
+        batchWriteSupporter.writeToRedis(key, value);
+    }
+
 }

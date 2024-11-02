@@ -22,7 +22,7 @@ public interface PositionInfoMapper {
             @Mapping(source = "balanceEqualPrice", target = "balanceEqualPrice"),
             @Mapping(source = "countProfitOrLoss", target = "countProfitOrLoss"),
             @Mapping(source = "unrealizedProfitOrLoss", target = "unrealizedProfitOrLoss"),
-            @Mapping(source = "model", target = "model"),
+            @Mapping(source = "marginMode", target = "marginMode"),
             @Mapping(source = "bail", target = "bail"),
             @Mapping(source = "positionSide", target = "positionSide")
     })

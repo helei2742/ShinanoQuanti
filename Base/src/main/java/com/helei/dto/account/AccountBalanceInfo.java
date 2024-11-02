@@ -1,20 +1,19 @@
 package com.helei.dto.account;
 
-import cn.hutool.core.collection.ConcurrentHashSet;
 import com.helei.dto.BalanceInfo;
 import com.helei.dto.LockObject;
 import lombok.*;
 
-import java.util.ArrayList;
+import java.io.Serializable;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @ToString
-public class AccountBalanceInfo extends LockObject {
+public class AccountBalanceInfo extends LockObject implements Serializable {
 
     /**
      * 账户id
@@ -29,10 +28,14 @@ public class AccountBalanceInfo extends LockObject {
     /**
      * 资金信息
      */
-    private ConcurrentHashSet<BalanceInfo> balances = new ConcurrentHashSet<>();
+    private ConcurrentHashMap<String, BalanceInfo> balances = new ConcurrentHashMap<>();
 
-    public synchronized void updateBalanceInfos(List<BalanceInfo> balanceInfos) {
-        balances.clear();
-        balances.addAll(balanceInfos);
+
+
+    public void updateBalanceInfos(List<BalanceInfo> balanceInfos) {
+
+        balanceInfos.forEach(balanceInfo -> {
+            balances.put(balanceInfo.getAsset(), balanceInfo);
+        });
     }
 }

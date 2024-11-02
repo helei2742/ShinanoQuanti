@@ -87,9 +87,11 @@ public abstract class AbstractWebSocketClientHandler<P, T> extends SimpleChannel
         }
 
         if (msg instanceof FullHttpResponse response) {
-            throw new IllegalStateException(
-                    "Unexpected FullHttpResponse (getStatus=" + response.status() +
-                            ", content=" + response.content().toString(CharsetUtil.UTF_8) + ')');
+            if (response.status().code() / 100 > 3) {
+                throw new IllegalStateException(
+                        "Unexpected FullHttpResponse (getStatus=" + response.status() +
+                                ", content=" + response.content().toString(CharsetUtil.UTF_8) + ')');
+            }
         } else if (msg instanceof WebSocketFrame frame) {
             if (frame instanceof TextWebSocketFrame textFrame) {
                 log.debug("websocket client [{}] 接收到的消息：{}", ch.attr(NettyConstants.CLIENT_NAME).get(), textFrame.text());

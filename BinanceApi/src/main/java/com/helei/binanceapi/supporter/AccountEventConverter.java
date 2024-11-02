@@ -7,7 +7,8 @@ import com.helei.binanceapi.constants.order .*;
 import com.helei.binanceapi.constants.strategy.StrategyStatus;
 import com.helei.binanceapi.constants.strategy.StrategyType;
 import com.helei.binanceapi.dto.accountevent .*;
-        import com.helei.constants.PositionSide;
+import com.helei.constants.MarginMode;
+import com.helei.constants.PositionSide;
 import com.helei.constants.TradeSide;
 
 import java.util.ArrayList;
@@ -31,7 +32,7 @@ public interface AccountEventConverter {
                 event.setMatchMakingTime(jsonObject.getLong("T"));
 
                 JSONObject a = jsonObject.getJSONObject("a");
-                event.setReason(a.getString("m"));
+                event.setReason(BalancePositionUpdateEvent.BPUpdateReason.valueOf(a.getString("m")));
 
                 List<BalancePositionUpdateEvent.BalanceChangeInfo> bList = new ArrayList<>();
                 for (int i = 0; i < a.getJSONArray("B").size(); i++) {
@@ -39,8 +40,8 @@ public interface AccountEventConverter {
                     BalancePositionUpdateEvent.BalanceChangeInfo changeInfo = new BalancePositionUpdateEvent.BalanceChangeInfo();
                     changeInfo.setAsset(jb.getString("a"));
                     changeInfo.setWalletBalance(jb.getDouble("wb"));
-                    changeInfo.setWalletBalanceChange(jb.getDouble("cw"));
-                    changeInfo.setBailRemoveWalletBalance(jb.getDouble("bc"));
+                    changeInfo.setBailRemoveWalletBalance(jb.getDouble("cw"));
+                    changeInfo.setWalletBalanceChange(jb.getDouble("bc"));
                     bList.add(changeInfo);
                 }
                 event.setBalanceChangeInfos(bList);
@@ -55,9 +56,10 @@ public interface AccountEventConverter {
                     changeInfo.setBalanceEqualPrice(jb.getDouble("bep"));
                     changeInfo.setCountProfitOrLoss(jb.getDouble("cr"));
                     changeInfo.setUnrealizedProfitOrLoss(jb.getDouble("up"));
-                    changeInfo.setModel(jb.getString("mt"));
+                    changeInfo.setMarginMode(MarginMode.valueOf(jb.getString("mt").toUpperCase()));
                     changeInfo.setBail(jb.getDouble("iw"));
                     changeInfo.setPositionSide(PositionSide.STATUS_MAP.get(jb.getString("ps")));
+                    pList.add(changeInfo);
                 }
                 event.setPositionChangeInfos(pList);
                 return event;
@@ -76,7 +78,7 @@ public interface AccountEventConverter {
                 positionNeedInfo.setSymbol(p.getString("s"));
                 positionNeedInfo.setPositionSide(PositionSide.STATUS_MAP.get(p.getString("ps")));
                 positionNeedInfo.setPosition(p.getDouble("pa"));
-                positionNeedInfo.setMode(p.getString("mt"));
+                positionNeedInfo.setMarginMode(MarginMode.valueOf(p.getString("mt").toUpperCase()));
                 positionNeedInfo.setBail(p.getDouble("iw"));
                 positionNeedInfo.setMarkPrice(p.getDouble("mp"));
                 positionNeedInfo.setUnrealizedProfitOrLoss(p.getDouble("up"));
