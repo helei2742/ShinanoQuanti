@@ -3,14 +3,14 @@ package com.helei.tradesignalcenter.support;
 
 import com.helei.constants.KLineInterval;
 import com.helei.constants.TradeSide;
-import com.helei.dto.IndicatorMap;
+import com.helei.dto.trade.IndicatorMap;
 import com.helei.dto.indicator.config.MACDConfig;
 import com.helei.tradesignalcenter.config.FlinkConfig;
 import com.helei.tradesignalcenter.stream.*;
 import com.helei.tradesignalcenter.stream.a_klinesource.RandomKLineSource;
 import com.helei.tradesignalcenter.dto.TradeSignal;
-import com.helei.dto.KLine;
-import com.helei.dto.IndicatorSignal;
+import com.helei.dto.trade.KLine;
+import com.helei.dto.trade.IndicatorSignal;
 import com.helei.tradesignalcenter.stream.b_indicator.calculater.MACDCalculator;
 import com.helei.tradesignalcenter.stream.b_indicator.calculater.PSTCalculator;
 import com.helei.tradesignalcenter.stream.c_indicator_signal.IndicatorSignalService;

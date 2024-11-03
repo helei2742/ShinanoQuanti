@@ -2,8 +2,8 @@ package com.helei.tradesignalcenter.signal;
 
 
 import com.helei.constants.TradeSide;
-import com.helei.dto.IndicatorSignal;
-import com.helei.dto.KLine;
+import com.helei.dto.trade.IndicatorSignal;
+import com.helei.dto.trade.KLine;
 import com.helei.tradesignalcenter.stream.c_indicator_signal.maker.AbstractSignalMaker;
 import org.apache.flink.api.common.functions.OpenContext;
 import org.apache.flink.streaming.api.TimerService;

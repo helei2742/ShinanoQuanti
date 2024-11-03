@@ -5,8 +5,8 @@ import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.helei.constants.KLineInterval;
-import com.helei.dto.IndicatorMap;
-import com.helei.dto.KLine;
+import com.helei.dto.trade.IndicatorMap;
+import com.helei.dto.trade.KLine;
 
 public class KLineSerializer extends Serializer<KLine> {
 

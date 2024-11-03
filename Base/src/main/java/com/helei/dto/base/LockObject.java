@@ -1,4 +1,4 @@
-package com.helei.dto;
+package com.helei.dto.base;
 
 import java.util.concurrent.locks.ReentrantLock;
 

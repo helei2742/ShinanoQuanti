@@ -1,4 +1,4 @@
-package com.helei.dto;
+package com.helei.dto.trade;
 
 import com.helei.constants.TradeSide;
 import lombok.AllArgsConstructor;

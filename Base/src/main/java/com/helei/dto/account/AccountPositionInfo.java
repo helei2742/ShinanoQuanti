@@ -1,7 +1,7 @@
 package com.helei.dto.account;
 
 
-import com.helei.dto.LockObject;
+import com.helei.dto.base.LockObject;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

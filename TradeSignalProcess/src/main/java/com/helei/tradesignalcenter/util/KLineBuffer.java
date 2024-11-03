@@ -1,6 +1,6 @@
 package com.helei.tradesignalcenter.util;
 
-import com.helei.dto.KLine;
+import com.helei.dto.trade.KLine;
 
 import java.io.Serial;
 import java.io.Serializable;

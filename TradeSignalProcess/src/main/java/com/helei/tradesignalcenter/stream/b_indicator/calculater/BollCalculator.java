@@ -1,6 +1,6 @@
 package com.helei.tradesignalcenter.stream.b_indicator.calculater;
 
-import com.helei.dto.KLine;
+import com.helei.dto.trade.KLine;
 import com.helei.dto.indicator.Boll;
 import com.helei.dto.indicator.config.BollConfig;
 import org.apache.flink.api.common.functions.RuntimeContext;

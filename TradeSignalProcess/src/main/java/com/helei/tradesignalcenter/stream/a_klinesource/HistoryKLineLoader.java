@@ -5,7 +5,7 @@ import com.helei.binanceapi.BinanceWSApiClient;
 import com.helei.binanceapi.api.rest.BinanceUContractMarketRestApi;
 import com.helei.constants.KLineInterval;
 import com.helei.binanceapi.supporter.KLineMapper;
-import com.helei.dto.KLine;
+import com.helei.dto.trade.KLine;
 import com.helei.tradesignalcenter.config.TradeSignalConfig;
 import lombok.extern.slf4j.Slf4j;
 

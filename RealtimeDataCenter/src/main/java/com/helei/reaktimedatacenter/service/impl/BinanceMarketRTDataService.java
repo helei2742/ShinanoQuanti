@@ -144,8 +144,8 @@ public class BinanceMarketRTDataService implements MarketRealtimeDataService {
 
             kafkaProducerService.checkAndCreateTopic(
                     topic,
-                    realtimeConfig.getBase().getKafka_kline_num_partitions(),
-                    realtimeConfig.getBase().getKafka_kline_replication_factor()
+                    realtimeConfig.getKafka().getKafka_kline_num_partitions(),
+                    realtimeConfig.getKafka().getKafka_kline_replication_factor()
             );
         }
     }

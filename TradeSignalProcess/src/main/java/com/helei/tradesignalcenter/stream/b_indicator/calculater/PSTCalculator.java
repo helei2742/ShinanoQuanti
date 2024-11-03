@@ -1,8 +1,8 @@
 package com.helei.tradesignalcenter.stream.b_indicator.calculater;
 
 import cn.hutool.core.util.BooleanUtil;
-import com.helei.dto.TrendLine;
-import com.helei.dto.KLine;
+import com.helei.dto.indicator.TrendLine;
+import com.helei.dto.trade.KLine;
 import com.helei.dto.indicator.PST;
 import com.helei.dto.indicator.config.PSTConfig;
 import com.helei.util.CalculatorUtil;

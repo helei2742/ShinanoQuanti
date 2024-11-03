@@ -5,6 +5,8 @@ import com.helei.binanceapi.config.BinanceApiConfig;
 import com.helei.constants.KLineInterval;
 import com.helei.constants.RunEnv;
 import com.helei.constants.TradeType;
+import com.helei.dto.kafka.KafkaConfig;
+import com.helei.dto.kafka.RedisConfig;
 import com.helei.reaktimedatacenter.dto.SymbolKLineInfo;
 import lombok.Data;
 import org.yaml.snakeyaml.Yaml;
@@ -19,7 +21,9 @@ public class RealtimeConfig {
 
     public static final RealtimeConfig INSTANCE;
 
-    private RealtimeBaseConfig base;
+    private KafkaConfig kafka;
+
+    private RedisConfig redis;
 
     private RealtimeEnvConfig normal;
 
@@ -55,20 +59,6 @@ public class RealtimeConfig {
         };
     }
 
-
-    @Data
-    public static class RealtimeBaseConfig {
-
-        /**
-         * kafka写入实时k线时设置几个分区
-         */
-        private int kafka_kline_num_partitions;
-
-        /**
-         * kafka的副本个数
-         */
-        private short kafka_kline_replication_factor;
-    }
 
     @Data
     public static class RealtimeEnvConfig {

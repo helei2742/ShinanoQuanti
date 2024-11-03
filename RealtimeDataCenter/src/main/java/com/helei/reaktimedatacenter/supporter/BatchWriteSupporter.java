@@ -1,7 +1,7 @@
 package com.helei.reaktimedatacenter.supporter;
 
 
-import com.helei.dto.KeyValue;
+import com.helei.dto.base.KeyValue;
 import com.helei.reaktimedatacenter.manager.ExecutorServiceManager;
 import com.helei.reaktimedatacenter.service.RedisService;
 import lombok.extern.slf4j.Slf4j;

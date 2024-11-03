@@ -1,7 +1,7 @@
 package com.helei.dto.account;
 
-import com.helei.dto.BalanceInfo;
-import com.helei.dto.LockObject;
+import com.helei.dto.trade.BalanceInfo;
+import com.helei.dto.base.LockObject;
 import lombok.*;
 
 import java.io.Serializable;

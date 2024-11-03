@@ -2,6 +2,9 @@ package com.helei.reaktimedatacenter.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.admin.AdminClient;
+import org.redisson.Redisson;
+import org.redisson.api.RedissonClient;
+import org.redisson.config.Config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,14 +16,21 @@ import java.util.Map;
 @Configuration
 public class ApplicationSpringConfig {
 
-    @Value("${spring.kafka.bootstrap-servers}")
-    private String bootstrapServers;
+
+    private final RealtimeConfig realtimeConfig = RealtimeConfig.INSTANCE;
 
     @Bean(name = "kafkaAdminClient")
     public AdminClient kafkaAdminClient() {
+
         Map<String, Object> configs = new HashMap<>();
-        configs.put("bootstrap.servers", bootstrapServers);  // 确保这里是 bootstrap.servers
+        configs.put("bootstrap.servers", realtimeConfig.getKafka().getBootstrap_servers());  // 确保这里是 bootstrap.servers
         return AdminClient.create(configs);
     }
 
+    @Bean
+    public RedissonClient redissonClient() {
+        Config config = new Config();
+        config.useSingleServer().setAddress(realtimeConfig.getRedis().getUrl());
+        return Redisson.create(config);
+    }
 }

@@ -1,7 +1,7 @@
 package com.helei.tradesignalcenter.stream;
 
-import com.helei.dto.IndicatorSignal;
-import com.helei.dto.SignalGroupKey;
+import com.helei.dto.trade.IndicatorSignal;
+import com.helei.dto.trade.SignalGroupKey;
 import com.helei.tradesignalcenter.stream.c_indicator_signal.IndicatorSignalService;
 import com.helei.tradesignalcenter.stream.d_decision.AbstractDecisionMaker;
 import com.helei.tradesignalcenter.stream.e_trade_signal.AbstractTradeSignalCommitter;
@@ -51,11 +51,11 @@ public class TradeSignalBuildTask<T> {
         //1.信号服务
         KeyedStream<Tuple2<SignalGroupKey, List<IndicatorSignal>>, String> symbolGroupSignalStream = indicatorSignalService.getSymbolGroupSignalStream();
 
-        symbolGroupSignalStream.print();
+//        symbolGroupSignalStream.print();
         //2.决策服务
         DataStream<T> originOrderStream = symbolGroupSignalStream.process(decisionMaker);
 
-//        originOrderStream.print();
+        originOrderStream.print();
         //3订单提交服务
         Sink<T> commitSink = orderCommitter.getCommitSink();
         originOrderStream.sinkTo(commitSink);

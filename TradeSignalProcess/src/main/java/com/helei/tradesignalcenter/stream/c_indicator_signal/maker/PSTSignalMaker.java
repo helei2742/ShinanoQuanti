@@ -1,9 +1,9 @@
 package com.helei.tradesignalcenter.stream.c_indicator_signal.maker;
 
 import com.helei.constants.TradeSide;
-import com.helei.dto.KLine;
-import com.helei.dto.IndicatorSignal;
-import com.helei.dto.TrendLine;
+import com.helei.dto.trade.KLine;
+import com.helei.dto.trade.IndicatorSignal;
+import com.helei.dto.indicator.TrendLine;
 import com.helei.dto.indicator.PST;
 import com.helei.dto.indicator.config.PSTConfig;
 import lombok.extern.slf4j.Slf4j;

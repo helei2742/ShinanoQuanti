@@ -1,7 +1,7 @@
 package com.helei.util;
 
 import com.helei.dto.account.AccountPositionConfig;
-import com.helei.dto.TrendLine;
+import com.helei.dto.indicator.TrendLine;
 
 import java.util.List;
 import java.util.function.Function;

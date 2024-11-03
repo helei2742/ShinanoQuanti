@@ -1,43 +1,43 @@
 {
-  "accountBalanceInfo": {
-    "accountId": 0,
-    "balances": {
-      "USDT": {
-        "asset": "USDT",
-        "free": 14401.91057764,
-        "locked": 0.0
-      }
-    }
-  },
-  "accountPositionInfo": {
-    "accountId": 0,
-    "positions": {
-      "BTCUSDT": {
-        "bail": 0.0,
-        "balanceEqualPrice": 0.0,
-        "countProfitOrLoss": -523.9542999,
-        "enterPosition": 0.0,
-        "marginMode": "ISOLATED",
-        "position": 0.0,
-        "positionSide": "BOTH",
-        "symbol": "BTCUSDT",
-        "unrealizedProfitOrLoss": 0.0
-      }
+  "signal": {
+    "normal": {
+      "contract": [
+        {
+          "signal_names": [
+            "test1",
+            "test2",
+            "test3"
+          ],
+          "symbol": "btcusdt"
+        },
+        {
+          "signal_names": [
+            "test1",
+            "test2",
+            "test3"
+          ],
+          "symbol": "ethusdt"
+        }
+      ],
+      "spot": [
+        {
+          "signal_names": [
+            "test1",
+            "test2",
+            "test3"
+          ],
+          "symbol": "btcusdt"
+        },
+        {
+          "signal_names": [
+            "test1",
+            "test2",
+            "test3"
+          ],
+          "symbol": "ethusdt"
+        }
+      ]
     },
-    "updateTime": 1730525952709
-  },
-  "asKey": {
-    "apiKey": "b252246c6c6e81b64b8ff52caf6b8f37471187b1b9086399e27f6911242cbc66",
-    "secretKey": "a4ed1b1addad2a49d13e08644f0cc8fc02a5c14c3511d374eac4e37763cadf5f"
-  },
-  "id": 1,
-  "runEnv": "TEST_NET",
-  "subscribeSymbol": [
-    "btcusdt",
-    "ethusdt",
-    "solusdt"
-  ],
-  "tradeType": "CONTRACT",
-  "usable": false,
-  "userId": 1
+    "test_net": {}
+  }
 }

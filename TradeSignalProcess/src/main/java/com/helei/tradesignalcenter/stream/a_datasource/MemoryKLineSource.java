@@ -7,7 +7,7 @@ import com.helei.binanceapi.dto.StreamSubscribeEntity;
 import com.helei.cexapi.CEXApiFactory;
 import com.helei.constants.KLineInterval;
 import com.helei.constants.WebSocketStreamParamKey;
-import com.helei.dto.KLine;
+import com.helei.dto.trade.KLine;
 
 import com.helei.binanceapi.supporter.KLineMapper;
 import com.helei.tradesignalcenter.stream.a_klinesource.HistoryKLineLoader;

@@ -1,4 +1,4 @@
-package com.helei.dto;
+package com.helei.dto.base;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

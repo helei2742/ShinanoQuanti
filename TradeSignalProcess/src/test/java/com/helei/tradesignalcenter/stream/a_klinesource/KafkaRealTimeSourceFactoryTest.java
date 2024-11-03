@@ -2,8 +2,9 @@ package com.helei.tradesignalcenter.stream.a_klinesource;
 
 import com.helei.constants.CEXType;
 import com.helei.constants.KLineInterval;
+import com.helei.constants.RunEnv;
 import com.helei.constants.TradeType;
-import com.helei.dto.KLine;
+import com.helei.dto.trade.KLine;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.flink.configuration.MemorySize;
 import org.apache.flink.configuration.TaskManagerOptions;
@@ -45,7 +46,7 @@ class KafkaRealTimeSourceFactoryTest {
     @Test
     void buildRTKLineStream() throws Exception {
         KafkaRealTimeSourceFactory sourceFactory = new KafkaRealTimeSourceFactory("btcusdt", Set.of(KLineInterval.h_1));
-        KafkaConsumer<String, KLine> consumer = sourceFactory.loadRTKLineStream(CEXType.BINANCE, TradeType.CONTRACT);
+        KafkaConsumer<String, KLine> consumer = sourceFactory.loadRTKLineStream(CEXType.BINANCE, RunEnv.NORMAL,TradeType.CONTRACT);
 
 
         while (true) {

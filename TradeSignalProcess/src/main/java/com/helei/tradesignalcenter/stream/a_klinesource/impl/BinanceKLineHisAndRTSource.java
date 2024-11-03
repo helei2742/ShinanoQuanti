@@ -7,7 +7,7 @@ import com.helei.binanceapi.config.BinanceApiConfig;
 import com.helei.cexapi.CEXApiFactory;
 import com.helei.constants.KLineInterval;
 import com.helei.constants.TradeType;
-import com.helei.dto.KLine;
+import com.helei.dto.trade.KLine;
 import com.helei.constants.RunEnv;
 import com.helei.tradesignalcenter.stream.a_klinesource.HistoryKLineLoader;
 import com.helei.tradesignalcenter.stream.a_klinesource.KLineHisAndRTSource;
@@ -124,7 +124,7 @@ public class BinanceKLineHisAndRTSource extends KLineHisAndRTSource {
             KafkaRealTimeSourceFactory sourceFactory = new KafkaRealTimeSourceFactory(symbol, intervals);
 
             KafkaConsumer<String, KLine> rtConsumer = sourceFactory
-                    .loadRTKLineStream(BinanceApiConfig.cexType, tradeType);
+                    .loadRTKLineStream(BinanceApiConfig.cexType, tradeSignalConfig.getRun_env(), tradeType);
             while (isRunning) {
                 ConsumerRecords<String, KLine> records = rtConsumer.poll(Duration.ofMillis(100));
                 for (ConsumerRecord<String, KLine> record : records) {

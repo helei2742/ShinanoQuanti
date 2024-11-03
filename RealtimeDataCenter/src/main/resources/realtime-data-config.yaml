@@ -1,9 +1,14 @@
 shinano:
   quantity:
     realtime:
-      base:
+      kafka:
+        bootstrap_servers: 192.168.1.2:9092 # Kafka服务器地址
         kafka_kline_num_partitions: 1
         kafka_kline_replication_factor: 1
+      redis:
+        # 如果需要密码，格式为 redis://:password@localhost:6379
+        url: redis://192.168.1.2:6379
+
       # 测试网配置
       test_net:
         #现货配置

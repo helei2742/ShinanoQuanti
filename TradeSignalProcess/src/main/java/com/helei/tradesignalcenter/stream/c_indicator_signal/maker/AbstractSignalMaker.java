@@ -1,8 +1,8 @@
 package com.helei.tradesignalcenter.stream.c_indicator_signal.maker;
 
 import cn.hutool.core.util.BooleanUtil;
-import com.helei.dto.IndicatorSignal;
-import com.helei.dto.KLine;
+import com.helei.dto.trade.IndicatorSignal;
+import com.helei.dto.trade.KLine;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.flink.api.common.functions.OpenContext;
 import org.apache.flink.api.common.state.ValueState;

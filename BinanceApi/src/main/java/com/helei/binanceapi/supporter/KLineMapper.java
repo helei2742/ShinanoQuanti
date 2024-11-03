@@ -2,7 +2,7 @@ package com.helei.binanceapi.supporter;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.helei.dto.KLine;
+import com.helei.dto.trade.KLine;
 
 
 //@Mapper

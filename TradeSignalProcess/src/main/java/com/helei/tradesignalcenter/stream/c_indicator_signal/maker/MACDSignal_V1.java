@@ -1,8 +1,8 @@
 package com.helei.tradesignalcenter.stream.c_indicator_signal.maker;
 
 import com.helei.constants.TradeSide;
-import com.helei.dto.IndicatorSignal;
-import com.helei.dto.KLine;
+import com.helei.dto.trade.IndicatorSignal;
+import com.helei.dto.trade.KLine;
 import com.helei.dto.indicator.MACD;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.flink.api.common.functions.OpenContext;

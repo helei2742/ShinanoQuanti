@@ -1,7 +1,7 @@
 package com.helei.tradesignalcenter.stream.c_indicator_signal;
 
-import com.helei.dto.IndicatorSignal;
-import com.helei.dto.SignalGroupKey;
+import com.helei.dto.trade.IndicatorSignal;
+import com.helei.dto.trade.SignalGroupKey;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.flink.api.java.tuple.Tuple2;

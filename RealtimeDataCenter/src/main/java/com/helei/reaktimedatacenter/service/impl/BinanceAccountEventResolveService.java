@@ -2,7 +2,7 @@ package com.helei.reaktimedatacenter.service.impl;
 
 
 import com.helei.binanceapi.dto.accountevent.*;
-import com.helei.dto.BalanceInfo;
+import com.helei.dto.trade.BalanceInfo;
 import com.helei.dto.account.AccountBalanceInfo;
 import com.helei.dto.account.AccountPositionInfo;
 import com.helei.dto.account.PositionInfo;

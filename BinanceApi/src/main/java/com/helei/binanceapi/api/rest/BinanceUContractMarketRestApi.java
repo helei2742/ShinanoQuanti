@@ -6,7 +6,7 @@ import com.helei.binanceapi.base.BinanceRestApiClient;
 import com.helei.binanceapi.supporter.IpWeightSupporter;
 import com.helei.binanceapi.supporter.KLineMapper;
 import com.helei.constants.KLineInterval;
-import com.helei.dto.KLine;
+import com.helei.dto.trade.KLine;
 
 import java.util.ArrayList;
 import java.util.List;

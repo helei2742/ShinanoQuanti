@@ -1,5 +1,6 @@
 package com.helei.tradesignalcenter.stream.e_trade_signal;
 
+import com.helei.dto.kafka.TradeSignalTopic;
 import com.helei.tradesignalcenter.config.TradeSignalConfig;
 import com.helei.tradesignalcenter.dto.TradeSignal;
 import com.helei.util.Serializer;
@@ -21,7 +22,7 @@ public class KafkaTradeSignalCommitter extends AbstractTradeSignalCommitter<Trad
     public Sink<TradeSignal> getCommitSink() {
         TradeSignalConfig.KafkaServerConfig kafkaServerConfig = tradeSignalConfig.getRealtime().getKafka().getOutput();
         String bootstrap = kafkaServerConfig.getBootstrapServer();
-        String topic = tradeSignalConfig.getSinkTopic();
+        TradeSignalTopic topic = tradeSignalConfig.getSinkTopic();
 
         log.info("创建 原始订单 Kafka Sink [{}] - topic [{}]", bootstrap, topic);
 
@@ -33,7 +34,7 @@ public class KafkaTradeSignalCommitter extends AbstractTradeSignalCommitter<Trad
                 .setRecordSerializer(
                         KafkaRecordSerializationSchema
                                 .builder()
-                                .setTopic(topic)
+                                .setTopic(topic.toString())
                                 .setValueSerializationSchema(new KafkaOriginOrderSchema())
                                 .build()
                 )

@@ -1,8 +1,8 @@
 package com.helei.tradesignalcenter.stream.c_indicator_signal;
 
-import com.helei.dto.IndicatorSignal;
-import com.helei.dto.KLine;
-import com.helei.dto.SignalGroupKey;
+import com.helei.dto.trade.IndicatorSignal;
+import com.helei.dto.trade.KLine;
+import com.helei.dto.trade.SignalGroupKey;
 import com.helei.dto.indicator.Indicator;
 import com.helei.tradesignalcenter.stream.a_klinesource.KLineHisAndRTSource;
 import com.helei.tradesignalcenter.stream.b_indicator.IndicatorProcessFunction;

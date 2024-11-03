@@ -10,7 +10,7 @@ spring:
       log-impl: org.apache.ibatis.logging.stdout.StdOutImpl  # 输出 SQL 日志
 
   kafka:
-    bootstrap-servers: 192.168.1.2:9092 # Kafka服务器地址
+
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
@@ -19,29 +19,3 @@ spring:
     redis:
       # 如果需要密码，格式为 redis://:password@localhost:6379
       url: redis://192.168.1.2:6379
-
-
-
-
-
-shinano:
-  quantity:
-    realtime:
-      base:
-        kafka-kline-num-partitions: 1
-        kafka-kline-replication-factor: 1
-
-      spot:
-        listen-kline:
-          - BTCUSDT@1m,15m,1h,24h
-          - ETHUSDT@1m,15m,1h,24h
-        clientListenKLineMaxCount: 15
-      contract:
-        listen-kline:
-          - BTCUSDT@1m,15m,1h,1d
-          - ETHUSDT@1m,15m,1h,1d
-        clientListenKLineMaxCount: 15
-
-    url:
-      binance-api-url:
-        u-contract-stream-url: wss://fstream.binance.com/stream

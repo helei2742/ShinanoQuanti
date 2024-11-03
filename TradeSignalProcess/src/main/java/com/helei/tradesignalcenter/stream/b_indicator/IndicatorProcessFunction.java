@@ -1,6 +1,6 @@
 package com.helei.tradesignalcenter.stream.b_indicator;
 
-import com.helei.dto.KLine;
+import com.helei.dto.trade.KLine;
 import com.helei.dto.indicator.Indicator;
 import com.helei.tradesignalcenter.stream.b_indicator.calculater.BaseIndicatorCalculator;
 import lombok.Getter;

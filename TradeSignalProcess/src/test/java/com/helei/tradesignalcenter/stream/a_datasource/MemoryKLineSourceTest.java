@@ -2,7 +2,7 @@ package com.helei.tradesignalcenter.stream.a_datasource;
 
 import com.helei.binanceapi.constants.BinanceApiUrl;
 import com.helei.constants.KLineInterval;
-import com.helei.dto.KLine;
+import com.helei.dto.trade.KLine;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.datastream.KeyedStream;
 import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;

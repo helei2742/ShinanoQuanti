@@ -2,6 +2,7 @@ package com.helei.tradesignalcenter.config;
 
 import com.helei.constants.TradeType;
 import com.helei.constants.RunEnv;
+import com.helei.dto.kafka.TradeSignalTopic;
 import lombok.Data;
 import org.yaml.snakeyaml.Yaml;
 
@@ -75,8 +76,8 @@ public class TradeSignalConfig implements Serializable {
      * 获取最终交易信号写入到kafka到topic
      * @return topic
      */
-    public String getSinkTopic() {
-        return (run_env.name() + "." + trade_type + "." + symbol + "." + name).toLowerCase();
+    public TradeSignalTopic getSinkTopic() {
+        return new TradeSignalTopic(run_env, trade_type, symbol, name);
     }
 
 

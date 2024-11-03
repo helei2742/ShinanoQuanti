@@ -3,7 +3,7 @@ package com.helei.binanceapi.api.rest;
 import com.helei.binanceapi.config.BinanceApiConfig;
 import com.helei.binanceapi.supporter.IpWeightSupporter;
 import com.helei.constants.KLineInterval;
-import com.helei.dto.KLine;
+import com.helei.dto.trade.KLine;
 import org.junit.jupiter.api.Test;
 
 import java.net.InetSocketAddress;
@@ -14,7 +14,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 
-import static org.junit.jupiter.api.Assertions.*;
 class BinanceUContractMarketRestApiTest {
     private static InetSocketAddress proxy = new InetSocketAddress("127.0.0.1", 7890);
 

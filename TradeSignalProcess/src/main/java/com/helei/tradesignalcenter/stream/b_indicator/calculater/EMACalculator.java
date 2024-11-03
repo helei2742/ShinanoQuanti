@@ -1,6 +1,6 @@
 package com.helei.tradesignalcenter.stream.b_indicator.calculater;
 
-import com.helei.dto.KLine;
+import com.helei.dto.trade.KLine;
 import com.helei.dto.indicator.EMA;
 import com.helei.dto.indicator.config.EMAConfig;
 import com.helei.util.CalculatorUtil;

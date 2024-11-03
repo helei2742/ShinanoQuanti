@@ -1,0 +1,34 @@
+shinano:
+  quantity:
+    trade_app:
+      kafka:
+        bootstrap_servers: 192.168.1.2:9092 # Kafka服务器地址
+
+      # 信号设置
+      signal:
+        # 运行环境
+        normal:
+          # 交易类型
+          spot:
+            - symbol: btcusdt # 交易对名称
+              signal_names: # 信号名list
+                - test1
+                - test2
+                - test3
+            - symbol: ethusdt
+              signal_names:
+                - test1
+                - test2
+                - test3
+          contract:
+            - symbol: btcusdt
+              signal_names:
+                - test1
+                - test2
+                - test3
+            - symbol: ethusdt
+              signal_names:
+                - test1
+                - test2
+                - test3
+        test_net: {}

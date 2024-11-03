@@ -2,8 +2,9 @@ package com.helei.tradesignalcenter.stream.a_klinesource;
 
 import com.helei.constants.CEXType;
 import com.helei.constants.KLineInterval;
+import com.helei.constants.RunEnv;
 import com.helei.constants.TradeType;
-import com.helei.dto.KLine;
+import com.helei.dto.trade.KLine;
 import com.helei.tradesignalcenter.config.TradeSignalConfig;
 import com.helei.util.KafkaUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -58,6 +59,7 @@ public class KafkaRealTimeSourceFactory {
      */
     public KafkaConsumer<String, KLine> loadRTKLineStream(
             CEXType cexType,
+            RunEnv runEnv,
             TradeType tradeType
     ) {
         List<String> topicList = intervals

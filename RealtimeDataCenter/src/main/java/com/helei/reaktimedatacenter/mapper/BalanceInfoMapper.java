@@ -1,7 +1,7 @@
 package com.helei.reaktimedatacenter.mapper;
 
 import com.helei.binanceapi.dto.accountevent.BalancePositionUpdateEvent;
-import com.helei.dto.BalanceInfo;
+import com.helei.dto.trade.BalanceInfo;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;

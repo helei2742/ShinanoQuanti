@@ -4,7 +4,7 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
-import com.helei.dto.IndicatorMap;
+import com.helei.dto.trade.IndicatorMap;
 import com.helei.dto.indicator.Indicator;
 import lombok.extern.slf4j.Slf4j;
 

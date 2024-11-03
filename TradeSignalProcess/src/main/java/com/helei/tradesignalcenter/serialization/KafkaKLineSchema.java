@@ -1,7 +1,7 @@
 package com.helei.tradesignalcenter.serialization;
 
 import com.alibaba.fastjson.JSONObject;
-import com.helei.dto.KLine;
+import com.helei.dto.trade.KLine;
 import com.helei.binanceapi.supporter.KLineMapper;
 import org.apache.flink.api.common.serialization.DeserializationSchema;
 import org.apache.flink.api.common.serialization.SerializationSchema;

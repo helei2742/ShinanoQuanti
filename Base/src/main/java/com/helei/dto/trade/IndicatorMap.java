@@ -1,11 +1,10 @@
-package com.helei.dto;
+package com.helei.dto.trade;
 
 import com.helei.dto.indicator.Indicator;
 import com.helei.dto.indicator.config.IndicatorConfig;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Setter

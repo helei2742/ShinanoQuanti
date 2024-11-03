@@ -9,7 +9,7 @@ import com.helei.cexapi.client.BinanceAccountMergeClient;
 import com.helei.constants.RunEnv;
 import com.helei.constants.TradeType;
 import com.helei.dto.ASKey;
-import com.helei.dto.KeyValue;
+import com.helei.dto.base.KeyValue;
 import com.helei.dto.account.UserAccountInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;

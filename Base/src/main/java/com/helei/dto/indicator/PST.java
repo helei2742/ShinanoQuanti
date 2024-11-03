@@ -1,6 +1,5 @@
 package com.helei.dto.indicator;
 
-import com.helei.dto.TrendLine;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

@@ -1,7 +1,7 @@
 package com.helei.tradesignalcenter.stream.a_klinesource.impl;
 
 import com.helei.constants.KLineInterval;
-import com.helei.dto.KLine;
+import com.helei.dto.trade.KLine;
 import com.helei.tradesignalcenter.config.FlinkConfig;
 import org.apache.flink.api.common.functions.OpenContext;
 import org.apache.flink.streaming.api.datastream.DataStream;
