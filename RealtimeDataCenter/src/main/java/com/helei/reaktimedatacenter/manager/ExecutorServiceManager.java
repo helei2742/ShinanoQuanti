@@ -16,10 +16,18 @@ public class ExecutorServiceManager {
      */
     private final ExecutorService syncTaskExecutor = Executors.newThreadPerTaskExecutor(new NamedThreadFactory("同步任务线程池"));
 
+    /**
+     * 处理账户事件的线程池
+     */
+    private final ExecutorService accountEventExecutor = Executors.newThreadPerTaskExecutor(new NamedThreadFactory("账户事件处理线程池"));
 
     /**
-     * 处理事件的线程池
+     * 获取账户实时信息推送的线程池
      */
-    private final ExecutorService eventExecutor = Executors.newThreadPerTaskExecutor(new NamedThreadFactory("事件处理线程池"));
+    private final ExecutorService accountRTDataExecutor = Executors.newThreadPerTaskExecutor(new NamedThreadFactory("账户实时数据流获取线程池"));
 
+    /**
+     * k线加载任务处理的线程池
+     */
+    private final ExecutorService klineTaskExecutor = Executors.newThreadPerTaskExecutor(new NamedThreadFactory("k线数据加载线程池"));
 }

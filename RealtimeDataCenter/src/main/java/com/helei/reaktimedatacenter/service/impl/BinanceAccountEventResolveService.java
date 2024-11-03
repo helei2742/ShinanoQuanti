@@ -37,7 +37,7 @@ public class BinanceAccountEventResolveService implements AccountEventResolveSer
 
     @Autowired
     public BinanceAccountEventResolveService(ExecutorServiceManager executorServiceManager) {
-        this.eventExecutor = executorServiceManager.getEventExecutor();
+        this.eventExecutor = executorServiceManager.getAccountEventExecutor();
     }
 
 

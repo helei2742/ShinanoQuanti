@@ -94,7 +94,7 @@ public abstract class AbstractWebSocketClientHandler<P, T> extends SimpleChannel
             }
         } else if (msg instanceof WebSocketFrame frame) {
             if (frame instanceof TextWebSocketFrame textFrame) {
-                log.debug("websocket client [{}] 接收到的消息：{}", ch.attr(NettyConstants.CLIENT_NAME).get(), textFrame.text());
+                log.info("websocket client [{}] 接收到的消息：{}", ch.attr(NettyConstants.CLIENT_NAME).get(), textFrame.text());
 
                 whenReceiveMessage(textFrame.text());
 

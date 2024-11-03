@@ -13,13 +13,14 @@ import com.helei.dto.KeyValue;
 import com.helei.dto.account.UserAccountInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.net.InetSocketAddress;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent .*;
-        import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BiConsumer;
 
 
@@ -36,7 +37,7 @@ public class BinanceAccountClientManager implements InitializingBean {
     private static final int ACCOUNT_STREAM_START_TIMES_LIMIT = 3;
 
 
-    private final ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor();
+    private final ExecutorService executor;
 
 
     private final static ConcurrentMap<String, BinanceAccountMergeClient> mergeClientMap = new ConcurrentHashMap<>();
@@ -50,6 +51,11 @@ public class BinanceAccountClientManager implements InitializingBean {
 
     private final AtomicBoolean streamRefreshTaskState = new AtomicBoolean(true);
 
+
+    @Autowired
+    public BinanceAccountClientManager(ExecutorServiceManager executorServiceManager) {
+        this.executor = executorServiceManager.getAccountRTDataExecutor();
+    }
 
     /**
      * 创建 BinanceWSAccountStreamClient，用来获取账户事件推送流

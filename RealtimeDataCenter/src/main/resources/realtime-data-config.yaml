@@ -1,0 +1,38 @@
+shinano:
+  quantity:
+    realtime:
+      base:
+        kafka_kline_num_partitions: 1
+        kafka_kline_replication_factor: 1
+      # 测试网配置
+      test_net:
+        #现货配置
+        spot:
+          # 监听的k线
+          listen_kline:
+            - BTCUSDT@24h
+            - ETHUSDT@1m
+          # 一个ws客户端监听k线的最大数量
+          client_listen_kline_max_count: 15
+        # 合约配置
+        contract:
+          listen_kline:
+            - BTCUSDT@15m,1h
+            - ETHUSDT@15m,1h
+          client_listen_kline_max_count: 15
+      # 主网配置
+      normal:
+        #现货配置
+        spot:
+          # 监听的k线
+          listen_kline:
+            - SOLUSDT@15m,1h
+            - BTCUSDT@15m,1h
+          # 一个ws客户端监听k线的最大数量
+          client_listen_kline_max_count: 15
+        # 合约配置
+        contract:
+          listen_kline:
+            - BTCUSDT@1m,15m,1h,1d
+            - ETHUSDT@1m,15m,1h,1d
+          client_listen_kline_max_count: 15

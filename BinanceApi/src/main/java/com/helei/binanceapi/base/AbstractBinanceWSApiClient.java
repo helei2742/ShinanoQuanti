@@ -203,7 +203,7 @@ public class AbstractBinanceWSApiClient extends AbstractWebsocketClient<JSONObje
             sendRequest(1, command, subscribeEntity.getAsKey(), response -> {
                 if (response != null) {
                     log.debug("get subscribe response: {}", response);
-                    binanceWSStreamSupporter.addSubscribe(symbol, List.of(subscribeEntity));
+                     binanceWSStreamSupporter.addSubscribe(symbol, List.of(subscribeEntity));
                 } else {
                     log.error("get subscribe response error, requestId[{}]", id);
                 }

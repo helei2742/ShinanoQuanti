@@ -62,7 +62,7 @@ public class KafkaRealTimeSourceFactory {
     ) {
         List<String> topicList = intervals
                 .stream()
-                .map(interval -> KafkaUtil.resolveKafkaTopic(cexType, KafkaUtil.getKLineStreamName(symbol, interval), tradeType))
+                .map(interval -> KafkaUtil.resolveKafkaTopic(cexType, KafkaUtil.getKLineStreamName(symbol, interval), runEnv, tradeType))
                 .toList();
 
         String bootstrapServer = realtimeKafkaConfig.getInput().getBootstrapServer();

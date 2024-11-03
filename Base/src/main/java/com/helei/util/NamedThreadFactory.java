@@ -15,7 +15,7 @@ public class NamedThreadFactory implements ThreadFactory {
     @Override
     public Thread newThread(Runnable r) {
         // 使用指定的名称前缀和自动编号来创建线程名称
-        Thread thread = new Thread(r, namePrefix + "-thread-" + threadNumber.getAndIncrement());
+        Thread thread = new Thread(r, namePrefix + "-" + threadNumber.getAndIncrement());
         // 设置为守护线程（可选）
         thread.setDaemon(false);
         return thread;

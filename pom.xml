@@ -16,6 +16,7 @@
         <module>Base</module>
         <module>BinanceApi</module>
         <module>RealtimeDataCenter</module>
+        <module>TradeApplication</module>
     </modules>
 
 
