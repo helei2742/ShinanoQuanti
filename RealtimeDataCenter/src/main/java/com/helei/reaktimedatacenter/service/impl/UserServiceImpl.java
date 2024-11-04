@@ -4,12 +4,16 @@ import com.alibaba.fastjson.JSONObject;
 import com.helei.constants.RunEnv;
 import com.helei.constants.TradeType;
 import com.helei.dto.ASKey;
+import com.helei.dto.account.AccountRTData;
 import com.helei.dto.account.UserAccountInfo;
 import com.helei.dto.account.UserInfo;
+import com.helei.dto.base.KeyValue;
+import com.helei.reaktimedatacenter.config.RealtimeConfig;
 import com.helei.reaktimedatacenter.service.UserService;
 import com.helei.reaktimedatacenter.supporter.BatchWriteSupporter;
-import com.helei.reaktimedatacenter.util.RedisKeyUtil;
+import com.helei.util.RedisKeyUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,8 +23,9 @@ import java.util.List;
 
 @Slf4j
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService, InitializingBean {
 
+    private final RealtimeConfig realtimeConfig = RealtimeConfig.INSTANCE;
 
     @Autowired
     private BatchWriteSupporter batchWriteSupporter;
@@ -91,20 +96,45 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 更新用户账户信息
+     *
      * @param userAccountInfo userAccountInfo
      */
     @Override
     public void updateUserAccountInfo(UserAccountInfo userAccountInfo) {
-        String key = RedisKeyUtil.getUserAccountInfoKey(
-                userAccountInfo.getUserId(),
-                userAccountInfo.getId(),
-                userAccountInfo.getRunEnv(),
-                userAccountInfo.getTradeType()
-        );
-        String value = JSONObject.toJSONString(userAccountInfo);
+//        String key = RedisKeyUtil.getUserAccountInfoKey(
+//                userAccountInfo.getUserId(),
+//                userAccountInfo.getId(),
+//                userAccountInfo.getRunEnv(),
+//                userAccountInfo.getTradeType()
+//        );
+
+        long accountId = userAccountInfo.getId();
+        long userId = userAccountInfo.getUserId();
+
+        String key = RedisKeyUtil.getUserAccountEnvRTDataKey(userAccountInfo.getRunEnv(), userAccountInfo.getTradeType());
+        String hashKey = String.valueOf(accountId);
+
+        //只发实时的部分数据
+        String value = JSONObject.toJSONString(new AccountRTData(userId, accountId, userAccountInfo.getAccountBalanceInfo(), userAccountInfo.getAccountPositionInfo()));
 
         log.info("更新账户信息，key[{}], value[{}]", key, value);
-        batchWriteSupporter.writeToRedis(key, value);
+//        batchWriteSupporter.writeToRedis(key, value);
+        batchWriteSupporter.writeToRedisHash(key, hashKey, value);
     }
 
+
+    public void updateUserInfoToRedis(RunEnv env, TradeType tradeType) {
+        List<UserInfo> userInfos = queryAll();
+        for (UserInfo userInfo : userInfos) {
+            String key = RedisKeyUtil.getUserInfoKeyPrefix(env, tradeType) + userInfo.getId();
+            batchWriteSupporter.writeToRedis(key, JSONObject.toJSONString(userInfo));
+        }
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        for (KeyValue<RunEnv, TradeType> keyValue : realtimeConfig.getRun_type().getRunTypeList()) {
+            updateUserInfoToRedis(keyValue.getKey(), keyValue.getValue());
+        }
+    }
 }

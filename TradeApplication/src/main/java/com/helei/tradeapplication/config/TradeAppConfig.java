@@ -2,6 +2,9 @@ package com.helei.tradeapplication.config;
 
 import com.alibaba.fastjson.JSON;
 import com.helei.binanceapi.config.BinanceApiConfig;
+import com.helei.constants.RunEnv;
+import com.helei.constants.TradeType;
+import com.helei.dto.config.RunTypeConfig;
 import com.helei.dto.kafka.KafkaConfig;
 import com.helei.dto.kafka.RedisConfig;
 import lombok.AllArgsConstructor;
@@ -10,8 +13,10 @@ import lombok.NoArgsConstructor;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.InputStream;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiConsumer;
 
 @Data
 @AllArgsConstructor
@@ -20,6 +25,8 @@ public class TradeAppConfig {
     private static final String CONFIG_FILE = "trade-app-config.yaml";
 
     public static final TradeAppConfig INSTANCE;
+
+    private RunTypeConfig run_type;
 
     private RedisConfig redis;
 
@@ -42,6 +49,33 @@ public class TradeAppConfig {
             INSTANCE = yaml.loadAs(yaml.dump(trade_app), TradeAppConfig.class);
         } catch (Exception e) {
             throw new RuntimeException("Failed to load YAML file: " + CONFIG_FILE, e);
+        }
+    }
+
+
+    /**
+     * 获取信号topics，通过回调的方式，不直接返回topic列表
+     * @param env 运行环境
+     * @param tradeType 交易类型
+     * @param topicResolve 回调函数， 第一个参数为前缀， 第二个参数为信号名列表
+     */
+    public void getSignalTopics(RunEnv env, TradeType tradeType, BiConsumer<String, List<String>> topicResolve) {
+        StringBuilder prefix = new StringBuilder(env.name());
+        prefix.append(".").append(tradeType.name()).append(".");
+
+        List<TradeSignalSymbolConfig> scList = switch (env) {
+            case TEST_NET -> signal.test_net.getTradeSignalSymbolConfigs(tradeType) ;
+            case NORMAL -> signal.normal.getTradeSignalSymbolConfigs(tradeType);
+        };
+
+        if (scList == null) {
+            topicResolve.accept(prefix.toString(), Collections.emptyList());
+            return;
+        }
+
+        for (TradeSignalSymbolConfig signalSymbolConfig : scList) {
+            String symbol = signalSymbolConfig.getSymbol();
+            topicResolve.accept(prefix + symbol + ".", signalSymbolConfig.signal_names);
         }
     }
 
@@ -74,6 +108,13 @@ public class TradeAppConfig {
          * u本位合约类型信号设置
          */
         private List<TradeSignalSymbolConfig> contract;
+
+        public List<TradeSignalSymbolConfig> getTradeSignalSymbolConfigs(TradeType tradeType) {
+            return switch (tradeType) {
+                case SPOT -> spot;
+                case CONTRACT -> contract;
+            };
+        }
     }
 
 

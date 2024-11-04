@@ -11,6 +11,8 @@ public class KafkaConfig {
 
     private String bootstrap_servers;
 
+    private String group_id = "default_group";
+
     /**
      * kafka写入实时k线时设置几个分区
      */

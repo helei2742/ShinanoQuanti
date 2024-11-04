@@ -5,6 +5,7 @@ import com.helei.binanceapi.config.BinanceApiConfig;
 import com.helei.constants.KLineInterval;
 import com.helei.constants.RunEnv;
 import com.helei.constants.TradeType;
+import com.helei.dto.config.RunTypeConfig;
 import com.helei.dto.kafka.KafkaConfig;
 import com.helei.dto.kafka.RedisConfig;
 import com.helei.reaktimedatacenter.dto.SymbolKLineInfo;
@@ -13,13 +14,15 @@ import org.yaml.snakeyaml.Yaml;
 
 import java.io.InputStream;
 import java.util.*;
-import java.util.stream.Collectors;
+        import java.util.stream.Collectors;
 
 @Data
 public class RealtimeConfig {
     private static final String CONFIG_FILE = "realtime-data-config.yaml";
 
     public static final RealtimeConfig INSTANCE;
+
+    private RunTypeConfig run_type;
 
     private KafkaConfig kafka;
 

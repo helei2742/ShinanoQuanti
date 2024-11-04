@@ -1,21 +1,23 @@
-
 spring:
-  datasource:
-    url: jdbc:mysql://localhost:3306/shinano_quanti?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
-    username: helei
-    password: 962464helei
-    driver-class-name: com.mysql.cj.jdbc.Driver
-  mybatis-plus:
-    configuration:
-      log-impl: org.apache.ibatis.logging.stdout.StdOutImpl  # 输出 SQL 日志
+    datasource:
+      url: jdbc:mysql://192.168.1.3:3306/shinanoquanti?useSSL=false&allowPublicKeyRetrieval=true&autoReconnect=true&failOverReadOnly=false&maxReconnects=10
+      username: root
+      password: 123456
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      type: com.alibaba.druid.pool.DruidDataSource
 
-  kafka:
+      druid:
+        initial-size: 5
+        max-active: 20
+        min-idle: 5
+        max-wait: 60000
+        time-between-eviction-runs-millis: 60000
+        min-evictable-idle-time-millis: 300000
+        validation-query: SELECT 1
+        test-while-idle: true
+        test-on-borrow: false
+        test-on-return: false
 
-    producer:
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.apache.kafka.common.serialization.StringSerializer
-
-  data:
-    redis:
-      # 如果需要密码，格式为 redis://:password@localhost:6379
-      url: redis://192.168.1.2:6379
+    mybatis-plus:
+      configuration:
+        log-impl: org.apache.ibatis.logging.stdout.StdOutImpl  # 输出 SQL 日志
