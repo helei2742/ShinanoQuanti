@@ -1,7 +1,7 @@
 package com.helei.tradesignalprocess.stream.a_datasource;
 
 
-import com.helei.constants.KLineInterval;
+import com.helei.constants.trade.KLineInterval;
 
 import java.util.List;
 

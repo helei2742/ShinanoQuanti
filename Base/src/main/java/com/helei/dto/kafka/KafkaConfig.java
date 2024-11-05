@@ -16,11 +16,11 @@ public class KafkaConfig {
     /**
      * kafka写入实时k线时设置几个分区
      */
-    private int kafka_kline_num_partitions;
+    private int kafka_num_partitions;
 
     /**
      * kafka的副本个数
      */
-    private short kafka_kline_replication_factor;
+    private short kafka_replication_factor;
 
 }

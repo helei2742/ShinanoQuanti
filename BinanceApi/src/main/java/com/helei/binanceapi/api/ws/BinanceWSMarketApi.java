@@ -3,7 +3,7 @@ package com.helei.binanceapi.api.ws;
 import com.alibaba.fastjson.JSONObject;
 import com.helei.binanceapi.BinanceWSApiClient;
 import com.helei.binanceapi.base.AbstractBinanceWSApi;
-import com.helei.constants.KLineInterval;
+import com.helei.constants.trade.KLineInterval;
 import com.helei.binanceapi.constants.command.MarketCommandType;
 import com.helei.dto.ASKey;
 import com.helei.dto.WebSocketCommandBuilder;

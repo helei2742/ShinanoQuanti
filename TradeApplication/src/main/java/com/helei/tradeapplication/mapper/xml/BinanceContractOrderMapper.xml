@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mp.mpdemo.mapper.BinanceContractOrderMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.example.mp.mpdemo.entity.BinanceContractOrder">
+        <id column="order_id" property="orderId" />
+        <result column="user_id" property="userId" />
+        <result column="account_id" property="accountId" />
+        <result column="symbol" property="symbol" />
+        <result column="side" property="side" />
+        <result column="position_side" property="positionSide" />
+        <result column="type" property="type" />
+        <result column="reduce_only" property="reduceOnly" />
+        <result column="quantity" property="quantity" />
+        <result column="price" property="price" />
+        <result column="client_order_id" property="clientOrderId" />
+        <result column="stop_price" property="stopPrice" />
+        <result column="close_position" property="closePosition" />
+        <result column="activation_price" property="activationPrice" />
+        <result column="callback_rate" property="callbackRate" />
+        <result column="time_in_force" property="timeInForce" />
+        <result column="working_type" property="workingType" />
+        <result column="price_protect" property="priceProtect" />
+        <result column="order_resp_type" property="orderRespType" />
+        <result column="price_match" property="priceMatch" />
+        <result column="self_trade_prevention_mode" property="selfTradePreventionMode" />
+        <result column="good_till_date" property="goodTillDate" />
+        <result column="timestamp" property="timestamp" />
+        <result column="status" property="status" />
+        <result column="created_datetime" property="createdDatetime" />
+        <result column="updated_datetime" property="updatedDatetime" />
+    </resultMap>
+
+</mapper>

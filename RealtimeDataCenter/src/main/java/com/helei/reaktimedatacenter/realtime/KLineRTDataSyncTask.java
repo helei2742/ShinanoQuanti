@@ -1,7 +1,7 @@
 package com.helei.reaktimedatacenter.realtime;
 
 import cn.hutool.core.lang.Pair;
-import com.helei.constants.KLineInterval;
+import com.helei.constants.trade.KLineInterval;
 
 import java.util.List;
 

@@ -1,8 +1,8 @@
 package com.helei.dto.account;
 
 
-import com.helei.constants.MarginMode;
-import com.helei.constants.PositionSide;
+import com.helei.constants.order.PositionSide;
+import com.helei.constants.trade.MarginMode;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

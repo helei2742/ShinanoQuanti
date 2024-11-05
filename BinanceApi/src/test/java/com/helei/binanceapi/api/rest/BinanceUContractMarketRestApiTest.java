@@ -2,7 +2,7 @@ package com.helei.binanceapi.api.rest;
 
 import com.helei.binanceapi.config.BinanceApiConfig;
 import com.helei.binanceapi.supporter.IpWeightSupporter;
-import com.helei.constants.KLineInterval;
+import com.helei.constants.trade.KLineInterval;
 import com.helei.dto.trade.KLine;
 import org.junit.jupiter.api.Test;
 

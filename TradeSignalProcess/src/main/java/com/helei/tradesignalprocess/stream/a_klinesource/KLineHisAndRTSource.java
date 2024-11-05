@@ -1,7 +1,7 @@
 package com.helei.tradesignalprocess.stream.a_klinesource;
 
 import cn.hutool.core.util.StrUtil;
-import com.helei.constants.KLineInterval;
+import com.helei.constants.trade.KLineInterval;
 import com.helei.dto.trade.KLine;
 import com.helei.tradesignalprocess.config.TradeSignalConfig;
 import org.apache.flink.configuration.Configuration;

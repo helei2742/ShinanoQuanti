@@ -1,8 +1,9 @@
 package com.helei.dto.account;
 
 
+import com.helei.constants.CEXType;
 import com.helei.constants.RunEnv;
-import com.helei.constants.TradeType;
+import com.helei.constants.trade.TradeType;
 import com.helei.dto.ASKey;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,7 +13,6 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.locks.ReentrantLock;
 
 @Data
 @AllArgsConstructor
@@ -51,6 +51,11 @@ public class UserAccountInfo implements Serializable {
     private TradeType tradeType;
 
     /**
+     * 账户交易所类型
+     */
+    private CEXType cexType = CEXType.BINANCE;
+
+    /**
      * 订阅的交易对
      */
     private List<String> subscribeSymbol;
@@ -77,3 +82,4 @@ public class UserAccountInfo implements Serializable {
         this.accountPositionInfo.setAccountId(id);
     }
 }
+

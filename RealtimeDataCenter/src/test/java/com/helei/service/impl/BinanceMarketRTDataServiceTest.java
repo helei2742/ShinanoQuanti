@@ -1,7 +1,7 @@
 package com.helei.service.impl;
 
 import com.helei.constants.RunEnv;
-import com.helei.constants.TradeType;
+import com.helei.constants.trade.TradeType;
 import com.helei.reaktimedatacenter.service.impl.BinanceMarketRTDataService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

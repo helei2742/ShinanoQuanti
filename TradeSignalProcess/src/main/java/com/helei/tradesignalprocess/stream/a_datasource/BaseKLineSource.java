@@ -1,6 +1,6 @@
 package com.helei.tradesignalprocess.stream.a_datasource;
 
-import com.helei.constants.KLineInterval;
+import com.helei.constants.trade.KLineInterval;
 import com.helei.dto.trade.KLine;
 import lombok.Getter;
 import org.apache.flink.streaming.api.functions.source.RichSourceFunction;

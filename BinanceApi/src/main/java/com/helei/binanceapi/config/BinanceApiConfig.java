@@ -3,7 +3,7 @@ package com.helei.binanceapi.config;
 
 import com.helei.constants.CEXType;
 import com.helei.constants.RunEnv;
-import com.helei.constants.TradeType;
+import com.helei.constants.trade.TradeType;
 import lombok.Data;
 import org.yaml.snakeyaml.Yaml;
 

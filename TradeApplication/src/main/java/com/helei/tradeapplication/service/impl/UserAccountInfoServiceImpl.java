@@ -1,7 +1,7 @@
 package com.helei.tradeapplication.service.impl;
 
 import com.helei.constants.RunEnv;
-import com.helei.constants.TradeType;
+import com.helei.constants.trade.TradeType;
 import com.helei.dto.account.AccountRTData;
 import com.helei.dto.account.UserAccountInfo;
 import com.helei.tradeapplication.cache.UserInfoCache;

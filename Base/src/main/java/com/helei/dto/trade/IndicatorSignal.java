@@ -1,6 +1,6 @@
 package com.helei.dto.trade;
 
-import com.helei.constants.TradeSide;
+import com.helei.constants.trade.TradeSide;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

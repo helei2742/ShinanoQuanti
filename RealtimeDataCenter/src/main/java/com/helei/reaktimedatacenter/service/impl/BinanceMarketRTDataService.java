@@ -5,9 +5,9 @@ import cn.hutool.core.lang.Pair;
 import com.alibaba.fastjson.JSONObject;
 import com.helei.binanceapi.config.BinanceApiConfig;
 import com.helei.constants.CEXType;
-import com.helei.constants.KLineInterval;
+import com.helei.constants.trade.KLineInterval;
 import com.helei.constants.RunEnv;
-import com.helei.constants.TradeType;
+import com.helei.constants.trade.TradeType;
 import com.helei.reaktimedatacenter.config.RealtimeConfig;
 import com.helei.reaktimedatacenter.dto.SymbolKLineInfo;
 import com.helei.reaktimedatacenter.manager.ExecutorServiceManager;
@@ -144,8 +144,8 @@ public class BinanceMarketRTDataService implements MarketRealtimeDataService {
 
             kafkaProducerService.checkAndCreateTopic(
                     topic,
-                    realtimeConfig.getKafka().getKafka_kline_num_partitions(),
-                    realtimeConfig.getKafka().getKafka_kline_replication_factor()
+                    realtimeConfig.getKafka().getKafka_num_partitions(),
+                    realtimeConfig.getKafka().getKafka_replication_factor()
             );
         }
     }

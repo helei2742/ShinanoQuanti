@@ -2,9 +2,9 @@ package com.helei.reaktimedatacenter.config;
 
 
 import com.helei.binanceapi.config.BinanceApiConfig;
-import com.helei.constants.KLineInterval;
+import com.helei.constants.trade.KLineInterval;
 import com.helei.constants.RunEnv;
-import com.helei.constants.TradeType;
+import com.helei.constants.trade.TradeType;
 import com.helei.dto.config.RunTypeConfig;
 import com.helei.dto.kafka.KafkaConfig;
 import com.helei.dto.kafka.RedisConfig;

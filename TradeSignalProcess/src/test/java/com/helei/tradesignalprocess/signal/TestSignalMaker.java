@@ -1,7 +1,7 @@
 package com.helei.tradesignalprocess.signal;
 
 
-import com.helei.constants.TradeSide;
+import com.helei.constants.trade.TradeSide;
 import com.helei.dto.trade.IndicatorSignal;
 import com.helei.dto.trade.KLine;
 import com.helei.tradesignalprocess.stream.c_indicator_signal.maker.AbstractSignalMaker;

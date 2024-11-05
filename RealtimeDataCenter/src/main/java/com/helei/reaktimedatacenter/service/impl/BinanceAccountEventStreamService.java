@@ -3,7 +3,7 @@ package com.helei.reaktimedatacenter.service.impl;
 import com.helei.binanceapi.BinanceWSAccountStreamClient;
 import com.helei.binanceapi.dto.accountevent.AccountEvent;
 import com.helei.constants.RunEnv;
-import com.helei.constants.TradeType;
+import com.helei.constants.trade.TradeType;
 import com.helei.dto.account.UserAccountInfo;
 import com.helei.dto.account.UserInfo;
 import com.helei.reaktimedatacenter.manager.BinanceAccountClientManager;

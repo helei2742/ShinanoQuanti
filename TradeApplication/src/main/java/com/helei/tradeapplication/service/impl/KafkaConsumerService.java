@@ -1,7 +1,7 @@
 package com.helei.tradeapplication.service.impl;
 
 import com.helei.constants.RunEnv;
-import com.helei.constants.TradeType;
+import com.helei.constants.trade.TradeType;
 import com.helei.dto.base.KeyValue;
 import com.helei.tradeapplication.config.TradeAppConfig;
 import com.helei.tradeapplication.listener.KafkaTradeSignalListener;

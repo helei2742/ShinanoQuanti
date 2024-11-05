@@ -1,10 +1,9 @@
 package com.helei.binanceapi.dto.accountevent;
 
 import com.helei.binanceapi.constants.AccountEventType;
-import com.helei.binanceapi.constants.order .*;
-import com.helei.binanceapi.constants.TimeInForce;
-import com.helei.constants.PositionSide;
-import com.helei.constants.TradeSide;
+import com.helei.constants.order.TimeInForce;
+import com.helei.constants.trade.TradeSide;
+import com.helei.constants.order.*;
 import lombok .*;
 
 /**

@@ -1,6 +1,6 @@
 package com.helei.dto.trade;
 
-import com.helei.constants.KLineInterval;
+import com.helei.constants.trade.KLineInterval;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

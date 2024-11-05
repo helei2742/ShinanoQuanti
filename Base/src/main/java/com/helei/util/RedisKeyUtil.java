@@ -2,7 +2,7 @@
 package com.helei.util;
 
 import com.helei.constants.RunEnv;
-import com.helei.constants.TradeType;
+import com.helei.constants.trade.TradeType;
 
 
 public class RedisKeyUtil {

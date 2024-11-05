@@ -3,10 +3,9 @@ package com.helei.tradeapplication.listener;
 
 import com.alibaba.fastjson.JSONObject;
 import com.helei.constants.RunEnv;
-import com.helei.constants.TradeType;
+import com.helei.constants.trade.TradeType;
 import com.helei.dto.trade.TradeSignal;
 import com.helei.tradeapplication.service.TradeSignalService;
-import com.helei.tradeapplication.service.impl.KafkaTradeSignalService;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.ExecutorService;

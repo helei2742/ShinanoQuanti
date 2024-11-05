@@ -1,16 +1,14 @@
 package com.helei.tradeapplication.service.impl;
 
 
-import com.helei.binanceapi.dto.order.BaseOrder;
-import com.helei.binanceapi.dto.order.LimitOrder;
+import com.helei.dto.order.BaseOrder;
 import com.helei.constants.RunEnv;
-import com.helei.constants.TradeType;
-import com.helei.dto.account.AccountRTData;
-import com.helei.dto.account.PositionInfo;
+import com.helei.constants.trade.TradeType;
 import com.helei.dto.account.UserAccountInfo;
-import com.helei.dto.trade.BalanceInfo;
 import com.helei.dto.trade.TradeSignal;
+import com.helei.interfaces.CompleteInvocation;
 import com.helei.tradeapplication.manager.ExecutorServiceManager;
+import com.helei.tradeapplication.service.OrderService;
 import com.helei.tradeapplication.service.TradeSignalService;
 import com.helei.tradeapplication.service.UserAccountInfoService;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 
@@ -32,6 +31,10 @@ public class KafkaTradeSignalService implements TradeSignalService {
 
     @Autowired
     private UserAccountInfoService userAccountInfoService;
+
+    @Autowired
+    private OrderService orderService;
+
 
     public KafkaTradeSignalService(ExecutorServiceManager executorServiceManager) {
         this.executor = executorServiceManager.getTradeExecutor();
@@ -61,7 +64,8 @@ public class KafkaTradeSignalService implements TradeSignalService {
 
 
     /**
-     * 构建订单，符合条件的提交到交易
+     * 构建订单，符合条件的提交到交易.
+     * <p>并不会真正把订单提交到交易所，而是写入数据库后，再写入kafka的topic里</p>
      *
      * @param runEnv       runEnv
      * @param tradeType    tradeType
@@ -74,19 +78,54 @@ public class KafkaTradeSignalService implements TradeSignalService {
         List<CompletableFuture<BaseOrder>> futures = new ArrayList<>();
 
         for (UserAccountInfo accountInfo : accountInfos) {
+
+            //Step 1 过滤掉账户设置不接受此信号的
             if (filterAccount(signal, accountInfo)) {
                 log.warn("accountId[{}]不能执行信号 [{}]", accountInfo.getId(), signal);
             }
 
             CompletableFuture<BaseOrder> future = userAccountInfoService
+                    //Step 2 查询实时的账户数据
                     .queryAccountRTInfo(runEnv, tradeType, accountInfo.getId())
+                    //Step 3 生产订单
                     .thenApplyAsync(accountRTData -> {
+                        final BaseOrder[] baseOrder = {null};
+
                         try {
-                            return makeOrder(accountInfo, accountRTData, signal);
+                            CountDownLatch latch = new CountDownLatch(1);
+
+                            orderService.makeOrder(accountInfo, accountRTData, signal, new CompleteInvocation<>() {
+                                @Override
+                                public void success(BaseOrder order) {
+                                    baseOrder[0] = order;
+                                    log.info("创建订单[{}]成功", order);
+                                }
+
+                                @Override
+                                public void fail(BaseOrder order, String errorMsg) {
+                                    baseOrder[0] = order;
+                                    log.info("创建订单失败[{}],错误原因[{}]", order, errorMsg);
+                                }
+
+                                @Override
+                                public void finish() {
+                                    latch.countDown();
+                                }
+                            });
+
+                            //等待订单创建完成
+                            latch.await();
+
                         } catch (Exception e) {
-                            log.error("为accountId[{}]创建订单时出错, signal[{}]", accountInfo.getId(), signal);
-                            return null;
+                            log.error("为accountId[{}]创建订单时出错, signal[{}]", accountInfo.getId(), signal, e);
                         }
+                        return baseOrder[0];
+                    })
+                    .exceptionallyAsync(throwable -> {
+                        if (throwable != null) {
+                            log.error("创建订单时发生错误", throwable);
+                        }
+                        return null;
                     });
 
             futures.add(future);
@@ -109,23 +148,6 @@ public class KafkaTradeSignalService implements TradeSignalService {
 
 
     /**
-     * 生成订单
-     *
-     * @param accountInfo   账户信息
-     * @param accountRTData 账户实时数据
-     * @param signal        信号
-     * @return 交易的订单
-     */
-    private BaseOrder makeOrder(UserAccountInfo accountInfo, AccountRTData accountRTData, TradeSignal signal) {
-        String symbol = signal.getSymbol().toLowerCase();
-        BalanceInfo balanceInfo = accountRTData.getAccountBalanceInfo().getBalances().get(symbol);
-        PositionInfo positionInfo = accountRTData.getAccountPositionInfo().getPositions().get(symbol);
-        //TODO
-
-        return new LimitOrder();
-    }
-
-    /**
      * 根据账户设置过滤
      *
      * @param signal  信号
@@ -136,3 +158,4 @@ public class KafkaTradeSignalService implements TradeSignalService {
         return !account.getUsable().get() || !account.getSubscribeSymbol().contains(signal.getSymbol());
     }
 }
+

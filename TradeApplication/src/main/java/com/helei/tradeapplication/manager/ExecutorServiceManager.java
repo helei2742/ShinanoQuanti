@@ -19,4 +19,8 @@ public class ExecutorServiceManager {
 
 
     private final ExecutorService tradeExecutor = Executors.newThreadPerTaskExecutor(new NamedThreadFactory("交易用线程池"));
+
+
+    private final ExecutorService orderExecutor = Executors.newThreadPerTaskExecutor(new NamedThreadFactory("订单用线程池"));
 }
+

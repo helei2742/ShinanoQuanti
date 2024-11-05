@@ -1,9 +1,9 @@
 package com.helei.tradesignalprocess.stream.a_klinesource;
 
 import com.helei.constants.CEXType;
-import com.helei.constants.KLineInterval;
+import com.helei.constants.trade.KLineInterval;
 import com.helei.constants.RunEnv;
-import com.helei.constants.TradeType;
+import com.helei.constants.trade.TradeType;
 import com.helei.dto.trade.KLine;
 import com.helei.tradesignalprocess.config.TradeSignalConfig;
 import com.helei.util.KafkaUtil;

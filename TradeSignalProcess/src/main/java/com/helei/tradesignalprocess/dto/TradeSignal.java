@@ -1,6 +1,6 @@
 package com.helei.tradesignalprocess.dto;
 
-import com.helei.constants.TradeSide;
+import com.helei.constants.trade.TradeSide;
 import lombok.*;
 
 import java.math.BigDecimal;

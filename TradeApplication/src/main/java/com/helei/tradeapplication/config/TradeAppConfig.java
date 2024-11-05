@@ -3,7 +3,7 @@ package com.helei.tradeapplication.config;
 import com.alibaba.fastjson.JSON;
 import com.helei.binanceapi.config.BinanceApiConfig;
 import com.helei.constants.RunEnv;
-import com.helei.constants.TradeType;
+import com.helei.constants.trade.TradeType;
 import com.helei.dto.config.RunTypeConfig;
 import com.helei.dto.kafka.KafkaConfig;
 import com.helei.dto.kafka.RedisConfig;

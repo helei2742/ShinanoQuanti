@@ -1,15 +1,14 @@
 package com.helei.binanceapi.supporter;
 
 import com.alibaba.fastjson.JSONObject;
-import com.helei.binanceapi.constants.TimeInForce;
-import com.helei.binanceapi.constants.order .*;
-        import com.helei.binanceapi.constants.strategy.StrategyOPCode;
+import com.helei.constants.order.TimeInForce;
+import com.helei.binanceapi.constants.strategy.StrategyOPCode;
 import com.helei.binanceapi.constants.strategy.StrategyStatus;
 import com.helei.binanceapi.constants.strategy.StrategyType;
-import com.helei.binanceapi.dto.accountevent .*;
-import com.helei.constants.MarginMode;
-import com.helei.constants.PositionSide;
-import com.helei.constants.TradeSide;
+import com.helei.binanceapi.dto.accountevent.*;
+import com.helei.constants.trade.MarginMode;
+import com.helei.constants.trade.TradeSide;
+import com.helei.constants.order.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -99,15 +98,15 @@ public interface AccountEventConverter {
                 OrderTradeUpdateEvent.OrderTradeUpdateDetails details = new OrderTradeUpdateEvent.OrderTradeUpdateDetails();
                 details.setSymbol(o.getString("s"));
                 details.setClientOrderId(o.getString("c"));
-                details.setOrderSide(TradeSide.STATUS_MAP.get(o.getString("S")));
-                details.setOrderType(OrderType.STATUS_MAP.get(o.getString("o")));
-                details.setTimeInForce(TimeInForce.STATUS_MAP.get(o.getString("f")));
+                details.setOrderSide(TradeSide.valueOf(o.getString("S").toUpperCase()));
+                details.setOrderType(OrderType.valueOf(o.getString("o").toUpperCase()));
+                details.setTimeInForce(TimeInForce.valueOf(o.getString("f").toUpperCase()));
                 details.setOriginalQuantity(o.getDouble("q"));
                 details.setOriginalPrice(o.getDouble("p"));
                 details.setAveragePrice(o.getDouble("ap"));
                 details.setStopPrice(o.getString("sp"));
                 details.setExecutionType(OrderExcuteType.STATUS_MAP.get(o.getString("x")));
-                details.setOrderStatus(OrderStatus.STATUS_MAP.get(o.getString("X")));
+                details.setOrderStatus(OrderStatus.valueOf(o.getString("X").toUpperCase()));
                 details.setOrderId(o.getLong("i"));
                 details.setLastFilledQuantity(o.getDouble("l"));
                 details.setCumulativeFilledQuantity(o.getDouble("z"));
@@ -121,7 +120,7 @@ public interface AccountEventConverter {
                 details.setMaker(o.getBoolean("m"));
                 details.setReduceOnly(o.getBoolean("R"));
                 details.setWorkingType(WorkingType.STATUS_MAP.get(o.getString("wt")));
-                details.setOriginalOrderType(OrderType.STATUS_MAP.get(o.getString("ot")));
+                details.setOriginalOrderType(OrderType.valueOf(o.getString("ot").toUpperCase()));
                 details.setPositionSide(PositionSide.STATUS_MAP.get(o.getString("ps")));
                 details.setClosePosition(o.getBoolean("cp"));
                 details.setActivationPrice(o.getDouble("AP"));
@@ -147,7 +146,7 @@ public interface AccountEventConverter {
                 event.setOriginalPrice(jsonObject.getDouble("p"));
                 event.setIsMaker(jsonObject.getBoolean("m"));
                 event.setClientOrderId(jsonObject.getString("c"));
-                event.setOrderSide(TradeSide.STATUS_MAP.get(jsonObject.getString("S")));
+                event.setOrderSide(TradeSide.valueOf(jsonObject.getString("S").toUpperCase()));
                 event.setLastTradePrice(jsonObject.getDouble("L"));
                 event.setLastTradeQuantity(jsonObject.getDouble("l"));
                 event.setTradeId(jsonObject.getLong("t"));

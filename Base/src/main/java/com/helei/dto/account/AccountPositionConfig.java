@@ -1,5 +1,6 @@
 package com.helei.dto.account;
 
+import com.helei.constants.order.OrderType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,6 +14,11 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AccountPositionConfig implements Serializable {
+
+    /**
+     * 订单类型
+     */
+    private OrderType orderType = OrderType.LIMIT;
 
     /**
      * 风险百分比

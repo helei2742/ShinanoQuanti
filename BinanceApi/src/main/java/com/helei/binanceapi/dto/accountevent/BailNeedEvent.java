@@ -1,7 +1,7 @@
 package com.helei.binanceapi.dto.accountevent;
 
-import com.helei.constants.MarginMode;
-import com.helei.constants.PositionSide;
+import com.helei.constants.order.PositionSide;
+import com.helei.constants.trade.MarginMode;
 import com.helei.binanceapi.constants.AccountEventType;
 import lombok.*;
 

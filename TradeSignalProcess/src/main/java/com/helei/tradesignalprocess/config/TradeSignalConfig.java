@@ -1,6 +1,6 @@
 package com.helei.tradesignalprocess.config;
 
-import com.helei.constants.TradeType;
+import com.helei.constants.trade.TradeType;
 import com.helei.constants.RunEnv;
 import com.helei.dto.kafka.TradeSignalTopic;
 import lombok.Data;

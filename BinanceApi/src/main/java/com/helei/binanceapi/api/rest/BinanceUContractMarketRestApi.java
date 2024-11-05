@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.helei.binanceapi.base.BinanceRestApiClient;
 import com.helei.binanceapi.supporter.IpWeightSupporter;
 import com.helei.binanceapi.supporter.KLineMapper;
-import com.helei.constants.KLineInterval;
+import com.helei.constants.trade.KLineInterval;
 import com.helei.dto.trade.KLine;
 
 import java.util.ArrayList;

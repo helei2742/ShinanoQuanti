@@ -1,7 +1,7 @@
 package com.helei.tradeapplication.service;
 
 import com.helei.constants.RunEnv;
-import com.helei.constants.TradeType;
+import com.helei.constants.trade.TradeType;
 import com.helei.dto.trade.TradeSignal;
 
 public interface TradeSignalService {

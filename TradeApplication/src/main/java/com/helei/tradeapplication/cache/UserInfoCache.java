@@ -3,7 +3,7 @@ package com.helei.tradeapplication.cache;
 
 import com.alibaba.fastjson.JSONObject;
 import com.helei.constants.RunEnv;
-import com.helei.constants.TradeType;
+import com.helei.constants.trade.TradeType;
 import com.helei.dto.account.AccountRTData;
 import com.helei.dto.account.UserAccountInfo;
 import com.helei.dto.account.UserInfo;

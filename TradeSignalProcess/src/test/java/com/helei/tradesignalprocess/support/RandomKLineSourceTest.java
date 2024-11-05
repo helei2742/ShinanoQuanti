@@ -1,8 +1,8 @@
 package com.helei.tradesignalprocess.support;
 
 
-import com.helei.constants.KLineInterval;
-import com.helei.constants.TradeSide;
+import com.helei.constants.trade.KLineInterval;
+import com.helei.constants.trade.TradeSide;
 import com.helei.dto.trade.IndicatorMap;
 import com.helei.dto.indicator.config.MACDConfig;
 import com.helei.tradesignalprocess.config.FlinkConfig;

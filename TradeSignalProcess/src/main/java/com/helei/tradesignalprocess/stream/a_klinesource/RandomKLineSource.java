@@ -1,6 +1,6 @@
 package com.helei.tradesignalprocess.stream.a_klinesource;
 
-import com.helei.constants.KLineInterval;
+import com.helei.constants.trade.KLineInterval;
 import com.helei.dto.trade.IndicatorMap;
 import com.helei.dto.trade.KLine;
 import org.apache.flink.configuration.Configuration;

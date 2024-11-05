@@ -3,7 +3,7 @@ package com.helei.tradesignalprocess.stream.a_klinesource;
 import com.alibaba.fastjson.JSONArray;
 import com.helei.binanceapi.BinanceWSApiClient;
 import com.helei.binanceapi.api.rest.BinanceUContractMarketRestApi;
-import com.helei.constants.KLineInterval;
+import com.helei.constants.trade.KLineInterval;
 import com.helei.binanceapi.supporter.KLineMapper;
 import com.helei.dto.trade.KLine;
 import com.helei.tradesignalprocess.config.TradeSignalConfig;

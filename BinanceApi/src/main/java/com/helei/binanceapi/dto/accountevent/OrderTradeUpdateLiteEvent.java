@@ -1,8 +1,7 @@
 package com.helei.binanceapi.dto.accountevent;
 
 import com.helei.binanceapi.constants.AccountEventType;
-import com.helei.constants.TradeSide;
-import lombok.Data;
+import com.helei.constants.trade.TradeSide;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

@@ -2,8 +2,9 @@ package com.helei.dto.config;
 
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.helei.constants.CEXType;
 import com.helei.constants.RunEnv;
-import com.helei.constants.TradeType;
+import com.helei.constants.trade.TradeType;
 import com.helei.dto.base.KeyValue;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -43,6 +44,8 @@ public class RunTypeConfig {
     @NoArgsConstructor
     public static class RunEnvTradeTypeConfig {
         private RunEnv env;
+
+        private CEXType cexType = CEXType.BINANCE;
 
         private List<TradeType> trade_type;
 
