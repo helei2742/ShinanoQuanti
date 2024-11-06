@@ -17,6 +17,11 @@ import java.math.BigDecimal;
 public class TradeSignal {
 
     /**
+     * 信号id
+     */
+    private String id;
+
+    /**
      * 交易对
      */
     private String symbol;
@@ -51,3 +56,4 @@ public class TradeSignal {
      */
     private long createKLineOpenTimestamp;
 }
+

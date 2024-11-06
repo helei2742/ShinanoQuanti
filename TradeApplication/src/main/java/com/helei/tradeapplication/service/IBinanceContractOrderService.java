@@ -2,8 +2,10 @@ package com.helei.tradeapplication.service;
 
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.helei.dto.order.BaseOrder;
-import com.helei.tradeapplication.entity.BinanceContractOrder;
+import com.helei.tradeapplication.dto.GroupOrder;
+import com.helei.dto.order.CEXTradeOrder;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,13 +15,14 @@ import com.helei.tradeapplication.entity.BinanceContractOrder;
  * @author com.helei
  * @since 2024-11-05
  */
-public interface IBinanceContractOrderService extends IService<BinanceContractOrder> {
+public interface IBinanceContractOrderService extends IService<CEXTradeOrder> {
 
 
     /**
      * 保存订单
      * @param order 订单
      */
-    void saveOrder(BaseOrder order);
+    List<CEXTradeOrder> saveGroupOrder(GroupOrder order);
 
 }
+

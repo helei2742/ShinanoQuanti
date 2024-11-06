@@ -39,8 +39,10 @@ class BinanceAccountEventStreamServiceTest {
         List<UserInfo> userInfos = userService.queryAll();
 
         UserInfo first = userInfos.getFirst();
+        UserInfo two = userInfos.get(1);
+        UserInfo three = userInfos.get(2);
 
-        binanceAccountEventStreamService.startUserInfoEventStream(first);
+        binanceAccountEventStreamService.startUserInfoEventStream(three);
 
         TimeUnit.MINUTES.sleep(1000);
     }

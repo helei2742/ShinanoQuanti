@@ -6,6 +6,6 @@ package com.helei.constants.trade;
  */
 public enum TradeSide {
     BUY,
-    SALE
+    SELL
     ;
 }

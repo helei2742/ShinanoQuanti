@@ -8,6 +8,7 @@ import com.helei.constants.CEXType;
 import com.helei.constants.trade.KLineInterval;
 import com.helei.constants.RunEnv;
 import com.helei.constants.trade.TradeType;
+import com.helei.dto.base.KeyValue;
 import com.helei.reaktimedatacenter.config.RealtimeConfig;
 import com.helei.reaktimedatacenter.dto.SymbolKLineInfo;
 import com.helei.reaktimedatacenter.manager.ExecutorServiceManager;
@@ -49,10 +50,10 @@ public class BinanceMarketRTDataService implements MarketRealtimeDataService {
     public Integer startSyncRealTimeKLine() {
         int all = 0;
         List<CompletableFuture<Integer>> futures = new ArrayList<>();
-        futures.add(CompletableFuture.supplyAsync(() -> startSyncRealTimeKLine(RunEnv.NORMAL, TradeType.SPOT), taskExecutor));
-//        futures.add(CompletableFuture.supplyAsync(()->startSyncRealTimeKLine(RunEnv.NORMAL, TradeType.CONTRACT), taskExecutor));
-//        futures.add(CompletableFuture.supplyAsync(()->startSyncRealTimeKLine(RunEnv.TEST_NET, TradeType.SPOT), taskExecutor));
-//        futures.add(CompletableFuture.supplyAsync(()->startSyncRealTimeKLine(RunEnv.TEST_NET, TradeType.CONTRACT), taskExecutor));
+
+        for (KeyValue<RunEnv, TradeType> keyValue : realtimeConfig.getRun_type().getRunTypeList()) {
+            futures.add(CompletableFuture.supplyAsync(() -> startSyncRealTimeKLine(keyValue.getKey(), keyValue.getValue()), taskExecutor));
+        }
 
         for (CompletableFuture<Integer> future : futures) {
             try {
@@ -66,6 +67,8 @@ public class BinanceMarketRTDataService implements MarketRealtimeDataService {
 
     @Override
     public Integer startSyncRealTimeKLine(RunEnv runEnv, TradeType tradeType) {
+        log.info("开始同步env[{}]-tradeType[{}]的实时k线", runEnv, tradeType);
+
         RealtimeConfig.RealtimeKLineDataConfig realtimeKLineDataConfig = realtimeConfig.getEnvKLineDataConfig(runEnv, tradeType);
 
         //Step 1: 解析k线

@@ -26,9 +26,9 @@ public class UserAccountInfoServiceImpl implements UserAccountInfoService {
         this.executor = executorServiceManager.getQueryExecutor();
     }
 
-
+    @Override
     public CompletableFuture<List<UserAccountInfo>> queryEnvAccountInfo(RunEnv env, TradeType tradeType) {
-        return null;
+        return CompletableFuture.supplyAsync(()-> userInfoCache.queryAllAccountInfoFromCache(env, tradeType), executor);
     }
 
     @Override

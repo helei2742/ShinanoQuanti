@@ -72,7 +72,8 @@ public class BinanceWSAccountStreamClient extends AbstractBinanceWSApiClient {
     public CompletableFuture<Boolean> startAccountInfoStream() {
         log.info("开始获取账户信息流， apiKey = [{}]", asKey.getApiKey());
 
-        return baseApi.requestListenKey(asKey)//获取listenKey
+        return baseApi
+                .requestListenKey(asKey)//获取listenKey
                 .thenApplyAsync(listenKey -> { //请求ws连接
                     log.info("listenKey = [{}]", listenKey);
                     if (listenKey == null) {

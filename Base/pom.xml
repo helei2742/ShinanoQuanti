@@ -64,5 +64,10 @@
             <artifactId>logback-classic</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-annotation</artifactId>
+            <version>${mybatis_plus.version}</version>
+        </dependency>
     </dependencies>
 </project>

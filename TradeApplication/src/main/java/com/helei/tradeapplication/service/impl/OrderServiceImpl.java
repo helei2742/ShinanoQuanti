@@ -1,27 +1,31 @@
 package com.helei.tradeapplication.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.helei.constants.order.OrderEvent;
-import com.helei.constants.order.OrderType;
-import com.helei.dto.order.BaseOrder;
-import com.helei.dto.order.LimitOrder;
 import com.helei.constants.CEXType;
+import com.helei.constants.order.GroupOrderStatus;
+import com.helei.constants.order.OrderEvent;
+import com.helei.constants.order.OrderStatus;
+import com.helei.constants.order.OrderType;
 import com.helei.constants.trade.TradeType;
+import com.helei.dto.account.AccountPositionConfig;
+import com.helei.dto.order.BaseOrder;
+import com.helei.dto.order.CEXTradeOrder;
+import com.helei.dto.order.CEXTradeOrderWrap;
+import com.helei.tradeapplication.dto.GroupOrder;
 import com.helei.dto.account.AccountRTData;
-import com.helei.dto.account.PositionInfo;
 import com.helei.dto.account.UserAccountInfo;
-import com.helei.dto.trade.BalanceInfo;
 import com.helei.dto.trade.TradeSignal;
 import com.helei.interfaces.CompleteInvocation;
 import com.helei.tradeapplication.manager.ExecutorServiceManager;
 import com.helei.tradeapplication.service.IBinanceContractOrderService;
 import com.helei.tradeapplication.service.OrderEventProcessService;
+import com.helei.tradeapplication.supporter.TradeOrderBuildSupporter;
 import com.helei.util.KafkaUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 
@@ -39,6 +43,10 @@ public class OrderServiceImpl extends OrderEventProcessService {
 
 
     @Autowired
+    private TradeOrderBuildSupporter tradeOrderBuildSupporter;
+
+
+    @Autowired
     public OrderServiceImpl(ExecutorServiceManager executorServiceManager) {
         super(executorServiceManager.getOrderExecutor());
         super.startProcessEvents();
@@ -53,33 +61,68 @@ public class OrderServiceImpl extends OrderEventProcessService {
      * @param signal        信号
      */
     @Override
-    public void makeOrder(UserAccountInfo accountInfo, AccountRTData accountRTData, TradeSignal signal, CompleteInvocation<BaseOrder> invocation) {
-        String symbol = signal.getSymbol().toLowerCase();
+    public void makeOrder(UserAccountInfo accountInfo, AccountRTData accountRTData, TradeSignal signal, CompleteInvocation<GroupOrder> invocation) {
 
-        OrderType orderType = accountInfo.getAccountPositionConfig().getOrderType();
+        AccountPositionConfig accountPositionConfig = accountInfo.getAccountPositionConfig();
+        OrderType orderType = accountPositionConfig.getOrderType();
 
-        BaseOrder order = switch (orderType) {
-            case LIMIT -> buildLimitOrder(accountInfo, accountRTData, symbol);
-            case MARKET -> buildMarketOrder(accountInfo, accountRTData, symbol);
-            case STOP_MARKET -> buildStopMarketOrder(accountInfo, accountRTData, symbol);
-            case STOP_LIMIT -> buildStopLimitOrder(accountInfo, accountRTData, symbol);
-            case TAKE_PROFIT_MARKET -> buildTakeProfitMarketOrder(accountInfo, accountRTData, symbol);
-            case TAKE_PROFIT_LIMIT -> buildTakeProfitLimitOrder(accountInfo, accountRTData, symbol);
-            case TRAILING_STIO_MARKET -> buildTrailingSTIDMarketOrder(accountInfo, accountRTData, symbol);
+        GroupOrder groupOrder = new GroupOrder();
+
+        //Step 1 创建主单
+        CEXTradeOrderWrap orderWrapper = switch (orderType) {
+            case LIMIT -> tradeOrderBuildSupporter.buildLimitOrder(accountInfo, accountRTData, signal);
+            case MARKET -> tradeOrderBuildSupporter.buildMarketOrder(accountInfo, accountRTData, signal);
+            default -> null;
         };
 
 
+        long userId = accountInfo.getId();
+        long accountId = accountRTData.getAccountId();
+
+        if (orderWrapper == null) {
+            log.warn("userId[{}]-accountId[{}]创建主订单结果为null, signalId[{}]", userId, accountId, signal.getId());
+            return;
+        }
+
+        //获取订单
+        CEXTradeOrder order = orderWrapper.getFullFieldOrder();
+
+        // 资金不足
+        if (order.getQuantity().doubleValue() <= 0) {
+            order.setStatus(OrderStatus.BALANCE_INSUFFICIENT);
+        }
+        groupOrder.setMainOrder(order);
+
+
+        // 满足资金不足的标记，给group order也打上，不继续创建止盈止损单了
+        if (OrderStatus.BALANCE_INSUFFICIENT.equals(order.getStatus())) {
+            log.warn("userId[{}]-account[{}] 资金不足，将不会提交订单[{}]到交易所, signalId[{}]", userId, accountId, order.getOrderId(), signal.getId());
+            groupOrder.setGroupOrderStatus(GroupOrderStatus.BALANCE_INSUFFICIENT);
+
+            super.submitOrderEvent(groupOrder, OrderEvent.BALANCE_INSUFFICIENT, invocation);
+            return;
+        }
+
+        //Step 2 根据策略创建止损、止盈单
+
+
         log.info("订单[{}]创建成功", order);
-        // 提交订单创建事件
-        super.submitOrderEvent(order, OrderEvent.CREATED_ORDER, invocation);
+        //Step 3 提交订单创建事件
+        super.submitOrderEvent(groupOrder, OrderEvent.CREATED_ORDER, invocation);
     }
 
 
     @Override
-    public BaseOrder writeOrder2Kafka(BaseOrder order) throws ExecutionException, InterruptedException {
-        String topic = KafkaUtil.getOrderSymbolTopic(order.getRunEnv(), order.getTradeType(), order.getSymbol());
+    public GroupOrder writeOrder2Kafka(GroupOrder order) throws ExecutionException, InterruptedException {
+        //Step 1 从主单中取出环境信息，生成topic
+        BaseOrder mainOrder = order.getMainOrder();
 
-        kafkaProducerService.sendMessage(topic, JSONObject.toJSONString(order)).get();
+        String topic = KafkaUtil.getOrderSymbolTopic(mainOrder.getRunEnv(), mainOrder.getTradeType(), mainOrder.getSymbol());
+
+        //Step 2 获取交易所订单列表发送
+        List<CEXTradeOrder> cexTradeOrders = order.getCexTradeOrders();
+
+        kafkaProducerService.sendMessage(topic, JSONObject.toJSONString(cexTradeOrders)).get();
 
         log.debug("订单order[{}]写入kafka成功", order);
 
@@ -88,118 +131,23 @@ public class OrderServiceImpl extends OrderEventProcessService {
 
 
     @Override
-    public BaseOrder writeOrder2DB(BaseOrder order) {
-        CEXType cexType = order.getCexType();
-        TradeType tradeType = order.getTradeType();
+    public GroupOrder writeOrder2DB(GroupOrder order) {
+
+        BaseOrder mainOrder = order.getMainOrder();
+        CEXType cexType = mainOrder.getCexType();
+        TradeType tradeType = mainOrder.getTradeType();
+
 
         if (CEXType.BINANCE.equals(cexType) && TradeType.CONTRACT.equals(tradeType)) {
-            binanceContractOrderService.saveOrder(order);
+            List<CEXTradeOrder> cexTradeOrders = binanceContractOrderService.saveGroupOrder(order);
+            order.setCexTradeOrders(cexTradeOrders);
+            return order;
         }
 
-        return order;
-    }
-
-
-    /**
-     * 构建限价单
-     *
-     * @param accountInfo   账户信息
-     * @param accountRTData 账户实时数据
-     * @param symbol        交易对
-     * @return 限价单
-     */
-    private static @NotNull LimitOrder buildLimitOrder(UserAccountInfo accountInfo, AccountRTData accountRTData, String symbol) {
-        BalanceInfo balanceInfo = accountRTData.getAccountBalanceInfo().getBalances().get(symbol);
-        PositionInfo positionInfo = accountRTData.getAccountPositionInfo().getPositions().get(symbol);
-
-        LimitOrder limitOrder = new LimitOrder();
-        limitOrder.setRunEnv(accountInfo.getRunEnv());
-        limitOrder.setTradeType(accountInfo.getTradeType());
-        limitOrder.setCexType(accountInfo.getCexType());
-
-        limitOrder.setSymbol(symbol);
-        limitOrder.setUserId(accountInfo.getUserId());
-        limitOrder.setAccountId(accountRTData.getAccountId());
-
-        //TODO 完善逻辑
-
-        return limitOrder;
-    }
-
-
-    /**
-     * 构建市价单
-     *
-     * @param accountInfo   账户信息
-     * @param accountRTData 账户实时数据
-     * @param symbol        交易对
-     * @return 限价单
-     */
-    private BaseOrder buildMarketOrder(UserAccountInfo accountInfo, AccountRTData accountRTData, String symbol) {
-        return null;
-    }
-
-    /**
-     * 构建市价止损单
-     *
-     * @param accountInfo   账户信息
-     * @param accountRTData 账户实时数据
-     * @param symbol        交易对
-     * @return 限价单
-     */
-    private BaseOrder buildStopMarketOrder(UserAccountInfo accountInfo, AccountRTData accountRTData, String symbol) {
-        return null;
-    }
-
-
-    /**
-     * 构建限价止损单
-     *
-     * @param accountInfo   账户信息
-     * @param accountRTData 账户实时数据
-     * @param symbol        交易对
-     * @return 限价单
-     */
-    private BaseOrder buildStopLimitOrder(UserAccountInfo accountInfo, AccountRTData accountRTData, String symbol) {
-        return null;
-    }
-
-    /**
-     * 构建市价止盈单
-     *
-     * @param accountInfo   账户信息
-     * @param accountRTData 账户实时数据
-     * @param symbol        交易对
-     * @return 限价单
-     */
-    private BaseOrder buildTakeProfitMarketOrder(UserAccountInfo accountInfo, AccountRTData accountRTData, String symbol) {
-        return null;
-    }
-
-    /**
-     * 构建限价止盈单
-     *
-     * @param accountInfo   账户信息
-     * @param accountRTData 账户实时数据
-     * @param symbol        交易对
-     * @return 限价单
-     */
-    private BaseOrder buildTakeProfitLimitOrder(UserAccountInfo accountInfo, AccountRTData accountRTData, String symbol) {
-        return null;
-    }
-
-    /**
-     * buildTrailingSTIDMarketOrder
-     *
-     * @param accountInfo   账户信息
-     * @param accountRTData 账户实时数据
-     * @param symbol        交易对
-     * @return 限价单
-     */
-    private BaseOrder buildTrailingSTIDMarketOrder(UserAccountInfo accountInfo, AccountRTData accountRTData, String symbol) {
         return null;
     }
 
 }
+
 
 

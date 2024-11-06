@@ -45,24 +45,22 @@ public class BinanceAccountEventResolveService implements AccountEventResolveSer
     public void resolveAccountEvent(UserAccountInfo accountInfo, AccountEvent accountEvent) {
         CompletableFuture<Void> future = null;
 
-        if (accountEvent instanceof ListenKeyExpireEvent listenKeyExpireEvent) {
-            future = resolveListenKeyExpireEvent(accountInfo, listenKeyExpireEvent);
-        } else if (accountEvent instanceof BailNeedEvent bailNeedEvent) {
-            future = resolveBailNeedEvent(accountInfo, bailNeedEvent);
-        } else if (accountEvent instanceof BalancePositionUpdateEvent balancePositionUpdateEvent) {
-            future = resolveBalancePositionUpdateEvent(accountInfo, balancePositionUpdateEvent);
-        } else if (accountEvent instanceof OrderTradeUpdateLiteEvent orderTradeUpdateEvent) {
-            future = resolveOrderTradeUpdateEvent(orderTradeUpdateEvent);
-        } else if (accountEvent instanceof AccountConfigUpdateEvent accountConfigUpdateEvent) {
-            future = resolveAccountConfigUpdateEvent(accountConfigUpdateEvent);
-        } else if (accountEvent instanceof StrategyUpdateEvent strategyUpdateEvent) {
-            future = resolveStrategyUpdateEvent(strategyUpdateEvent);
-        } else if (accountEvent instanceof GridUpdateEvent gridUpdateEvent) {
-            future = resolveGridUpdateEvent(gridUpdateEvent);
-        } else if (accountEvent instanceof ConditionalOrderTriggerRejectEvent conditionalOrderTriggerRejectEvent) {
-            future = resolveConditionalOrderTriggerRejectEvent(conditionalOrderTriggerRejectEvent);
-        } else {
-            log.warn("userId[{}]-accountId[{}]-未知事件 [{}]", accountInfo.getUserId(), accountInfo.getId(), accountEvent);
+        switch (accountEvent) {
+            case ListenKeyExpireEvent listenKeyExpireEvent ->
+                    future = resolveListenKeyExpireEvent(accountInfo, listenKeyExpireEvent);
+            case BailNeedEvent bailNeedEvent -> future = resolveBailNeedEvent(accountInfo, bailNeedEvent);
+            case BalancePositionUpdateEvent balancePositionUpdateEvent ->
+                    future = resolveBalancePositionUpdateEvent(accountInfo, balancePositionUpdateEvent);
+            case OrderTradeUpdateLiteEvent orderTradeUpdateEvent ->
+                    future = resolveOrderTradeUpdateEvent(orderTradeUpdateEvent);
+            case AccountConfigUpdateEvent accountConfigUpdateEvent ->
+                    future = resolveAccountConfigUpdateEvent(accountConfigUpdateEvent);
+            case StrategyUpdateEvent strategyUpdateEvent -> future = resolveStrategyUpdateEvent(strategyUpdateEvent);
+            case GridUpdateEvent gridUpdateEvent -> future = resolveGridUpdateEvent(gridUpdateEvent);
+            case ConditionalOrderTriggerRejectEvent conditionalOrderTriggerRejectEvent ->
+                    future = resolveConditionalOrderTriggerRejectEvent(conditionalOrderTriggerRejectEvent);
+            case null, default ->
+                    log.warn("userId[{}]-accountId[{}]-未知事件 [{}]", accountInfo.getUserId(), accountInfo.getId(), accountEvent);
         }
 
 

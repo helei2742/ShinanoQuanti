@@ -1,8 +1,8 @@
 package com.helei.tradeapplication.service;
 
 import com.helei.constants.order.OrderEvent;
-import com.helei.constants.order.OrderStatus;
-import com.helei.dto.order.BaseOrder;
+import com.helei.constants.order.GroupOrderStatus;
+import com.helei.tradeapplication.dto.GroupOrder;
 import com.helei.interfaces.CompleteInvocation;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -36,13 +36,13 @@ public abstract class OrderEventProcessService implements OrderService {
     /**
      * 存放订单回调的map
      */
-    private final ConcurrentMap<BaseOrder, CompleteInvocation<BaseOrder>> invocationMap = new ConcurrentHashMap<>();
+    private final ConcurrentMap<GroupOrder, CompleteInvocation<GroupOrder>> invocationMap = new ConcurrentHashMap<>();
 
 
     /**
      * 记录重试次数的map
      */
-    private final ConcurrentMap<BaseOrder, Integer> retryMap = new ConcurrentHashMap<>();
+    private final ConcurrentMap<GroupOrder, Integer> retryMap = new ConcurrentHashMap<>();
 
 
     /**
@@ -56,7 +56,6 @@ public abstract class OrderEventProcessService implements OrderService {
     }
 
 
-
     /**
      * 提交订单事件
      *
@@ -64,7 +63,7 @@ public abstract class OrderEventProcessService implements OrderService {
      * @param event              订单事件
      * @param completeInvocation 完成的回调函数
      */
-    public void submitOrderEvent(BaseOrder order, OrderEvent event, CompleteInvocation<BaseOrder> completeInvocation) {
+    public void submitOrderEvent(GroupOrder order, OrderEvent event, CompleteInvocation<GroupOrder> completeInvocation) {
         invocationMap.compute(order, (k, v) -> {
             submitOrderEvent(order, event);
             return completeInvocation;
@@ -77,7 +76,7 @@ public abstract class OrderEventProcessService implements OrderService {
      * @param order 订单
      * @param event 订单事件
      */
-    public void submitOrderEvent(BaseOrder order, OrderEvent event) {
+    public void submitOrderEvent(GroupOrder order, OrderEvent event) {
         try {
             eventQueue.put(new OrderProcessTask(order, event));
         } catch (InterruptedException e) {
@@ -92,7 +91,7 @@ public abstract class OrderEventProcessService implements OrderService {
      * @param order 订单
      * @param event 事件
      */
-    public void processOrderEvent(BaseOrder order, OrderEvent event) {
+    public void processOrderEvent(GroupOrder order, OrderEvent event) {
         log.debug("开始处理订单[{}]的事件[{}]", order, event);
 
         OrderEvent next = switch (event) {
@@ -108,8 +107,10 @@ public abstract class OrderEventProcessService implements OrderService {
             case SEND_TO_KAFKA_FINAL_ERROR -> errorProcess(order, OrderEvent.SEND_TO_KAFKA_FINAL_ERROR);
             case UN_SUPPORT_EVENT_ERROR -> errorProcess(order, OrderEvent.UN_SUPPORT_EVENT_ERROR);
 
-            case COMPLETE -> successProcess(order);
+            case BALANCE_INSUFFICIENT -> balanceInsufficientProcess(order);
 
+            case COMPLETE -> successProcess(order);
+            case ERROR -> errorProcess(order, OrderEvent.ERROR);
             case CANCEL -> cancelProcess(order);
         };
 
@@ -122,12 +123,34 @@ public abstract class OrderEventProcessService implements OrderService {
 
 
     /**
+     * 资金不足的订单处理
+     *
+     * @param order groupOrder
+     * @return 下一个事件
+     */
+    private OrderEvent balanceInsufficientProcess(GroupOrder order) {
+        if (GroupOrderStatus.BALANCE_INSUFFICIENT.equals(order.getGroupOrderStatus())) {
+            try {
+                //写入数据库
+                writeOrder2DB(order);
+            } catch (Exception e) {
+                //重试
+                return OrderEvent.SEND_TO_DB_RETRY;
+            }
+            //错误事件
+            errorProcess(order, OrderEvent.BALANCE_INSUFFICIENT);
+        }
+        return OrderEvent.UN_SUPPORT_EVENT_ERROR;
+    }
+
+
+    /**
      * 取消订单
      *
      * @param order order
      * @return 下一个事件
      */
-    private OrderEvent cancelProcess(BaseOrder order) {
+    private OrderEvent cancelProcess(GroupOrder order) {
         //TODO 取消订单逻辑，未写入kafka的标记就好，写入kafka的还需要向另外的kafka里写上取消的消息，订单提交服务收到后进行取消
         return null;
     }
@@ -139,9 +162,9 @@ public abstract class OrderEventProcessService implements OrderService {
      * @param order order
      * @return 下一个事件
      */
-    private OrderEvent successProcess(BaseOrder order) {
+    private OrderEvent successProcess(GroupOrder order) {
 
-        CompleteInvocation<BaseOrder> invocation = invocationMap.remove(order);
+        CompleteInvocation<GroupOrder> invocation = invocationMap.remove(order);
 
         if (invocation != null) {
             invocation.success(order);
@@ -159,9 +182,9 @@ public abstract class OrderEventProcessService implements OrderService {
      * @param event 时间
      * @return 下一个事件
      */
-    private OrderEvent errorProcess(BaseOrder order, OrderEvent event) {
+    private OrderEvent errorProcess(GroupOrder order, OrderEvent event) {
 
-        CompleteInvocation<BaseOrder> invocation = invocationMap.remove(order);
+        CompleteInvocation<GroupOrder> invocation = invocationMap.remove(order);
 
         if (invocation != null) {
             invocation.fail(order, event.name());
@@ -178,8 +201,8 @@ public abstract class OrderEventProcessService implements OrderService {
      * @param order order
      * @return 下一个事件
      */
-    private OrderEvent sendToKafkaRetryProcess(BaseOrder order) {
-        if (OrderStatus.WRITE_IN_KAFKA.equals(order.getOrderStatus())) {
+    private OrderEvent sendToKafkaRetryProcess(GroupOrder order) {
+        if (GroupOrderStatus.WRITE_IN_KAFKA.equals(order.getGroupOrderStatus())) {
             Integer times = retryMap.remove(order);
             times = times == null ? 0 : times;
 
@@ -190,7 +213,7 @@ public abstract class OrderEventProcessService implements OrderService {
 
 
             try {
-                BaseOrder result = writeOrder2Kafka(order);
+                GroupOrder result = writeOrder2Kafka(order);
 
                 if (result == null) return OrderEvent.CANCEL;
 
@@ -212,13 +235,13 @@ public abstract class OrderEventProcessService implements OrderService {
      * @param order order
      * @return 下一个事件
      */
-    private OrderEvent sendToKafkaProcess(BaseOrder order) {
-        if (OrderStatus.WRITE_IN_DB.equals(order.getOrderStatus())) {
+    private OrderEvent sendToKafkaProcess(GroupOrder order) {
+        if (GroupOrderStatus.WRITE_IN_DB.equals(order.getGroupOrderStatus())) {
             // 发送kafka
             try {
-                order.setOrderStatus(OrderStatus.WRITE_IN_KAFKA);
+                order.setGroupOrderStatus(GroupOrderStatus.WRITE_IN_KAFKA);
 
-                BaseOrder result = writeOrder2Kafka(order);
+                GroupOrder result = writeOrder2Kafka(order);
 
                 if (result == null) return OrderEvent.CANCEL;
             } catch (Exception e) {
@@ -237,8 +260,9 @@ public abstract class OrderEventProcessService implements OrderService {
      * @param order order
      * @return 下一个事件
      */
-    private OrderEvent sendToDBRetryProcess(BaseOrder order) {
-        if (OrderStatus.WRITE_IN_DB.equals(order.getOrderStatus())) {
+    private OrderEvent sendToDBRetryProcess(GroupOrder order) {
+        GroupOrderStatus groupOrderStatus = order.getGroupOrderStatus();
+        if (GroupOrderStatus.WRITE_IN_DB.equals(groupOrderStatus) || GroupOrderStatus.BALANCE_INSUFFICIENT.equals(groupOrderStatus)) {
             Integer times = retryMap.remove(order);
             times = times == null ? 0 : times;
 
@@ -248,9 +272,12 @@ public abstract class OrderEventProcessService implements OrderService {
             }
 
             try {
-                BaseOrder result = writeOrder2DB(order);
+                GroupOrder result = writeOrder2DB(order);
 
                 if (result == null) return OrderEvent.CANCEL;
+
+                //资金不足，只写入数据库记录
+                if (GroupOrderStatus.BALANCE_INSUFFICIENT.equals(groupOrderStatus)) return OrderEvent.ERROR;
 
                 return OrderEvent.SEND_TO_KAFKA;
             } catch (Exception e) {
@@ -270,13 +297,13 @@ public abstract class OrderEventProcessService implements OrderService {
      * @param order order
      * @return 下一个事件
      */
-    private OrderEvent sendToDBProcess(BaseOrder order) {
-        if (OrderStatus.CREATED.equals(order.getOrderStatus())) {
+    private OrderEvent sendToDBProcess(GroupOrder order) {
+        if (GroupOrderStatus.CREATED.equals(order.getGroupOrderStatus())) {
             // 写数据库
             try {
-                order.setOrderStatus(OrderStatus.WRITE_IN_DB);
+                order.setGroupOrderStatus(GroupOrderStatus.WRITE_IN_DB);
 
-                BaseOrder result = writeOrder2DB(order);
+                GroupOrder result = writeOrder2DB(order);
 
                 if (result == null) return OrderEvent.CANCEL;
             } catch (Exception e) {
@@ -294,9 +321,9 @@ public abstract class OrderEventProcessService implements OrderService {
      * @param order order
      * @return 下一个事件
      */
-    private OrderEvent createdOrderProcess(BaseOrder order) {
+    private OrderEvent createdOrderProcess(GroupOrder order) {
         //订单创建事件
-        order.setOrderStatus(OrderStatus.CREATED);
+        order.setGroupOrderStatus(GroupOrderStatus.CREATED);
         return OrderEvent.SEND_TO_DB;
     }
 
@@ -328,7 +355,7 @@ public abstract class OrderEventProcessService implements OrderService {
         /**
          * 订单信息
          */
-        private BaseOrder order;
+        private GroupOrder order;
 
         /**
          * 订单事件

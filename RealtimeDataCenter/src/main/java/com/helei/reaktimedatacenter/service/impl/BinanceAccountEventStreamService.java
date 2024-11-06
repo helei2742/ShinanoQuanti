@@ -11,19 +11,21 @@ import com.helei.reaktimedatacenter.service.AccountEventResolveService;
 import com.helei.reaktimedatacenter.service.AccountEventStreamService;
 import com.helei.reaktimedatacenter.service.UserService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 
 @Slf4j
 @Service
-public class BinanceAccountEventStreamService implements AccountEventStreamService {
+public class BinanceAccountEventStreamService implements AccountEventStreamService, InitializingBean {
 
     private static final ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor();
 
@@ -50,9 +52,15 @@ public class BinanceAccountEventStreamService implements AccountEventStreamServi
 
         List<CompletableFuture<Void>> list = userService.queryAll().stream()
                 .map(userInfo -> CompletableFuture.runAsync(() -> startUserInfoEventStream(userInfo), executor)).toList();
-        list.forEach(CompletableFuture::join);
 
-        log.info("所有用户账户事件流获取完毕，共[{}]个用户", list.size());
+        CompletableFuture.allOf(list.toArray(new CompletableFuture[0]))
+                .whenCompleteAsync((unused, throwable) -> {
+                    if (throwable != null) {
+                        log.error("获取账户事件流发送错误", throwable);
+                    } else {
+                        log.info("所有用户账户事件流获取完毕，共[{}]个用户", list.size());
+                    }
+                }, executor);
     }
 
 
@@ -79,9 +87,20 @@ public class BinanceAccountEventStreamService implements AccountEventStreamServi
             futures.add(future);
         }
 
-        futures.forEach(CompletableFuture::join);
-
-        log.info("用户id[{}]-name[{}]所有账户事件流[共{}个]开启成功", userInfo.getId(), userInfo.getUsername(), futures.size());
+        try {
+            CompletableFuture
+                    .allOf(futures.toArray(new CompletableFuture[0]))
+                    .whenCompleteAsync((unused, throwable) -> {
+                        if (throwable != null) {
+                            log.error("用户id[{}]-name[{}]所有账户事件流开启时发生错误", userInfo.getId(), userInfo.getUsername(), throwable);
+                        } else {
+                            log.info("用户id[{}]-name[{}]所有账户事件流[共{}个]开启成功", userInfo.getId(), userInfo.getUsername(), futures.size());
+                        }
+                    })
+                    .get();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -156,6 +175,7 @@ public class BinanceAccountEventStreamService implements AccountEventStreamServi
         } else {
             // TODO 错误日志上传
             log.error("开启账户事件流失败, accountId[{}]", accountId);
+            throw new RuntimeException(String.format("开启账户事件流失败，accountId[%s], listenKey [%s]", accountId, binanceWSAccountStreamClient.getListenKey()));
         }
     }
 
@@ -164,5 +184,10 @@ public class BinanceAccountEventStreamService implements AccountEventStreamServi
     public void resolveAccountEvent(final UserAccountInfo accountInfo, AccountEvent accountEvent) {
         log.info("账户[{}]-[{}]收到事件 [{}]", accountInfo.getUserId(), accountInfo.getId(), accountEvent);
         accountEventResolveService.resolveAccountEvent(accountInfo, accountEvent);
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        startAllUserInfoEventStream();
     }
 }

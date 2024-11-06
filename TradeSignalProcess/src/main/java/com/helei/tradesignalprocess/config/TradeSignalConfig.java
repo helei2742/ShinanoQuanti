@@ -2,6 +2,7 @@ package com.helei.tradesignalprocess.config;
 
 import com.helei.constants.trade.TradeType;
 import com.helei.constants.RunEnv;
+import com.helei.dto.config.RunTypeConfig;
 import com.helei.dto.kafka.TradeSignalTopic;
 import lombok.Data;
 import org.yaml.snakeyaml.Yaml;
@@ -27,14 +28,9 @@ public class TradeSignalConfig implements Serializable {
     private String symbol;
 
     /**
-     * 运行环境，测试网或者普通网
+     * 运行环境设置
      */
-    private RunEnv run_env;
-
-    /**
-     * 交易类型
-     */
-    private TradeType trade_type;
+    private RunTypeConfig run_type;
 
     /**
      * 历史k线加载批大小
@@ -77,7 +73,15 @@ public class TradeSignalConfig implements Serializable {
      * @return topic
      */
     public TradeSignalTopic getSinkTopic() {
-        return new TradeSignalTopic(run_env, trade_type, symbol, name);
+        return new TradeSignalTopic(getRun_env(), getTrade_type(), symbol, name);
+    }
+
+    public TradeType getTrade_type() {
+        return run_type.getConfigs().getFirst().getTrade_type().getFirst();
+    }
+
+    public RunEnv getRun_env() {
+        return run_type.getConfigs().getFirst().getEnv();
     }
 
 
@@ -142,3 +146,6 @@ public class TradeSignalConfig implements Serializable {
     }
 
 }
+
+
+

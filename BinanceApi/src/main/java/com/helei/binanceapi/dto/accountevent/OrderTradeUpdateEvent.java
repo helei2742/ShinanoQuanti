@@ -166,7 +166,7 @@ public class OrderTradeUpdateEvent extends AccountEvent {
         /**
          * 价格匹配模式
          */
-        private OpponentPriceMode opponentPriceMode;
+        private PriceMatch priceMatch;
         /**
          * TIF为GTD的订单自动取消时间
          */

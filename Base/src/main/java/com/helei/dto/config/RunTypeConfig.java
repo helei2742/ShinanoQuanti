@@ -23,6 +23,8 @@ public class RunTypeConfig {
 
     private List<RunEnvTradeTypeConfig> configs;
 
+    private SnowFlowConfig snow_flow;
+
 
     /**
      * 获取运行类型列表
@@ -55,3 +57,4 @@ public class RunTypeConfig {
         }
     }
 }
+

@@ -1,13 +1,17 @@
 package com.helei.tradeapplication.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.helei.dto.order.BaseOrder;
-import com.helei.dto.order.LimitOrder;
-import com.helei.tradeapplication.entity.BinanceContractOrder;
+import com.helei.dto.order.CEXTradeOrder;
+import com.helei.dto.order.CEXTradeOrderWrap;
+import com.helei.tradeapplication.dto.GroupOrder;
 import com.helei.tradeapplication.mapper.BinanceContractOrderMapper;
 import com.helei.tradeapplication.service.IBinanceContractOrderService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>
@@ -19,51 +23,37 @@ import org.springframework.stereotype.Service;
  */
 @Slf4j
 @Service
-public class BinanceContractOrderServiceImpl extends ServiceImpl<BinanceContractOrderMapper, BinanceContractOrder> implements IBinanceContractOrderService {
+public class BinanceContractOrderServiceImpl extends ServiceImpl<BinanceContractOrderMapper, CEXTradeOrder> implements IBinanceContractOrderService {
 
 
+    @Transactional
     @Override
-    public void saveOrder(BaseOrder order) {
-        BinanceContractOrder saveOrder = switch (order.getOrderType()) {
-            case LIMIT -> convertFromLimitOrder(order);
-            case MARKET -> null;
-            case STOP_MARKET -> null;
-            case STOP_LIMIT -> null;
-            case TAKE_PROFIT_MARKET -> null;
-            case TAKE_PROFIT_LIMIT -> null;
-            case TRAILING_STIO_MARKET -> null;
-        };
+    public List<CEXTradeOrder> saveGroupOrder(GroupOrder groupOrder) {
 
-        if (saveOrder == null) {
-            log.warn("原始订单[{}]转化为为数据库订单类型后结果为null", order);
-            return;
+        List<CEXTradeOrder> orderList = new ArrayList<>();
+
+        // 主单
+        orderList.add((CEXTradeOrder) groupOrder.getMainOrder());
+
+        // 止损单
+        List<CEXTradeOrderWrap> stopOrders = groupOrder.getStopOrders();
+        if (stopOrders != null) {
+            for (CEXTradeOrderWrap stopOrder : stopOrders) {
+                orderList.add(stopOrder.getFullFieldOrder());
+            }
         }
 
-        save(saveOrder);
-    }
+        //止盈单
+        List<CEXTradeOrderWrap> profitOrders = groupOrder.getProfitOrders();
+        if (profitOrders != null) {
+            for (CEXTradeOrderWrap profitOrder : profitOrders) {
+                orderList.add(profitOrder.getFullFieldOrder());
+            }
+        }
 
+        //保存到数据库
+        saveBatch(orderList);
 
-    /**
-     * 将限价单转成插入数据库的订单类型
-     *
-     * @param order 限价单
-     * @return 数据库订单类型
-     */
-    public static BinanceContractOrder convertFromLimitOrder(BaseOrder order) {
-        LimitOrder limitOrder = (LimitOrder) order;
-        return BinanceContractOrder
-                .builder()
-                .userId(limitOrder.getUserId())
-                .accountId(limitOrder.getAccountId())
-                .symbol(limitOrder.getSymbol())
-                .side(limitOrder.getSide().name())
-                .positionSide(limitOrder.getPositionSide().name())
-                .type(limitOrder.getOrderType().name())
-                .quantity(limitOrder.getQuantity())
-                .price(limitOrder.getPrice())
-                .status(limitOrder.getOrderStatus().name())
-                .build();
+        return orderList;
     }
 }
-
-

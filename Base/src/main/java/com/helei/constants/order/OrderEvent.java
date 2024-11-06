@@ -38,11 +38,20 @@ public enum OrderEvent {
      */
     UN_SUPPORT_EVENT_ERROR,
     /**
+     * 资金不足
+     */
+    BALANCE_INSUFFICIENT,
+    /**
      * 完成
      */
     COMPLETE,
     /**
+     * 错误
+     */
+    ERROR,
+    /**
      * 取消
      */
     CANCEL,
+
 }

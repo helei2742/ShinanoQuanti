@@ -169,7 +169,8 @@ public abstract class AbstractWebsocketClient<P, T> {
     public CompletableFuture<Void> connect() throws SSLException, URISyntaxException {
         if (isRunning.get()) {
             log.warn("WS客户端[{}}已链接", url);
-            return CompletableFuture.runAsync(() -> {});
+            return CompletableFuture.runAsync(() -> {
+            });
         }
 
         log.info("开始初始化WS客户端");
@@ -187,6 +188,12 @@ public abstract class AbstractWebsocketClient<P, T> {
      */
     public CompletableFuture<Void> reconnect() {
         return CompletableFuture.runAsync(() -> {
+            if (reconnectTimes.get() > NettyConstants.RECONNECT_LIMIT) {
+                log.error("reconnect times out of limit [{}], close websocket client", NettyConstants.RECONNECT_LIMIT);
+                close();
+                return;
+            }
+
             AtomicBoolean isSuccess = new AtomicBoolean(false);
             while (reconnectTimes.incrementAndGet() <= NettyConstants.RECONNECT_LIMIT) {
                 eventLoopGroup.schedule(() -> {
@@ -195,7 +202,6 @@ public abstract class AbstractWebsocketClient<P, T> {
 
                 log.info("start connect client [{}], url[{}], current times [{}]", name, url, reconnectTimes.get());
                 CountDownLatch latch = new CountDownLatch(1);
-
 
                 eventLoopGroup.schedule(() -> {
                     try {
@@ -208,8 +214,9 @@ public abstract class AbstractWebsocketClient<P, T> {
                         isSuccess.set(true);
                     } catch (Exception e) {
                         log.error("connect client [{}], url[{}] error, times [{}]", name, url, reconnectTimes.get(), e);
+                    } finally {
+                        latch.countDown();
                     }
-                    latch.countDown();
                 }, NettyConstants.RECONNECT_DELAY_SECONDS, TimeUnit.SECONDS);
 
                 try {
@@ -219,16 +226,19 @@ public abstract class AbstractWebsocketClient<P, T> {
                 }
 
                 if (isSuccess.get()) {
-
                     log.info("connect client [{}], url[{}] success, current times [{}]", name, url, reconnectTimes.get());
                     isRunning.set(true);
+                    reconnectTimes.set(0);
                     break;
                 }
             }
+
             if (!isSuccess.get()) {
                 isRunning.set(false);
                 log.error("reconnect times out of limit [{}], close websocket client", NettyConstants.RECONNECT_LIMIT);
                 close();
+
+                throw new RuntimeException("reconnect times out of limit");
             }
         }, callbackInvoker);
     }

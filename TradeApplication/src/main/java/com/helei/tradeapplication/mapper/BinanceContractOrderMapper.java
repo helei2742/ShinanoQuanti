@@ -2,7 +2,7 @@ package com.helei.tradeapplication.mapper;
 
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.helei.tradeapplication.entity.BinanceContractOrder;
+import com.helei.dto.order.CEXTradeOrder;
 
 /**
  * <p>
@@ -12,6 +12,6 @@ import com.helei.tradeapplication.entity.BinanceContractOrder;
  * @author com.helei
  * @since 2024-11-05
  */
-public interface BinanceContractOrderMapper extends BaseMapper<BinanceContractOrder> {
+public interface BinanceContractOrderMapper extends BaseMapper<CEXTradeOrder> {
 
 }

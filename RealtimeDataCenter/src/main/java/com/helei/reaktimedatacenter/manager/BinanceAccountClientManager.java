@@ -34,7 +34,7 @@ public class BinanceAccountClientManager implements InitializingBean {
 
     private final static int REFRESH_CONCURRENT_LIMIT = 10;
 
-    private static final int ACCOUNT_STREAM_START_TIMES_LIMIT = 3;
+    private static final int ACCOUNT_STREAM_START_TIMES_LIMIT = 1;
 
 
     private final ExecutorService executor;
@@ -182,7 +182,7 @@ public class BinanceAccountClientManager implements InitializingBean {
 
         }
 
-        log.error(" accountId[{}] 重试次数[{}]超过限制[{}],", accountId, ACCOUNT_STREAM_START_TIMES_LIMIT, ACCOUNT_STREAM_START_TIMES_LIMIT);
+        log.error("accountId[{}] 重试次数[{}]超过限制[{}],", accountId, ACCOUNT_STREAM_START_TIMES_LIMIT, ACCOUNT_STREAM_START_TIMES_LIMIT);
         return false;
     }
 

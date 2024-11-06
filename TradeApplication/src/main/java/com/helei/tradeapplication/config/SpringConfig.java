@@ -1,13 +1,14 @@
 package com.helei.tradeapplication.config;
 
 
+import com.helei.dto.config.SnowFlowConfig;
+import com.helei.snowflack.SnowFlakeFactory;
 import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
 import org.redisson.config.Config;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.annotation.EnableKafka;
@@ -60,5 +61,12 @@ public class SpringConfig {
         Config config = new Config();
         config.useSingleServer().setAddress(tradeAppConfig.getRedis().getUrl());
         return Redisson.create(config);
+    }
+
+
+    @Bean
+    public SnowFlakeFactory snowFlakeFactory() {
+        SnowFlowConfig snowFlow = tradeAppConfig.getRun_type().getSnow_flow();
+        return new SnowFlakeFactory(snowFlow.getDatacenter_id(), snowFlow.getMachine_id());
     }
 }

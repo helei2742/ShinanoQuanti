@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.helei.constants.RunEnv;
 import com.helei.constants.trade.TradeType;
 import com.helei.dto.ASKey;
+import com.helei.dto.account.AccountPositionConfig;
 import com.helei.dto.account.AccountRTData;
 import com.helei.dto.account.UserAccountInfo;
 import com.helei.dto.account.UserInfo;
@@ -45,6 +46,12 @@ public class UserServiceImpl implements UserService, InitializingBean {
                                 .builder()
                                 .id(1)
                                 .userId(1)
+                                .accountPositionConfig(AccountPositionConfig
+                                        .builder()
+                                        .riskPercent(0.5)
+                                        .leverage(10)
+                                        .build()
+                                )
                                 .asKey(new ASKey("b252246c6c6e81b64b8ff52caf6b8f37471187b1b9086399e27f6911242cbc66", "a4ed1b1addad2a49d13e08644f0cc8fc02a5c14c3511d374eac4e37763cadf5f"))
                                 .subscribeSymbol(List.of("btcusdt", "ethusdt", "solusdt"))
                                 .runEnv(RunEnv.TEST_NET)
@@ -59,12 +66,18 @@ public class UserServiceImpl implements UserService, InitializingBean {
                 .accountInfos(List.of(
                         UserAccountInfo
                                 .builder()
-                                .id(2)
-                                .userId(1)
+                                .id(1)
+                                .userId(2)
+                                .accountPositionConfig(AccountPositionConfig
+                                        .builder()
+                                        .riskPercent(0.5)
+                                        .leverage(10)
+                                        .build()
+                                )
                                 .subscribeSymbol(List.of("btcusdt", "ethusdt", "solusdt"))
                                 .asKey(new ASKey("1JIhkPyK07xadG9x8hIwqitN95MgpypPzA4b6TLraTonRnJ8BBJQlaO2iL9tPH0Y", "t84TYFR1zieMGncbw3kYq4zAPLxIJHJeMdD8V0FMKxij9fApojV6bhbDpyyjNDWt"))
                                 .runEnv(RunEnv.TEST_NET)
-                                .tradeType(TradeType.CONTRACT)
+                                .tradeType(TradeType.SPOT)
                                 .build()
                 ))
                 .build();
@@ -76,20 +89,26 @@ public class UserServiceImpl implements UserService, InitializingBean {
                 .accountInfos(List.of(
                         UserAccountInfo
                                 .builder()
-                                .id(3)
-                                .userId(1)
+                                .id(1)
+                                .userId(3)
+                                .accountPositionConfig(AccountPositionConfig
+                                        .builder()
+                                        .riskPercent(0.5)
+                                        .leverage(10)
+                                        .build()
+                                )
                                 .subscribeSymbol(List.of("btcusdt", "ethusdt", "solusdt"))
                                 .asKey(new ASKey("TUFsFL4YrBsR4fnBqgewxiGfL3Su5L9plcjZuyRO3cq6M1yuwV3eiNX1LcMamYxz", "YsLzVacYo8eOGlZZ7RjznyWVjPHltIXzZJz2BrggCmCUDcW75FyFEv0uKyLBVAuU"))
-                                .runEnv(RunEnv.TEST_NET)
-                                .tradeType(TradeType.CONTRACT)
+                                .runEnv(RunEnv.NORMAL)
+                                .tradeType(TradeType.SPOT)
                                 .build()
                 ))
                 .build();
 
 
         list.add(u_contract_test_net_account);
-        list.add(spot_test_net_account);
-        list.add(binance_account);
+//        list.add(spot_test_net_account);
+//        list.add(binance_account);
         return list;
     }
 
@@ -122,7 +141,12 @@ public class UserServiceImpl implements UserService, InitializingBean {
         batchWriteSupporter.writeToRedisHash(key, hashKey, value);
     }
 
-
+    /**
+     * 更新UserInfo到Redis
+     *
+     * @param env       运行环境
+     * @param tradeType 交易类型
+     */
     public void updateUserInfoToRedis(RunEnv env, TradeType tradeType) {
         List<UserInfo> userInfos = queryAll();
         for (UserInfo userInfo : userInfos) {

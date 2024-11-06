@@ -119,7 +119,7 @@ public interface AccountEventConverter {
                 details.setSellerNetValue(o.getDouble("a"));
                 details.setMaker(o.getBoolean("m"));
                 details.setReduceOnly(o.getBoolean("R"));
-                details.setWorkingType(WorkingType.STATUS_MAP.get(o.getString("wt")));
+                details.setWorkingType(WorkingType.valueOf(o.getString("wt").toUpperCase()));
                 details.setOriginalOrderType(OrderType.valueOf(o.getString("ot").toUpperCase()));
                 details.setPositionSide(PositionSide.STATUS_MAP.get(o.getString("ps")));
                 details.setClosePosition(o.getBoolean("cp"));
@@ -127,8 +127,8 @@ public interface AccountEventConverter {
                 details.setCallbackRate(o.getDouble("cr"));
                 details.setPriceProtect(o.getBoolean("pP"));
                 details.setRealizedProfit(o.getDouble("rp"));
-                details.setSelfTradePreventionMode(SelfTradePreventionMode.STATUS_MAP.get(o.getString("V")));
-                details.setOpponentPriceMode(OpponentPriceMode.STATUS_MAP.get(o.getString("pm")));
+                details.setSelfTradePreventionMode(SelfTradePreventionMode.valueOf(o.getString("V").toUpperCase()));
+                details.setPriceMatch(PriceMatch.valueOf(o.getString("pm").toUpperCase()));
                 details.setGtdCancelTime(o.getLong("gtd"));
 
                 event.setOrderTradeUpdateDetails(details);

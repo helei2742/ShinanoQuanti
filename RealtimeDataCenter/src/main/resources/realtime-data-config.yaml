@@ -9,8 +9,7 @@ shinano:
           #              - CONTRACT
           - env: TEST_NET
             trade_type:
-              - SPOT
-      #              - CONTRACT
+              - CONTRACT
 
       kafka:
         bootstrap_servers: 192.168.1.3:9092 # Kafka服务器地址

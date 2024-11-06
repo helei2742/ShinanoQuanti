@@ -1,8 +1,8 @@
 package com.helei.tradeapplication.service;
 
-import com.helei.dto.order.BaseOrder;
 import com.helei.dto.account.AccountRTData;
 import com.helei.dto.account.UserAccountInfo;
+import com.helei.tradeapplication.dto.GroupOrder;
 import com.helei.dto.trade.TradeSignal;
 import com.helei.interfaces.CompleteInvocation;
 
@@ -17,9 +17,9 @@ public interface OrderService {
      * @param accountInfo   账户信息
      * @param accountRTData 账户实时数据
      * @param signal        信号
-     * @param invocation 生成订单结果的回调
+     * @param invocation    生成订单结果的回调
      */
-    void makeOrder(UserAccountInfo accountInfo, AccountRTData accountRTData, TradeSignal signal, CompleteInvocation<BaseOrder> invocation);
+    void makeOrder(UserAccountInfo accountInfo, AccountRTData accountRTData, TradeSignal signal, CompleteInvocation<GroupOrder> invocation);
 
 
     /**
@@ -28,7 +28,7 @@ public interface OrderService {
      * @param order 订单数据
      * @return 订单数据
      */
-    BaseOrder writeOrder2Kafka(BaseOrder order) throws ExecutionException, InterruptedException;
+    GroupOrder writeOrder2Kafka(GroupOrder order) throws ExecutionException, InterruptedException;
 
 
     /**
@@ -37,5 +37,5 @@ public interface OrderService {
      * @param order order
      * @return 订单数据
      */
-    BaseOrder writeOrder2DB(BaseOrder order);
+    GroupOrder writeOrder2DB(GroupOrder order);
 }

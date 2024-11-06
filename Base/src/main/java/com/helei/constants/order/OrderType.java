@@ -39,5 +39,10 @@ public enum OrderType {
      * 跟踪止损单
      */
     TRAILING_STIO_MARKET,
+
+    /**
+     * 强平单
+     */
+    LIQUIDATION
     ;
 }

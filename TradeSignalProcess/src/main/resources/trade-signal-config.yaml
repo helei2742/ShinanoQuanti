@@ -6,10 +6,16 @@ shinano:
       name: test
       # symbol
       symbol: btcusdt
-      # 运行环境
-      run_env: NORMAL
-      # 交易类型
-      trade_type: CONTRACT
+
+      run_type:
+        configs:
+          - env: NORMAL  # 运行环境
+            trade_type:  # 交易类型
+              - SPOT
+        snow_flow: # 雪花算法配置
+          datacenter_id: 0 # 数据中心id
+          machine_id: 1 # 机器id
+
       # 历史k线加载批大小
       historyKLineBatchSize: 200
       # 批加载的网络并发度

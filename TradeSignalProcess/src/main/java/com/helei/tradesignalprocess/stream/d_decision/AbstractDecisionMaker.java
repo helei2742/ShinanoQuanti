@@ -1,8 +1,13 @@
+
 package com.helei.tradesignalprocess.stream.d_decision;
 
+import com.helei.dto.config.SnowFlowConfig;
 import com.helei.dto.trade.IndicatorMap;
 import com.helei.dto.trade.IndicatorSignal;
 import com.helei.dto.trade.SignalGroupKey;
+import com.helei.snowflack.BRStyle;
+import com.helei.snowflack.SnowFlakeFactory;
+import com.helei.tradesignalprocess.config.TradeSignalConfig;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +29,8 @@ import java.util.List;
 @Setter
 public abstract class AbstractDecisionMaker<T> extends KeyedProcessFunction<String, Tuple2<SignalGroupKey, List<IndicatorSignal>>, T> {
 
+    private transient SnowFlakeFactory snowFlakeFactory;
+
     private final String name;
 
     /**
@@ -39,6 +46,8 @@ public abstract class AbstractDecisionMaker<T> extends KeyedProcessFunction<Stri
     public void open(Configuration parameters) throws Exception {
         historySignalMapState = getRuntimeContext().getMapState(new MapStateDescriptor<>("historySignalMapState", BasicTypeInfo.STRING_TYPE_INFO, TypeInformation.of(new TypeHint<>() {
         })));
+        SnowFlowConfig snowFlow = TradeSignalConfig.TRADE_SIGNAL_CONFIG.getRun_type().getSnow_flow();
+        snowFlakeFactory = new SnowFlakeFactory(snowFlow);
     }
 
     @Override
@@ -66,16 +75,24 @@ public abstract class AbstractDecisionMaker<T> extends KeyedProcessFunction<Stri
 
     protected abstract T decisionAndBuilderOrder(String symbol, List<IndicatorSignal> windowSignal, IndicatorMap indicatorMap);
 
+
+    /**
+     * 下一个信号id，采用雪花算法
+     *
+     * @return id
+     */
+    protected String nextSignalId() {
+        return snowFlakeFactory.nextId(BRStyle.TRADE_SIGNAL);
+    }
+
     /**
      * 取历史信号
+     *
      * @param kLineStreamKey kLine的key，symbol + interval
      * @return 历史信号
-     * @throws Exception
+     * @throws Exception 异常
      */
     private Tuple2<SignalGroupKey, List<IndicatorSignal>> getHistorySignal(String kLineStreamKey) throws Exception {
         return historySignalMapState.get(kLineStreamKey);
     }
 }
-
-
-

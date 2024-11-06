@@ -1,10 +1,10 @@
 package com.helei.tradeapplication.service.impl;
 
 
-import com.helei.dto.order.BaseOrder;
 import com.helei.constants.RunEnv;
 import com.helei.constants.trade.TradeType;
 import com.helei.dto.account.UserAccountInfo;
+import com.helei.tradeapplication.dto.GroupOrder;
 import com.helei.dto.trade.TradeSignal;
 import com.helei.interfaces.CompleteInvocation;
 import com.helei.tradeapplication.manager.ExecutorServiceManager;
@@ -23,6 +23,9 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 
 
+/**
+ * 处理交易信号
+ */
 @Slf4j
 @Service
 public class KafkaTradeSignalService implements TradeSignalService {
@@ -53,7 +56,9 @@ public class KafkaTradeSignalService implements TradeSignalService {
 
         try {
             userAccountInfoService
+                    // 1 查询环境下的账户
                     .queryEnvAccountInfo(runEnv, tradeType)
+                    // 2 生成订单并交易
                     .thenApplyAsync(accounts -> makeOrdersAndSend2Trade(runEnv, tradeType, signal, accounts), executor);
         } catch (Exception e) {
             log.error("处理信号[{}]时发生错误", signal, e);
@@ -73,9 +78,9 @@ public class KafkaTradeSignalService implements TradeSignalService {
      * @param accountInfos accountInfos
      * @return List<BaseOrder>
      */
-    private List<BaseOrder> makeOrdersAndSend2Trade(RunEnv runEnv, TradeType tradeType, TradeSignal signal, List<UserAccountInfo> accountInfos) {
+    private List<GroupOrder> makeOrdersAndSend2Trade(RunEnv runEnv, TradeType tradeType, TradeSignal signal, List<UserAccountInfo> accountInfos) {
 
-        List<CompletableFuture<BaseOrder>> futures = new ArrayList<>();
+        List<CompletableFuture<GroupOrder>> futures = new ArrayList<>();
 
         for (UserAccountInfo accountInfo : accountInfos) {
 
@@ -84,26 +89,26 @@ public class KafkaTradeSignalService implements TradeSignalService {
                 log.warn("accountId[{}]不能执行信号 [{}]", accountInfo.getId(), signal);
             }
 
-            CompletableFuture<BaseOrder> future = userAccountInfoService
+            CompletableFuture<GroupOrder> future = userAccountInfoService
                     //Step 2 查询实时的账户数据
                     .queryAccountRTInfo(runEnv, tradeType, accountInfo.getId())
                     //Step 3 生产订单
                     .thenApplyAsync(accountRTData -> {
-                        final BaseOrder[] baseOrder = {null};
+                        final GroupOrder[] groupOrder = {null};
 
                         try {
                             CountDownLatch latch = new CountDownLatch(1);
 
                             orderService.makeOrder(accountInfo, accountRTData, signal, new CompleteInvocation<>() {
                                 @Override
-                                public void success(BaseOrder order) {
-                                    baseOrder[0] = order;
+                                public void success(GroupOrder order) {
+                                    groupOrder[0] = order;
                                     log.info("创建订单[{}]成功", order);
                                 }
 
                                 @Override
-                                public void fail(BaseOrder order, String errorMsg) {
-                                    baseOrder[0] = order;
+                                public void fail(GroupOrder order, String errorMsg) {
+                                    groupOrder[0] = order;
                                     log.info("创建订单失败[{}],错误原因[{}]", order, errorMsg);
                                 }
 
@@ -119,7 +124,7 @@ public class KafkaTradeSignalService implements TradeSignalService {
                         } catch (Exception e) {
                             log.error("为accountId[{}]创建订单时出错, signal[{}]", accountInfo.getId(), signal, e);
                         }
-                        return baseOrder[0];
+                        return groupOrder[0];
                     })
                     .exceptionallyAsync(throwable -> {
                         if (throwable != null) {
@@ -133,17 +138,17 @@ public class KafkaTradeSignalService implements TradeSignalService {
 
 
         //等待执行完成
-        List<BaseOrder> baseOrders = new ArrayList<>();
-        for (CompletableFuture<BaseOrder> future : futures) {
+        List<GroupOrder> groupOrders = new ArrayList<>();
+        for (CompletableFuture<GroupOrder> future : futures) {
             try {
-                BaseOrder baseOrder = future.get();
-                baseOrders.add(baseOrder);
+                GroupOrder order = future.get();
+                groupOrders.add(order);
             } catch (ExecutionException | InterruptedException e) {
                 log.error("获取订单结果处理订单结果出错", e);
                 throw new RuntimeException(e);
             }
         }
-        return baseOrders;
+        return groupOrders;
     }
 
 
@@ -158,4 +163,5 @@ public class KafkaTradeSignalService implements TradeSignalService {
         return !account.getUsable().get() || !account.getSubscribeSymbol().contains(signal.getSymbol());
     }
 }
+
 

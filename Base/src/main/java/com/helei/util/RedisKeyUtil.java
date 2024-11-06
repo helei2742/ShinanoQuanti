@@ -1,4 +1,3 @@
-
 package com.helei.util;
 
 import com.helei.constants.RunEnv;
@@ -7,11 +6,11 @@ import com.helei.constants.trade.TradeType;
 
 public class RedisKeyUtil {
 
-    private static final String USER_ACCOUNT_PREFIX = "user";
+    private static final String USER_Info_PREFIX = "user";
 
     public static String getUserAccountInfoKey(long userId, long accountId, RunEnv runEnv, TradeType tradeType) {
 
-        return USER_ACCOUNT_PREFIX + ":" + userId + ":" + accountId + ":" + runEnv + ":" + tradeType;
+        return USER_Info_PREFIX + ":" + userId + ":" + accountId + ":" + runEnv + ":" + tradeType;
     }
 
     /**
@@ -22,7 +21,7 @@ public class RedisKeyUtil {
      * @return prefix
      */
     public static String getEnvKeyPrefix(RunEnv runEnv, TradeType tradeType) {
-        return runEnv.getDeclaringClass() + ":" + tradeType.getDescription() + ":";
+        return (runEnv.name() + ":" + tradeType.name() + ":").toLowerCase();
     }
 
     /**
@@ -33,7 +32,7 @@ public class RedisKeyUtil {
      * @return prefix
      */
     public static String getUserEnvKeyPrefix(RunEnv runEnv, TradeType tradeType) {
-        return getEnvKeyPrefix(runEnv, tradeType) + USER_ACCOUNT_PREFIX + ":";
+        return getEnvKeyPrefix(runEnv, tradeType) + USER_Info_PREFIX + ":";
     }
 
     /**

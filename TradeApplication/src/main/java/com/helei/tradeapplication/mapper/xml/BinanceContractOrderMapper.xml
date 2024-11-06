@@ -28,8 +28,10 @@
         <result column="good_till_date" property="goodTillDate" />
         <result column="timestamp" property="timestamp" />
         <result column="status" property="status" />
+        <result column="main_order" property="mainOrder" />
+        <result column="sub_order_Id_list" property="subOrderIdList" />
+        <result column="connect_main_order_id" property="connectMainOrderId" />
         <result column="created_datetime" property="createdDatetime" />
         <result column="updated_datetime" property="updatedDatetime" />
     </resultMap>
-
 </mapper>

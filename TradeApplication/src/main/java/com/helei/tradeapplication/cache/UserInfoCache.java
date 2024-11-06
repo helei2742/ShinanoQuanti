@@ -21,9 +21,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.*;
-        import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiConsumer;
 
 
@@ -73,15 +75,35 @@ public class UserInfoCache implements InitializingBean {
 
 
     /**
-     * 从redis查指定环境的所有账户信息
+     * 从本地缓存中查询指定环境的用户信息
+     *
+     * @param env       运行环境
+     * @param tradeType 交易类型
+     * @return List<UserInfo>
+     */
+    public List<UserAccountInfo> queryAllAccountInfoFromCache(RunEnv env, TradeType tradeType) {
+        ConcurrentMap<TradeType, ConcurrentMap<Long, UserAccountInfo>> map1 = accountInfoCache.get(env);
+        if (map1 != null) {
+            ConcurrentMap<Long, UserAccountInfo> map2 = map1.get(tradeType);
+            if (map2 != null) {
+                return map2.values().stream().toList();
+            }
+        }
+        return Collections.emptyList();
+    }
+
+    /**
+     * 从redis查指定环境的所有用户信息
      *
      * @param env       运行环境
      * @param tradeType 交易类型
      */
-    public int queryAllUserInfo(RunEnv env, TradeType tradeType, BiConsumer<String, UserInfo> consumer) {
+    public int queryAllUserInfoFromRemote(RunEnv env, TradeType tradeType, BiConsumer<String, UserInfo> consumer) {
+        // Step 1 获取用户的pattern
         String accountPattern = RedisKeyUtil.getUserInfoPattern(env, tradeType);
         RKeys keys = redissonClient.getKeys();
 
+        // Step 2 用pattern筛选key， 再查对应key下的UserInfo
         AtomicInteger total = new AtomicInteger();
         keys.getKeysStreamByPattern(accountPattern).forEach(key -> {
             RBucket<String> bucket = redissonClient.getBucket(key);
@@ -94,6 +116,12 @@ public class UserInfoCache implements InitializingBean {
     }
 
 
+    /**
+     * 更新用户账户信息缓存
+     *
+     * @throws ExecutionException   ExecutionException
+     * @throws InterruptedException InterruptedException
+     */
     public void updateUserInfo() throws ExecutionException, InterruptedException {
         List<CompletableFuture<Void>> futures = new ArrayList<>();
 
@@ -109,7 +137,7 @@ public class UserInfoCache implements InitializingBean {
 
                 log.info("开始初始化环境env[{}]-tradeType[{}]的账户信息", env, type);
 
-                int total = queryAllUserInfo(env, type, (k, v) -> {
+                int total = queryAllUserInfoFromRemote(env, type, (k, v) -> {
                     for (UserAccountInfo accountInfo : v.getAccountInfos()) {
 
                         // 更新 accountInfoCache
