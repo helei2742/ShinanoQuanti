@@ -56,7 +56,7 @@ public class BollSignalMaker extends AbstractSignalMaker {
 
         //1.上下轨信号
         if (price >= upper) { //触碰boll上轨，卖出信号
-            return buildSignal(kLine, TradeSide.SALE, "触碰boll上轨", sma, kLine.getHigh());
+            return buildSignal(kLine, TradeSide.SELL, "触碰boll上轨", sma, kLine.getHigh());
         }
         if (price <= lower) { //触碰boll下轨，买入信号
             return buildSignal(kLine, TradeSide.BUY, "触碰boll下轨", sma, kLine.getLow());
@@ -80,7 +80,7 @@ public class BollSignalMaker extends AbstractSignalMaker {
         }
 
         if (kLine.getOpen() > curBoll.getSma() && kLine.getClose() < curBoll.getSma()) {
-            return buildSignal(kLine, TradeSide.SALE, "下穿中轨", curBoll.getLower(), kLine.getHigh());
+            return buildSignal(kLine, TradeSide.SELL, "下穿中轨", curBoll.getLower(), kLine.getHigh());
         }
 
         return null;

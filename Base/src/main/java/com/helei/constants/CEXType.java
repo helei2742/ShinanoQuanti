@@ -2,6 +2,7 @@ package com.helei.constants;
 
 import lombok.Getter;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,7 +10,7 @@ import java.util.Map;
  * 中心化交易所类型
  */
 @Getter
-public enum CEXType {
+public enum CEXType implements Serializable {
     BINANCE("BINANCE"),
     ;
 

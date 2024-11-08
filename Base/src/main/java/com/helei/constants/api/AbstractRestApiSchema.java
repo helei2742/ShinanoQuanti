@@ -12,13 +12,12 @@ import java.util.Map;
 @Data
 public abstract class AbstractRestApiSchema {
 
-    private static final Map<String, AbstractRestApiSchema> TYPE_MAP = new HashMap<>();
-
+    private static final Map<RestApiType, AbstractRestApiSchema> TYPE_MAP = new HashMap<>();
 
     /**
-     * 交易类型
+     * 交易类型和path的map
      */
-    private final TradeType tradeType;
+    private Map<TradeType, String> tradeTypePathMap = new HashMap<>();
 
     /**
      * api类型
@@ -31,10 +30,6 @@ public abstract class AbstractRestApiSchema {
      */
     private String method;
 
-    /**
-     * 请求的路径
-     */
-    private String path;
 
     /**
      * 请求的query参数的Key
@@ -46,36 +41,27 @@ public abstract class AbstractRestApiSchema {
      */
     private List<String> bodyKey;
 
+    /**
+     * 是否签名，当需要签名，并且请求参数没带签名参数时，抛出异常
+     */
+    private boolean isSignature = false;
 
-    protected AbstractRestApiSchema(TradeType tradeType, RestApiType restApiType) {
-        this.tradeType = tradeType;
+    protected AbstractRestApiSchema(RestApiType restApiType) {
         this.restApiType = restApiType;
-        TYPE_MAP.put(generateKey(tradeType, restApiType), this);
+        TYPE_MAP.put(restApiType, this);
 
-        initSchema(this);
+        initSchema(tradeTypePathMap,this);
     }
 
-    public abstract void initSchema(AbstractRestApiSchema restApiSchema);
-
+    public abstract void initSchema(Map<TradeType, String> tradeTypePathMap, AbstractRestApiSchema restApiSchema);
 
     public abstract int calculateIpWeight(JSONObject allParams);
 
     public abstract <R> R requestResultHandler(String result);
 
-    /**
-     * 构造Key
-     *
-     * @param tradeType   交易类型
-     * @param restApiType restApi类型
-     * @return key
-     */
-    private static String generateKey(TradeType tradeType, RestApiType restApiType) {
-        return tradeType.name() + ":" + restApiType.name();
-    }
-
 
     @Override
     public String toString() {
-        return method + " " + path + " query [" + queryKey + "] body [" + bodyKey + "]";
+        return method + " " + tradeTypePathMap + " query [" + queryKey + "] body [" + bodyKey + "]";
     }
 }

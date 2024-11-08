@@ -66,27 +66,39 @@ public class TradeSignalConfig implements Serializable {
         }
     }
 
-    private TradeSignalConfig() {}
+    private TradeSignalConfig() {
+    }
 
     /**
      * 获取最终交易信号写入到kafka到topic
+     *
      * @return topic
      */
     public TradeSignalTopic getSinkTopic() {
         return new TradeSignalTopic(getRun_env(), getTrade_type(), symbol, name);
     }
 
+    /**
+     * 获取交易类型
+     *
+     * @return TradeType
+     */
     public TradeType getTrade_type() {
         return run_type.getConfigs().getFirst().getTrade_type().getFirst();
     }
 
+    /**
+     * 获取运行环境
+     *
+     * @return RunEnv
+     */
     public RunEnv getRun_env() {
         return run_type.getConfigs().getFirst().getEnv();
     }
 
 
     @Data
-    public static class RealtimeConfig  implements Serializable  {
+    public static class RealtimeConfig implements Serializable {
 
         private RealtimeKafkaConfig kafka;
 
@@ -96,7 +108,7 @@ public class TradeSignalConfig implements Serializable {
 
 
     @Data
-    public static class RealtimeKafkaConfig  implements Serializable  {
+    public static class RealtimeKafkaConfig implements Serializable {
 
         /**
          * 输入的配置
@@ -111,7 +123,7 @@ public class TradeSignalConfig implements Serializable {
     }
 
     @Data
-    public static class KafkaServerConfig  implements Serializable  {
+    public static class KafkaServerConfig implements Serializable {
         /**
          * kafka集群连接地址
          */
@@ -129,7 +141,7 @@ public class TradeSignalConfig implements Serializable {
     }
 
     @Data
-    public static class RealtimeFlinkConfig  implements Serializable  {
+    public static class RealtimeFlinkConfig implements Serializable {
 
         /**
          * flink job manager host

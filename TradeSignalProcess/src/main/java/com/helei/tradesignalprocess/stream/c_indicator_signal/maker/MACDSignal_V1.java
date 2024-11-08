@@ -104,7 +104,7 @@ public class MACDSignal_V1 extends AbstractSignalMaker {
 
         // 水上死叉，卖出
         if (!under && acrossState == -1) {
-            return sendSignal(kLine, TradeSide.SALE);
+            return sendSignal(kLine, TradeSide.SELL);
         }
 
         return null;

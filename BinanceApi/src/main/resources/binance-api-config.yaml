@@ -15,7 +15,7 @@ shinano:
             ws_account_info_stream_url: wss://fstream.binancefuture.com/ws
         normal:
           spot:
-            rest_api_url: https://data-api.binance.vision
+            rest_api_url: https://api.binance.com
             ws_market_url: wss://ws-api.binance.com:443/ws-api/v3
             ws_market_stream_url: wss://stream.binance.com:9443/stream
             ws_account_info_stream_url: wss://stream.binance.com:9443/ws
@@ -24,7 +24,6 @@ shinano:
             ws_market_url: wss://ws-fapi.binance.com/ws-fapi/v1
             ws_market_stream_url: wss://fstream.binance.com/stream
             ws_account_info_stream_url: wss://fstream.binance.com/ws
-
-    proxy:
-      hostname: 127.0.0.1
-      port: 7890
+        proxy:
+          hostname: 127.0.0.1
+          port: 7890

@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +20,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RunTypeConfig {
+public class RunTypeConfig implements Serializable {
 
     public static final RunTypeConfig DEFAULT_RUN_TYPE_CONFIG;
 
@@ -57,7 +58,7 @@ public class RunTypeConfig {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class RunEnvTradeTypeConfig {
+    public static class RunEnvTradeTypeConfig implements Serializable {
         private RunEnv env;
 
         private CEXType cexType = CEXType.BINANCE;

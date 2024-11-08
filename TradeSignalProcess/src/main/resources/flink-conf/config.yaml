@@ -1,4 +1,4 @@
 pipeline.serialization-config:
-  - com.helei.dto.KLine :  {type: kryo, kryo-type: registered, class: com.helei.tradesignalcenter.serialization.KLineSerializer}
-  - com.helei.dto.IndicatorMap: {type: kryo, kryo-type: registered, class: com.helei.tradesignalcenter.serialization.IndicatorMapSerializer}
-  - com.helei.constants.KLineInterval: {type: kryo, kryo-type: registered, class: com.helei.tradesignalcenter.serialization.KLineIntervalSerializer}
+  - com.helei.dto.trade.KLine :  {type: kryo, kryo-type: registered, class: com.helei.tradesignalprocess.serialization.KLineSerializer}
+  - com.helei.dto.trade.IndicatorMap: {type: kryo, kryo-type: registered, class: com.helei.tradesignalprocess.serialization.IndicatorMapSerializer}
+  - com.helei.constants.trade.KLineInterval: {type: kryo, kryo-type: registered, class: com.helei.tradesignalprocess.serialization.KLineIntervalSerializer}

@@ -1,7 +1,8 @@
 package com.helei.cexapi;
 
 
-import com.helei.binanceapi.api.rest.BinanceUContractMarketRestApi;
+import com.helei.binanceapi.api.rest.BinanceRestHttpApiClient;
+import com.helei.binanceapi.config.BinanceApiConfig;
 import com.helei.binanceapi.supporter.IpWeightSupporter;
 import com.helei.cexapi.manager.BinanceBaseClientManager;
 import com.helei.dto.config.RunTypeConfig;
@@ -18,6 +19,8 @@ public class CEXApiFactory {
 
     private static final Map<RunTypeConfig, BinanceBaseClientManager> MANAGER_MAP = new ConcurrentHashMap<>();
 
+    private static volatile BinanceRestHttpApiClient binanceRestHttpApiClient;
+
     public static BinanceBaseClientManager binanceBaseWSClientManager(RunTypeConfig runTypeConfig, ExecutorService executor) {
 
         return MANAGER_MAP.compute(runTypeConfig, (k, v) -> {
@@ -29,9 +32,18 @@ public class CEXApiFactory {
     }
 
 
-    public static BinanceUContractMarketRestApi binanceUContractMarketRestApi(String baseUrl,
-                                                                              ExecutorService executor) {
-        return new BinanceUContractMarketRestApi(executor, baseUrl, new IpWeightSupporter("123123"));
+    public static BinanceRestHttpApiClient binanceRestHttpApiClient(BinanceApiConfig binanceApiConfig,
+                                                                     ExecutorService executor) {
+
+        if (binanceRestHttpApiClient == null) {
+            synchronized (BinanceRestHttpApiClient.class) {
+                if (binanceRestHttpApiClient == null) {
+                    binanceRestHttpApiClient = new BinanceRestHttpApiClient(binanceApiConfig, executor);
+                }
+            }
+        }
+
+        return binanceRestHttpApiClient;
     }
 
 

@@ -2,7 +2,7 @@ package com.helei.tradesignalprocess.stream.a_klinesource.impl;
 
 import cn.hutool.core.collection.ConcurrentHashSet;
 import com.helei.binanceapi.BinanceWSReqRespApiClient;
-import com.helei.binanceapi.api.rest.BinanceUContractMarketRestApi;
+import com.helei.binanceapi.api.rest.BinanceRestHttpApiClient;
 import com.helei.binanceapi.base.AbstractBinanceWSApiClient;
 import com.helei.binanceapi.config.BinanceApiConfig;
 import com.helei.binanceapi.constants.BinanceWSClientType;
@@ -10,8 +10,6 @@ import com.helei.cexapi.CEXApiFactory;
 import com.helei.cexapi.manager.BinanceBaseClientManager;
 import com.helei.constants.trade.KLineInterval;
 import com.helei.constants.trade.TradeType;
-import com.helei.dto.base.KeyValue;
-import com.helei.dto.config.RunTypeConfig;
 import com.helei.dto.trade.KLine;
 import com.helei.constants.RunEnv;
 import com.helei.tradesignalprocess.config.TradeSignalConfig;
@@ -63,6 +61,7 @@ public class BinanceKLineHisAndRTSource extends KLineHisAndRTSource {
     private final BinanceApiConfig binanceApiConfig;
 
 
+
     protected BinanceKLineHisAndRTSource(
             String symbol,
             Set<KLineInterval> kLineIntervals,
@@ -89,7 +88,7 @@ public class BinanceKLineHisAndRTSource extends KLineHisAndRTSource {
 
 
         //Step 1: 初始化HistoryKLineLoader
-        HistoryKLineLoader historyKLineLoader = initHistoryKLineLoader(tradeSignalConfig.getRun_type(), batchSize, executor);
+        HistoryKLineLoader historyKLineLoader = initHistoryKLineLoader(batchSize, executor);
 
         //Step 2: 遍历k线频率列表，开始加载历史k线数据
         for (KLineInterval interval : intervals) {
@@ -111,7 +110,6 @@ public class BinanceKLineHisAndRTSource extends KLineHisAndRTSource {
                             log.info("symbol[{}], interval[{}]历史k线数据获取完毕", symbol, interval);
                         } catch (InterruptedException | ExecutionException e) {
                             log.error("加载历史k线数据出错", e);
-                            System.exit(-1);
                         }
                         return interval;
                     }, executor)
@@ -127,6 +125,12 @@ public class BinanceKLineHisAndRTSource extends KLineHisAndRTSource {
                     }, executor)
                     .exceptionally(e -> {
                         log.error("异步任务执行异常", e);
+                        historyKLineLoader.closeClient();
+                        try {
+                            close();
+                        } catch (Exception ex) {
+                            throw new RuntimeException(ex);
+                        }
                         return null;
                     });
         }
@@ -151,6 +155,7 @@ public class BinanceKLineHisAndRTSource extends KLineHisAndRTSource {
             }
         }, executor).exceptionally(e -> {
             log.error("加载实时数据出错", e);
+            System.exit(-1);
             return null;
         });
     }
@@ -158,28 +163,27 @@ public class BinanceKLineHisAndRTSource extends KLineHisAndRTSource {
     /**
      * 初始化历史k线加载器
      *
-     * @param runTypeConfig    runTypeConfig
      * @param batchSize batchSize
      * @param executor  executor
      * @return HistoryKLineLoader
      */
     @NotNull
     private HistoryKLineLoader initHistoryKLineLoader(
-            RunTypeConfig runTypeConfig,
             int batchSize,
             ExecutorService executor
     ) {
         HistoryKLineLoader historyKLineLoader;
         try {
-            KeyValue<RunEnv, TradeType> keyValue = runTypeConfig.getRunTypeList().getFirst();
+            RunEnv runEnv = tradeSignalConfig.getRun_env();
+            TradeType tradeType = tradeSignalConfig.getTrade_type();
 
-            historyKLineLoader = switch (keyValue.getValue()) {
-                case SPOT -> spotHistoryKLineLoader(runTypeConfig, batchSize, executor);
-                case CONTRACT -> {
-                    String historyApiUrl = getHistoryApiUrl(TradeType.CONTRACT);
-                    yield contractHistoryKLineLoader(historyApiUrl, batchSize, executor);
-                }
+            historyKLineLoader = switch (tradeType) {
+                case SPOT -> spotHistoryKLineLoader(runEnv, tradeType, batchSize, executor);
+                case CONTRACT -> contractHistoryKLineLoader(batchSize, executor);
             };
+
+            historyKLineLoader.setRunEnv(runEnv);
+            historyKLineLoader.setTradeType(tradeType);
         } catch (Exception e) {
             throw new RuntimeException("获取历史k线数据加载器失败", e);
         }
@@ -189,16 +193,14 @@ public class BinanceKLineHisAndRTSource extends KLineHisAndRTSource {
     /**
      * 获取现货历史k线数据加载器
      *
-     * @param runTypeConfig runTypeConfig
      * @param batchSize     batchSize
      * @param executor      executor
      * @return HistoryKLineLoader
      */
     @NotNull
-    private HistoryKLineLoader spotHistoryKLineLoader(RunTypeConfig runTypeConfig, int batchSize, ExecutorService executor) throws URISyntaxException, SSLException, InterruptedException, ExecutionException {
-        RunTypeConfig.RunEnvTradeTypeConfig first = runTypeConfig.getConfigs().getFirst();
+    private HistoryKLineLoader spotHistoryKLineLoader(RunEnv runEnv, TradeType tradeType, int batchSize, ExecutorService executor) throws URISyntaxException, SSLException, InterruptedException, ExecutionException {
 
-        AbstractBinanceWSApiClient client = binanceBaseClientManager.getEnvTypedApiClient(first.getEnv(), first.getTrade_type().getFirst(), BinanceWSClientType.MARKET_STREAM).get();
+        AbstractBinanceWSApiClient client = binanceBaseClientManager.getEnvTypedApiClient(runEnv, tradeType, BinanceWSClientType.REQUEST_RESPONSE).get();
 
         return new HistoryKLineLoader(batchSize, (BinanceWSReqRespApiClient) client, executor);
     }
@@ -208,34 +210,15 @@ public class BinanceKLineHisAndRTSource extends KLineHisAndRTSource {
      * 获取合约历史k线数据加载器
      * <p>由于合约币安没提供k线数据的websocket的获取方式，所以用的rest api</p>
      *
-     * @param historyApiUrl historyApiUrl
      * @param batchSize     batchSize
      * @param executor      executor
      * @return HistoryKLineLoader
      */
     @NotNull
-    private HistoryKLineLoader contractHistoryKLineLoader(String historyApiUrl, int batchSize, ExecutorService executor) {
-        BinanceUContractMarketRestApi binanceUContractMarketRestApi = CEXApiFactory.binanceUContractMarketRestApi(historyApiUrl, executor);
-        return new HistoryKLineLoader(batchSize, binanceUContractMarketRestApi, executor);
+    private HistoryKLineLoader contractHistoryKLineLoader(int batchSize, ExecutorService executor) {
+        BinanceRestHttpApiClient restHttpApiClient = CEXApiFactory.binanceRestHttpApiClient(binanceApiConfig, executor);
+
+        return new HistoryKLineLoader(batchSize, restHttpApiClient, executor);
     }
 
-
-    /**
-     * 获取请求历史数据的api url
-     *
-     * @return url
-     */
-    protected String getHistoryApiUrl(TradeType tradeType) {
-        if (RunEnv.NORMAL.equals(tradeSignalConfig.getRun_env())) {
-            return switch (tradeType) {
-                case SPOT -> binanceApiConfig.getNormal().getSpot().getWs_market_url();
-                case CONTRACT -> binanceApiConfig.getNormal().getU_contract().getRest_api_url();
-            };
-        } else {
-            return switch (tradeType) {
-                case SPOT -> binanceApiConfig.getTest_net().getSpot().getWs_market_url();
-                case CONTRACT -> binanceApiConfig.getTest_net().getU_contract().getRest_api_url();
-            };
-        }
-    }
 }

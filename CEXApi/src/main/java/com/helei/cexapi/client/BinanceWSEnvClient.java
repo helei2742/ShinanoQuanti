@@ -41,7 +41,7 @@ public class BinanceWSEnvClient {
 
         BinanceApiConfig apiConfig = BinanceApiConfig.INSTANCE;
         this.urlSet = apiConfig.getEnvUrlSet(runEnv, tradeType);
-        this.proxy = apiConfig.getProxy();
+        this.proxy = apiConfig.getProxy().getProxyAddress();
 
         this.typedApiClient = new ConcurrentHashMap<>();
     }

@@ -15,7 +15,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-import java.io.IOException;
 import java.net.Proxy;
 import java.net.SocketTimeoutException;
 import java.util.*;
@@ -46,15 +45,36 @@ public class BinanceRestHttpApiClient {
 
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         if (binanceApiConfig.getProxy() != null) {
-            builder.proxy(new Proxy(Proxy.Type.HTTP, binanceApiConfig.getProxy()));
+            builder.proxy(new Proxy(Proxy.Type.HTTP, binanceApiConfig.getProxy().getProxyAddress()));
         }
         this.okHttpClient = builder.build();
     }
+
 
     /**
      * 发送请求
      *
      * @param runEnv             runEnv
+     * @param tradeType  交易类型
+     * @param binanceRestApiType rest接口类型
+     * @param allParam           所有的参数
+     * @return result 的future
+     */
+    public <R> CompletableFuture<R> queryBinanceApi(
+            RunEnv runEnv,
+            TradeType tradeType,
+            BinanceRestApiType binanceRestApiType,
+            JSONObject allParam
+    ) {
+        return queryBinanceApi(runEnv, tradeType, binanceRestApiType, allParam, null);
+    }
+
+
+    /**
+     * 发送请求
+     *
+     * @param runEnv             runEnv
+     * @param tradeType  交易类型
      * @param binanceRestApiType rest接口类型
      * @param allParam           所有的参数
      * @param asKey              用于签名
@@ -62,13 +82,13 @@ public class BinanceRestHttpApiClient {
      */
     public <R> CompletableFuture<R> queryBinanceApi(
             RunEnv runEnv,
+            TradeType tradeType,
             BinanceRestApiType binanceRestApiType,
             JSONObject allParam,
             ASKey asKey
     ) {
         AbstractRestApiSchema restApiSchema = binanceRestApiType.getRestApiSchema();
-        TradeType tradeType = restApiSchema.getTradeType();
-
+        String path = restApiSchema.getTradeTypePathMap().get(tradeType);
         int ipWeight = restApiSchema.calculateIpWeight(allParam);
 
         BinanceApiConfig.BinanceTypedUrl envUrlSet = binanceApiConfig.getEnvUrlSet(runEnv, tradeType);
@@ -78,12 +98,13 @@ public class BinanceRestHttpApiClient {
         return request(
                 baseUrl,
                 restApiSchema.getMethod(),
-                restApiSchema.getPath(),
+                path,
                 ipWeight,
                 restApiSchema.getQueryKey() == null ? Collections.emptySet() : new HashSet<>(restApiSchema.getQueryKey()),
                 restApiSchema.getBodyKey() == null ? Collections.emptySet() : new HashSet<>(restApiSchema.getBodyKey()),
                 allParam,
-                asKey
+                asKey,
+                restApiSchema.isSignature()
         ).thenApplyAsync(restApiSchema::requestResultHandler, executor);
     }
 
@@ -99,6 +120,7 @@ public class BinanceRestHttpApiClient {
      * @param bodyKey   body参数的Key
      * @param allParam  所有参数
      * @param asKey     ASKey
+     * @param isSignature 是否签名
      * @return future
      */
     private CompletableFuture<String> request(
@@ -109,7 +131,8 @@ public class BinanceRestHttpApiClient {
             Set<String> paramsKey,
             Set<String> bodyKey,
             JSONObject allParam,
-            ASKey asKey
+            ASKey asKey,
+            boolean isSignature
     ) {
         return CompletableFuture.supplyAsync(() -> {
 
@@ -144,28 +167,30 @@ public class BinanceRestHttpApiClient {
                 payload.deleteCharAt(payload.length() - 1);
             }
 
-            String url = baseUrl + path + "?" + queryString;
-
             Request.Builder builder = new Request.Builder();
 
             if (asKey != null) {
                 try {
-                    url += "&signature=" + SignatureUtil.hmac256(asKey.getSecretKey(), payload.toString());
+                    if (isSignature) {
+                        if (!queryString.isEmpty()) queryString.append("&");
+                        queryString.append("signature=").append(SignatureUtil.hmac256(asKey.getSecretKey(), payload.toString()));
+                    }
+
                     builder.addHeader("X-MBX-APIKEY", asKey.getApiKey());
                 } catch (Exception e) {
                     throw new RuntimeException("计算签名失败", e);
                 }
             }
-
-
-            // 创建 POST 请求
+            String url = baseUrl + path + "?" + queryString;
             builder.url(url);
-            String upperCase = method.toUpperCase();
 
-            if (upperCase.equals("GET")) {
-                builder.get();
-            } else {
-                builder.method(upperCase, bodyBuilder.build());
+            String upperCase = method.toUpperCase();
+            switch (upperCase) {
+                case "GET" -> builder.get();
+                case "POST" -> builder.post(bodyBuilder.build());
+                case "PUT" -> builder.put(bodyBuilder.build());
+                case "DELETE" -> builder.delete();
+                case "HEAD" -> builder.head();
             }
 
             Request request = builder.build();
@@ -180,16 +205,15 @@ public class BinanceRestHttpApiClient {
                     if (response.isSuccessful()) {
                         return response.body() == null ? "" : response.body().string();
                     } else {
-                        log.error("请求url [{}] 失败， code [{}]， {}", url, response.code(), response.body());
+                        log.error("请求url [{}] 失败， code [{}]， {}", url, response.code(), response.body() == null ? "" : response.body().string());
                         break;
                     }
                 } catch (SocketTimeoutException e) {
                     log.warn("请求[{}]超时，尝试重新请求 [{}/{}]", url, i, RETRY_TIMES);
                     lastException = e;
-                } catch (IOException e) {
+                } catch (Exception e) {
                     log.error("请求url [{}] 失败", url, e);
                     lastException = e;
-                    throw new RuntimeException(e);
                 }
             }
 

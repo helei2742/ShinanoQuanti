@@ -185,7 +185,7 @@ public abstract class AbstractWebsocketClient<P, T> {
                 log.warn("WS客户端[{}}正在运行, clientStatus[{}]", url, clientStatus);
                 yield CompletableFuture.supplyAsync(() -> true);
             }
-            case SHUTDOWN -> throw new RuntimeException("client already shutdown");
+            case SHUTDOWN -> throw new RuntimeException("");
         };
     }
 
@@ -203,7 +203,10 @@ public abstract class AbstractWebsocketClient<P, T> {
                 log.warn("WS客户端[{}}正在启动或运行, 不能reconnect. clientStatus[{}]", url, clientStatus);
                 yield CompletableFuture.supplyAsync(() -> true);
             }
-            case SHUTDOWN -> throw new RuntimeException("client already shutdown");
+            case SHUTDOWN ->  CompletableFuture.supplyAsync(()->{
+                log.error("client[{}] already shutdown", name);
+                return false;
+            });
         };
     }
 

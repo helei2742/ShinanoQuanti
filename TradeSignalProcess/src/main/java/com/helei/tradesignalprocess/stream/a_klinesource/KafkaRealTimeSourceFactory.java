@@ -73,8 +73,8 @@ public class KafkaRealTimeSourceFactory {
         Properties properties = new Properties();
         properties.setProperty(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServer);
         properties.setProperty(ConsumerConfig.GROUP_ID_CONFIG, groupId);
-        properties.setProperty(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, "com.helei.tradesignalcenter.serialization.KafkaKLineSchema");
-        properties.setProperty(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, "com.helei.tradesignalcenter.serialization.KafkaKLineSchema");
+        properties.setProperty(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, "com.helei.tradesignalprocess.serialization.KafkaKLineSchema");
+        properties.setProperty(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, "com.helei.tradesignalprocess.serialization.KafkaKLineSchema");
 
         KafkaConsumer<String, KLine> consumer = null;
         try {

@@ -4,12 +4,12 @@ package com.helei.binanceapi.config;
 import com.helei.constants.CEXType;
 import com.helei.constants.RunEnv;
 import com.helei.constants.trade.TradeType;
+import com.helei.dto.config.ProxyConfig;
 import lombok.Data;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.InputStream;
 import java.io.Serializable;
-import java.net.InetSocketAddress;
 import java.util.Map;
 
 @Data
@@ -24,7 +24,7 @@ public class BinanceApiConfig implements Serializable {
 
     private BinanceURL normal;
 
-    private InetSocketAddress proxy;
+    private ProxyConfig proxy;
 
     static {
         Yaml yaml = new Yaml();

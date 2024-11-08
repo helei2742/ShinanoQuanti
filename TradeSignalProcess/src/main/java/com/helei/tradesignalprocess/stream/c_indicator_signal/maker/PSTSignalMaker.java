@@ -108,7 +108,7 @@ public class PSTSignalMaker extends AbstractSignalMaker {
         //k线结束，还在趋势线下
         if (downPrice != null && kLine.getClose() < downPrice) {
             log.info("跌破下趋势线，卖出信号");
-            return buildSignal("跌破下趋势线，卖出信号", TradeSide.SALE, kLine, target, stop);
+            return buildSignal("跌破下趋势线，卖出信号", TradeSide.SELL, kLine, target, stop);
         }
 
         return null;
@@ -146,9 +146,9 @@ public class PSTSignalMaker extends AbstractSignalMaker {
                 if (price > upPrice) { // 突破上趋势线
                     return buildSignal("两条趋势线相交，交点在右侧，突破上趋势", TradeSide.BUY, kLine, (pList.get(0) + pList.get(1)) / 2, sList.getFirst());
                 } else if (price < downPrice) {// 跌破下趋势线
-                    return buildSignal("两条趋势线相交，交点在右侧，跌破下趋势线", TradeSide.SALE, kLine, kLine.getOpen() - (pList.getLast() - sList.getLast()), kLine.getHigh());
+                    return buildSignal("两条趋势线相交，交点在右侧，跌破下趋势线", TradeSide.SELL, kLine, kLine.getOpen() - (pList.getLast() - sList.getLast()), kLine.getHigh());
                 } else { //趋势线中间
-                    return buildSignal("两条趋势线相交，交点在右侧", TradeSide.SALE, kLine, sList.getFirst(), downPrice);
+                    return buildSignal("两条趋势线相交，交点在右侧", TradeSide.SELL, kLine, sList.getFirst(), downPrice);
                 }
             } else {
                 if (price > upPrice) { // 突破上趋势线
@@ -158,7 +158,7 @@ public class PSTSignalMaker extends AbstractSignalMaker {
                     downConfirmPrice.update(downPrice);
                     setTimerSignal(kLine, timerService, Arrays.asList(kLine.getOpen() - (pList.getLast() - sList.getLast()), kLine.getHigh()));
                 } else { //趋势线中间
-                    return buildSignal("两条趋势线相交，交点在右侧", TradeSide.SALE, kLine, sList.getFirst(), downPrice);
+                    return buildSignal("两条趋势线相交，交点在右侧", TradeSide.SELL, kLine, sList.getFirst(), downPrice);
                 }
             }
         } else if (upK < 0 && downK < 0) { //\\

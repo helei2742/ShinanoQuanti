@@ -90,7 +90,7 @@ public abstract class BaseWebSocketClientHandler<P, T> extends SimpleChannelInbo
             }
         } else if (msg instanceof WebSocketFrame frame) {
             if (frame instanceof TextWebSocketFrame textFrame) {
-                log.info("websocket client [{}] 接收到的消息：{}", ch.attr(NettyConstants.CLIENT_NAME).get(), textFrame.text());
+                log.info("websocket client [{}] 接收到的消息：{}", ch.attr(NettyConstants.CLIENT_NAME).get(), textFrame.text().length());
 
                 whenReceiveMessage(textFrame.text());
 
