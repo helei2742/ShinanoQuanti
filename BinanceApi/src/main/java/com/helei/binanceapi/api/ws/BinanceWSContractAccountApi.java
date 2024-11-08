@@ -1,8 +1,8 @@
 package com.helei.binanceapi.api.ws;
 
 import com.alibaba.fastjson.JSONObject;
-import com.helei.binanceapi.BinanceWSApiClient;
 import com.helei.binanceapi.base.AbstractBinanceWSApi;
+import com.helei.binanceapi.base.AbstractBinanceWSApiClient;
 import com.helei.binanceapi.constants.command.AccountCommandType;
 import com.helei.dto.ASKey;
 import com.helei.dto.WebSocketCommandBuilder;
@@ -18,7 +18,7 @@ import java.util.concurrent.CompletableFuture;
 @Slf4j
 public class BinanceWSContractAccountApi extends AbstractBinanceWSApi {
 
-    public BinanceWSContractAccountApi(BinanceWSApiClient binanceWSApiClient) throws URISyntaxException {
+    public BinanceWSContractAccountApi(AbstractBinanceWSApiClient binanceWSApiClient) throws URISyntaxException {
         super(binanceWSApiClient);
     }
 
@@ -86,3 +86,4 @@ public class BinanceWSContractAccountApi extends AbstractBinanceWSApi {
     }
 
 }
+

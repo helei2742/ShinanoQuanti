@@ -1,14 +1,20 @@
 package com.helei.tradesignalprocess.stream.a_klinesource.impl;
 
 import cn.hutool.core.collection.ConcurrentHashSet;
-import com.helei.binanceapi.BinanceWSApiClient;
+import com.helei.binanceapi.BinanceWSReqRespApiClient;
 import com.helei.binanceapi.api.rest.BinanceUContractMarketRestApi;
+import com.helei.binanceapi.base.AbstractBinanceWSApiClient;
 import com.helei.binanceapi.config.BinanceApiConfig;
+import com.helei.binanceapi.constants.BinanceWSClientType;
 import com.helei.cexapi.CEXApiFactory;
+import com.helei.cexapi.manager.BinanceBaseClientManager;
 import com.helei.constants.trade.KLineInterval;
 import com.helei.constants.trade.TradeType;
+import com.helei.dto.base.KeyValue;
+import com.helei.dto.config.RunTypeConfig;
 import com.helei.dto.trade.KLine;
 import com.helei.constants.RunEnv;
+import com.helei.tradesignalprocess.config.TradeSignalConfig;
 import com.helei.tradesignalprocess.stream.a_klinesource.HistoryKLineLoader;
 import com.helei.tradesignalprocess.stream.a_klinesource.KLineHisAndRTSource;
 import com.helei.tradesignalprocess.stream.a_klinesource.KafkaRealTimeSourceFactory;
@@ -47,6 +53,11 @@ public class BinanceKLineHisAndRTSource extends KLineHisAndRTSource {
     private transient ConcurrentHashSet<KLineInterval> historyLoadedIntervals;
 
     /**
+     * 币安基础WS客户端管理器
+     */
+    private transient BinanceBaseClientManager binanceBaseClientManager;
+
+    /**
      * binance api config
      */
     private final BinanceApiConfig binanceApiConfig;
@@ -64,7 +75,9 @@ public class BinanceKLineHisAndRTSource extends KLineHisAndRTSource {
     @Override
     public void onOpen(Configuration parameters) throws Exception {
         historyLoadedIntervals = new ConcurrentHashSet<>();
+        // TODO 线程池管理
         executor = Executors.newVirtualThreadPerTaskExecutor();
+        binanceBaseClientManager = CEXApiFactory.binanceBaseWSClientManager(TradeSignalConfig.TRADE_SIGNAL_CONFIG.getRun_type(), executor);
     }
 
     @Override
@@ -76,7 +89,7 @@ public class BinanceKLineHisAndRTSource extends KLineHisAndRTSource {
 
 
         //Step 1: 初始化HistoryKLineLoader
-        HistoryKLineLoader historyKLineLoader = initHistoryKLineLoader(tradeType, batchSize, executor);
+        HistoryKLineLoader historyKLineLoader = initHistoryKLineLoader(tradeSignalConfig.getRun_type(), batchSize, executor);
 
         //Step 2: 遍历k线频率列表，开始加载历史k线数据
         for (KLineInterval interval : intervals) {
@@ -120,7 +133,7 @@ public class BinanceKLineHisAndRTSource extends KLineHisAndRTSource {
 
 
         //Step 3: 获取实时k线，写入buffer
-        CompletableFuture.runAsync(()->{
+        CompletableFuture.runAsync(() -> {
             KafkaRealTimeSourceFactory sourceFactory = new KafkaRealTimeSourceFactory(symbol, intervals);
 
             KafkaConsumer<String, KLine> rtConsumer = sourceFactory
@@ -144,54 +157,60 @@ public class BinanceKLineHisAndRTSource extends KLineHisAndRTSource {
 
     /**
      * 初始化历史k线加载器
-     * @param tradeType tradeType
+     *
+     * @param runTypeConfig    runTypeConfig
      * @param batchSize batchSize
-     * @param executor executor
+     * @param executor  executor
      * @return HistoryKLineLoader
      */
     @NotNull
     private HistoryKLineLoader initHistoryKLineLoader(
-            TradeType tradeType,
+            RunTypeConfig runTypeConfig,
             int batchSize,
             ExecutorService executor
     ) {
-        String historyApiUrl = getHistoryApiUrl(tradeType);
-
         HistoryKLineLoader historyKLineLoader;
-        log.info("开始初始化历史k线获取客户端, api url[{}]，RunEnv[{}], tradeType[{}]", historyApiUrl, tradeSignalConfig.getRun_env(), tradeType);
         try {
-            historyKLineLoader = switch (tradeType) {
-                case SPOT -> spotHistoryKLineLoader(historyApiUrl, batchSize, executor);
-                case CONTRACT -> contractHistoryKLineLoader(historyApiUrl, batchSize, executor);
+            KeyValue<RunEnv, TradeType> keyValue = runTypeConfig.getRunTypeList().getFirst();
+
+            historyKLineLoader = switch (keyValue.getValue()) {
+                case SPOT -> spotHistoryKLineLoader(runTypeConfig, batchSize, executor);
+                case CONTRACT -> {
+                    String historyApiUrl = getHistoryApiUrl(TradeType.CONTRACT);
+                    yield contractHistoryKLineLoader(historyApiUrl, batchSize, executor);
+                }
             };
         } catch (Exception e) {
-            log.error("获取历史k线信息失败，api url [{}]", historyApiUrl, e);
-            throw new RuntimeException("获取历史k线信息失败", e);
+            throw new RuntimeException("获取历史k线数据加载器失败", e);
         }
         return historyKLineLoader;
     }
 
     /**
      * 获取现货历史k线数据加载器
-     * @param historyApiUrl historyApiUrl
-     * @param batchSize batchSize
-     * @param executor executor
+     *
+     * @param runTypeConfig runTypeConfig
+     * @param batchSize     batchSize
+     * @param executor      executor
      * @return HistoryKLineLoader
      */
     @NotNull
-    private HistoryKLineLoader spotHistoryKLineLoader(String historyApiUrl, int batchSize, ExecutorService executor) throws URISyntaxException, SSLException, InterruptedException, ExecutionException {
-        BinanceWSApiClient apiClient = CEXApiFactory.binanceApiClient(historyApiUrl, "binance-history-kline-client");
-        apiClient.connect().get();
-        return new HistoryKLineLoader(batchSize, apiClient, executor);
+    private HistoryKLineLoader spotHistoryKLineLoader(RunTypeConfig runTypeConfig, int batchSize, ExecutorService executor) throws URISyntaxException, SSLException, InterruptedException, ExecutionException {
+        RunTypeConfig.RunEnvTradeTypeConfig first = runTypeConfig.getConfigs().getFirst();
+
+        AbstractBinanceWSApiClient client = binanceBaseClientManager.getEnvTypedApiClient(first.getEnv(), first.getTrade_type().getFirst(), BinanceWSClientType.MARKET_STREAM).get();
+
+        return new HistoryKLineLoader(batchSize, (BinanceWSReqRespApiClient) client, executor);
     }
 
 
     /**
      * 获取合约历史k线数据加载器
      * <p>由于合约币安没提供k线数据的websocket的获取方式，所以用的rest api</p>
+     *
      * @param historyApiUrl historyApiUrl
-     * @param batchSize batchSize
-     * @param executor executor
+     * @param batchSize     batchSize
+     * @param executor      executor
      * @return HistoryKLineLoader
      */
     @NotNull
@@ -199,7 +218,6 @@ public class BinanceKLineHisAndRTSource extends KLineHisAndRTSource {
         BinanceUContractMarketRestApi binanceUContractMarketRestApi = CEXApiFactory.binanceUContractMarketRestApi(historyApiUrl, executor);
         return new HistoryKLineLoader(batchSize, binanceUContractMarketRestApi, executor);
     }
-
 
 
     /**

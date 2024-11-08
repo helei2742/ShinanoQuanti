@@ -21,10 +21,23 @@ import java.util.List;
 @NoArgsConstructor
 public class RunTypeConfig {
 
+    public static final RunTypeConfig DEFAULT_RUN_TYPE_CONFIG;
+
     private List<RunEnvTradeTypeConfig> configs;
 
     private SnowFlowConfig snow_flow;
 
+    static {
+        DEFAULT_RUN_TYPE_CONFIG = new RunTypeConfig();
+        List<RunEnvTradeTypeConfig> list = new ArrayList<>();
+        list.add(new RunEnvTradeTypeConfig(RunEnv.NORMAL, CEXType.BINANCE, List.of(TradeType.SPOT, TradeType.CONTRACT)));
+        list.add(new RunEnvTradeTypeConfig(RunEnv.NORMAL, CEXType.BINANCE, List.of(TradeType.CONTRACT, TradeType.CONTRACT)));
+        list.add(new RunEnvTradeTypeConfig(RunEnv.TEST_NET, CEXType.BINANCE, List.of(TradeType.SPOT, TradeType.CONTRACT)));
+        list.add(new RunEnvTradeTypeConfig(RunEnv.TEST_NET, CEXType.BINANCE, List.of(TradeType.CONTRACT, TradeType.CONTRACT)));
+
+        DEFAULT_RUN_TYPE_CONFIG.setConfigs(list);
+        DEFAULT_RUN_TYPE_CONFIG.setSnow_flow(new SnowFlowConfig());
+    }
 
     /**
      * 获取运行类型列表
@@ -57,4 +70,3 @@ public class RunTypeConfig {
         }
     }
 }
-

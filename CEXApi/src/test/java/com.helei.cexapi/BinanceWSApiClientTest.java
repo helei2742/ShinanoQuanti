@@ -1,24 +1,37 @@
 package com.helei.cexapi;
 
-import com.helei.binanceapi.BinanceWSApiClient;
+import com.helei.binanceapi.BinanceWSMarketStreamClient;
+import com.helei.binanceapi.constants.BinanceWSClientType;
+import com.helei.cexapi.manager.BinanceBaseClientManager;
+import com.helei.constants.RunEnv;
 import com.helei.constants.WebSocketStreamParamKey;
 import com.helei.binanceapi.constants.WebSocketStreamType;
 import com.helei.binanceapi.dto.StreamSubscribeEntity;
-import com.helei.binanceapi.constants.BinanceApiUrl;
+import com.helei.constants.trade.TradeType;
+import com.helei.dto.config.RunTypeConfig;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 
 class BinanceWSApiClientTest {
-    private static BinanceWSApiClient binanceWSApiClient = null;
+
+    private static RunEnv runEnv;
+
+    private static TradeType tradeType;
+
+    private static BinanceBaseClientManager clientManager = null;
+
+    private static BinanceWSMarketStreamClient marketStreamClient;
 
     @BeforeAll
     public static void before() {
         try {
-            binanceWSApiClient = CEXApiFactory.binanceApiClient(BinanceApiUrl.WS_SPOT_STREAM_URL);
-            binanceWSApiClient.connect().get();
+            clientManager = CEXApiFactory.binanceBaseWSClientManager(new RunTypeConfig(), Executors.newVirtualThreadPerTaskExecutor());
+
+            marketStreamClient = (BinanceWSMarketStreamClient) clientManager.getEnvTypedApiClient(runEnv, tradeType, BinanceWSClientType.MARKET_STREAM).get();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -26,13 +39,13 @@ class BinanceWSApiClientTest {
 
     @Test
     public void testAGG_TRADE() throws InterruptedException {
-        binanceWSApiClient
+        marketStreamClient
                 .getStreamApi()
                 .builder()
                 .symbol("btcusdt")
                 .addSubscribeEntity(
                         WebSocketStreamType.AGG_TRADE,
-                        (streamName, result) -> {
+                        (streamName, params, result) -> {
                             System.out.println(streamName);
                         }
                 )
@@ -43,7 +56,7 @@ class BinanceWSApiClientTest {
 
     @Test
     public void testKLine() throws InterruptedException {
-        binanceWSApiClient
+        marketStreamClient
                 .getStreamApi()
                 .builder()
                 .symbol("btcusdt")
@@ -52,7 +65,7 @@ class BinanceWSApiClientTest {
                                 .builder()
                                 .symbol("btcusdt")
                                 .subscribeType(WebSocketStreamType.KLINE)
-                                .invocationHandler((streamName, result) -> {
+                                .invocationHandler((streamName, params, result) -> {
                                     System.out.println("<<<<<<======================");
                                     System.out.println(streamName);
                                     System.out.println(result);

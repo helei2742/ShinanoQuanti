@@ -1,7 +1,8 @@
 package com.helei.tradesignalprocess.stream.a_klinesource;
 
 import com.alibaba.fastjson.JSONArray;
-import com.helei.binanceapi.BinanceWSApiClient;
+import com.helei.binanceapi.BinanceWSMarketStreamClient;
+import com.helei.binanceapi.BinanceWSReqRespApiClient;
 import com.helei.binanceapi.api.rest.BinanceUContractMarketRestApi;
 import com.helei.constants.trade.KLineInterval;
 import com.helei.binanceapi.supporter.KLineMapper;
@@ -15,7 +16,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.*;
-import java.util.function.Consumer;
+        import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
@@ -25,7 +26,7 @@ import java.util.stream.Collectors;
 public class HistoryKLineLoader {
     private final transient Semaphore semaphore;
 
-    private final transient BinanceWSApiClient binanceWSApiClient;
+    private final transient BinanceWSReqRespApiClient reqRespApiClient;
 
     private final transient BinanceUContractMarketRestApi binanceUContractMarketRestApi;
 
@@ -37,15 +38,15 @@ public class HistoryKLineLoader {
     /**
      * 传入websocket api,通过ws获取k线数据
      * @param limit limit
-     * @param binanceWSApiClient binanceWSApiClient
+     * @param reqRespApiClient reqRespApiClient
      * @param loadThreadPool loadThreadPool
      */
     public HistoryKLineLoader(
             int limit,
-            BinanceWSApiClient binanceWSApiClient,
+            BinanceWSReqRespApiClient reqRespApiClient,
             ExecutorService loadThreadPool
     ) {
-        this(limit, binanceWSApiClient, null, loadThreadPool);
+        this(limit, reqRespApiClient, null, loadThreadPool);
     }
 
     /**
@@ -64,12 +65,12 @@ public class HistoryKLineLoader {
 
     public HistoryKLineLoader(
             int limit,
-            BinanceWSApiClient binanceWSApiClient,
+            BinanceWSReqRespApiClient reqRespApiClient,
             BinanceUContractMarketRestApi binanceUContractMarketRestApi,
             ExecutorService loadThreadPool
     ) {
         this.limit = limit;
-        this.binanceWSApiClient = binanceWSApiClient;
+        this.reqRespApiClient = reqRespApiClient;
         this.binanceUContractMarketRestApi = binanceUContractMarketRestApi;
         this.loadThreadPool = loadThreadPool;
         this.semaphore = new Semaphore(TradeSignalConfig.TRADE_SIGNAL_CONFIG.getBatchLoadConcurrent());
@@ -137,8 +138,8 @@ public class HistoryKLineLoader {
     }
 
     private CompletableFuture<List<KLine>> batchLoadKLineNetwork(KLineInterval interval, String upperSymbol, long curTimeSecond) {
-        if (binanceWSApiClient != null) {
-            return binanceWSApiClient
+        if (reqRespApiClient != null) {
+            return reqRespApiClient
                     .getMarketApi()
                     .queryHistoryKLine(upperSymbol, interval, curTimeSecond, limit)
                     .thenApplyAsync(result -> {
@@ -166,9 +167,9 @@ public class HistoryKLineLoader {
      * 关闭客户端
      */
     public void closeClient() {
-        if (binanceWSApiClient != null) {
-            log.info("关闭客户端[{}]", binanceWSApiClient.getName());
-            binanceWSApiClient.close();
+        if (reqRespApiClient != null) {
+            log.info("关闭客户端[{}]", reqRespApiClient.getName());
+            reqRespApiClient.close();
         }
     }
 }

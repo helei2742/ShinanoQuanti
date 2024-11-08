@@ -2,8 +2,8 @@ package com.helei.netty.base;
 
 
 import com.alibaba.fastjson.JSON;
+import com.helei.constants.WebsocketClientStatus;
 import com.helei.netty.NettyConstants;
-import com.helei.netty.handler.RequestResponseHandler;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -30,6 +30,8 @@ import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Consumer;
 
 /**
@@ -56,6 +58,7 @@ public abstract class AbstractWebsocketClient<P, T> {
     /**
      * 执行回调的线程池
      */
+    @Getter
     protected final ExecutorService callbackInvoker;
 
     /**
@@ -70,10 +73,21 @@ public abstract class AbstractWebsocketClient<P, T> {
     private final AtomicInteger reconnectTimes = new AtomicInteger(0);
 
     /**
-     * 当前是否在允许
+     * 重连锁
+     */
+    private final ReentrantLock reconnectLock = new ReentrantLock();
+
+    /**
+     * 启动中阻塞的condition
+     */
+    private final Condition startingWaitCondition = reconnectLock.newCondition();
+
+    /**
+     * 客户端当前状态
      */
     @Getter
-    private final AtomicBoolean isRunning = new AtomicBoolean(false);
+    private volatile WebsocketClientStatus clientStatus = WebsocketClientStatus.NEW;
+
 
     @Setter
     @Getter
@@ -93,8 +107,6 @@ public abstract class AbstractWebsocketClient<P, T> {
 
     private Channel channel;
 
-    private final RequestResponseHandler<T> requestResponseHandler;
-
     public AbstractWebsocketClient(
             String url,
             AbstractWebSocketClientHandler<P, T> handler
@@ -104,8 +116,6 @@ public abstract class AbstractWebsocketClient<P, T> {
         this.handler.websocketClient = this;
 
         this.callbackInvoker = Executors.newVirtualThreadPerTaskExecutor();
-
-        requestResponseHandler = new RequestResponseHandler<>();
     }
 
     private void init() throws SSLException, URISyntaxException {
@@ -166,18 +176,17 @@ public abstract class AbstractWebsocketClient<P, T> {
      *
      * @throws SSLException Exception
      */
-    public CompletableFuture<Void> connect() throws SSLException, URISyntaxException {
-        if (isRunning.get()) {
-            log.warn("WS客户端[{}}已链接", url);
-            return CompletableFuture.runAsync(() -> {
-            });
-        }
+    public CompletableFuture<Boolean> connect() throws SSLException, URISyntaxException {
 
-        log.info("开始初始化WS客户端");
-        init();
-        log.info("初始化WS客户端完成，开始链接服务器 [{}]", url);
-
-        return reconnect();
+        return switch (clientStatus) {
+            case NEW, STOP -> reconnect();
+            case STARTING -> waitForStarting();
+            case RUNNING -> {
+                log.warn("WS客户端[{}}正在运行, clientStatus[{}]", url, clientStatus);
+                yield CompletableFuture.supplyAsync(() -> true);
+            }
+            case SHUTDOWN -> throw new RuntimeException("client already shutdown");
+        };
     }
 
 
@@ -186,89 +195,160 @@ public abstract class AbstractWebsocketClient<P, T> {
      *
      * @return CompletableFuture<Void>
      */
-    public CompletableFuture<Void> reconnect() {
-        return CompletableFuture.runAsync(() -> {
+    public CompletableFuture<Boolean> reconnect() {
+        return switch (clientStatus) {
+            case NEW, STOP -> doReconnect();
+            case STARTING -> waitForStarting();
+            case RUNNING -> {
+                log.warn("WS客户端[{}}正在启动或运行, 不能reconnect. clientStatus[{}]", url, clientStatus);
+                yield CompletableFuture.supplyAsync(() -> true);
+            }
+            case SHUTDOWN -> throw new RuntimeException("client already shutdown");
+        };
+    }
+
+    /**
+     * 执行重连接，带重试逻辑
+     *
+     * @return CompletableFuture<Void>
+     */
+    private CompletableFuture<Boolean> doReconnect() {
+        return CompletableFuture.supplyAsync(() -> {
+            log.info("开始初始化WS客户端");
+            clientStatus = WebsocketClientStatus.STARTING;
+
+            try {
+                init();
+            } catch (SSLException | URISyntaxException e) {
+                throw new RuntimeException("初始化WS客户端发生错误", e);
+            }
+            log.info("初始化WS客户端完成，开始链接服务器 [{}]", url);
+
+
             if (reconnectTimes.get() > NettyConstants.RECONNECT_LIMIT) {
                 log.error("reconnect times out of limit [{}], close websocket client", NettyConstants.RECONNECT_LIMIT);
                 close();
-                return;
+                return false;
             }
 
             AtomicBoolean isSuccess = new AtomicBoolean(false);
-            while (reconnectTimes.incrementAndGet() <= NettyConstants.RECONNECT_LIMIT) {
-                eventLoopGroup.schedule(() -> {
-                    reconnectTimes.decrementAndGet();
-                }, 60, TimeUnit.SECONDS);
 
-                log.info("start connect client [{}], url[{}], current times [{}]", name, url, reconnectTimes.get());
-                CountDownLatch latch = new CountDownLatch(1);
+            reconnectLock.lock();
+            try {
+                while (reconnectTimes.incrementAndGet() <= NettyConstants.RECONNECT_LIMIT) {
+                    eventLoopGroup.schedule(() -> {
+                        reconnectTimes.decrementAndGet();
+                    }, 180, TimeUnit.SECONDS);
 
-                eventLoopGroup.schedule(() -> {
+                    log.info("start connect client [{}], url[{}], current times [{}]", name, url, reconnectTimes.get());
+                    CountDownLatch latch = new CountDownLatch(1);
+
+                    eventLoopGroup.schedule(() -> {
+                        try {
+                            channel = bootstrap.connect().sync().channel();
+                            // 8. 等待 WebSocket 握手完成
+                            handler.handshakeFuture().sync();
+
+                            channel.attr(NettyConstants.CLIENT_NAME).set(name);
+
+                            isSuccess.set(true);
+                        } catch (Exception e) {
+                            log.error("connect client [{}], url[{}] error, times [{}]", name, url, reconnectTimes.get(), e);
+                        } finally {
+                            latch.countDown();
+                        }
+                    }, NettyConstants.RECONNECT_DELAY_SECONDS, TimeUnit.SECONDS);
+
                     try {
-                        channel = bootstrap.connect().sync().channel();
-                        // 8. 等待 WebSocket 握手完成
-                        handler.handshakeFuture().sync();
-
-                        channel.attr(NettyConstants.CLIENT_NAME).set(name);
-
-                        isSuccess.set(true);
-                    } catch (Exception e) {
+                        latch.await();
+                    } catch (InterruptedException e) {
                         log.error("connect client [{}], url[{}] error, times [{}]", name, url, reconnectTimes.get(), e);
-                    } finally {
-                        latch.countDown();
                     }
-                }, NettyConstants.RECONNECT_DELAY_SECONDS, TimeUnit.SECONDS);
 
-                try {
-                    latch.await();
-                } catch (InterruptedException e) {
-                    log.error("connect client [{}], url[{}] error, times [{}]", name, url, reconnectTimes.get(), e);
-                }
+                    if (isSuccess.get()) {
+                        log.info("connect client [{}], url[{}] success, current times [{}]", name, url, reconnectTimes.get());
 
-                if (isSuccess.get()) {
-                    log.info("connect client [{}], url[{}] success, current times [{}]", name, url, reconnectTimes.get());
-                    isRunning.set(true);
-                    reconnectTimes.set(0);
-                    break;
+                        clientStatus = WebsocketClientStatus.RUNNING;
+
+                        reconnectTimes.set(0);
+                        break;
+                    }
                 }
+            } catch (Exception e) {
+                close();
+                throw new RuntimeException(String.format("connect client [%s] appear unknown error", name), e);
+            } finally {
+                startingWaitCondition.signalAll();
+                reconnectLock.unlock();
             }
 
             if (!isSuccess.get()) {
-                isRunning.set(false);
                 log.error("reconnect times out of limit [{}], close websocket client", NettyConstants.RECONNECT_LIMIT);
                 close();
-
                 throw new RuntimeException("reconnect times out of limit");
             }
+
+            return true;
         }, callbackInvoker);
     }
 
 
     /**
-     * 关闭WebSocketClient
+     * 停止WebSocketClient
      */
     public void close() {
-        log.info("start close websocket client [{}]", name);
+        log.info("closing websocket client [{}]", name);
         if (channel != null) {
             channel.close();
         }
+
         if (eventLoopGroup != null) {
             eventLoopGroup.shutdownGracefully();
         }
-
         reconnectTimes.set(0);
-        isRunning.set(false);
-        log.info("web socket client [{}] closed", name);
+
+        clientStatus = WebsocketClientStatus.STOP;
+
+        log.warn("web socket client [{}] closed", name);
     }
 
+    /**
+     * 彻底关闭客户端
+     */
+    public void shutdown() {
+        close();
+        clientStatus = WebsocketClientStatus.SHUTDOWN;
+        log.warn("web socket client [{}] already shutdown !", name);
+    }
 
     /**
-     * 从request获取id
+     * 等待启动完成
      *
-     * @param request request
-     * @return id
+     * @return CompletableFuture<Void>
      */
-    public abstract String getIdFromRequest(P request);
+    private CompletableFuture<Boolean> waitForStarting() {
+        return CompletableFuture.supplyAsync(() -> {
+            log.warn("client [{}] is starting, waiting for complete", name);
+            reconnectLock.lock();
+            try {
+                while (clientStatus.equals(WebsocketClientStatus.RUNNING)) {
+                    startingWaitCondition.await();
+                }
+
+                if (clientStatus.equals(WebsocketClientStatus.STOP) || clientStatus.equals(WebsocketClientStatus.SHUTDOWN)) {
+                    log.error("启动WS客户端[{}]失败, ClientStatus [{}}", name, clientStatus);
+                    return false;
+                }
+                return true;
+            } catch (InterruptedException e) {
+                log.error("waiting for start client [{}] error", name);
+                throw new RuntimeException(e);
+            } finally {
+                reconnectLock.unlock();
+            }
+        }, callbackInvoker);
+    }
+
 
     /**
      * 发送请求, 注册响应监听
@@ -288,7 +368,7 @@ public abstract class AbstractWebsocketClient<P, T> {
      * @param executorService 执行回调的线程池，传入为空则会尝试使用本类的线程池以及netty线程池
      */
     public void sendRequest(P request, Consumer<T> callback, ExecutorService executorService) {
-        boolean flag = requestResponseHandler.registryRequest(getIdFromRequest(request), response -> {
+        boolean flag = handler.registryRequest(request, response -> {
             if (executorService == null) {
                 //此类线程处理
                 callbackInvoker.submit(() -> {
@@ -299,7 +379,6 @@ public abstract class AbstractWebsocketClient<P, T> {
                     callback.accept(response);
                 });
             }
-
         });
 
         if (flag) {
@@ -325,7 +404,7 @@ public abstract class AbstractWebsocketClient<P, T> {
             CountDownLatch latch = new CountDownLatch(1);
             AtomicReference<T> jb = new AtomicReference<>(null);
 
-            boolean flag = requestResponseHandler.registryRequest(getIdFromRequest(request), response -> {
+            boolean flag = handler.registryRequest(request, response -> {
                 latch.countDown();
                 jb.set(response);
             });
@@ -366,16 +445,6 @@ public abstract class AbstractWebsocketClient<P, T> {
     }
 
     /**
-     * 发送请求,不组册监听
-     *
-     * @param request 请求体
-     */
-    public void sendRequestNoListener(P request) {
-        channel.writeAndFlush(new TextWebSocketFrame(JSON.toJSONString(request)));
-    }
-
-
-    /**
      * 解析参数
      *
      * @throws URISyntaxException url解析错误
@@ -403,24 +472,4 @@ public abstract class AbstractWebsocketClient<P, T> {
 
         useSSL = "wss".equalsIgnoreCase(scheme);
     }
-
-
-    /**
-     * 提交请求的响应
-     *
-     * @param id       id
-     * @param response response
-     * @return 是否成功
-     */
-    public boolean submitResponse(String id, T response) {
-        return requestResponseHandler.submitResponse(id, response);
-    }
-
-    /**
-     * 提交stream流的响应
-     *
-     * @param streamName streamName, 通常由symbol和WebSocketStreamType组合成
-     * @param message    message
-     */
-    public abstract void submitStreamResponse(String streamName, T message);
 }

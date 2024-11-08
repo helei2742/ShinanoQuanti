@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.helei.binanceapi.base.AbstractBinanceWSApiClientHandler;
 import com.helei.binanceapi.constants.AccountEventType;
 import com.helei.binanceapi.dto.accountevent.AccountEvent;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.function.Consumer;
@@ -11,27 +13,29 @@ import java.util.function.Consumer;
 /**
  * 币安账户信息流客户端处理消息的handler
  */
+@Setter
 @Slf4j
 class BinanceWSAccountStreamClientHandler extends AbstractBinanceWSApiClientHandler {
 
-    private final Consumer<AccountEvent> whenReceiveEvent;
+    @Getter
+    private Consumer<AccountEvent> whenReceiveEvent;
 
-    BinanceWSAccountStreamClientHandler(Consumer<AccountEvent> whenReceiveEvent) {
+
+    public BinanceWSAccountStreamClientHandler(Consumer<AccountEvent> whenReceiveEvent) {
         this.whenReceiveEvent = whenReceiveEvent;
     }
 
+    public BinanceWSAccountStreamClientHandler() {}
+
     @Override
-    protected void whenReceiveMessage(String text) {
-        JSONObject response = JSONObject.parseObject(text);
-        if (response.get("id") != null) {
-            log.warn("get an response, not stream message! [{}]", text);
-        } else if (response.get("e") != null){
-            log.debug("get stream message [{}}", text);
-            try {
-                whenReceiveEvent.accept(AccountEventType.STATUS_MAP.get(response.getString("e")).getConverter().convertFromJsonObject(response));
-            } catch (Exception e) {
-                log.warn("处理账户事件[{}]出错，", text, e);
-            }
+    protected void handleResponseMessage(String id, JSONObject response) {
+        log.warn("get an response, not stream message! [{}]", response);
+    }
+
+    @Override
+    protected void handleStreamMessage(String streamName, JSONObject context) {
+        if (whenReceiveEvent != null) {
+            whenReceiveEvent.accept(AccountEventType.STATUS_MAP.get(context.getString("e")).getConverter().convertFromJsonObject(context));
         }
     }
 }

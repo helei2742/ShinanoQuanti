@@ -2,14 +2,18 @@ package com.helei.binanceapi.base;
 
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
+import com.helei.binanceapi.constants.BinanceWSClientType;
+import com.helei.constants.RunEnv;
+import com.helei.constants.trade.TradeType;
 import com.helei.dto.ASKey;
 import com.helei.binanceapi.dto.StreamSubscribeEntity;
 import com.helei.dto.WebSocketCommandBuilder;
-import com.helei.binanceapi.supporter.BinanceWSStreamSupporter;
 import com.helei.binanceapi.supporter.IpWeightSupporter;
 import com.helei.binanceapi.util.SignatureUtil;
 import com.helei.binanceapi.constants.command.BaseCommandType;
 import com.helei.netty.base.AbstractWebsocketClient;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.net.URISyntaxException;
@@ -25,40 +29,43 @@ import java.util.function.Consumer;
 public class AbstractBinanceWSApiClient extends AbstractWebsocketClient<JSONObject, JSONObject> {
 
     /**
+     * 运行环境
+     */
+    @Getter
+    @Setter
+    private RunEnv runEnv;
+
+    /**
+     * 交易类型
+     */
+    @Getter
+    @Setter
+    private TradeType tradeType;
+
+    /**
+     * 币安客户端类型
+     */
+    @Getter
+    private final BinanceWSClientType clientType;
+
+    /**
      * 处理ip限制相关
      */
     private final IpWeightSupporter ipWeightSupporter;
 
-
-    /**
-     * 处理stream流相关
-     */
-    private final BinanceWSStreamSupporter binanceWSStreamSupporter;
+    protected final AbstractBinanceWSApiClientHandler handler;
 
     public AbstractBinanceWSApiClient(
+            BinanceWSClientType clientType,
             String url,
             IpWeightSupporter ipWeightSupporter,
-            BinanceWSStreamSupporter binanceWSStreamSupporter,
             AbstractBinanceWSApiClientHandler handler
     ) throws URISyntaxException {
         super(url, handler);
-
+        this.clientType = clientType;
         this.ipWeightSupporter = ipWeightSupporter;
-
-        this.binanceWSStreamSupporter = binanceWSStreamSupporter;
+        this.handler = handler;
     }
-
-
-    @Override
-    public String getIdFromRequest(JSONObject request) {
-        return request.getString("id");
-    }
-
-    @Override
-    public void submitStreamResponse(String streamName, JSONObject message) {
-        binanceWSStreamSupporter.publishStreamResponse(streamName, message, callbackInvoker);
-    }
-
 
     /**
      * 发生请求
@@ -91,7 +98,7 @@ public class AbstractBinanceWSApiClient extends AbstractWebsocketClient<JSONObje
     ) {
         try {
             if (ipWeightSupporter.submitIpWeight(ipWeight)) {
-                String id = getIdFromRequest(request);
+                String id = handler.getRequestId(request);
 
                 //需要签名
                 if (asKey != null) {
@@ -157,13 +164,14 @@ public class AbstractBinanceWSApiClient extends AbstractWebsocketClient<JSONObje
 
     /**
      * 如果askey不为空，则对请求进行签名
+     *
      * @param request request
-     * @param asKey asKey
+     * @param asKey   asKey
      * @return JSONObject 签名后的请求
      */
     private JSONObject trySignatureRequest(JSONObject request, ASKey asKey) {
         //需要签名
-        if (asKey != null && StrUtil.isNotBlank(asKey.getApiKey()) && StrUtil.isNotBlank(asKey.getSecretKey()) ) {
+        if (asKey != null && StrUtil.isNotBlank(asKey.getApiKey()) && StrUtil.isNotBlank(asKey.getSecretKey())) {
             JSONObject params = request.getJSONObject("params");
             params.put("timestamp", System.currentTimeMillis());
             params.put("apiKey", asKey.getApiKey());
@@ -181,10 +189,9 @@ public class AbstractBinanceWSApiClient extends AbstractWebsocketClient<JSONObje
     /**
      * 订阅stream
      *
-     * @param symbol  需订阅的币种symbol
      * @param subList 需订阅的类型
      */
-    public void subscribeStream(String symbol, List<StreamSubscribeEntity> subList) {
+    public void subscribeStream(List<StreamSubscribeEntity> subList) {
 
         WebSocketCommandBuilder builder = WebSocketCommandBuilder.builder().setCommandType(BaseCommandType.SUBSCRIBE);
 
@@ -203,7 +210,7 @@ public class AbstractBinanceWSApiClient extends AbstractWebsocketClient<JSONObje
             sendRequest(1, command, subscribeEntity.getAsKey(), response -> {
                 if (response != null) {
                     log.debug("get subscribe response: {}", response);
-                     binanceWSStreamSupporter.addSubscribe(symbol, List.of(subscribeEntity));
+                    handler.addSubscribe(List.of(subscribeEntity));
                 } else {
                     log.error("get subscribe response error, requestId[{}]", id);
                 }

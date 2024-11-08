@@ -2,6 +2,7 @@ package com.helei.binanceapi;
 
 import com.helei.binanceapi.api.ws.BinanceWSBaseApi;
 import com.helei.binanceapi.base.AbstractBinanceWSApiClient;
+import com.helei.binanceapi.constants.BinanceWSClientType;
 import com.helei.binanceapi.dto.accountevent.AccountEvent;
 import com.helei.dto.ASKey;
 import com.helei.binanceapi.supporter.IpWeightSupporter;
@@ -15,6 +16,7 @@ import java.util.function.Consumer;
 /**
  * 币安账户信息流推送客户端
  */
+@Deprecated
 @Slf4j
 public class BinanceWSAccountStreamClient extends AbstractBinanceWSApiClient {
 
@@ -55,7 +57,7 @@ public class BinanceWSAccountStreamClient extends AbstractBinanceWSApiClient {
             Consumer<AccountEvent> whenReceiveEvent,
             BinanceWSBaseApi baseApi
     ) throws URISyntaxException {
-        super(streamUrl, ipWeightSupporter, null, new BinanceWSAccountStreamClientHandler(whenReceiveEvent));
+        super(BinanceWSClientType.ACCOUNT_STREAM, streamUrl, ipWeightSupporter, new BinanceWSAccountStreamClientHandler(whenReceiveEvent));
         this.streamUrl = streamUrl;
         this.whenReceiveEvent = whenReceiveEvent;
         this.asKey = asKey;
@@ -104,3 +106,4 @@ public class BinanceWSAccountStreamClient extends AbstractBinanceWSApiClient {
     }
 
 }
+

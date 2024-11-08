@@ -1,13 +1,12 @@
-
-
 package com.helei.binanceapi.api.ws;
 
-import com.helei.binanceapi.BinanceWSApiClient;
 import com.helei.binanceapi.base.AbstractBinanceWSApi;
+import com.helei.binanceapi.base.AbstractBinanceWSApiClient;
 import com.helei.binanceapi.base.SubscribeResultInvocationHandler;
 import com.helei.binanceapi.constants.WebSocketStreamType;
 import com.helei.dto.ASKey;
 import com.helei.binanceapi.dto.StreamSubscribeEntity;
+
 import java.util.concurrent.ExecutorService;
 
 import java.net.URISyntaxException;
@@ -20,7 +19,7 @@ import java.util.Map;
  */
 public class BinanceWSStreamApi extends AbstractBinanceWSApi {
 
-    public BinanceWSStreamApi(BinanceWSApiClient binanceWSApiClient) throws URISyntaxException {
+    public BinanceWSStreamApi(AbstractBinanceWSApiClient binanceWSApiClient) throws URISyntaxException {
         super(binanceWSApiClient);
     }
 
@@ -29,20 +28,20 @@ public class BinanceWSStreamApi extends AbstractBinanceWSApi {
     }
 
 
-
-    public static class StreamCommandBuilder{
-        private final BinanceWSApiClient binanceWSApiClient;
+    public static class StreamCommandBuilder {
+        private final AbstractBinanceWSApiClient binanceWSApiClient;
 
         private String symbol = null;
 
         private List<StreamSubscribeEntity> subscribeList = null;
 
-        StreamCommandBuilder(BinanceWSApiClient binanceWSApiClient){
+        StreamCommandBuilder(AbstractBinanceWSApiClient binanceWSApiClient) {
             this.binanceWSApiClient = binanceWSApiClient;
         }
 
         /**
          * 设置symbol
+         *
          * @param symbol symbol
          * @return StreamCommandBuilder
          */
@@ -54,7 +53,8 @@ public class BinanceWSStreamApi extends AbstractBinanceWSApi {
 
         /**
          * 添加订阅类型， 必须在设置symbol之后
-         * @param subscribeType subscribeType
+         *
+         * @param subscribeType     subscribeType
          * @param invocationHandler invocationHandler
          * @return StreamCommandBuilder
          */
@@ -67,9 +67,10 @@ public class BinanceWSStreamApi extends AbstractBinanceWSApi {
 
         /**
          * 添加订阅类型， 必须在设置symbol之后
-         * @param subscribeType subscribeType
+         *
+         * @param subscribeType     subscribeType
          * @param invocationHandler invocationHandler
-         * @param params params
+         * @param params            params
          * @return StreamCommandBuilder
          */
         public StreamCommandBuilder addSubscribeEntity(
@@ -82,9 +83,10 @@ public class BinanceWSStreamApi extends AbstractBinanceWSApi {
 
         /**
          * 添加订阅类型， 必须在设置symbol之后
-         * @param subscribeType subscribeType
+         *
+         * @param subscribeType     subscribeType
          * @param invocationHandler invocationHandler
-         * @param executorService 执行的线程池，如果设置了，在收到订阅的消息的时候会优先使用该线程池
+         * @param executorService   执行的线程池，如果设置了，在收到订阅的消息的时候会优先使用该线程池
          * @return StreamCommandBuilder
          */
         public StreamCommandBuilder addSubscribeEntity(
@@ -98,9 +100,10 @@ public class BinanceWSStreamApi extends AbstractBinanceWSApi {
 
         /**
          * 添加订阅类型， 必须在设置symbol之后
-         * @param subscribeType subscribeType
+         *
+         * @param subscribeType     subscribeType
          * @param invocationHandler invocationHandler
-         * @param executorService 执行的线程池，如果设置了，在收到订阅的消息的时候会优先使用该线程池
+         * @param executorService   执行的线程池，如果设置了，在收到订阅的消息的时候会优先使用该线程池
          * @return StreamCommandBuilder
          */
         public StreamCommandBuilder addSubscribeEntity(
@@ -112,8 +115,10 @@ public class BinanceWSStreamApi extends AbstractBinanceWSApi {
         ) {
             return addSubscribeEntity(new StreamSubscribeEntity(symbol, subscribeType, invocationHandler, executorService, params, asKey));
         }
+
         /**
          * 添加订阅类型， 必须在设置symbol之后
+         *
          * @param subscribeEntity subscribeEntity
          * @return StreamCommandBuilder
          */
@@ -129,9 +134,8 @@ public class BinanceWSStreamApi extends AbstractBinanceWSApi {
         }
 
         public void subscribe() {
-            binanceWSApiClient.subscribeStream(symbol, subscribeList);
+            binanceWSApiClient.subscribeStream(subscribeList);
         }
     }
 
 }
-

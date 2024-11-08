@@ -1,8 +1,8 @@
 package com.helei.binanceapi.api.ws;
 
 import com.alibaba.fastjson.JSONObject;
-import com.helei.binanceapi.BinanceWSApiClient;
 import com.helei.binanceapi.base.AbstractBinanceWSApi;
+import com.helei.binanceapi.base.AbstractBinanceWSApiClient;
 import com.helei.constants.trade.KLineInterval;
 import com.helei.binanceapi.constants.command.MarketCommandType;
 import com.helei.dto.ASKey;
@@ -21,7 +21,7 @@ import java.util.function.Consumer;
 public class BinanceWSMarketApi extends AbstractBinanceWSApi {
 
 
-    public BinanceWSMarketApi(BinanceWSApiClient binanceWSApiClient) throws URISyntaxException {
+    public BinanceWSMarketApi(AbstractBinanceWSApiClient binanceWSApiClient) throws URISyntaxException {
         super(binanceWSApiClient);
     }
 
@@ -149,3 +149,4 @@ public class BinanceWSMarketApi extends AbstractBinanceWSApi {
         return binanceWSApiClient.sendRequest(2, command, ASKey.EMPTY_ASKEY);
     }
 }
+

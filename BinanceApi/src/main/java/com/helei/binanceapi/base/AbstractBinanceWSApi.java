@@ -1,6 +1,5 @@
 package com.helei.binanceapi.base;
 
-import com.helei.binanceapi.BinanceWSApiClient;
 
 import java.net.URISyntaxException;
 
@@ -8,10 +7,10 @@ import java.net.URISyntaxException;
  * 币安接口基础类
  */
 public class AbstractBinanceWSApi {
-    protected final BinanceWSApiClient binanceWSApiClient;
+    protected final AbstractBinanceWSApiClient binanceWSApiClient;
 
     public AbstractBinanceWSApi(
-            BinanceWSApiClient binanceWSApiClient
+            AbstractBinanceWSApiClient binanceWSApiClient
     ) throws URISyntaxException {
         this.binanceWSApiClient = binanceWSApiClient;
     }

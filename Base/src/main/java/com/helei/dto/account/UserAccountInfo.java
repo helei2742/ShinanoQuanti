@@ -61,6 +61,11 @@ public class UserAccountInfo implements Serializable {
     private List<String> subscribeSymbol;
 
     /**
+     * 账户详情
+     */
+    private UserAccountTradeDetail detail;
+
+    /**
      * 账户仓位设置
      */
     private AccountPositionConfig accountPositionConfig;
@@ -82,4 +87,3 @@ public class UserAccountInfo implements Serializable {
         this.accountPositionInfo.setAccountId(id);
     }
 }
-

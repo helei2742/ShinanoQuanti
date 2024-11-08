@@ -1,11 +1,10 @@
-
 package com.helei.binanceapi.api.ws;
 
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.helei.binanceapi.BinanceWSApiClient;
 import com.helei.binanceapi.base.AbstractBinanceWSApi;
+import com.helei.binanceapi.base.AbstractBinanceWSApiClient;
 import com.helei.binanceapi.constants.CancelRestrictions;
 import com.helei.binanceapi.constants.command.TradeCommandType;
 import com.helei.dto.ASKey;
@@ -23,7 +22,7 @@ import java.util.concurrent.CompletableFuture;
 @Slf4j
 public class BinanceWSTradeApi extends AbstractBinanceWSApi {
 
-    public BinanceWSTradeApi(BinanceWSApiClient binanceWSApiClient) throws URISyntaxException {
+    public BinanceWSTradeApi(AbstractBinanceWSApiClient binanceWSApiClient) throws URISyntaxException {
         super(binanceWSApiClient);
     }
 
@@ -181,4 +180,3 @@ public class BinanceWSTradeApi extends AbstractBinanceWSApi {
         return binanceWSApiClient.sendRequest(weight, command, asKey);
     }
 }
-

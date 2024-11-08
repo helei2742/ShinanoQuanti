@@ -3,7 +3,7 @@ package com.helei.cexapi.client;
 import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.StrUtil;
 import com.helei.binanceapi.BinanceWSAccountStreamClient;
-import com.helei.binanceapi.BinanceWSApiClient;
+import com.helei.binanceapi.BinanceWSReqRespApiClient;
 import com.helei.binanceapi.dto.accountevent.AccountEvent;
 import com.helei.binanceapi.supporter.IpWeightSupporter;
 import com.helei.dto.ASKey;
@@ -12,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.net.InetSocketAddress;
 import java.util.UUID;
-import java.util.concurrent .*;
+import java.util.concurrent.*;
         import java.util.function.Consumer;
 
 
@@ -25,6 +25,7 @@ import java.util.concurrent .*;
  * 里面记录了账户鉴权信息和对应的账户信息推送连接BinanceWSAccountStreamClient
  * </p>
  */
+@Deprecated
 @Slf4j
 public class BinanceAccountMergeClient {
 
@@ -37,7 +38,7 @@ public class BinanceAccountMergeClient {
     /**
      * 用于请求listenKey，更新listenKey等请求的WSClient
      */
-    private final BinanceWSApiClient requestClient;
+    private final BinanceWSReqRespApiClient requestClient;
 
     /**
      * 账户信息推送的base url
@@ -51,7 +52,7 @@ public class BinanceAccountMergeClient {
 
 
     public BinanceAccountMergeClient(
-            BinanceWSApiClient requestClient,
+            BinanceWSReqRespApiClient requestClient,
             String accountStreamUrl,
             ExecutorService executor
 
@@ -153,3 +154,4 @@ public class BinanceAccountMergeClient {
         return false;
     }
 }
+
