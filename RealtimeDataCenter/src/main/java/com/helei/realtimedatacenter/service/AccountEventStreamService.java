@@ -2,6 +2,7 @@ package com.helei.realtimedatacenter.service;
 
 import com.helei.binanceapi.dto.accountevent.AccountEvent;
 import com.helei.dto.account.UserAccountInfo;
+import com.helei.dto.account.UserAccountRealTimeInfo;
 import com.helei.dto.account.UserInfo;
 
 public interface AccountEventStreamService {

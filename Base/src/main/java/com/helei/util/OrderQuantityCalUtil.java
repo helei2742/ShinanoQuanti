@@ -1,6 +1,9 @@
 package com.helei.util;
 
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 /**
  * 计算订单 量工具
  */
@@ -18,20 +21,20 @@ public class OrderQuantityCalUtil {
      * @param stopPrice        止损价格
      * @return 能开的数量
      */
-    public static double riskPercentBasedQuantityCalculate(
-            double remainingCapital,
-            double riskPercentage,
-            double currentPrice,
-            double entryPrice,
-            double currentQuantity,
-            double stopPrice
+    public static BigDecimal riskPercentBasedQuantityCalculate(
+            BigDecimal remainingCapital,
+            BigDecimal riskPercentage,
+            BigDecimal currentPrice,
+            BigDecimal entryPrice,
+            BigDecimal currentQuantity,
+            BigDecimal stopPrice
 
     ) {
-        double existingRisk = currentQuantity * (entryPrice - stopPrice);
+        BigDecimal existingRisk = entryPrice.subtract(stopPrice).multiply(currentQuantity);
 
-        double riskCapital = remainingCapital * riskPercentage;
+        BigDecimal riskCapital = remainingCapital.multiply(riskPercentage);
 
-        return (riskCapital - existingRisk) / (currentPrice - stopPrice);
+        return  riskCapital.subtract(existingRisk).divide(currentPrice.subtract(stopPrice), RoundingMode.DOWN);
     }
 }
 

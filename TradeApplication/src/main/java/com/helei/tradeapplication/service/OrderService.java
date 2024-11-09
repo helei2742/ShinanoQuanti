@@ -1,6 +1,5 @@
 package com.helei.tradeapplication.service;
 
-import com.helei.dto.account.AccountRTData;
 import com.helei.dto.account.UserAccountInfo;
 import com.helei.tradeapplication.dto.GroupOrder;
 import com.helei.dto.trade.TradeSignal;
@@ -15,11 +14,10 @@ public interface OrderService {
      * 生成订单
      *
      * @param accountInfo   账户信息
-     * @param accountRTData 账户实时数据
      * @param signal        信号
      * @param invocation    生成订单结果的回调
      */
-    void makeOrder(UserAccountInfo accountInfo, AccountRTData accountRTData, TradeSignal signal, CompleteInvocation<GroupOrder> invocation);
+    void makeOrder(UserAccountInfo accountInfo, TradeSignal signal, CompleteInvocation<GroupOrder> invocation);
 
 
     /**

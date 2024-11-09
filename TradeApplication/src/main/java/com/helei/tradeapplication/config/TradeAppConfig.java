@@ -55,8 +55,9 @@ public class TradeAppConfig {
 
     /**
      * 获取信号topics，通过回调的方式，不直接返回topic列表
-     * @param env 运行环境
-     * @param tradeType 交易类型
+     *
+     * @param env          运行环境
+     * @param tradeType    交易类型
      * @param topicResolve 回调函数， 第一个参数为前缀， 第二个参数为信号名列表
      */
     public void getSignalTopics(RunEnv env, TradeType tradeType, BiConsumer<String, List<String>> topicResolve) {
@@ -64,7 +65,7 @@ public class TradeAppConfig {
         prefix.append(".").append(tradeType.name()).append(".");
 
         List<TradeSignalSymbolConfig> scList = switch (env) {
-            case TEST_NET -> signal.test_net.getTradeSignalSymbolConfigs(tradeType) ;
+            case TEST_NET -> signal.test_net.getTradeSignalSymbolConfigs(tradeType);
             case NORMAL -> signal.normal.getTradeSignalSymbolConfigs(tradeType);
         };
 

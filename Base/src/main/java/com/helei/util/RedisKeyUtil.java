@@ -53,8 +53,8 @@ public class RedisKeyUtil {
      * @param tradeType tradeType
      * @return pattern
      */
-    public static String getUserInfoPattern(RunEnv runEnv, TradeType tradeType) {
-        return getUserInfoKeyPrefix(runEnv, tradeType) + "*";
+    public static String getUserBaseInfoPattern(RunEnv runEnv, TradeType tradeType) {
+        return getUserInfoKeyPrefix(runEnv, tradeType) + "*base*";
     }
 
     /**
@@ -69,6 +69,18 @@ public class RedisKeyUtil {
     }
 
     /**
+     * 获取用户账户历史数据的key
+     *
+     * @param runEnv    runEnv
+     * @param tradeType tradeType
+     * @return String
+     */
+    public static String getUserAccountEnvStaticDataHashKey(RunEnv runEnv, TradeType tradeType, long userId) {
+        return getUserInfoKeyPrefix(runEnv, tradeType) + userId + ":static_account_data";
+    }
+
+
+    /**
      * 用户基础数据的key
      *
      * @param env       env
@@ -79,4 +91,5 @@ public class RedisKeyUtil {
     public static String getUserBaseInfoKey(RunEnv env, TradeType tradeType, long userId) {
         return getUserInfoKeyPrefix(env, tradeType) + userId + ":base";
     }
+
 }

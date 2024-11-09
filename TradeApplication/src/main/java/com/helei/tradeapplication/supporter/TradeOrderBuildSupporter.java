@@ -2,14 +2,10 @@ package com.helei.tradeapplication.supporter;
 
 import com.helei.constants.order.OrderType;
 import com.helei.constants.order.TimeInForce;
-import com.helei.dto.account.AccountPositionConfig;
-import com.helei.dto.account.AccountRTData;
-import com.helei.dto.account.PositionInfo;
-import com.helei.dto.account.UserAccountInfo;
+import com.helei.dto.account.*;
 import com.helei.dto.order.BaseOrder;
 import com.helei.dto.order.CEXTradeOrder;
 import com.helei.dto.order.type.*;
-import com.helei.dto.account.BalanceInfo;
 import com.helei.dto.trade.TradeSignal;
 import com.helei.snowflack.BRStyle;
 import com.helei.snowflack.SnowFlakeFactory;
@@ -33,16 +29,18 @@ public class TradeOrderBuildSupporter {
      * 构建限价单
      *
      * @param accountInfo   账户信息
-     * @param accountRTData 账户实时数据
      * @param signal        信号
      * @return 限价单
      */
-    public LimitOrder buildLimitOrder(UserAccountInfo accountInfo, AccountRTData accountRTData, TradeSignal signal) {
+    public LimitOrder buildLimitOrder(UserAccountInfo accountInfo, TradeSignal signal) {
         // Step 1 参数检验
+        UserAccountStaticInfo staticInfo = accountInfo.getUserAccountStaticInfo();
+        UserAccountRealTimeInfo realTimeInfo = accountInfo.getUserAccountRealTimeInfo();
+
         BigDecimal enterPrice = signal.getEnterPrice();
         if (enterPrice == null) return null;
 
-        AccountPositionConfig positionConfig = accountInfo.getAccountPositionConfig();
+        AccountPositionConfig positionConfig = staticInfo.getAccountPositionConfig();
 
         // Step 2 创建订单
         String symbol = signal.getSymbol();
@@ -51,34 +49,34 @@ public class TradeOrderBuildSupporter {
         // Step 2.1 基础订单信息
         BaseOrder baseOrder = BaseOrder.builder()
                 .orderId(nextId(OrderType.LIMIT))
-                .runEnv(accountInfo.getRunEnv())
-                .tradeType(accountInfo.getTradeType())
-                .cexType(accountInfo.getCexType())
+                .runEnv(staticInfo.getRunEnv())
+                .tradeType(staticInfo.getTradeType())
+                .cexType(staticInfo.getCexType())
                 .symbol(symbol)
                 .side(signal.getTradeSide())
                 .positionSide(positionConfig.getPositionSide())
                 .userId(accountInfo.getUserId())
-                .accountId(accountRTData.getAccountId())
+                .accountId(staticInfo.getId())
                 .build();
         LimitOrder limitOrder = new LimitOrder(baseOrder);
 
         // Step 2.2 订单价格、数量等 LimitOrder 信息
-        BalanceInfo balanceInfo = accountRTData.getAccountBalanceInfo().getBalances().get(symbol);
-        PositionInfo positionInfo = accountRTData.getAccountPositionInfo().getPositions().get(symbol);
+        BalanceInfo balanceInfo = realTimeInfo.getAccountBalanceInfo().getBalances().get(symbol);
+        PositionInfo positionInfo = realTimeInfo.getAccountPositionInfo().getPositions().get(symbol);
 
 
-        double quantity = OrderQuantityCalUtil.riskPercentBasedQuantityCalculate(
-                balanceInfo.getFree(),
-                positionConfig.getRiskPercent(),
-                enterPrice.doubleValue(),
-                positionInfo.getEnterPosition(),
-                positionInfo.getPosition(),
-                signal.getStopPrice().doubleValue()
+        BigDecimal quantity = OrderQuantityCalUtil.riskPercentBasedQuantityCalculate(
+                balanceInfo.getAvailableBalance(),
+                BigDecimal.valueOf(positionConfig.getRiskPercent()),
+                enterPrice,
+                positionInfo.getEntryPrice(),
+                positionInfo.getPositionAmt(),
+                signal.getStopPrice()
         );
 
         limitOrder.setTimeInForce(TimeInForce.GTC);
         limitOrder.setPrice(enterPrice);
-        limitOrder.setQuantity(BigDecimal.valueOf(quantity));
+        limitOrder.setQuantity(quantity);
 
         return limitOrder;
     }
@@ -88,11 +86,10 @@ public class TradeOrderBuildSupporter {
      * 构建市价单
      *
      * @param accountInfo   账户信息
-     * @param accountRTData 账户实时数据
      * @param signal        信号
      * @return 限价单
      */
-    public MarketOrder buildMarketOrder(UserAccountInfo accountInfo, AccountRTData accountRTData, TradeSignal signal) {
+    public MarketOrder buildMarketOrder(UserAccountInfo accountInfo, TradeSignal signal) {
         return null;
     }
 
@@ -100,11 +97,10 @@ public class TradeOrderBuildSupporter {
      * 构建市价止损单
      *
      * @param accountInfo   账户信息
-     * @param accountRTData 账户实时数据
      * @param symbol        交易对
      * @return 限价单
      */
-    public StopLossMarketOrder buildStopMarketOrder(UserAccountInfo accountInfo, AccountRTData accountRTData, String symbol) {
+    public StopLossMarketOrder buildStopMarketOrder(UserAccountInfo accountInfo, String symbol) {
         return null;
     }
 
@@ -113,11 +109,10 @@ public class TradeOrderBuildSupporter {
      * 构建限价止损单
      *
      * @param accountInfo   账户信息
-     * @param accountRTData 账户实时数据
      * @param symbol        交易对
      * @return 限价单
      */
-    public StopLossLimitOrder buildStopLimitOrder(UserAccountInfo accountInfo, AccountRTData accountRTData, String symbol) {
+    public StopLossLimitOrder buildStopLimitOrder(UserAccountRealTimeInfo accountInfo, String symbol) {
         return null;
     }
 
@@ -125,11 +120,10 @@ public class TradeOrderBuildSupporter {
      * 构建市价止盈单
      *
      * @param accountInfo   账户信息
-     * @param accountRTData 账户实时数据
      * @param symbol        交易对
      * @return 限价单
      */
-    public TakeProfitMarketOrder buildTakeProfitMarketOrder(UserAccountInfo accountInfo, AccountRTData accountRTData, String symbol) {
+    public TakeProfitMarketOrder buildTakeProfitMarketOrder(UserAccountRealTimeInfo accountInfo, String symbol) {
         return null;
     }
 
@@ -137,11 +131,10 @@ public class TradeOrderBuildSupporter {
      * 构建限价止盈单
      *
      * @param accountInfo   账户信息
-     * @param accountRTData 账户实时数据
      * @param symbol        交易对
      * @return 限价单
      */
-    public TakeProfitLimitOrder buildTakeProfitLimitOrder(UserAccountInfo accountInfo, AccountRTData accountRTData, String symbol) {
+    public TakeProfitLimitOrder buildTakeProfitLimitOrder(UserAccountRealTimeInfo accountInfo, String symbol) {
         return null;
     }
 
@@ -149,11 +142,10 @@ public class TradeOrderBuildSupporter {
      * buildTrailingSTIDMarketOrder
      *
      * @param accountInfo   账户信息
-     * @param accountRTData 账户实时数据
      * @param symbol        交易对
      * @return 限价单
      */
-    public CEXTradeOrder buildTrailingSTIDMarketOrder(UserAccountInfo accountInfo, AccountRTData accountRTData, String symbol) {
+    public CEXTradeOrder buildTrailingSTIDMarketOrder(UserAccountRealTimeInfo accountInfo, String symbol) {
         return null;
     }
 

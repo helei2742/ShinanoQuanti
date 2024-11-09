@@ -8,12 +8,11 @@ import com.helei.constants.order.OrderStatus;
 import com.helei.constants.order.OrderType;
 import com.helei.constants.trade.TradeType;
 import com.helei.dto.account.AccountPositionConfig;
+import com.helei.dto.account.UserAccountInfo;
 import com.helei.dto.order.BaseOrder;
 import com.helei.dto.order.CEXTradeOrder;
 import com.helei.dto.order.CEXTradeOrderWrap;
 import com.helei.tradeapplication.dto.GroupOrder;
-import com.helei.dto.account.AccountRTData;
-import com.helei.dto.account.UserAccountInfo;
 import com.helei.dto.trade.TradeSignal;
 import com.helei.interfaces.CompleteInvocation;
 import com.helei.tradeapplication.manager.ExecutorServiceManager;
@@ -57,27 +56,26 @@ public class OrderServiceImpl extends OrderEventProcessService {
      * 生成订单
      *
      * @param accountInfo   账户信息
-     * @param accountRTData 账户实时数据
      * @param signal        信号
      */
     @Override
-    public void makeOrder(UserAccountInfo accountInfo, AccountRTData accountRTData, TradeSignal signal, CompleteInvocation<GroupOrder> invocation) {
+    public void makeOrder(UserAccountInfo accountInfo, TradeSignal signal, CompleteInvocation<GroupOrder> invocation) {
 
-        AccountPositionConfig accountPositionConfig = accountInfo.getAccountPositionConfig();
+        AccountPositionConfig accountPositionConfig = accountInfo.getUserAccountStaticInfo().getAccountPositionConfig();
         OrderType orderType = accountPositionConfig.getOrderType();
 
         GroupOrder groupOrder = new GroupOrder();
 
         //Step 1 创建主单
         CEXTradeOrderWrap orderWrapper = switch (orderType) {
-            case LIMIT -> tradeOrderBuildSupporter.buildLimitOrder(accountInfo, accountRTData, signal);
-            case MARKET -> tradeOrderBuildSupporter.buildMarketOrder(accountInfo, accountRTData, signal);
+            case LIMIT -> tradeOrderBuildSupporter.buildLimitOrder(accountInfo, signal);
+            case MARKET -> tradeOrderBuildSupporter.buildMarketOrder(accountInfo, signal);
             default -> null;
         };
 
 
         long userId = accountInfo.getId();
-        long accountId = accountRTData.getAccountId();
+        long accountId = accountInfo.getId();
 
         if (orderWrapper == null) {
             log.warn("userId[{}]-accountId[{}]创建主订单结果为null, signalId[{}]", userId, accountId, signal.getId());

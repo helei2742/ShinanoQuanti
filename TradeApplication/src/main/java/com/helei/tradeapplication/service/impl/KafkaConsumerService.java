@@ -2,12 +2,10 @@ package com.helei.tradeapplication.service.impl;
 
 import com.helei.constants.RunEnv;
 import com.helei.constants.trade.TradeType;
-import com.helei.dto.base.KeyValue;
 import com.helei.tradeapplication.config.TradeAppConfig;
 import com.helei.tradeapplication.listener.KafkaTradeSignalListener;
 import com.helei.tradeapplication.manager.ExecutorServiceManager;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.listener.ConcurrentMessageListenerContainer;
@@ -19,7 +17,7 @@ import java.util.List;
 
 @Slf4j
 @Service
-public class KafkaConsumerService implements InitializingBean {
+public class KafkaConsumerService {
 
     private final TradeAppConfig tradeAppConfig = TradeAppConfig.INSTANCE;
 
@@ -63,13 +61,6 @@ public class KafkaConsumerService implements InitializingBean {
 
         container.setupMessageListener(messageListener);
         container.start();
-    }
-
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        for (KeyValue<RunEnv, TradeType> keyValue : tradeAppConfig.getRun_type().getRunTypeList()) {
-            startTradeSignalConsumer(keyValue.getKey(), keyValue.getValue());
-        }
     }
 }
 

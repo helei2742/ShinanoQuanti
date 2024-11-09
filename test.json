@@ -1,126 +1,118 @@
 {
-  "accountBalanceInfo": {
-    "accountId": 0,
-    "balances": {
-      "BTC": {
-        "asset": "BTC",
-        "availableBalance": 0E-8,
-        "crossUnPnl": 0E-8,
-        "crossWalletBalance": 0E-8,
-        "initialMargin": 0E-8,
-        "maintMargin": 0E-8,
-        "marginBalance": 0E-8,
-        "maxWithdrawAmount": 0E-8,
-        "openOrderInitialMargin": 0E-8,
-        "positionInitialMargin": 0E-8,
-        "unrealizedProfit": 0E-8,
-        "updateTime": 1731144465152,
-        "walletBalance": 0E-8
+  "accountBalanceInfo" : {
+    "accountId" : 1,
+    "balances" : {
+      "BTC" : {
+        "asset" : "BTC",
+        "availableBalance" : 0.0,
+        "crossUnPnl" : 0.0,
+        "crossWalletBalance" : 0.0,
+        "initialMargin" : 0.0,
+        "maintMargin" : 0.0,
+        "marginBalance" : 0.0,
+        "maxWithdrawAmount" : 0.0,
+        "openOrderInitialMargin" : 0.0,
+        "positionInitialMargin" : 0.0,
+        "unrealizedProfit" : 0.0,
+        "updateTime" : 1731167412205,
+        "walletBalance" : 0.0
       },
-      "FDUSD": {
-        "asset": "FDUSD",
-        "availableBalance": 0E-8,
-        "crossUnPnl": 0E-8,
-        "crossWalletBalance": 0E-8,
-        "initialMargin": 0E-8,
-        "maintMargin": 0E-8,
-        "marginBalance": 0E-8,
-        "maxWithdrawAmount": 0E-8,
-        "openOrderInitialMargin": 0E-8,
-        "positionInitialMargin": 0E-8,
-        "unrealizedProfit": 0E-8,
-        "updateTime": 1731144465152,
-        "walletBalance": 0E-8
+      "FDUSD" : {
+        "asset" : "FDUSD",
+        "availableBalance" : 0.0,
+        "crossUnPnl" : 0.0,
+        "crossWalletBalance" : 0.0,
+        "initialMargin" : 0.0,
+        "maintMargin" : 0.0,
+        "marginBalance" : 0.0,
+        "maxWithdrawAmount" : 0.0,
+        "openOrderInitialMargin" : 0.0,
+        "positionInitialMargin" : 0.0,
+        "unrealizedProfit" : 0.0,
+        "updateTime" : 1731167412205,
+        "walletBalance" : 0.0
       },
-      "BNB": {
-        "asset": "BNB",
-        "availableBalance": 0E-8,
-        "crossUnPnl": 0E-8,
-        "crossWalletBalance": 0E-8,
-        "initialMargin": 0E-8,
-        "maintMargin": 0E-8,
-        "marginBalance": 0E-8,
-        "maxWithdrawAmount": 0E-8,
-        "openOrderInitialMargin": 0E-8,
-        "positionInitialMargin": 0E-8,
-        "unrealizedProfit": 0E-8,
-        "updateTime": 1731144465152,
-        "walletBalance": 0E-8
+      "BNB" : {
+        "asset" : "BNB",
+        "availableBalance" : 0.0,
+        "crossUnPnl" : 0.0,
+        "crossWalletBalance" : 0.0,
+        "initialMargin" : 0.0,
+        "maintMargin" : 0.0,
+        "marginBalance" : 0.0,
+        "maxWithdrawAmount" : 0.0,
+        "openOrderInitialMargin" : 0.0,
+        "positionInitialMargin" : 0.0,
+        "unrealizedProfit" : 0.0,
+        "updateTime" : 1731167412205,
+        "walletBalance" : 0.0
       },
-      "ETH": {
-        "asset": "ETH",
-        "availableBalance": 0E-8,
-        "crossUnPnl": 0E-8,
-        "crossWalletBalance": 0E-8,
-        "initialMargin": 0E-8,
-        "maintMargin": 0E-8,
-        "marginBalance": 0E-8,
-        "maxWithdrawAmount": 0E-8,
-        "openOrderInitialMargin": 0E-8,
-        "positionInitialMargin": 0E-8,
-        "unrealizedProfit": 0E-8,
-        "updateTime": 1731144465152,
-        "walletBalance": 0E-8
+      "ETH" : {
+        "asset" : "ETH",
+        "availableBalance" : 0.0,
+        "crossUnPnl" : 0.0,
+        "crossWalletBalance" : 0.0,
+        "initialMargin" : 0.0,
+        "maintMargin" : 0.0,
+        "marginBalance" : 0.0,
+        "maxWithdrawAmount" : 0.0,
+        "openOrderInitialMargin" : 0.0,
+        "positionInitialMargin" : 0.0,
+        "unrealizedProfit" : 0.0,
+        "updateTime" : 1731167412205,
+        "walletBalance" : 0.0
       },
-      "USDT": {
-        "asset": "USDT",
-        "availableBalance": 14253.58053537,
-        "crossUnPnl": 0E-8,
-        "crossWalletBalance": 14253.58053537,
-        "initialMargin": 49.41663897,
-        "maintMargin": 7.61825303,
-        "marginBalance": 14326.30212090,
-        "maxWithdrawAmount": 14253.58053537,
-        "openOrderInitialMargin": 0E-8,
-        "positionInitialMargin": 49.41663897,
-        "unrealizedProfit": 6.35925886,
-        "updateTime": 1731144465152,
-        "walletBalance": 14319.94286204
+      "USDT" : {
+        "asset" : "USDT",
+        "availableBalance" : 14299.90829364,
+        "crossUnPnl" : 0.0,
+        "crossWalletBalance" : 14299.90829364,
+        "initialMargin" : 0.0,
+        "maintMargin" : 0.0,
+        "marginBalance" : 14299.90829364,
+        "maxWithdrawAmount" : 14299.90829364,
+        "openOrderInitialMargin" : 0.0,
+        "positionInitialMargin" : 0.0,
+        "unrealizedProfit" : 0.0,
+        "updateTime" : 1731167412205,
+        "walletBalance" : 14299.90829364
       },
-      "USDC": {
-        "asset": "USDC",
-        "availableBalance": 0E-8,
-        "crossUnPnl": 0E-8,
-        "crossWalletBalance": 0E-8,
-        "initialMargin": 0E-8,
-        "maintMargin": 0E-8,
-        "marginBalance": 0E-8,
-        "maxWithdrawAmount": 0E-8,
-        "openOrderInitialMargin": 0E-8,
-        "positionInitialMargin": 0E-8,
-        "unrealizedProfit": 0E-8,
-        "updateTime": 1731144465152,
-        "walletBalance": 0E-8
+      "USDC" : {
+        "asset" : "USDC",
+        "availableBalance" : 0.0,
+        "crossUnPnl" : 0.0,
+        "crossWalletBalance" : 0.0,
+        "initialMargin" : 0.0,
+        "maintMargin" : 0.0,
+        "marginBalance" : 0.0,
+        "maxWithdrawAmount" : 0.0,
+        "openOrderInitialMargin" : 0.0,
+        "positionInitialMargin" : 0.0,
+        "unrealizedProfit" : 0.0,
+        "updateTime" : 1731167412205,
+        "walletBalance" : 0.0
       }
     },
-    "updateTime": 1731144465152
+    "updateTime" : 1731167412205
   },
-  "accountId": 1,
-  "accountPositionInfo": {
-    "accountId": 0,
-    "positions": {
-      "BTCUSDT": {
-        "initialMargin": 30.54101597,
-        "leverage": 0,
-        "maintMargin": 6.10820319,
-        "positionAmt": 0.020,
-        "positionSide": "BOTH",
-        "symbol": "BTCUSDT",
-        "unrealizedProfit": 9.66679872,
-        "updateTime": 1731144464836
-      },
-      "BCHUSDT": {
-        "initialMargin": 18.87562300,
-        "leverage": 0,
-        "maintMargin": 1.51004984,
-        "positionAmt": 1.000,
-        "positionSide": "BOTH",
-        "symbol": "BCHUSDT",
-        "unrealizedProfit": -3.30753986,
-        "updateTime": 1731139200371
-      }
-    },
-    "updateTime": 0
+  "accountPositionInfo" : {
+    "accountId" : 1,
+    "positions" : { },
+    "updateTime" : 0
   },
-  "userId": 1
+  "detail" : {
+    "availableBalance" : 14299.90829364,
+    "maxWithdrawAmount" : 14299.90829364,
+    "totalCrossUnPnl" : 0.0,
+    "totalCrossWalletBalance" : 14299.90829364,
+    "totalInitialMargin" : 0.0,
+    "totalMaintMargin" : 0.0,
+    "totalMarginBalance" : 14299.90829364,
+    "totalOpenOrderInitialMargin" : 0.0,
+    "totalPositionInitialMargin" : 0.0,
+    "totalUnrealizedProfit" : 0.0,
+    "totalWalletBalance" : 14299.90829364
+  },
+  "id" : 1,
+  "userId" : 1
 }

@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Set;
 
 
 @Data
@@ -35,6 +36,11 @@ public class UserInfo {
      */
     private String email;
 
+
+    /**
+     * 名下账户列表
+     */
+    private Set<Long> accountIds;
 
     /**
      * 用户的账户信息

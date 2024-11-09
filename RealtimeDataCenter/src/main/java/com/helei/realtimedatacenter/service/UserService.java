@@ -2,7 +2,8 @@ package com.helei.realtimedatacenter.service;
 
 import com.helei.constants.RunEnv;
 import com.helei.constants.trade.TradeType;
-import com.helei.dto.account.UserAccountInfo;
+import com.helei.dto.account.UserAccountRealTimeInfo;
+import com.helei.dto.account.UserAccountStaticInfo;
 import com.helei.dto.account.UserInfo;
 
 import java.util.List;
@@ -26,11 +27,23 @@ public interface UserService {
     List<UserInfo> queryEnvUser(RunEnv runEnv, TradeType tradeType);
 
     /**
-     * 更新用户账户信息
+     * 更新用户账户实时信息
      *
-     * @param userAccountInfo userAccountInfo
+     * @param tradeType    tradeType
+     * @param runEnv       runEnv
+     * @param realTimeInfo realTimeInfo
      */
-    void updateUserAccountInfo(UserAccountInfo userAccountInfo);
+    void updateUserAccountRTInfo(RunEnv runEnv, TradeType tradeType, UserAccountRealTimeInfo realTimeInfo);
+
+
+    /**
+     * 更新用户账户历史信息
+     *
+     * @param tradeType    tradeType
+     * @param runEnv       runEnv
+     * @param staticInfo staticInfo
+     */
+    void updateUserAccountStaticInfo(RunEnv runEnv, TradeType tradeType, UserAccountStaticInfo staticInfo);
 
     /**
      * 更新所有用户信息

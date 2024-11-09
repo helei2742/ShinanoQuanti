@@ -10,8 +10,10 @@ import com.helei.constants.RunEnv;
 import com.helei.constants.WebsocketClientStatus;
 import com.helei.constants.trade.TradeType;
 import com.helei.dto.ASKey;
-import com.helei.dto.base.KeyValue;
 import com.helei.dto.account.UserAccountInfo;
+import com.helei.dto.account.UserAccountStaticInfo;
+import com.helei.dto.base.KeyValue;
+import com.helei.dto.account.UserAccountRealTimeInfo;
 import com.helei.realtimedatacenter.config.RealtimeConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
@@ -72,11 +74,13 @@ public class BinanceAccountEventClientManager implements InitializingBean {
 
 
     private CompletableFuture<Void> doCreateAccountEventStreamClient(UserAccountInfo accountInfo, Consumer<AccountEvent> whenReceiveAccountEvent) {
-        RunEnv runEnv = accountInfo.getRunEnv();
-        TradeType tradeType = accountInfo.getTradeType();
-        ASKey asKey = accountInfo.getAsKey();
-        long accountId = accountInfo.getId();
-        long userId = accountInfo.getUserId();
+        UserAccountStaticInfo staticInfo = accountInfo.getUserAccountStaticInfo();
+
+        RunEnv runEnv = staticInfo.getRunEnv();
+        TradeType tradeType = staticInfo.getTradeType();
+        ASKey asKey = staticInfo.getAsKey();
+        long accountId = staticInfo.getId();
+        long userId = staticInfo.getUserId();
 
         // 1. 得到用于获取 listenKey 的客户端
         CompletableFuture<AbstractBinanceWSApiClient> requestClientFuture = binanceBaseClientManager.getEnvTypedApiClient(runEnv, tradeType, BinanceWSClientType.REQUEST_RESPONSE);
@@ -229,7 +233,7 @@ public class BinanceAccountEventClientManager implements InitializingBean {
                                     BinanceWSReqRespApiClient reqRespApiClient = (BinanceWSReqRespApiClient) requestClient;
                                     reqRespApiClient.getBaseApi()
                                             // 2.1 请求延长listenKey
-                                            .lengthenListenKey(client.getListenKey(), client.getUserAccountInfo().getAsKey())
+                                            .lengthenListenKey(client.getListenKey(), client.getUserAccountInfo().getUserAccountStaticInfo().getAsKey())
                                             // 2.2 延长listenKey有错误，重新获取
                                             .whenCompleteAsync((key, throwable) -> {
                                                 try {

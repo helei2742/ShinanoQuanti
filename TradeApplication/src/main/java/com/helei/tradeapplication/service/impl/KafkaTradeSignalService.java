@@ -4,6 +4,7 @@ package com.helei.tradeapplication.service.impl;
 import com.helei.constants.RunEnv;
 import com.helei.constants.trade.TradeType;
 import com.helei.dto.account.UserAccountInfo;
+import com.helei.dto.account.UserAccountStaticInfo;
 import com.helei.tradeapplication.dto.GroupOrder;
 import com.helei.dto.trade.TradeSignal;
 import com.helei.interfaces.CompleteInvocation;
@@ -83,23 +84,25 @@ public class KafkaTradeSignalService implements TradeSignalService {
         List<CompletableFuture<GroupOrder>> futures = new ArrayList<>();
 
         for (UserAccountInfo accountInfo : accountInfos) {
+            long userId = accountInfo.getUserId();
+            long accountId = accountInfo.getId();
 
             //Step 1 过滤掉账户设置不接受此信号的
-            if (filterAccount(signal, accountInfo)) {
-                log.warn("accountId[{}]不能执行信号 [{}]", accountInfo.getId(), signal);
+            if (filterAccount(signal, accountInfo.getUserAccountStaticInfo())) {
+                log.warn("accountId[{}]不能执行信号 [{}]", accountId, signal);
             }
 
             CompletableFuture<GroupOrder> future = userAccountInfoService
                     //Step 2 查询实时的账户数据
-                    .queryAccountRTInfo(runEnv, tradeType, accountInfo.getId())
+                    .queryAccountNewInfo(runEnv, tradeType, userId, accountId)
                     //Step 3 生产订单
-                    .thenApplyAsync(accountRTData -> {
+                    .thenApplyAsync(newAccountInfo -> {
                         final GroupOrder[] groupOrder = {null};
 
                         try {
                             CountDownLatch latch = new CountDownLatch(1);
 
-                            orderService.makeOrder(accountInfo, accountRTData, signal, new CompleteInvocation<>() {
+                            orderService.makeOrder(newAccountInfo, signal, new CompleteInvocation<>() {
                                 @Override
                                 public void success(GroupOrder order) {
                                     groupOrder[0] = order;
@@ -122,7 +125,7 @@ public class KafkaTradeSignalService implements TradeSignalService {
                             latch.await();
 
                         } catch (Exception e) {
-                            log.error("为accountId[{}]创建订单时出错, signal[{}]", accountInfo.getId(), signal, e);
+                            log.error("为accountId[{}]创建订单时出错, signal[{}]", accountId, signal, e);
                         }
                         return groupOrder[0];
                     })
@@ -156,11 +159,11 @@ public class KafkaTradeSignalService implements TradeSignalService {
      * 根据账户设置过滤
      *
      * @param signal  信号
-     * @param account 账户
+     * @param staticInfo 账户静态信息
      * @return List<UserAccountInfo>
      */
-    private boolean filterAccount(TradeSignal signal, UserAccountInfo account) {
-        return !account.getUsable().get() || !account.getSubscribeSymbol().contains(signal.getSymbol());
+    private boolean filterAccount(TradeSignal signal, UserAccountStaticInfo staticInfo) {
+        return !staticInfo.getUsable().get() || !staticInfo.getSubscribeSymbol().contains(signal.getSymbol());
     }
 }
 

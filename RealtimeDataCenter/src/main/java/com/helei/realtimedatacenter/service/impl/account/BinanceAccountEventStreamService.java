@@ -5,6 +5,7 @@ import com.helei.binanceapi.dto.accountevent.AccountEvent;
 import com.helei.constants.RunEnv;
 import com.helei.constants.trade.TradeType;
 import com.helei.dto.account.UserAccountInfo;
+import com.helei.dto.account.UserAccountStaticInfo;
 import com.helei.dto.account.UserInfo;
 import com.helei.realtimedatacenter.config.RealtimeConfig;
 import com.helei.realtimedatacenter.manager.BinanceAccountEventClientManager;
@@ -85,8 +86,9 @@ public class BinanceAccountEventStreamService implements AccountEventStreamServi
         List<CompletableFuture<Void>> futures = new ArrayList<>();
 
         for (UserAccountInfo accountInfo : accountInfos) {
+            UserAccountStaticInfo staticInfo = accountInfo.getUserAccountStaticInfo();
             //过滤一些账户
-            if (!realtimeConfig.isExistEnv(accountInfo.getRunEnv(), accountInfo.getTradeType())) {
+            if (!realtimeConfig.isExistEnv(staticInfo.getRunEnv(), staticInfo.getTradeType())) {
                 continue;
             }
 
@@ -113,15 +115,16 @@ public class BinanceAccountEventStreamService implements AccountEventStreamServi
     /**
      * 构建并启动账户事件流，
      *
-     * @param accountInfo accountInfo
+     * @param accountInfo staticInfo
      * @return CompletableFuture<Void>
      */
     private CompletableFuture<Void> buildAndStartAccountEventStream(UserAccountInfo accountInfo) {
-        long userId = accountInfo.getUserId();
-        long accountId = accountInfo.getId();
+        UserAccountStaticInfo staticInfo = accountInfo.getUserAccountStaticInfo();
+        long userId = staticInfo.getUserId();
+        long accountId = staticInfo.getId();
 
-        RunEnv runEnv = accountInfo.getRunEnv();
-        TradeType tradeType = accountInfo.getTradeType();
+        RunEnv runEnv = staticInfo.getRunEnv();
+        TradeType tradeType = staticInfo.getTradeType();
 
 
         log.info("开始获取账户事件流, userId[{}], accountId[{}], runEvn[{}], tradeType[{}]", userId, accountId, runEnv, tradeType);
@@ -137,7 +140,8 @@ public class BinanceAccountEventStreamService implements AccountEventStreamServi
                             log.info("第 [{}] 次获取账户事件流, userId[{}], accountId[{}]", i, userId, accountId);
 
                             //1.2 创建 binanceWSAccountStreamClient 用于开启事件流
-                            binanceWSAccountStreamClient = binanceAccountEventClientManager.startAccountEventStreamClient(accountInfo, this::resolveAccountEvent);
+                            binanceWSAccountStreamClient = binanceAccountEventClientManager
+                                    .startAccountEventStreamClient(accountInfo, this::resolveAccountEvent);
 
                             log.info("第 [{}] 次获取账户事件流成功, userId[{}], accountId[{}], listenKey[{}]", i, userId, accountId, binanceWSAccountStreamClient.getListenKey());
 
