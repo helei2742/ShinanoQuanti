@@ -1,7 +1,7 @@
 package com.helei.realtimedatacenter.mapper;
 
 import com.helei.binanceapi.dto.accountevent.BalancePositionUpdateEvent;
-import com.helei.dto.trade.BalanceInfo;
+import com.helei.dto.account.BalanceInfo;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
@@ -9,7 +9,8 @@ import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
-@Mapper
+//@Mapper
+@Deprecated
 public interface BalanceInfoMapper {
 
     BalanceInfoMapper INSTANCE = Mappers.getMapper(BalanceInfoMapper.class);

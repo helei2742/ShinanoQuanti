@@ -51,7 +51,7 @@ public interface AccountEventConverter {
                     BalancePositionUpdateEvent.PositionChangeInfo changeInfo = new BalancePositionUpdateEvent.PositionChangeInfo();
                     changeInfo.setSymbol(jb.getString("s"));
                     changeInfo.setPosition(jb.getDouble("pa"));
-                    changeInfo.setEnterPosition(jb.getDouble("ep"));
+                    changeInfo.setEntryPrice(jb.getDouble("ep"));
                     changeInfo.setBalanceEqualPrice(jb.getDouble("bep"));
                     changeInfo.setCountProfitOrLoss(jb.getDouble("cr"));
                     changeInfo.setUnrealizedProfitOrLoss(jb.getDouble("up"));

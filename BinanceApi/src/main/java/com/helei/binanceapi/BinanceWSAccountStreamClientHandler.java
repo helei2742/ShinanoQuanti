@@ -34,6 +34,7 @@ class BinanceWSAccountStreamClientHandler extends AbstractBinanceWSApiClientHand
 
     @Override
     protected void handleStreamMessage(String streamName, JSONObject context) {
+        System.out.println(streamName);
         if (whenReceiveEvent != null) {
             whenReceiveEvent.accept(AccountEventType.STATUS_MAP.get(context.getString("e")).getConverter().convertFromJsonObject(context));
         }

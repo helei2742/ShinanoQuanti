@@ -9,7 +9,7 @@ import com.helei.dto.account.UserAccountInfo;
 import com.helei.dto.order.BaseOrder;
 import com.helei.dto.order.CEXTradeOrder;
 import com.helei.dto.order.type.*;
-import com.helei.dto.trade.BalanceInfo;
+import com.helei.dto.account.BalanceInfo;
 import com.helei.dto.trade.TradeSignal;
 import com.helei.snowflack.BRStyle;
 import com.helei.snowflack.SnowFlakeFactory;

@@ -131,7 +131,7 @@ public class BalancePositionUpdateEvent extends AccountEvent {
         /**
          * 入仓价格
          */
-        private Double enterPosition;
+        private Double entryPrice;
 
         /**
          * 盈亏平衡价

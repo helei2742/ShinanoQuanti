@@ -1,13 +1,18 @@
 package com.helei.realtimedatacenter.service.impl.account;
 
 
+import com.alibaba.fastjson.JSONObject;
+import com.helei.binanceapi.BinanceWSReqRespApiClient;
+import com.helei.binanceapi.base.AbstractBinanceWSApiClient;
+import com.helei.binanceapi.constants.BinanceWSClientType;
 import com.helei.binanceapi.dto.accountevent.*;
-        import com.helei.dto.trade.BalanceInfo;
+import com.helei.cexapi.manager.BinanceBaseClientManager;
+import com.helei.dto.account.BalanceInfo;
 import com.helei.dto.account.AccountBalanceInfo;
 import com.helei.dto.account.AccountPositionInfo;
 import com.helei.dto.account.PositionInfo;
 import com.helei.dto.account.UserAccountInfo;
-import com.helei.realtimedatacenter.manager.BinanceAccountClientManager;
+import com.helei.realtimedatacenter.manager.BinanceAccountEventClientManager;
 import com.helei.realtimedatacenter.manager.ExecutorServiceManager;
 import com.helei.realtimedatacenter.mapper.BalanceInfoMapper;
 import com.helei.realtimedatacenter.mapper.PositionInfoMapper;
@@ -19,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 
 @Slf4j
@@ -29,10 +35,13 @@ public class BinanceAccountEventResolveService implements AccountEventResolveSer
     private ExecutorService eventExecutor = null;
 
     @Autowired
-    private BinanceAccountClientManager binanceAccountClientManager;
+    private BinanceAccountEventClientManager binanceAccountEventClientManager;
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private BinanceBaseClientManager binanceBaseClientManager;
 
 
     @Autowired
@@ -155,38 +164,31 @@ public class BinanceAccountEventResolveService implements AccountEventResolveSer
      */
     private CompletableFuture<Void> resolveBalancePositionUpdateEvent(UserAccountInfo accountInfo, BalancePositionUpdateEvent balancePositionUpdateEvent) {
 
+        log.info("account receive balancePositionUpdateEvent [{}}", balancePositionUpdateEvent);
+        // 收到更新事件，直接请求接口获取最新的仓位信息
         return CompletableFuture.runAsync(() -> {
-            // 1.更新仓位信息
-            AccountPositionInfo accountPositionInfo = accountInfo.getAccountPositionInfo();
-            accountPositionInfo.lock();
-            try {
-                List<BalancePositionUpdateEvent.PositionChangeInfo> positionChangeInfos = balancePositionUpdateEvent.getPositionChangeInfos();
-                List<PositionInfo> positionInfos = PositionInfoMapper.INSTANCE.convertFromPositionChangeInfoList(positionChangeInfos);
+            binanceBaseClientManager
+                    // 1 获取请求客户端
+                    .getEnvTypedApiClient(accountInfo.getRunEnv(), accountInfo.getTradeType(), BinanceWSClientType.REQUEST_RESPONSE)
+                    // 2 解析结果，更新accountInfo
+                    .thenApplyAsync(client -> {
+                        try {
+                            JSONObject result = ((BinanceWSReqRespApiClient) client).getAccountApi()
+                                    .accountStatus(accountInfo.getAsKey(), true)
+                                    .get();
 
-                accountPositionInfo.updatePositionInfos(positionInfos);
-                accountPositionInfo.setUpdateTime(System.currentTimeMillis());
-            } finally {
-                accountPositionInfo.unlock();
-            }
-
-
-            // 2.更新资金信息
-            AccountBalanceInfo accountBalanceInfo = accountInfo.getAccountBalanceInfo();
-            accountBalanceInfo.lock();
-            try {
-                List<BalancePositionUpdateEvent.BalanceChangeInfo> balanceChangeInfos = balancePositionUpdateEvent.getBalanceChangeInfos();
-                List<BalanceInfo> balanceInfos = BalanceInfoMapper.INSTANCE.convertFromBalanceChangeInfoList(balanceChangeInfos);
-
-                accountBalanceInfo.updateBalanceInfos(balanceInfos);
-                accountPositionInfo.setUpdateTime(System.currentTimeMillis());
-            } finally {
-                accountBalanceInfo.unlock();
-            }
-
-            // 3.更新数据库和redis中的信息
-            userService.updateUserAccountInfo(accountInfo);
-
-            log.info("accountId[{}]信息更新成功，[{}]", accountInfo.getId(), accountInfo);
+                            accountInfo.updateAccountStatusFromJson(result);
+                            return accountInfo;
+                        } catch (InterruptedException | ExecutionException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }, eventExecutor)
+                    // 3 发到redis
+                    .thenAcceptAsync(updatedAccountInfo -> {
+                        // 3.更新数据库和redis中的信息
+                        userService.updateUserAccountInfo(accountInfo);
+                        log.info("accountId[{}]信息更新成功，[{}]", accountInfo.getId(), accountInfo);
+                    }, eventExecutor);
         }, eventExecutor);
     }
 
@@ -217,7 +219,7 @@ public class BinanceAccountEventResolveService implements AccountEventResolveSer
         log.info("收到accountId[{}]的账户listenKey过期事件，尝试重新连接", accountId);
 
         return CompletableFuture.runAsync(() -> {
-            boolean result = binanceAccountClientManager.restartAccountEventStream(accountId);
+            boolean result = binanceAccountEventClientManager.restartAccountEventStream(accountId);
             if (result) {
                 log.info("accountId[{}]的账户重新获取listenKey成功", accountId);
             } else {

@@ -17,13 +17,13 @@ public interface PositionInfoMapper {
 
     @Mappings({
             @Mapping(source = "symbol", target = "symbol"),
-            @Mapping(source = "position", target = "position"),
-            @Mapping(source = "enterPosition", target = "enterPosition"),
+            @Mapping(source = "position", target = "positionAmt"),
+            @Mapping(source = "entryPrice", target = "entryPrice"),
             @Mapping(source = "balanceEqualPrice", target = "balanceEqualPrice"),
             @Mapping(source = "countProfitOrLoss", target = "countProfitOrLoss"),
-            @Mapping(source = "unrealizedProfitOrLoss", target = "unrealizedProfitOrLoss"),
+            @Mapping(source = "unrealizedProfitOrLoss", target = "unrealizedProfit"),
             @Mapping(source = "marginMode", target = "marginMode"),
-            @Mapping(source = "bail", target = "bail"),
+            @Mapping(source = "bail", target = "maintMargin"),
             @Mapping(source = "positionSide", target = "positionSide")
     })
     PositionInfo convertFromPositionChangeInfo(BalancePositionUpdateEvent.PositionChangeInfo positionChangeInfo);

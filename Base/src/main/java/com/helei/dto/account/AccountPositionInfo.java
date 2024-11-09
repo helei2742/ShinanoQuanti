@@ -40,7 +40,7 @@ public class AccountPositionInfo extends LockObject implements Serializable {
      */
     public void updatePositionInfos(List<PositionInfo> positionInfos) {
         positionInfos.forEach(positionInfo -> {
-            if (positionInfo.getPosition() == 0) {
+            if (positionInfo.getPositionAmt().doubleValue() == 0) {
                 return;
             }
             positions.put(positionInfo.getSymbol(), positionInfo);

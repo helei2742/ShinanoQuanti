@@ -61,7 +61,7 @@ public class BinanceWSAccountEventStreamClient extends AbstractBinanceWSApiClien
             ((BinanceWSAccountStreamClientHandler) super.handler).setWhenReceiveEvent(whenReceive);
 
             //开始连接
-            connect().get();
+            super.connect().get();
             log.info("币安账户信息流已开启，listenKey = [{}]", listenKey);
         } catch (Exception e) {
             log.error("连接币安服务器[{}}发生错误", url, e);

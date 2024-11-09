@@ -1,6 +1,5 @@
 package com.helei.dto.account;
 
-import com.helei.dto.trade.BalanceInfo;
 import com.helei.dto.base.LockObject;
 import lombok.*;
 
@@ -33,8 +32,10 @@ public class AccountBalanceInfo extends LockObject implements Serializable {
 
 
     public void updateBalanceInfos(List<BalanceInfo> balanceInfos) {
-
+        long updateTime = System.currentTimeMillis();
+        this.updateTime = updateTime;
         balanceInfos.forEach(balanceInfo -> {
+            balanceInfo.setUpdateTime(updateTime);
             balances.put(balanceInfo.getAsset(), balanceInfo);
         });
     }

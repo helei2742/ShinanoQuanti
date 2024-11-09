@@ -123,7 +123,7 @@ public abstract class AbstractWebsocketClient<P, T> {
         resolveParamFromUrl();
 
         WebSocketClientHandshaker handshaker = WebSocketClientHandshakerFactory.newHandshaker(
-                uri, WebSocketVersion.V13, null, true, new DefaultHttpHeaders()
+                uri, WebSocketVersion.V13, null, true, new DefaultHttpHeaders(), MAX_FRAME_SIZE
         );
         handler.init(handshaker);
 
@@ -216,17 +216,9 @@ public abstract class AbstractWebsocketClient<P, T> {
      * @return CompletableFuture<Void>
      */
     private CompletableFuture<Boolean> doReconnect() {
+        clientStatus = WebsocketClientStatus.STARTING;
+
         return CompletableFuture.supplyAsync(() -> {
-            log.info("开始初始化WS客户端");
-            clientStatus = WebsocketClientStatus.STARTING;
-
-            try {
-                init();
-            } catch (SSLException | URISyntaxException e) {
-                throw new RuntimeException("初始化WS客户端发生错误", e);
-            }
-            log.info("初始化WS客户端完成，开始链接服务器 [{}]", url);
-
 
             if (reconnectTimes.get() > NettyConstants.RECONNECT_LIMIT) {
                 log.error("reconnect times out of limit [{}], close websocket client", NettyConstants.RECONNECT_LIMIT);
@@ -238,6 +230,22 @@ public abstract class AbstractWebsocketClient<P, T> {
 
             reconnectLock.lock();
             try {
+                if (clientStatus.equals(WebsocketClientStatus.RUNNING)) {
+                    log.info("client started by other thread");
+                    return true;
+                }
+
+
+                log.info("开始初始化WS客户端");
+                try {
+                    init();
+                } catch (SSLException | URISyntaxException e) {
+                    throw new RuntimeException("初始化WS客户端发生错误", e);
+                }
+                log.info("初始化WS客户端完成，开始链接服务器 [{}]", url);
+
+
+
                 while (reconnectTimes.incrementAndGet() <= NettyConstants.RECONNECT_LIMIT) {
                     eventLoopGroup.schedule(() -> {
                         reconnectTimes.decrementAndGet();
@@ -413,6 +421,7 @@ public abstract class AbstractWebsocketClient<P, T> {
             });
 
             if (flag) {
+                log.info("send request [{}]", request);
                 channel.writeAndFlush(new TextWebSocketFrame(JSON.toJSONString(request)));
                 log.debug("send request [{}] success", request);
             } else {

@@ -1,35 +1,48 @@
 package com.helei.realtimedatacenter.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.helei.binanceapi.BinanceWSReqRespApiClient;
+import com.helei.binanceapi.constants.BinanceWSClientType;
+import com.helei.cexapi.manager.BinanceBaseClientManager;
 import com.helei.constants.RunEnv;
 import com.helei.constants.trade.TradeType;
 import com.helei.dto.ASKey;
-import com.helei.dto.account.AccountPositionConfig;
-import com.helei.dto.account.AccountRTData;
-import com.helei.dto.account.UserAccountInfo;
-import com.helei.dto.account.UserInfo;
+import com.helei.dto.account.*;
 import com.helei.dto.base.KeyValue;
 import com.helei.realtimedatacenter.config.RealtimeConfig;
+import com.helei.realtimedatacenter.manager.ExecutorServiceManager;
 import com.helei.realtimedatacenter.service.UserService;
 import com.helei.realtimedatacenter.supporter.BatchWriteSupporter;
 import com.helei.util.RedisKeyUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
 
 
 @Slf4j
 @Service
-public class UserServiceImpl implements UserService, InitializingBean {
+public class UserServiceImpl implements UserService {
 
     private final RealtimeConfig realtimeConfig = RealtimeConfig.INSTANCE;
 
+
     @Autowired
     private BatchWriteSupporter batchWriteSupporter;
+
+    @Autowired
+    private BinanceBaseClientManager binanceBaseClientManager;
+
+    private final ExecutorService executor;
+
+    @Autowired
+    public UserServiceImpl(ExecutorServiceManager executorServiceManager) {
+        executor = executorServiceManager.getSyncTaskExecutor();
+    }
 
 
     @Override
@@ -116,9 +129,16 @@ public class UserServiceImpl implements UserService, InitializingBean {
         return list;
     }
 
+    @Override
+    public List<UserInfo> queryEnvUser(RunEnv runEnv, TradeType tradeType) {
+        //TODO 测试阶段，写死的
+
+        return List.of();
+    }
+
 
     /**
-     * 更新用户账户信息
+     * 更新用户账户信息,写入redis
      *
      * @param userAccountInfo userAccountInfo
      */
@@ -128,14 +148,14 @@ public class UserServiceImpl implements UserService, InitializingBean {
         long accountId = userAccountInfo.getId();
         long userId = userAccountInfo.getUserId();
 
-        String key = RedisKeyUtil.getUserAccountEnvRTDataKey(userAccountInfo.getRunEnv(), userAccountInfo.getTradeType());
+        String key = RedisKeyUtil.getUserAccountEnvRTDataHashKey(userAccountInfo.getRunEnv(), userAccountInfo.getTradeType(), userId);
         String hashKey = String.valueOf(accountId);
 
         //只发实时的部分数据
         String value = JSONObject.toJSONString(new AccountRTData(userId, accountId, userAccountInfo.getAccountBalanceInfo(), userAccountInfo.getAccountPositionInfo()));
 
-        log.info("更新账户信息，key[{}], value[{}]", key, value);
-//        batchWriteSupporter.writeToRedis(key, value);
+        log.debug("更新账户信息，key[{}], value[{}]", key, value);
+
         batchWriteSupporter.writeToRedisHash(key, hashKey, value);
     }
 
@@ -147,15 +167,74 @@ public class UserServiceImpl implements UserService, InitializingBean {
      */
     public void updateUserInfoToRedis(RunEnv env, TradeType tradeType) {
         List<UserInfo> userInfos = queryAll();
-        for (UserInfo userInfo : userInfos) {
+        try {
+            BinanceWSReqRespApiClient requestClient = (BinanceWSReqRespApiClient) binanceBaseClientManager.getEnvTypedApiClient(env, tradeType, BinanceWSClientType.REQUEST_RESPONSE).get();
 
-            String key = RedisKeyUtil.getUserInfoKeyPrefix(env, tradeType) + userInfo.getId();
-            batchWriteSupporter.writeToRedis(key, JSONObject.toJSONString(userInfo));
+            //Step 1 遍历用户
+            for (UserInfo userInfo : userInfos) {
+
+                Map<CompletableFuture<JSONObject>, UserAccountInfo> futuresMap = new HashMap<>();
+                //Step 2 遍历用户下的账户，获取详细信息
+                for (UserAccountInfo accountInfo : userInfo.getAccountInfos()) {
+                    if (!accountInfo.getRunEnv().equals(env) || !accountInfo.getTradeType().equals(tradeType)) {
+                        log.warn("userId[{}]-accountId[{}] 不能在当前环境[{}]-[{}]下运行", accountInfo.getUserId(), accountInfo.getId(), env, tradeType);
+                        continue;
+                    }
+
+                    CompletableFuture<JSONObject> accountStatusFuture = requestClient
+                            .getAccountApi()
+                            .accountStatus(accountInfo.getAsKey(), true);
+                    futuresMap.put(accountStatusFuture, accountInfo);
+                }
+
+                //Step 3 解析详细信息，放入UserAccountInfo，并写入redis
+                CompletableFuture
+                        .allOf(futuresMap.keySet().toArray(new CompletableFuture[0]))
+                        .whenCompleteAsync((unused, throwable) -> {
+                            if (throwable != null) {
+                                log.error("userId[{}}获取最新账户信息发生错误", userInfo.getId(), throwable);
+                            }
+                            futuresMap.forEach((future, accountInfo) -> {
+                                try {
+                                    JSONObject result = future.get();
+
+                                    log.info("获取到userId[{}]-accountId[{}]最新的账户信息 [{}]", accountInfo.getId(), accountInfo.getId(), result);
+                                    //解析结构更新账户信息
+                                    accountInfo.updateAccountStatusFromJson(result);
+
+                                    //写redis
+                                    updateUserAccountInfo(accountInfo);
+                                } catch (InterruptedException | ExecutionException e) {
+                                    throw new RuntimeException(String.format("userId[%s]-accountId[%s]获取最新账户信息发生错误", userInfo.getId(), accountInfo.getId()), e);
+                                }
+                            });
+                        })
+                        .get();
+
+                log.info("userId[{}] 所有runEnv[{}]-tradeType[{}]的账户信息初始化完毕", userInfo.getId(), env, tradeType);
+
+                //Step 4 User 数据写入Redis
+                String key = RedisKeyUtil.getUserBaseInfoKey(env, tradeType, userInfo.getId());
+
+                JSONObject jb = new JSONObject();
+                jb.put("id", userInfo.getId());
+                jb.put("username", userInfo.getUsername());
+                jb.put("email", userInfo.getEmail());
+
+                batchWriteSupporter.writeToRedis(key, jb.toString());
+            }
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
         }
     }
 
+
+
+    /**
+     * 更新所有的用户信息到redis
+     */
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void updateAllUserInfo() {
         for (KeyValue<RunEnv, TradeType> keyValue : realtimeConfig.getRun_type().getRunTypeList()) {
             updateUserInfoToRedis(keyValue.getKey(), keyValue.getValue());
         }

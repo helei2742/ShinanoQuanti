@@ -12,7 +12,9 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 运行类型设置
@@ -24,20 +26,30 @@ public class RunTypeConfig implements Serializable {
 
     public static final RunTypeConfig DEFAULT_RUN_TYPE_CONFIG;
 
-    private List<RunEnvTradeTypeConfig> configs;
+    private Set<RunEnvTradeTypeConfig> configs;
 
     private SnowFlowConfig snow_flow;
 
+    private final HashSet<String> existEnvKeySet = new HashSet<>();
+
     static {
         DEFAULT_RUN_TYPE_CONFIG = new RunTypeConfig();
-        List<RunEnvTradeTypeConfig> list = new ArrayList<>();
-        list.add(new RunEnvTradeTypeConfig(RunEnv.NORMAL, CEXType.BINANCE, List.of(TradeType.SPOT, TradeType.CONTRACT)));
-        list.add(new RunEnvTradeTypeConfig(RunEnv.NORMAL, CEXType.BINANCE, List.of(TradeType.CONTRACT, TradeType.CONTRACT)));
-        list.add(new RunEnvTradeTypeConfig(RunEnv.TEST_NET, CEXType.BINANCE, List.of(TradeType.SPOT, TradeType.CONTRACT)));
-        list.add(new RunEnvTradeTypeConfig(RunEnv.TEST_NET, CEXType.BINANCE, List.of(TradeType.CONTRACT, TradeType.CONTRACT)));
+        Set<RunEnvTradeTypeConfig> set = new HashSet<>();
+        set.add(new RunEnvTradeTypeConfig(RunEnv.NORMAL, CEXType.BINANCE, Set.of(TradeType.SPOT, TradeType.CONTRACT)));
+        set.add(new RunEnvTradeTypeConfig(RunEnv.TEST_NET, CEXType.BINANCE, Set.of(TradeType.SPOT, TradeType.CONTRACT)));
 
-        DEFAULT_RUN_TYPE_CONFIG.setConfigs(list);
+        DEFAULT_RUN_TYPE_CONFIG.setConfigs(set);
         DEFAULT_RUN_TYPE_CONFIG.setSnow_flow(new SnowFlowConfig());
+    }
+
+
+    public void setConfigs(Set<RunEnvTradeTypeConfig> configs) {
+        this.configs = configs;
+
+        List<KeyValue<RunEnv, TradeType>> runTypeList = getRunTypeList();
+        for (KeyValue<RunEnv, TradeType> keyValue : runTypeList) {
+            existEnvKeySet.add(keyValue.getKey().name() + "-" + keyValue.getValue().name());
+        }
     }
 
     /**
@@ -54,6 +66,10 @@ public class RunTypeConfig implements Serializable {
         return list;
     }
 
+    public boolean contains(RunEnv runEnv, TradeType tradeType) {
+        return existEnvKeySet.contains(runEnv.name() + "-" + tradeType.name());
+    }
+
 
     @Data
     @AllArgsConstructor
@@ -63,7 +79,7 @@ public class RunTypeConfig implements Serializable {
 
         private CEXType cexType = CEXType.BINANCE;
 
-        private List<TradeType> trade_type;
+        private Set<TradeType> trade_type;
 
         @JSONField(serialize = false)
         public List<KeyValue<RunEnv, TradeType>> getRunTypeList() {

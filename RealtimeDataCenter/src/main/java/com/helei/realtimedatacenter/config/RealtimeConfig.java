@@ -62,6 +62,16 @@ public class RealtimeConfig {
         };
     }
 
+    /**
+     * 是否包含指定环境
+     * @param runEnv runEnv
+     * @param tradeType tradeType
+     * @return boolean
+     */
+    public boolean isExistEnv(RunEnv runEnv, TradeType tradeType) {
+        return run_type.contains(runEnv, tradeType);
+    }
+
 
     @Data
     public static class RealtimeEnvConfig {

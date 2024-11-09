@@ -154,7 +154,7 @@ public class AbstractBinanceWSApiClient extends AbstractWebsocketClient<JSONObje
                         jb -> {
                             if (jb == null || jb.getInteger("status") != 200) {
                                 log.error("请求不成功，响应为 [{}]", jb);
-                                throw new RuntimeException("请求不成功");
+                                throw new RuntimeException("请求不成功," + jb);
                             }
                             return jb;
                         }

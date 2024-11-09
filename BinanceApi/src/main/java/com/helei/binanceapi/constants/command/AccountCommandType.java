@@ -29,6 +29,11 @@ public enum AccountCommandType implements WSCommandType {
     ACCOUNT_STATUS("account.status"),
 
     /**
+     * 获取账户信息，只有u本位合约时，用于获取非0资产
+     */
+    ACCOUNT_STATUS_V2("v2/account.status"),
+
+    /**
      * 查询未成交的订单计数
      */
     ACCOUNT_RATE_LIMITS_ORDERS("account.rateLimits.orders"),

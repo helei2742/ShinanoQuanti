@@ -6,7 +6,8 @@ import com.helei.constants.RunEnv;
 import com.helei.constants.trade.TradeType;
 import com.helei.dto.account.UserAccountInfo;
 import com.helei.dto.account.UserInfo;
-import com.helei.realtimedatacenter.manager.BinanceAccountClientManager;
+import com.helei.realtimedatacenter.config.RealtimeConfig;
+import com.helei.realtimedatacenter.manager.BinanceAccountEventClientManager;
 import com.helei.realtimedatacenter.service.AccountEventResolveService;
 import com.helei.realtimedatacenter.service.AccountEventStreamService;
 import com.helei.realtimedatacenter.service.UserService;
@@ -32,6 +33,7 @@ public class BinanceAccountEventStreamService implements AccountEventStreamServi
 
     private static final int ACCOUNT_STREAM_START_TIMES_LIMIT = 1;
 
+    private final RealtimeConfig realtimeConfig = RealtimeConfig.INSTANCE;
 
     @Autowired
     private UserService userService;
@@ -39,9 +41,8 @@ public class BinanceAccountEventStreamService implements AccountEventStreamServi
     @Autowired
     private AccountEventResolveService accountEventResolveService;
 
-
     @Autowired
-    private BinanceAccountClientManager binanceAccountClientManager;
+    private BinanceAccountEventClientManager binanceAccountEventClientManager;
 
 
     /**
@@ -84,6 +85,11 @@ public class BinanceAccountEventStreamService implements AccountEventStreamServi
         List<CompletableFuture<Void>> futures = new ArrayList<>();
 
         for (UserAccountInfo accountInfo : accountInfos) {
+            //过滤一些账户
+            if (!realtimeConfig.isExistEnv(accountInfo.getRunEnv(), accountInfo.getTradeType())) {
+                continue;
+            }
+
             CompletableFuture<Void> future = buildAndStartAccountEventStream(accountInfo);
             futures.add(future);
         }
@@ -131,14 +137,14 @@ public class BinanceAccountEventStreamService implements AccountEventStreamServi
                             log.info("第 [{}] 次获取账户事件流, userId[{}], accountId[{}]", i, userId, accountId);
 
                             //1.2 创建 binanceWSAccountStreamClient 用于开启事件流
-                            binanceWSAccountStreamClient = binanceAccountClientManager.startAccountEventStreamClient(accountInfo, this::resolveAccountEvent);
+                            binanceWSAccountStreamClient = binanceAccountEventClientManager.startAccountEventStreamClient(accountInfo, this::resolveAccountEvent);
 
                             log.info("第 [{}] 次获取账户事件流成功, userId[{}], accountId[{}], listenKey[{}]", i, userId, accountId, binanceWSAccountStreamClient.getListenKey());
 
                         } catch (Exception e) {
                             log.error("第 [{}] 次获取账户事件流失败， userId[{}], accountId[{}]", i, userId, accountId, e);
 
-                            binanceAccountClientManager.removeAccountStreamClient(accountId);
+                            binanceAccountEventClientManager.removeAccountStreamClient(accountId);
 
                             if (i == ACCOUNT_STREAM_START_TIMES_LIMIT) {
                                 log.error("重试次数 [{}] 超过了限制[{}], 不再继续重试, userId[{}], accountId[{}]", i, ACCOUNT_STREAM_START_TIMES_LIMIT, userId, accountId);

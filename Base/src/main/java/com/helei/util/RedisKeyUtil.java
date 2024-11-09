@@ -64,7 +64,19 @@ public class RedisKeyUtil {
      * @param tradeType tradeType
      * @return String
      */
-    public static String getUserAccountEnvRTDataKey(RunEnv runEnv, TradeType tradeType) {
-        return getUserEnvKeyPrefix(runEnv, tradeType) + "realtime_account_data";
+    public static String getUserAccountEnvRTDataHashKey(RunEnv runEnv, TradeType tradeType, long userId) {
+        return getUserInfoKeyPrefix(runEnv, tradeType) + userId + ":realtime_account_data";
+    }
+
+    /**
+     * 用户基础数据的key
+     *
+     * @param env       env
+     * @param tradeType tradeType
+     * @param userId    userId
+     * @return key
+     */
+    public static String getUserBaseInfoKey(RunEnv env, TradeType tradeType, long userId) {
+        return getUserInfoKeyPrefix(env, tradeType) + userId + ":base";
     }
 }

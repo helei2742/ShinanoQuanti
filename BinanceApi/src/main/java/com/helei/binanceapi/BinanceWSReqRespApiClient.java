@@ -32,14 +32,9 @@ public class BinanceWSReqRespApiClient extends AbstractBinanceWSApiClient {
     private final BinanceWSTradeApi tradeApi;
 
     /**
-     * 现货账户api
+     * 账户相关api
      */
-    private final BinanceWSSpotAccountApi spotAccountApi;
-
-    /**
-     * 合约账户api
-     */
-    private final BinanceWSContractAccountApi contractAccountApi;
+    private final BinanceWSAccountApi accountApi;
 
     public BinanceWSReqRespApiClient(
             String url,
@@ -49,7 +44,6 @@ public class BinanceWSReqRespApiClient extends AbstractBinanceWSApiClient {
         baseApi = new BinanceWSBaseApi(this);
         marketApi = new BinanceWSMarketApi(this);
         tradeApi = new BinanceWSTradeApi(this);
-        spotAccountApi = new BinanceWSSpotAccountApi(this);
-        contractAccountApi = new BinanceWSContractAccountApi(this);
+        accountApi = new BinanceWSAccountApi(this);
     }
 }

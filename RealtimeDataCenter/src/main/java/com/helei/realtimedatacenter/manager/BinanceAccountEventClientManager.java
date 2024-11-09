@@ -28,7 +28,7 @@ import java.util.function.Consumer;
 
 @Slf4j
 @Component
-public class BinanceAccountClientManager implements InitializingBean {
+public class BinanceAccountEventClientManager implements InitializingBean {
 
     private final static long REFRESH_TASK_SLEEP_TIME = 60000;
 
@@ -37,7 +37,6 @@ public class BinanceAccountClientManager implements InitializingBean {
     private final static int REFRESH_CONCURRENT_LIMIT = 10;
 
     private static final int ACCOUNT_STREAM_START_TIMES_LIMIT = 1;
-
 
     private final static ConcurrentMap<Long, KeyValue<BinanceWSAccountEventStreamClient, Long>> accountIdMapClientAndExpireMap = new ConcurrentHashMap<>();
 
@@ -52,7 +51,7 @@ public class BinanceAccountClientManager implements InitializingBean {
 
 
     @Autowired
-    public BinanceAccountClientManager(ExecutorServiceManager executorServiceManager) {
+    public BinanceAccountEventClientManager(ExecutorServiceManager executorServiceManager) {
         this.executor = executorServiceManager.getAccountRTDataExecutor();
     }
 

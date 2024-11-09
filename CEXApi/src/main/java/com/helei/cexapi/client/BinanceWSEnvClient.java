@@ -76,7 +76,7 @@ public class BinanceWSEnvClient {
             return v;
         });
 
-        log.info("runEnv[{}]-tradeType[{}]获取到客户端[{}]-mark[{}]", runEnv, tradeType, clientType, clientType.name() + "[" + mark + "]");
+        log.info("runEnv[{}]-tradeType[{}]获取到客户端[{}]-mark[{}]-{}", runEnv, tradeType, clientType, clientType.name() + "[" + mark + "]", apiClient.hashCode());
 
         return apiClient;
     }
