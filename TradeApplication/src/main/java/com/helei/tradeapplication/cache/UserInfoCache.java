@@ -1,13 +1,11 @@
 package com.helei.tradeapplication.cache;
 
-
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
 import com.alibaba.fastjson.JSONObject;
 import com.helei.constants.RunEnv;
 import com.helei.constants.trade.TradeType;
-import com.helei.dto.account.UserAccountInfo;
-import com.helei.dto.account.UserAccountRealTimeInfo;
-import com.helei.dto.account.UserAccountStaticInfo;
-import com.helei.dto.account.UserInfo;
+import com.helei.dto.account.*;
 import com.helei.dto.base.KeyValue;
 import com.helei.tradeapplication.config.TradeAppConfig;
 import com.helei.tradeapplication.manager.ExecutorServiceManager;
@@ -23,6 +21,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiConsumer;
@@ -70,8 +69,24 @@ public class UserInfoCache {
 
         RMap<String, String> rtMap = redissonClient.getMap(accountRTDataKey);
 
-        //TODO json手动解析
-        return JSONObject.parseObject(rtMap.get(String.valueOf(accountId)), UserAccountRealTimeInfo.class);
+        // json手动解析
+        JSONObject jsonObject = JSONObject.parseObject(rtMap.get(String.valueOf(accountId)));
+
+        UserAccountRealTimeInfo userAccountRealTimeInfo = jsonObject.toJavaObject(UserAccountRealTimeInfo.class);
+
+
+        // 解析资金信息
+        JSONObject balancesJson = jsonObject.getJSONObject("accountBalanceInfo").getJSONObject("balances");
+        List<BalanceInfo> balanceInfos = balancesJson.values().stream().map(o -> ((JSONObject) o).toJavaObject(BalanceInfo.class)).toList();
+        userAccountRealTimeInfo.getAccountBalanceInfo().updateBalanceInfos(balanceInfos);
+
+
+        //解析仓位信息
+        JSONObject positionJson = jsonObject.getJSONObject("accountPositionInfo").getJSONObject("positions");
+        List<PositionInfo> positionInfos = positionJson.values().stream().map(o -> ((JSONObject) o).toJavaObject(PositionInfo.class)).toList();
+        userAccountRealTimeInfo.getAccountPositionInfo().updatePositionInfos(positionInfos);
+
+        return userAccountRealTimeInfo;
     }
 
     /**

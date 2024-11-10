@@ -1,6 +1,7 @@
 package com.helei.dto.account;
 
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.helei.dto.base.LockObject;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -31,6 +32,7 @@ public class AccountPositionInfo extends LockObject implements Serializable {
     /**
      * 仓位信息
      */
+    @JSONField(name = "positions")
     private final ConcurrentHashMap<String, PositionInfo> positions = new ConcurrentHashMap<>();
 
 

@@ -1,5 +1,6 @@
 package com.helei.dto.account;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.helei.dto.base.LockObject;
 import lombok.*;
 
@@ -27,7 +28,8 @@ public class AccountBalanceInfo extends LockObject implements Serializable {
     /**
      * 资金信息
      */
-    private ConcurrentHashMap<String, BalanceInfo> balances = new ConcurrentHashMap<>();
+    @JSONField(name = "balances")
+    private final ConcurrentHashMap<String, BalanceInfo> balances = new ConcurrentHashMap<>();
 
 
 
