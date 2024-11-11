@@ -43,7 +43,7 @@ public class KafkaConsumerService {
                 log.warn("没有配置env[{}]-tradeType[{}]类型的交易信号topic", env, tradeType);
                 return;
             }
-            log.info("注册监听topic [{}*] 交易信号 ", prefix);
+            log.info("注册监听topic [{}*] signalNames[{}]交易信号 ", prefix, signalNames);
             List<String> topics = signalNames.stream().map(name -> (prefix + name).toLowerCase()).toList();
             startConsumer(topics, new KafkaTradeSignalListener(env, tradeType, tradeSignalService, executorServiceManager.getTradeSignalResolveExecutor()));
         });
@@ -63,5 +63,3 @@ public class KafkaConsumerService {
         container.start();
     }
 }
-
-

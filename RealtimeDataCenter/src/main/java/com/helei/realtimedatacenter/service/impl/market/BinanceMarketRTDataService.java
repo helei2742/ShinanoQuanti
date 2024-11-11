@@ -6,6 +6,7 @@ import com.helei.binanceapi.base.AbstractBinanceWSApiClient;
 import com.helei.binanceapi.base.SubscribeResultInvocationHandler;
 import com.helei.binanceapi.constants.BinanceWSClientType;
 import com.helei.cexapi.manager.BinanceBaseClientManager;
+import com.helei.constants.CEXType;
 import com.helei.constants.trade.KLineInterval;
 import com.helei.constants.RunEnv;
 import com.helei.constants.trade.TradeType;
@@ -35,7 +36,7 @@ public class BinanceMarketRTDataService extends AbstractKafkaMarketRTDataService
 
     @Autowired
     public BinanceMarketRTDataService(ExecutorServiceManager executorServiceManager, KafkaProducerService kafkaProducerService) {
-        super(executorServiceManager.getKlineTaskExecutor(), kafkaProducerService);
+        super(executorServiceManager.getKlineTaskExecutor(), kafkaProducerService, CEXType.BINANCE);
     }
 
     @Override
@@ -55,4 +56,3 @@ public class BinanceMarketRTDataService extends AbstractKafkaMarketRTDataService
         ).startSync(whenReceiveKLineData, taskExecutor);
     }
 }
-

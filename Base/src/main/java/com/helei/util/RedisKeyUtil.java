@@ -8,11 +8,6 @@ public class RedisKeyUtil {
 
     private static final String USER_Info_PREFIX = "user";
 
-    public static String getUserAccountInfoKey(long userId, long accountId, RunEnv runEnv, TradeType tradeType) {
-
-        return USER_Info_PREFIX + ":" + userId + ":" + accountId + ":" + runEnv + ":" + tradeType;
-    }
-
     /**
      * Redis中存放相应环境数据的前缀
      *
@@ -93,3 +88,4 @@ public class RedisKeyUtil {
     }
 
 }
+

@@ -88,8 +88,9 @@ public class KafkaTradeSignalService implements TradeSignalService {
             long accountId = accountInfo.getId();
 
             //Step 1 过滤掉账户设置不接受此信号的
-            if (filterAccount(signal, accountInfo.getUserAccountStaticInfo())) {
+            if (filterAccount(runEnv, tradeType, signal, accountInfo.getUserAccountStaticInfo())) {
                 log.warn("accountId[{}]不能执行信号 [{}]", accountId, signal);
+                continue;
             }
 
             CompletableFuture<GroupOrder> future = userAccountInfoService
@@ -162,9 +163,11 @@ public class KafkaTradeSignalService implements TradeSignalService {
      * @param staticInfo 账户静态信息
      * @return List<UserAccountInfo>
      */
-    private boolean filterAccount(TradeSignal signal, UserAccountStaticInfo staticInfo) {
-        return !staticInfo.getUsable().get() || !staticInfo.getSubscribeSymbol().contains(signal.getSymbol());
+    private boolean filterAccount(RunEnv runEnv, TradeType tradeType, TradeSignal signal, UserAccountStaticInfo staticInfo) {
+        return !staticInfo.isUsable() ||
+                !staticInfo.getSubscribeSymbol().contains(signal.getSymbol().toLowerCase())||
+                !runEnv.equals(staticInfo.getRunEnv()) ||
+                !tradeType.equals(staticInfo.getTradeType());
     }
 }
-
 

@@ -20,9 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
+import java.util.concurrent.*;
 
 
 /**
@@ -31,6 +29,7 @@ import java.util.concurrent.ExecutorService;
  */
 @Slf4j
 public abstract class AbstractKafkaMarketRTDataService implements MarketRealtimeDataService {
+
     protected final ExecutorService taskExecutor;
 
     public final KafkaProducerService kafkaProducerService;
@@ -39,9 +38,12 @@ public abstract class AbstractKafkaMarketRTDataService implements MarketRealtime
 
     protected final BinanceApiConfig binanceApiConfig;
 
-    public AbstractKafkaMarketRTDataService(ExecutorService taskExecutor, KafkaProducerService kafkaProducerService) {
+    protected final CEXType cexType;
+
+    public AbstractKafkaMarketRTDataService(ExecutorService taskExecutor, KafkaProducerService kafkaProducerService, CEXType cexType) {
         this.taskExecutor = taskExecutor;
         this.kafkaProducerService = kafkaProducerService;
+        this.cexType = cexType;
         this.realtimeConfig = RealtimeConfig.INSTANCE;
         this.binanceApiConfig = BinanceApiConfig.INSTANCE;
     }
@@ -150,7 +152,7 @@ public abstract class AbstractKafkaMarketRTDataService implements MarketRealtime
      * @param data   data
      */
     public void klineDataSyncToKafka(String symbol, KLineInterval kLineInterval, JSONObject data, RunEnv runEnv, TradeType tradeType) {
-        String topic = KafkaUtil.resolveKafkaTopic(CEXType.BINANCE, KafkaUtil.getKLineStreamName(symbol, kLineInterval), runEnv, tradeType);
+        String topic = KafkaUtil.resolveKafkaTopic(cexType, KafkaUtil.getKLineStreamName(symbol, kLineInterval), runEnv, tradeType);
 
         log.info("收到k线信息 - {}, - {} - {} - {} send to topic[{}]", symbol, data, runEnv, tradeType, topic);
         try {
@@ -182,5 +184,3 @@ public abstract class AbstractKafkaMarketRTDataService implements MarketRealtime
         }
     }
 }
-
-

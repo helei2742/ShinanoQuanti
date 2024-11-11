@@ -26,9 +26,11 @@ public class TradeApplication {
         ConfigurableApplicationContext applicationContext = SpringApplication.run(TradeApplication.class, args);
 
 
-//        startTradeSignalConsumer(applicationContext);
-
         initAllUserInfo(applicationContext);
+
+
+        startTradeSignalConsumer(applicationContext);
+
     }
 
     /**
@@ -52,9 +54,10 @@ public class TradeApplication {
     private static void initAllUserInfo(ConfigurableApplicationContext applicationContext) {
         UserInfoCache userInfoCache = applicationContext.getBean(UserInfoCache.class);
         try {
-            userInfoCache.updateUserBaseAndRTInfo();
+            userInfoCache.updateUserBaseAndRTInfoFromRedis();
         } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
         }
     }
 }
+

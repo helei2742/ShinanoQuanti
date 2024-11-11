@@ -152,6 +152,8 @@ public abstract class OrderEventProcessService implements OrderService {
      */
     private OrderEvent cancelProcess(GroupOrder order) {
         //TODO 取消订单逻辑，未写入kafka的标记就好，写入kafka的还需要向另外的kafka里写上取消的消息，订单提交服务收到后进行取消
+
+        log.warn("取消订单 [{}]", order);
         return null;
     }
 

@@ -37,7 +37,7 @@ public class UserAccountStaticInfo {
     /**
      * 是否可用
      */
-    private final AtomicBoolean usable = new AtomicBoolean(false);
+    private volatile boolean usable = false;
 
     /**
      * 运行环境，测试网还是主网
@@ -53,6 +53,11 @@ public class UserAccountStaticInfo {
      * 账户交易所类型
      */
     private CEXType cexType = CEXType.BINANCE;
+
+    /**
+     * 交易币种
+     */
+    private final String quote = "USDT";
 
     /**
      * 订阅的交易对

@@ -46,7 +46,19 @@ public interface UserService {
     void updateUserAccountStaticInfo(RunEnv runEnv, TradeType tradeType, UserAccountStaticInfo staticInfo);
 
     /**
+     * 更新用户的baseInfo 到redis
+     *
+     * @param env       运行环境
+     * @param tradeType 交易类型
+     * @param userInfo  用户信息
+     */
+    void updateUserBaseInfoToRedis(RunEnv env, TradeType tradeType, UserInfo userInfo);
+
+    /**
      * 更新所有用户信息
      */
     void updateAllUserInfo();
 }
+
+
+

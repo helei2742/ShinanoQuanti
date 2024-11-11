@@ -28,14 +28,17 @@ public class TradeOrderBuildSupporter {
     /**
      * 构建限价单
      *
-     * @param accountInfo   账户信息
-     * @param signal        信号
+     * @param accountInfo 账户信息
+     * @param signal      信号
      * @return 限价单
      */
     public LimitOrder buildLimitOrder(UserAccountInfo accountInfo, TradeSignal signal) {
         // Step 1 参数检验
         UserAccountStaticInfo staticInfo = accountInfo.getUserAccountStaticInfo();
         UserAccountRealTimeInfo realTimeInfo = accountInfo.getUserAccountRealTimeInfo();
+
+        String quote = staticInfo.getQuote();
+
 
         BigDecimal enterPrice = signal.getEnterPrice();
         if (enterPrice == null) return null;
@@ -61,8 +64,8 @@ public class TradeOrderBuildSupporter {
         LimitOrder limitOrder = new LimitOrder(baseOrder);
 
         // Step 2.2 订单价格、数量等 LimitOrder 信息
-        BalanceInfo balanceInfo = realTimeInfo.getAccountBalanceInfo().getBalances().get(symbol);
-        PositionInfo positionInfo = realTimeInfo.getAccountPositionInfo().getPositions().get(symbol);
+        BalanceInfo balanceInfo = realTimeInfo.getAccountBalanceInfo().getBalances().get(quote);
+        PositionInfo positionInfo = realTimeInfo.getAccountPositionInfo().getPositions().get(symbol.toUpperCase());
 
 
         BigDecimal quantity = OrderQuantityCalUtil.riskPercentBasedQuantityCalculate(
@@ -85,8 +88,8 @@ public class TradeOrderBuildSupporter {
     /**
      * 构建市价单
      *
-     * @param accountInfo   账户信息
-     * @param signal        信号
+     * @param accountInfo 账户信息
+     * @param signal      信号
      * @return 限价单
      */
     public MarketOrder buildMarketOrder(UserAccountInfo accountInfo, TradeSignal signal) {
@@ -96,8 +99,8 @@ public class TradeOrderBuildSupporter {
     /**
      * 构建市价止损单
      *
-     * @param accountInfo   账户信息
-     * @param symbol        交易对
+     * @param accountInfo 账户信息
+     * @param symbol      交易对
      * @return 限价单
      */
     public StopLossMarketOrder buildStopMarketOrder(UserAccountInfo accountInfo, String symbol) {
@@ -108,8 +111,8 @@ public class TradeOrderBuildSupporter {
     /**
      * 构建限价止损单
      *
-     * @param accountInfo   账户信息
-     * @param symbol        交易对
+     * @param accountInfo 账户信息
+     * @param symbol      交易对
      * @return 限价单
      */
     public StopLossLimitOrder buildStopLimitOrder(UserAccountRealTimeInfo accountInfo, String symbol) {
@@ -119,8 +122,8 @@ public class TradeOrderBuildSupporter {
     /**
      * 构建市价止盈单
      *
-     * @param accountInfo   账户信息
-     * @param symbol        交易对
+     * @param accountInfo 账户信息
+     * @param symbol      交易对
      * @return 限价单
      */
     public TakeProfitMarketOrder buildTakeProfitMarketOrder(UserAccountRealTimeInfo accountInfo, String symbol) {
@@ -130,8 +133,8 @@ public class TradeOrderBuildSupporter {
     /**
      * 构建限价止盈单
      *
-     * @param accountInfo   账户信息
-     * @param symbol        交易对
+     * @param accountInfo 账户信息
+     * @param symbol      交易对
      * @return 限价单
      */
     public TakeProfitLimitOrder buildTakeProfitLimitOrder(UserAccountRealTimeInfo accountInfo, String symbol) {
@@ -141,8 +144,8 @@ public class TradeOrderBuildSupporter {
     /**
      * buildTrailingSTIDMarketOrder
      *
-     * @param accountInfo   账户信息
-     * @param symbol        交易对
+     * @param accountInfo 账户信息
+     * @param symbol      交易对
      * @return 限价单
      */
     public CEXTradeOrder buildTrailingSTIDMarketOrder(UserAccountRealTimeInfo accountInfo, String symbol) {
@@ -152,6 +155,7 @@ public class TradeOrderBuildSupporter {
 
     /**
      * 获取下一id
+     *
      * @param orderType 订单类型
      * @return 订单id
      */
@@ -159,3 +163,5 @@ public class TradeOrderBuildSupporter {
         return snowFlakeFactory.nextId(BRStyle.TRADE_SIGNAL, orderType.name());
     }
 }
+
+

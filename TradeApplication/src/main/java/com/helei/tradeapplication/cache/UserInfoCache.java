@@ -1,7 +1,5 @@
 package com.helei.tradeapplication.cache;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.TypeReference;
 import com.alibaba.fastjson.JSONObject;
 import com.helei.constants.RunEnv;
 import com.helei.constants.trade.TradeType;
@@ -21,7 +19,6 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiConsumer;
@@ -64,29 +61,31 @@ public class UserInfoCache {
      * @param accountId 账户id
      * @return 实时数据
      */
-    public UserAccountRealTimeInfo queryAccountRTInfoFromRedis(RunEnv env, TradeType tradeType, long userId, long accountId) {
-        String accountRTDataKey = RedisKeyUtil.getUserAccountEnvRTDataHashKey(env, tradeType, userId);
+    public CompletableFuture<UserAccountRealTimeInfo> queryAccountRTInfoFromRedis(RunEnv env, TradeType tradeType, long userId, long accountId) {
+        return CompletableFuture.supplyAsync(() -> {
+            String accountRTDataKey = RedisKeyUtil.getUserAccountEnvRTDataHashKey(env, tradeType, userId);
 
-        RMap<String, String> rtMap = redissonClient.getMap(accountRTDataKey);
+            RMap<String, String> rtMap = redissonClient.getMap(accountRTDataKey);
 
-        // json手动解析
-        JSONObject jsonObject = JSONObject.parseObject(rtMap.get(String.valueOf(accountId)));
+            // json手动解析
+            JSONObject jsonObject = JSONObject.parseObject(rtMap.get(String.valueOf(accountId)));
 
-        UserAccountRealTimeInfo userAccountRealTimeInfo = jsonObject.toJavaObject(UserAccountRealTimeInfo.class);
-
-
-        // 解析资金信息
-        JSONObject balancesJson = jsonObject.getJSONObject("accountBalanceInfo").getJSONObject("balances");
-        List<BalanceInfo> balanceInfos = balancesJson.values().stream().map(o -> ((JSONObject) o).toJavaObject(BalanceInfo.class)).toList();
-        userAccountRealTimeInfo.getAccountBalanceInfo().updateBalanceInfos(balanceInfos);
+            UserAccountRealTimeInfo userAccountRealTimeInfo = jsonObject.toJavaObject(UserAccountRealTimeInfo.class);
 
 
-        //解析仓位信息
-        JSONObject positionJson = jsonObject.getJSONObject("accountPositionInfo").getJSONObject("positions");
-        List<PositionInfo> positionInfos = positionJson.values().stream().map(o -> ((JSONObject) o).toJavaObject(PositionInfo.class)).toList();
-        userAccountRealTimeInfo.getAccountPositionInfo().updatePositionInfos(positionInfos);
+            // 解析资金信息
+            JSONObject balancesJson = jsonObject.getJSONObject("accountBalanceInfo").getJSONObject("balances");
+            List<BalanceInfo> balanceInfos = balancesJson.values().stream().map(o -> ((JSONObject) o).toJavaObject(BalanceInfo.class)).toList();
+            userAccountRealTimeInfo.getAccountBalanceInfo().updateBalanceInfos(balanceInfos);
 
-        return userAccountRealTimeInfo;
+
+            //解析仓位信息
+            JSONObject positionJson = jsonObject.getJSONObject("accountPositionInfo").getJSONObject("positions");
+            List<PositionInfo> positionInfos = positionJson.values().stream().map(o -> ((JSONObject) o).toJavaObject(PositionInfo.class)).toList();
+            userAccountRealTimeInfo.getAccountPositionInfo().updatePositionInfos(positionInfos);
+
+            return userAccountRealTimeInfo;
+        }, executor);
     }
 
     /**
@@ -98,12 +97,14 @@ public class UserInfoCache {
      * @param accountId 账户id
      * @return 静态信息
      */
-    public UserAccountStaticInfo queryAccountStaticInfoFromRedis(RunEnv env, TradeType tradeType, long userId, long accountId) {
-        String staticDataHashKey = RedisKeyUtil.getUserAccountEnvStaticDataHashKey(env, tradeType, userId);
+    public CompletableFuture<UserAccountStaticInfo> queryAccountStaticInfoFromRedis(RunEnv env, TradeType tradeType, long userId, long accountId) {
+        return CompletableFuture.supplyAsync(() -> {
+            String staticDataHashKey = RedisKeyUtil.getUserAccountEnvStaticDataHashKey(env, tradeType, userId);
 
-        RMap<String, String> staticMap = redissonClient.getMap(staticDataHashKey);
+            RMap<String, String> staticMap = redissonClient.getMap(staticDataHashKey);
 
-        return JSONObject.parseObject(staticMap.get(String.valueOf(accountId)), UserAccountStaticInfo.class);
+            return JSONObject.parseObject(staticMap.get(String.valueOf(accountId)), UserAccountStaticInfo.class);
+        }, executor);
     }
 
     /**
@@ -127,6 +128,162 @@ public class UserInfoCache {
             total.getAndIncrement();
         });
         return total.get();
+    }
+
+
+    /**
+     * 查询用户基础信息，从redis。
+     * 不包含账户相关信息
+     *
+     * @param userRedisKey userRedisKey
+     * @return 用户基础信息
+     */
+    public CompletableFuture<UserInfo> queryUserBaseFromRedis(String userRedisKey) {
+        return CompletableFuture.supplyAsync(() -> {
+
+            RBucket<String> bucket = redissonClient.getBucket(userRedisKey);
+
+            return JSONObject.parseObject(bucket.get(), UserInfo.class);
+        }, executor);
+    }
+
+
+    /**
+     * 查询用户的账户信息，直接写入userInfo参数的对应属性中
+     *
+     * @param userRedisKey userRedisKey
+     * @param userInfo     userInfo
+     * @param env          运行环境
+     * @param type         交易类型
+     */
+    public CompletableFuture<UserInfo> queryUserAccountInfoFromRedis(String userRedisKey, UserInfo userInfo, RunEnv env, TradeType type) {
+        userInfoCache.put(userRedisKey, userInfo);
+
+        long userId = userInfo.getId();
+
+        userInfo.setAccountInfos(new ArrayList<>());
+        List<CompletableFuture<Void>> accountFutures = new ArrayList<>();
+
+        //Step 3 根据账户id从redis查账户信息，并更新map
+        for (Long accountId : userInfo.getAccountIds()) {
+
+            //Step 3.1 查询静态信息
+            CompletableFuture<UserAccountStaticInfo> staticFuture = queryAccountStaticInfoFromRedis(env, type, userId, accountId);
+
+            //Step 3.2 查询动态信息
+            CompletableFuture<UserAccountRealTimeInfo> realtimeFuture = queryAccountRTInfoFromRedis(env, type, userId, accountId);
+
+            //Step 3.3 更新 accountInfoCache
+            CompletableFuture<Void> accountFuture = staticFuture.thenAcceptBothAsync(realtimeFuture, (staticInfo, realTimeInfo) -> {
+
+                UserAccountInfo userAccountInfo = accountInfoCache.get(env).get(type).compute(accountId, (k1, v1) -> {
+                    if (v1 == null) {
+                        v1 = new UserAccountInfo();
+                        v1.setUserId(userId);
+                        v1.setId(accountId);
+                    }
+                    v1.setUserAccountStaticInfo(staticInfo);
+                    v1.setUserAccountRealTimeInfo(realTimeInfo);
+
+                    return v1;
+                });
+                userInfo.getAccountInfos().add(userAccountInfo);
+
+                log.info("env[{}]-tradeType[{}]-userId[{}]-accountId[{}]信息同步到cache完成", env, type, userId, accountId);
+            }, executor);
+
+            accountFutures.add(accountFuture);
+        }
+
+        return CompletableFuture
+                .allOf(accountFutures.toArray(new CompletableFuture[0]))
+                .thenApplyAsync(Void -> userInfo);
+    }
+
+    /**
+     * 更新用户账户信息缓存
+     *
+     * @throws ExecutionException   ExecutionException
+     * @throws InterruptedException InterruptedException
+     */
+    public void updateUserBaseAndRTInfoFromRedis() throws ExecutionException, InterruptedException {
+        List<CompletableFuture<Void>> futures = new ArrayList<>();
+
+        /*
+         * 获取账户信息，不包括实时的资金信息和仓位信息
+         */
+        List<KeyValue<RunEnv, TradeType>> runTypeList = tradeAppConfig.getRun_type().getRunTypeList();
+        for (KeyValue<RunEnv, TradeType> keyValue : runTypeList) {
+
+            //Step 1 遍历环境
+            CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
+                RunEnv env = keyValue.getKey();
+                TradeType type = keyValue.getValue();
+
+                accountInfoCache.putIfAbsent(env, new ConcurrentHashMap<>());
+                accountInfoCache.get(env).putIfAbsent(type, new ConcurrentHashMap<>());
+
+                log.info("开始初始化环境env[{}]-tradeType[{}]的用户信息", env, type);
+
+                //Step 2 从redis查询UserBaseInfo
+                List<CompletableFuture<UserInfo>> accountFutures = new ArrayList<>();
+                int total = queryAllUserBaseFromRedis(env, type, (k, userInfo) -> {
+
+                    //Step 3 再从redis查询用户账户相关信息
+                    CompletableFuture<UserInfo> accountFuture = queryUserAccountInfoFromRedis(k, userInfo, env, type);
+                    accountFutures.add(accountFuture);
+                });
+
+                try {
+                    CompletableFuture
+                            .allOf(accountFutures.toArray(new CompletableFuture[0]))
+                            .whenCompleteAsync((unused, throwable) -> {
+                                if (throwable != null) {
+                                    log.error("获取env[{}]-tradeType[{}]的用户信息出错", env, type, throwable);
+                                } else {
+                                    log.info("环境env[{}]-tradeType[{}]的用户信息初始化完毕, 共[{}]个用户", env, type, total);
+                                }
+                            })
+                            .get();
+                } catch (InterruptedException | ExecutionException e) {
+                    throw new RuntimeException(e);
+                }
+            }, executor);
+
+            futures.add(future);
+        }
+
+        CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]))
+                .whenCompleteAsync((unused, throwable) -> {
+                    if (throwable != null) {
+                        log.error("更新用户信息时发生错误", throwable);
+                        System.exit(-1);
+                    }
+                    log.info("所有运行环境的用户信息初始化完毕, 环境列表: [{}]", runTypeList);
+                }).get();
+    }
+
+    /**
+     * 从redis查询用户信息
+     * 查询出的用户信息会从新放入缓存
+     *
+     * @param env       运行环境
+     * @param tradeType 交易类型
+     * @param userId    用户id
+     * @return CompletableFuture<UserInfo>
+     */
+    public CompletableFuture<UserInfo> queryUserInfoFromRedis(RunEnv env, TradeType tradeType, long userId) {
+        String key = RedisKeyUtil.getUserBaseInfoKey(env, tradeType, userId);
+
+        return queryUserBaseFromRedis(key)
+                .thenApplyAsync(userInfo -> {
+                    CompletableFuture<UserInfo> future = queryUserAccountInfoFromRedis(key, userInfo, env, tradeType);
+                    try {
+                        return future.get();
+                    } catch (InterruptedException | ExecutionException e) {
+                        throw new RuntimeException(String.format("查询[%s]-[%s}-[%s]的redis账户数据出错", env.name(), tradeType.name(), userId), e);
+                    }
+                });
     }
 
 
@@ -167,90 +324,5 @@ public class UserInfoCache {
     }
 
 
-    /**
-     * 更新用户账户信息缓存
-     *
-     * @throws ExecutionException   ExecutionException
-     * @throws InterruptedException InterruptedException
-     */
-    public void updateUserBaseAndRTInfo() throws ExecutionException, InterruptedException {
-        List<CompletableFuture<Void>> futures = new ArrayList<>();
-
-        /*
-         * 获取账户信息，不包括实时的资金信息和仓位信息
-         */
-        for (KeyValue<RunEnv, TradeType> keyValue : tradeAppConfig.getRun_type().getRunTypeList()) {
-            //Step 1 遍历环境
-            CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
-                RunEnv env = keyValue.getKey();
-                TradeType type = keyValue.getValue();
-
-                accountInfoCache.putIfAbsent(env, new ConcurrentHashMap<>());
-                accountInfoCache.get(env).putIfAbsent(type, new ConcurrentHashMap<>());
-
-                log.info("开始初始化环境env[{}]-tradeType[{}]的账户信息", env, type);
-
-                //Step 2 从redis查询UserBaseInfo
-                int total = queryAllUserBaseFromRedis(env, type, (k, userInfo) -> {
-                    long userId = userInfo.getId();
-
-                    userInfo.setAccountInfos(new ArrayList<>());
-                    List<CompletableFuture<Void>> accountFutures = new ArrayList<>();
-
-                    //Step 3 根据账户id从redis查账户信息，并更新map
-                    for (Long accountId : userInfo.getAccountIds()) {
-
-                        //Step 3.1 查询静态信息
-                        CompletableFuture<UserAccountStaticInfo> staticFuture = CompletableFuture.supplyAsync(() -> queryAccountStaticInfoFromRedis(env, type, userId, accountId), executor);
-
-                        //Step 3.2 查询动态信息
-                        CompletableFuture<UserAccountRealTimeInfo> realtimeFuture = CompletableFuture.supplyAsync(() -> queryAccountRTInfoFromRedis(env, type, userId, accountId), executor);
-
-                        //Step 3.3 更新 accountInfoCache
-                        CompletableFuture<Void> accountFuture = staticFuture.thenAcceptBothAsync(realtimeFuture, (staticInfo, realTimeInfo) -> {
-
-                            UserAccountInfo userAccountInfo = accountInfoCache.get(env).get(type).compute(accountId, (k1, v1) -> {
-                                if (v1 == null) {
-                                    v1 = new UserAccountInfo();
-                                    v1.setUserId(userId);
-                                    v1.setId(accountId);
-                                }
-                                v1.setUserAccountStaticInfo(staticInfo);
-                                v1.setUserAccountRealTimeInfo(realTimeInfo);
-
-                                log.info("env[{}]-tradeType[{}]-userId[{}]-accountId[{}]信息同步到cache完成", env, type, userId, accountId);
-                                return v1;
-                            });
-
-                            userInfo.getAccountInfos().add(userAccountInfo);
-                        }, executor);
-
-                        accountFutures.add(accountFuture);
-                    }
-
-                    CompletableFuture
-                            .allOf(accountFutures.toArray(new CompletableFuture[0]))
-                            .whenCompleteAsync((unused, throwable) -> {
-
-                                log.info("env[{}]-tradeType[{}]-userId[{}]信息同步到cache全部完成， userInfo[{}]", env, type, userId, userInfo);
-                                userInfoCache.put(k, userInfo);
-                            });
-
-                });
-
-                log.info("环境env[{}]-tradeType[{}]的账户信息初始化完毕, 共[{}]个账户", env, type, total);
-            }, executor);
-
-            futures.add(future);
-        }
-
-        CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]))
-                .whenCompleteAsync((unused, throwable) -> {
-                    if (throwable != null) {
-                        log.error("更新用户信息时发生错误", throwable);
-                        System.exit(-1);
-                    }
-                }).get();
-    }
 }
 

@@ -32,8 +32,8 @@ shinano:
         # 合约配置
         contract:
           listen_kline:
-            - BTCUSDT@15m,1h
-            - ETHUSDT@15m,1h
+            - BTCUSDT@1m
+#            - ETHUSDT@15m,1h
           client_listen_kline_max_count: 15
       # 主网配置
       normal:

@@ -1,6 +1,9 @@
 package com.helei.dto.trade;
 
+import com.helei.constants.CEXType;
+import com.helei.constants.RunEnv;
 import com.helei.constants.trade.TradeSide;
+import com.helei.constants.trade.TradeType;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -11,7 +14,6 @@ import java.math.BigDecimal;
  */
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
 @EqualsAndHashCode
 @Builder
 public class TradeSignal {
@@ -20,6 +22,21 @@ public class TradeSignal {
      * 信号id
      */
     private String id;
+
+    /**
+     * 运行环境
+     */
+    private RunEnv runEnv;
+
+    /**
+     * 交易类型
+     */
+    private TradeType tradeType;
+
+    /**
+     * 交易所类型
+     */
+    private CEXType cexType;
 
     /**
      * 交易对
@@ -56,4 +73,3 @@ public class TradeSignal {
      */
     private long createKLineOpenTimestamp;
 }
-

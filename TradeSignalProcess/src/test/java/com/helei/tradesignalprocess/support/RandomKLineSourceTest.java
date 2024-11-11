@@ -3,14 +3,12 @@ package com.helei.tradesignalprocess.support;
 
 import com.helei.constants.trade.KLineInterval;
 import com.helei.constants.trade.TradeSide;
-import com.helei.dto.trade.IndicatorMap;
+import com.helei.dto.trade.*;
 import com.helei.dto.indicator.config.MACDConfig;
 import com.helei.tradesignalprocess.config.FlinkConfig;
 import com.helei.tradesignalprocess.stream.*;
-import com.helei.tradesignalprocess.stream.a_klinesource.RandomKLineSource;
-import com.helei.dto.trade.TradeSignal;
-import com.helei.dto.trade.KLine;
-import com.helei.dto.trade.IndicatorSignal;
+import com.helei.tradesignalprocess.stream.a_klinesource.LocalFileKLineSource;
+import com.helei.tradesignalprocess.stream.a_klinesource.impl.RandomKLineSource;
 import com.helei.tradesignalprocess.stream.b_indicator.calculater.MACDCalculator;
 import com.helei.tradesignalprocess.stream.b_indicator.calculater.PSTCalculator;
 import com.helei.tradesignalprocess.stream.c_indicator_signal.IndicatorSignalService;
@@ -20,11 +18,10 @@ import com.helei.tradesignalprocess.stream.d_decision.AbstractDecisionMaker;
 import com.helei.tradesignalprocess.stream.b_indicator.calculater.BollCalculator;
 import com.helei.dto.indicator.config.BollConfig;
 import com.helei.dto.indicator.config.PSTConfig;
-import com.helei.tradesignalprocess.stream.c_indicator_signal.maker.AbstractSignalMaker;
 import com.helei.tradesignalprocess.stream.c_indicator_signal.maker.BollSignalMaker;
+import com.helei.tradesignalprocess.stream.d_decision.PSTBollDecisionMaker;
+import com.helei.tradesignalprocess.stream.d_decision.config.PSTBollDecisionConfig_v1;
 import com.helei.tradesignalprocess.stream.e_trade_signal.KafkaTradeSignalCommitter;
-import org.apache.flink.api.common.functions.OpenContext;
-import org.apache.flink.streaming.api.TimerService;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.junit.jupiter.api.BeforeAll;
@@ -45,13 +42,15 @@ public class RandomKLineSourceTest {
 
     private static String ethusdt = "ethusdt";
 
+    private static String kLineFileName = "";
+
     private static StreamExecutionEnvironment env;
 
     private static StreamExecutionEnvironment env2;
 
-
     private static RandomKLineSource randomKLineSource;
 
+    private static LocalFileKLineSource localFileKLineSource;
 
     @BeforeAll
     public static void before() {
@@ -60,6 +59,7 @@ public class RandomKLineSourceTest {
             randomKLineSource = new RandomKLineSource(btcusdt, Set.of(KLineInterval.m_15),
                     LocalDateTime.of(2020, 10, 29, 15, 38), 2000.0, 19000.0);
 
+            localFileKLineSource = new LocalFileKLineSource(kLineFileName);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -82,6 +82,8 @@ public class RandomKLineSourceTest {
 
 
         IndicatorSignalService indicatorSignalService = buildTradeSignalService(pstConfig, bollConfig);
+
+
         AbstractDecisionMaker<TradeSignal> abstractDecisionMaker = new AbstractDecisionMaker<>("测试用决策生成器") {
             @Serial
             private final static long serialVersionUID = 122142132145213L;
@@ -102,9 +104,9 @@ public class RandomKLineSourceTest {
         KafkaTradeSignalCommitter kafkaOriginOrderCommitter = new KafkaTradeSignalCommitter();
 
 
-        TradeSignalBuildTask<TradeSignal> tradeSignalBuildTask = new TradeSignalBuildTask<TradeSignal>(
+        TradeSignalBuildTask<TradeSignal> tradeSignalBuildTask = new TradeSignalBuildTask<>(
                 indicatorSignalService,
-                abstractDecisionMaker,
+                new PSTBollDecisionMaker(new PSTBollDecisionConfig_v1(pstConfig, bollConfig)),
                 kafkaOriginOrderCommitter);
 
         tradeSignalBuildTask.execute("test");
@@ -117,35 +119,37 @@ public class RandomKLineSourceTest {
                         IndicatorSignalStreamProcessor
                                 .builder()
                                 .setWindowLengthRationOfKLine(1.0 / 60)
-                                .addKLineSource(randomKLineSource)
+//                                .addKLineSource(randomKLineSource)
+                                .addKLineSource(localFileKLineSource)
                                 .addIndicator(new PSTCalculator(pstConfig))
                                 .addIndicator(new MACDCalculator(new MACDConfig(12, 26, 9)))
                                 .addIndicator(new BollCalculator(bollConfig))
 
                                 .addSignalMaker(new BollSignalMaker(bollConfig))
                                 .addSignalMaker(new PSTSignalMaker(pstConfig))
-                                .addSignalMaker(new AbstractSignalMaker(true) {
-
-                                    @Override
-                                    public void onOpen(OpenContext openContext) throws Exception {
-
-                                    }
-
-                                    @Override
-                                    protected IndicatorSignal resolveHistoryKLine(KLine kLine, TimerService timerService) throws Exception {
-//                        System.out.println(Instant.ofEpochMilli(kLine.getOpenTime()) + " - " + kLine.getIndicators());
-                                        return IndicatorSignal.builder().description("这是一条测试信号1h").name("测试信号1h")
-                                                .kLine(kLine).tradeSide(TradeSide.BUY).targetPrice(1111111111.0).stopPrice(1231231.0).build();
-                                    }
-
-                                    @Override
-                                    protected IndicatorSignal resolveRealTimeKLine(KLine kLine, TimerService timerService) throws Exception {
-                                        return null;
-                                    }
-                                })
+//                                .addSignalMaker(new AbstractSignalMaker(true) {
+//
+//                                    @Override
+//                                    public void onOpen(OpenContext openContext) throws Exception {
+//
+//                                    }
+//
+//                                    @Override
+//                                    protected IndicatorSignal resolveHistoryKLine(KLine kLine, TimerService timerService) throws Exception {
+////                        System.out.println(Instant.ofEpochMilli(kLine.getOpenTime()) + " - " + kLine.getIndicators());
+//                                        return IndicatorSignal.builder().description("这是一条测试信号1h").name("测试信号1h")
+//                                                .kLine(kLine).tradeSide(TradeSide.BUY).targetPrice(1111111111.0).stopPrice(1231231.0).build();
+//                                    }
+//
+//                                    @Override
+//                                    protected IndicatorSignal resolveRealTimeKLine(KLine kLine, TimerService timerService) throws Exception {
+//                                        return null;
+//                                    }
+//                                })
                                 .build()
                 )
                 .build();
     }
 
 }
+

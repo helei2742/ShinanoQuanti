@@ -17,11 +17,11 @@ public class RealtimeDataCenter {
         ConfigurableApplicationContext applicationContext = SpringApplication.run(RealtimeDataCenter.class, args);
 
 
-//        startRTDataStream(applicationContext);
+        startRTDataStream(applicationContext);
 
-        updateAllUserInfo2Redis(applicationContext);
-
-        startAccountEventStream(applicationContext);
+//        updateAllUserInfo2Redis(applicationContext);
+//
+//        startAccountEventStream(applicationContext);
     }
 
     /**

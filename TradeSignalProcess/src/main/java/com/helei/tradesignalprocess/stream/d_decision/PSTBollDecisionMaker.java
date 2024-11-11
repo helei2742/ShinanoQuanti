@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
  */
 @Deprecated
 @Slf4j
-public class PSTBollDecisionMaker extends AbstractDecisionMaker<TradeSignal> {
+public class PSTBollDecisionMaker extends BinanceDecisionMaker {
 
     private final PSTBollDecisionConfig_v1 config;
 
@@ -27,8 +27,7 @@ public class PSTBollDecisionMaker extends AbstractDecisionMaker<TradeSignal> {
     }
 
     @Override
-    protected TradeSignal decisionAndBuilderOrder(String symbol, List<IndicatorSignal> windowSignal, IndicatorMap indicatorMap) {
-        String pstKey = config.getPstConfig().getIndicatorName();
+    protected TradeSignal makeBinanceTradeSignal(String symbol, List<IndicatorSignal> windowSignal, IndicatorMap indicatorMap) { String pstKey = config.getPstConfig().getIndicatorName();
         String bollKey = config.getBollConfig().getIndicatorName();
 
         Map<String, List<IndicatorSignal>> signalMap = windowSignal.stream().collect(Collectors.groupingBy(IndicatorSignal::getName));
@@ -36,16 +35,20 @@ public class PSTBollDecisionMaker extends AbstractDecisionMaker<TradeSignal> {
         List<IndicatorSignal> pstSignals = signalMap.get(pstKey);
         List<IndicatorSignal> bollSignals = signalMap.get(bollKey);
 
-        if (pstSignals == null || bollSignals == null || pstSignals.isEmpty() || bollSignals.isEmpty()) {
-            log.warn("pst和boll信号不满足共振， 不生成订单");
-            return null;
+//        if (pstSignals == null || bollSignals == null || pstSignals.isEmpty() || bollSignals.isEmpty()) {
+//            log.warn("pst和boll信号不满足共振， 不生成订单");
+//            return null;
+//        }
+
+        if (bollSignals != null && !signalMap.isEmpty()) {
+            IndicatorSignal newBollSignal = bollSignals.getLast();
+            //TODO 仅仅测试用
+            return buildMarketOrder(newBollSignal);
         }
+//        IndicatorSignal newPstSignal = pstSignals.getLast();
 
-        IndicatorSignal newPstSignal = pstSignals.getLast();
-        IndicatorSignal newBollSignal = bollSignals.getLast();
 
-        //TODO 仅仅测试用
-        return buildMarketOrder(newBollSignal);
+        return null;
     }
 
     private static TradeSignal buildMarketOrder(IndicatorSignal newBollSignal) {
@@ -55,6 +58,7 @@ public class PSTBollDecisionMaker extends AbstractDecisionMaker<TradeSignal> {
                 .tradeSide(newBollSignal.getTradeSide())
                 .targetPrice(BigDecimal.valueOf(newBollSignal.getTargetPrice()))
                 .stopPrice(BigDecimal.valueOf(newBollSignal.getStopPrice()))
+                .enterPrice(BigDecimal.valueOf(newBollSignal.getKLine().getCloseTime()))
                 .build();
     }
 }

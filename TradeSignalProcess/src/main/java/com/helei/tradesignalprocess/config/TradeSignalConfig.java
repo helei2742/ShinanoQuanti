@@ -84,7 +84,7 @@ public class TradeSignalConfig implements Serializable {
      * @return TradeType
      */
     public TradeType getTrade_type() {
-        return run_type.getConfigs().getFirst().getTrade_type().getFirst();
+        return run_type.getConfigs().stream().findFirst().get().getTrade_type().stream().findFirst().get();
     }
 
     /**
@@ -93,7 +93,7 @@ public class TradeSignalConfig implements Serializable {
      * @return RunEnv
      */
     public RunEnv getRun_env() {
-        return run_type.getConfigs().getFirst().getEnv();
+        return run_type.getConfigs().stream().findFirst().get().getEnv();
     }
 
 
@@ -158,6 +158,3 @@ public class TradeSignalConfig implements Serializable {
     }
 
 }
-
-
-

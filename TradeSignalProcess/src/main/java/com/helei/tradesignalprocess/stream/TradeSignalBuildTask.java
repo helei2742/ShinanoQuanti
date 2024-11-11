@@ -58,9 +58,10 @@ public class TradeSignalBuildTask<T> {
         originOrderStream.print();
         //3订单提交服务
         Sink<T> commitSink = orderCommitter.getCommitSink();
-        originOrderStream.sinkTo(commitSink);
+        originOrderStream.sinkTo(commitSink).setParallelism(1);
 
         indicatorSignalService.getEnv().execute(name);
     }
 
 }
+

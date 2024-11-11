@@ -47,9 +47,7 @@ public class KafkaTradeSignalCommitter extends AbstractTradeSignalCommitter<Trad
     static class KafkaOriginOrderSchema implements SerializationSchema<TradeSignal> {
         @Override
         public byte[] serialize(TradeSignal tradeSignal) {
-            return Serializer.Algorithm.Protostuff.serialize(tradeSignal);
+            return Serializer.Algorithm.JSON.serialize(tradeSignal);
         }
     }
 }
-
-

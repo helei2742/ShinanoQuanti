@@ -1,8 +1,9 @@
-package com.helei.tradesignalprocess.stream.a_klinesource;
+package com.helei.tradesignalprocess.stream.a_klinesource.impl;
 
 import com.helei.constants.trade.KLineInterval;
 import com.helei.dto.trade.IndicatorMap;
 import com.helei.dto.trade.KLine;
+import com.helei.tradesignalprocess.stream.a_klinesource.KLineHisAndRTSource;
 import org.apache.flink.configuration.Configuration;
 
 import java.time.LocalDateTime;

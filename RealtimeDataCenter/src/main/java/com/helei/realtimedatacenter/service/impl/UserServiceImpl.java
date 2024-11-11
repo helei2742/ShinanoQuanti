@@ -1,10 +1,12 @@
 package com.helei.realtimedatacenter.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.serializer.SimplePropertyPreFilter;
 import com.helei.binanceapi.BinanceWSReqRespApiClient;
 import com.helei.binanceapi.constants.BinanceWSClientType;
 import com.helei.cexapi.manager.BinanceBaseClientManager;
 import com.helei.constants.RunEnv;
+import com.helei.constants.order.OrderType;
 import com.helei.constants.trade.TradeType;
 import com.helei.dto.ASKey;
 import com.helei.dto.account.*;
@@ -30,6 +32,7 @@ public class UserServiceImpl implements UserService {
 
     private final RealtimeConfig realtimeConfig = RealtimeConfig.INSTANCE;
 
+    private static final SimplePropertyPreFilter propertyPreFilter;
 
     @Autowired
     private BatchWriteSupporter batchWriteSupporter;
@@ -38,6 +41,11 @@ public class UserServiceImpl implements UserService {
     private BinanceBaseClientManager binanceBaseClientManager;
 
     private final ExecutorService executor;
+
+    static {
+        propertyPreFilter = new SimplePropertyPreFilter();
+        propertyPreFilter.getExcludes().add("accountInfos");
+    }
 
     @Autowired
     public UserServiceImpl(ExecutorServiceManager executorServiceManager) {
@@ -58,6 +66,7 @@ public class UserServiceImpl implements UserService {
                 .id(1)
                 .username("合约测试网账号")
                 .password("123456")
+
                 .accountInfos(List.of(
                         UserAccountInfo
                                 .builder()
@@ -71,9 +80,11 @@ public class UserServiceImpl implements UserService {
                                                 .accountPositionConfig(AccountPositionConfig
                                                         .builder()
                                                         .riskPercent(0.5)
+                                                        .orderType(OrderType.LIMIT)
                                                         .leverage(10)
                                                         .build()
                                                 )
+                                                .usable(true)
                                                 .asKey(new ASKey("b252246c6c6e81b64b8ff52caf6b8f37471187b1b9086399e27f6911242cbc66", "a4ed1b1addad2a49d13e08644f0cc8fc02a5c14c3511d374eac4e37763cadf5f"))
                                                 .subscribeSymbol(List.of("btcusdt", "ethusdt", "solusdt"))
                                                 .runEnv(RunEnv.TEST_NET)
@@ -100,9 +111,11 @@ public class UserServiceImpl implements UserService {
                                                 .accountPositionConfig(AccountPositionConfig
                                                         .builder()
                                                         .riskPercent(0.5)
+                                                        .orderType(OrderType.LIMIT)
                                                         .leverage(10)
                                                         .build()
                                                 )
+                                                .usable(true)
                                                 .subscribeSymbol(List.of("btcusdt", "ethusdt", "solusdt"))
                                                 .asKey(new ASKey("1JIhkPyK07xadG9x8hIwqitN95MgpypPzA4b6TLraTonRnJ8BBJQlaO2iL9tPH0Y", "t84TYFR1zieMGncbw3kYq4zAPLxIJHJeMdD8V0FMKxij9fApojV6bhbDpyyjNDWt"))
                                                 .runEnv(RunEnv.TEST_NET)
@@ -130,9 +143,11 @@ public class UserServiceImpl implements UserService {
                                                 .accountPositionConfig(AccountPositionConfig
                                                         .builder()
                                                         .riskPercent(0.5)
+                                                        .orderType(OrderType.LIMIT)
                                                         .leverage(10)
                                                         .build()
                                                 )
+                                                .usable(true)
                                                 .subscribeSymbol(List.of("btcusdt", "ethusdt", "solusdt"))
                                                 .asKey(new ASKey("TUFsFL4YrBsR4fnBqgewxiGfL3Su5L9plcjZuyRO3cq6M1yuwV3eiNX1LcMamYxz", "YsLzVacYo8eOGlZZ7RjznyWVjPHltIXzZJz2BrggCmCUDcW75FyFEv0uKyLBVAuU"))
                                                 .runEnv(RunEnv.NORMAL)
@@ -187,6 +202,19 @@ public class UserServiceImpl implements UserService {
         log.debug("更新账户静态信息，key[{}], value[{}]", key, value);
 
         batchWriteSupporter.writeToRedisHash(key, hashKey, value);
+    }
+
+    /**
+     * 更新用户的baseInfo 到redis
+     *
+     * @param env       运行环境
+     * @param tradeType 交易类型
+     * @param userInfo  用户信息
+     */
+    @Override
+    public void updateUserBaseInfoToRedis(RunEnv env, TradeType tradeType, UserInfo userInfo) {
+        String key = RedisKeyUtil.getUserBaseInfoKey(env, tradeType, userInfo.getId());
+        batchWriteSupporter.writeToRedis(key, JSONObject.toJSONString(userInfo, propertyPreFilter));
     }
 
 
@@ -281,14 +309,7 @@ public class UserServiceImpl implements UserService {
 
 
         //Step 4 User 数据写入Redis
-        String key = RedisKeyUtil.getUserBaseInfoKey(env, tradeType, userInfo.getId());
-
-        JSONObject jb = new JSONObject();
-        jb.put("id", userInfo.getId());
-        jb.put("username", userInfo.getUsername());
-        jb.put("email", userInfo.getEmail());
-        jb.put("accountIds", userInfo.getAccountIds());
-        batchWriteSupporter.writeToRedis(key, jb.toString());
+        updateUserBaseInfoToRedis(env, tradeType, userInfo);
     }
 
 
@@ -302,3 +323,4 @@ public class UserServiceImpl implements UserService {
         }
     }
 }
+

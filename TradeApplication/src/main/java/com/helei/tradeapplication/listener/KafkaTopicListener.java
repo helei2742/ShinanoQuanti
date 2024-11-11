@@ -24,6 +24,7 @@ public abstract class KafkaTopicListener<R> implements MessageListener<String, S
         executor.execute(()->{
             String topic = record.topic();
             String value = record.value();
+            log.info("topic[{}]收到消息[{}]", topic, value);
 
             if (StrUtil.isBlank(value)) {
                 log.warn("receive null kafka trade signal, topic[{}] key [{}]", topic, record.key());
@@ -31,7 +32,7 @@ public abstract class KafkaTopicListener<R> implements MessageListener<String, S
             }
 
             try {
-                convertJsonToTarget(value);
+                invoke(topic, convertJsonToTarget(value));
             } catch (Exception e) {
                 log.error("处理kafka topic[{}] 消息[{}]时出错", topic, value, e);
             }
@@ -43,7 +44,7 @@ public abstract class KafkaTopicListener<R> implements MessageListener<String, S
         executor.execute(()->{
             String topic = record.topic();
             String value = record.value();
-
+            log.info("topic[{}]收到消息[{}]", topic, value);
             if (StrUtil.isBlank(value)) {
                 log.warn("receive null kafka trade signal, topic[{}] key [{}]", topic, record.key());
                 return;

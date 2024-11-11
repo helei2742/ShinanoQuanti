@@ -3,6 +3,7 @@ package com.helei.realtimedatacenter.service.impl.market;
 import cn.hutool.core.lang.Pair;
 import com.alibaba.fastjson.JSONObject;
 import com.helei.binanceapi.base.SubscribeResultInvocationHandler;
+import com.helei.constants.CEXType;
 import com.helei.constants.RunEnv;
 import com.helei.constants.WebSocketStreamParamKey;
 import com.helei.constants.trade.KLineInterval;
@@ -44,7 +45,7 @@ public class RandomMarketRTDataService extends AbstractKafkaMarketRTDataService 
     public RandomMarketRTDataService(
             ExecutorServiceManager executorServiceManager, KafkaProducerService kafkaProducerService
     ) {
-        super(executorServiceManager.getKlineTaskExecutor(), kafkaProducerService);
+        super(executorServiceManager.getKlineTaskExecutor(), kafkaProducerService, CEXType.BINANCE);
 
         epochMilli = startTimeStamp.toInstant(ZoneOffset.UTC).toEpochMilli();
 
@@ -144,3 +145,4 @@ public class RandomMarketRTDataService extends AbstractKafkaMarketRTDataService 
         return runEnv.name() + " - " + tradeType.name();
     }
 }
+

@@ -8,6 +8,8 @@ import org.redisson.api.RBucket;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -17,7 +19,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 @Slf4j
 @Component
-public class BatchWriteSupporter implements InitializingBean {
+public class BatchWriteSupporter implements InitializingBean, ApplicationListener<ContextClosedEvent> {
 
 
     /**
@@ -128,4 +130,18 @@ public class BatchWriteSupporter implements InitializingBean {
     public void writeToRedisHash(String key, String hashKey, String value) {
         redissonClient.getMap(key).putAsync(hashKey, value);
     }
+
+    @Override
+    public void onApplicationEvent(ContextClosedEvent event) {
+        try {
+            for (Map.Entry<String, KeyValue<Integer, String>> entry : redisKVMap.entrySet()) {
+                batchWriteRedis(entry.getKey());
+            }
+        }catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
+
+
+
