@@ -17,6 +17,7 @@
         <module>BinanceApi</module>
         <module>RealtimeDataCenter</module>
         <module>TradeApplication</module>
+        <module>TelegramBot</module>
     </modules>
 
 
