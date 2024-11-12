@@ -2,13 +2,13 @@ package com.helei.dto.order;
 
 import com.baomidou.mybatisplus.annotation.*;
 
-        import java.io.Serial;
+import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
 
 import com.helei.constants.order.*;
-        import lombok.*;
+import lombok.*;
 
 /**
  * <p>
@@ -57,12 +57,6 @@ public class CEXTradeOrder extends BaseOrder implements Serializable {
      */
     protected Integer trailingDelta;
 
-    /**
-     * 用户
-     */
-    @Deprecated
-    @TableField("client_order_id")
-    protected String clientOrderId;
 
     /**
      * 触发价，仅限触发单
@@ -137,18 +131,23 @@ public class CEXTradeOrder extends BaseOrder implements Serializable {
     protected Long timestamp;
 
 
+    /**
+     * 订单编号,交易所给的
+     */
+    @TableId(value = "order_id", type = IdType.INPUT)
+    protected String orderId;
+
 
     public CEXTradeOrder(BaseOrder baseOrder) {
-        super.setRunEnv(baseOrder.getRunEnv());
-        super.setTradeType(baseOrder.getTradeType());
-        super.setCexType(baseOrder.getCexType());
-        super.setRunEnv(baseOrder.getRunEnv());
+        super.setRunEnv(baseOrder.getOriRunEnv());
+        super.setTradeType(baseOrder.getOriTradeType());
+        super.setCexType(baseOrder.getOriCEXType());
+
         super.setApiKey(baseOrder.getApiKey());
         super.setSignature(baseOrder.getSignature());
         super.setRecvWindow(baseOrder.getRecvWindow());
-        super.setRunEnv(baseOrder.getRunEnv());
         super.setTimestamp(baseOrder.getTimestamp());
-        super.setOrderId(baseOrder.getOrderId());
+        super.setClientOrderId(baseOrder.getClientOrderId());
         super.setUserId(baseOrder.getUserId());
         super.setAccountId(baseOrder.getAccountId());
         super.setSymbol(baseOrder.getSymbol());
@@ -163,3 +162,4 @@ public class CEXTradeOrder extends BaseOrder implements Serializable {
         super.setUpdatedDatetime(baseOrder.getUpdatedDatetime());
     }
 }
+

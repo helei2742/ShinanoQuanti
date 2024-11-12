@@ -21,11 +21,13 @@ import java.time.LocalDateTime;
 @Builder
 public class BaseOrder {
 
+
     /**
-     * 订单编号, 自定义订单ID
+     * 用户自定义订单ID
      */
-    @TableId(value = "order_id", type = IdType.INPUT)
-    protected String orderId;
+    @TableId(value = "client_order_id", type = IdType.INPUT)
+    protected String clientOrderId;
+
     /**
      * 用户id
      */
@@ -60,16 +62,19 @@ public class BaseOrder {
     /**
      * 运行环境
      */
+    @TableField("run_env")
     protected RunEnv runEnv;
 
     /**
      * 交易类型
      */
+    @TableField("run_env")
     protected TradeType tradeType;
 
     /**
      * 交易所类型
      */
+    @TableField("cex_type")
     protected CEXType cexType = CEXType.BINANCE;
 
 
@@ -140,6 +145,42 @@ public class BaseOrder {
     protected Long timestamp;
 
 
+    public RunEnv getOriRunEnv() {
+        return runEnv;
+    }
+
+    public TradeType getOriTradeType() {
+        return tradeType;
+    }
+
+    public CEXType getOriCEXType() {
+        return cexType;
+    }
+
+    /**
+     * 特殊处理
+     *
+     * @return String
+     */
+    public String getRunEnv() {
+        return "%env(" + runEnv.name() + ")%";
+    }
+
+    /**
+     * 特殊处理
+     *
+     * @return String
+     */
+    public String getTradeType() {
+        return "%tradeType(" + tradeType.name() + ")%";
+    }
+
+    /**
+     * 特殊处理
+     *
+     * @return String
+     */
+    public String getCexType() {
+        return "%cexType(" + cexType + ")%";
+    }
 }
-
-

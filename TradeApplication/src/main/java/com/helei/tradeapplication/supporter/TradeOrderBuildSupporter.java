@@ -51,7 +51,7 @@ public class TradeOrderBuildSupporter {
 
         // Step 2.1 基础订单信息
         BaseOrder baseOrder = BaseOrder.builder()
-                .orderId(nextId(OrderType.LIMIT))
+                .clientOrderId(nextId(OrderType.LIMIT))
                 .runEnv(staticInfo.getRunEnv())
                 .tradeType(staticInfo.getTradeType())
                 .cexType(staticInfo.getCexType())
@@ -163,5 +163,3 @@ public class TradeOrderBuildSupporter {
         return snowFlakeFactory.nextId(BRStyle.TRADE_SIGNAL, orderType.name());
     }
 }
-
-

@@ -15,6 +15,11 @@ public class ExecutorServiceManager {
     private final ExecutorService tradeSignalResolveExecutor = Executors.newThreadPerTaskExecutor(new NamedThreadFactory("kafka交易信号处理线程池"));
 
 
+    private final ExecutorService connectExecutor = Executors.newThreadPerTaskExecutor(new NamedThreadFactory("连接用线程池"));
+
+    private final ExecutorService tradeOrderResolveExecutor = Executors.newThreadPerTaskExecutor(new NamedThreadFactory("kafka订单处理线程池"));
+
+
     private final ExecutorService queryExecutor = Executors.newThreadPerTaskExecutor(new NamedThreadFactory("查询用线程池"));
 
 
@@ -23,4 +28,3 @@ public class ExecutorServiceManager {
 
     private final ExecutorService orderExecutor = Executors.newThreadPerTaskExecutor(new NamedThreadFactory("订单用线程池"));
 }
-

@@ -2,6 +2,7 @@ package com.helei.tradeapplication.dto;
 
 
 import com.helei.constants.order.GroupOrderStatus;
+import com.helei.dto.ASKey;
 import com.helei.dto.order.BaseOrder;
 import com.helei.dto.order.CEXTradeOrder;
 import com.helei.dto.order.CEXTradeOrderWrap;
@@ -22,6 +23,10 @@ import java.util.List;
 @EqualsAndHashCode
 public class GroupOrder {
 
+    /**
+     * 用于鉴权
+     */
+    private ASKey asKey;
 
     /**
      * 主订单
@@ -60,3 +65,6 @@ public class GroupOrder {
                 '}';
     }
 }
+
+
+

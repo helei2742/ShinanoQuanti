@@ -12,6 +12,6 @@ import com.helei.dto.order.CEXTradeOrder;
  * @author com.helei
  * @since 2024-11-05
  */
-public interface BinanceContractOrderMapper extends BaseMapper<CEXTradeOrder> {
+public interface TradeOrderMapper extends BaseMapper<CEXTradeOrder> {
 
 }

@@ -7,6 +7,7 @@ import com.helei.constants.trade.TradeType;
 import com.helei.dto.config.RunTypeConfig;
 import com.helei.dto.kafka.KafkaConfig;
 import com.helei.dto.kafka.RedisConfig;
+import com.helei.util.KafkaUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,6 +18,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 @Data
 @AllArgsConstructor
@@ -78,6 +80,29 @@ public class TradeAppConfig {
             String symbol = signalSymbolConfig.getSymbol();
             topicResolve.accept(prefix + symbol + ".", signalSymbolConfig.signal_names);
         }
+    }
+
+
+    /**
+     * 获取交易订单的topic
+     *
+     * @param env          运行环境
+     * @param tradeType    交易信号
+     * @param topicResolve 回调
+     */
+    public void getTradeOrderTopics(RunEnv env, TradeType tradeType, Consumer<List<String>> topicResolve) {
+
+        List<TradeSignalSymbolConfig> scList = switch (env) {
+            case TEST_NET -> signal.test_net.getTradeSignalSymbolConfigs(tradeType);
+            case NORMAL -> signal.normal.getTradeSignalSymbolConfigs(tradeType);
+        };
+
+        if (scList == null) {
+            topicResolve.accept(Collections.emptyList());
+            return;
+        }
+
+        topicResolve.accept(scList.stream().map(e -> KafkaUtil.getOrderSymbolTopic(env, tradeType, e.getSymbol())).toList());
     }
 
     @Data

@@ -4,6 +4,8 @@ import com.helei.constants.RunEnv;
 import com.helei.constants.trade.TradeType;
 import com.helei.dto.trade.TradeSignal;
 
+import java.util.concurrent.CompletableFuture;
+
 public interface TradeSignalService {
 
 
@@ -15,5 +17,5 @@ public interface TradeSignalService {
      * @param signal    信号
      * @return 是否执行成功
      */
-    boolean resolveTradeSignal(RunEnv runEnv, TradeType tradeType, TradeSignal signal);
+    CompletableFuture<Boolean> resolveTradeSignal(RunEnv runEnv, TradeType tradeType, TradeSignal signal);
 }

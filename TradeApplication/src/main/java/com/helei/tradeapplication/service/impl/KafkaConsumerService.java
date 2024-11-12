@@ -3,8 +3,10 @@ package com.helei.tradeapplication.service.impl;
 import com.helei.constants.RunEnv;
 import com.helei.constants.trade.TradeType;
 import com.helei.tradeapplication.config.TradeAppConfig;
+import com.helei.tradeapplication.listener.KafkaTradeOrderListener;
 import com.helei.tradeapplication.listener.KafkaTradeSignalListener;
 import com.helei.tradeapplication.manager.ExecutorServiceManager;
+import com.helei.tradeapplication.service.TradeOrderCommitService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
@@ -30,6 +32,9 @@ public class KafkaConsumerService {
     @Autowired
     private KafkaTradeSignalService tradeSignalService;
 
+    @Autowired
+    private TradeOrderCommitService tradeOrderCommitService;
+
     /**
      * 开始交易信号消费
      *
@@ -46,6 +51,19 @@ public class KafkaConsumerService {
             log.info("注册监听topic [{}*] signalNames[{}]交易信号 ", prefix, signalNames);
             List<String> topics = signalNames.stream().map(name -> (prefix + name).toLowerCase()).toList();
             startConsumer(topics, new KafkaTradeSignalListener(env, tradeType, tradeSignalService, executorServiceManager.getTradeSignalResolveExecutor()));
+        });
+    }
+
+
+    /**
+     * 开始消费交易订单
+     *
+     * @param env       运行环境
+     * @param tradeType 交易类型
+     */
+    public void startTradeOrderConsumer(RunEnv env, TradeType tradeType) {
+        tradeAppConfig.getTradeOrderTopics(env, tradeType, topics->{
+            startConsumer(topics, new KafkaTradeOrderListener(env, tradeType, tradeOrderCommitService, executorServiceManager.getTradeOrderResolveExecutor()));
         });
     }
 

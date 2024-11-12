@@ -1,4 +1,3 @@
-
 package com.helei.tradeapplication.listener;
 
 import com.alibaba.fastjson.JSONObject;
@@ -8,6 +7,7 @@ import com.helei.dto.trade.TradeSignal;
 import com.helei.tradeapplication.service.TradeSignalService;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 
 
@@ -49,15 +49,16 @@ public class KafkaTradeSignalListener extends KafkaTopicListener<TradeSignal> {
     }
 
     @Override
-    public boolean invoke(String topic, TradeSignal signal) {
+    public CompletableFuture<Boolean> invoke(String topic, TradeSignal signal) {
         log.info("topic[{}]收到信号,runEnv[{}]-tradeType[{}]-signal[{}]", topic, runEnv, tradeType, signal);
 
         try {
             return tradeSignalService.resolveTradeSignal(runEnv, tradeType, signal);
         } catch (Exception e) {
             log.error("处理topic[{}}信号发生错误", topic, e);
-            return false;
+            return null;
         }
     }
 
 }
+

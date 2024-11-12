@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.kafka.listener.MessageListener;
 import org.springframework.kafka.support.Acknowledgment;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 
 
@@ -53,8 +54,11 @@ public abstract class KafkaTopicListener<R> implements MessageListener<String, S
             try {
                 R r = convertJsonToTarget(value);
 
-                if(invoke(topic, r)){
-                    acknowledgment.acknowledge();
+                CompletableFuture<Boolean> invoke = invoke(topic, r);
+                if (invoke != null) {
+                    invoke.thenAcceptAsync(success->{
+                        if (success) acknowledgment.acknowledge();
+                    }, executor);
                 }
             } catch (Exception e) {
                 log.error("处理kafka topic[{}] 消息[{}]时出错", topic, value, e);
@@ -66,5 +70,5 @@ public abstract class KafkaTopicListener<R> implements MessageListener<String, S
     public abstract R convertJsonToTarget(String json);
 
 
-    public abstract boolean invoke(String topic, R message);
+    public abstract CompletableFuture<Boolean> invoke(String topic, R message);
 }

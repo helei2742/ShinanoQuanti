@@ -3,8 +3,9 @@
 <mapper namespace="com.example.mp.mpdemo.mapper.BinanceContractOrderMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.example.mp.mpdemo.entity.BinanceContractOrder">
-        <id column="order_id" property="orderId" />
+    <resultMap id="BaseResultMap" type="com.helei.dto.order.CEXTradeOrder">
+        <id column="client_order_id" property="client_order_id" />
+        <result column="order_id" property="orderId" />
         <result column="user_id" property="userId" />
         <result column="account_id" property="accountId" />
         <result column="symbol" property="symbol" />
@@ -33,5 +34,8 @@
         <result column="connect_main_order_id" property="connectMainOrderId" />
         <result column="created_datetime" property="createdDatetime" />
         <result column="updated_datetime" property="updatedDatetime" />
+        <result column="run_env" property="runEnv"/>
+        <result column="trade_type" property="tradeType"/>
+        <result column="cex_type" property="cexType"/>
     </resultMap>
 </mapper>

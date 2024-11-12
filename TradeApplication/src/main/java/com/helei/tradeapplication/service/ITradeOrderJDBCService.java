@@ -15,7 +15,7 @@ import java.util.List;
  * @author com.helei
  * @since 2024-11-05
  */
-public interface IBinanceContractOrderService extends IService<CEXTradeOrder> {
+public interface ITradeOrderJDBCService extends IService<CEXTradeOrder> {
 
 
     /**
@@ -25,4 +25,3 @@ public interface IBinanceContractOrderService extends IService<CEXTradeOrder> {
     List<CEXTradeOrder> saveGroupOrder(GroupOrder order);
 
 }
-

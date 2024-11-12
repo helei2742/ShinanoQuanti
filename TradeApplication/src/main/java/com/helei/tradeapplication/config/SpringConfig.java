@@ -1,14 +1,18 @@
 package com.helei.tradeapplication.config;
 
 
+import com.helei.cexapi.CEXApiFactory;
+import com.helei.cexapi.manager.BinanceBaseClientManager;
 import com.helei.dto.config.SnowFlowConfig;
 import com.helei.snowflack.SnowFlakeFactory;
+import com.helei.tradeapplication.manager.ExecutorServiceManager;
 import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
 import org.redisson.config.Config;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.annotation.EnableKafka;
@@ -25,6 +29,14 @@ public class SpringConfig {
 
 
     private final TradeAppConfig tradeAppConfig = TradeAppConfig.INSTANCE;
+
+    @Autowired
+    private ExecutorServiceManager executorServiceManager;
+
+    @Bean
+    public BinanceBaseClientManager binanceBaseWSClientManager() {
+        return CEXApiFactory.binanceBaseWSClientManager(tradeAppConfig.getRun_type(), executorServiceManager.getConnectExecutor());
+    }
 
     @Bean
     public Map<String, Object> kafkaConfigs() {
@@ -70,3 +82,5 @@ public class SpringConfig {
         return new SnowFlakeFactory(snowFlow.getDatacenter_id(), snowFlow.getMachine_id());
     }
 }
+
+

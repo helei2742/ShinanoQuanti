@@ -9,7 +9,7 @@ import com.helei.tradeapplication.dto.GroupOrder;
 import com.helei.dto.trade.TradeSignal;
 import com.helei.interfaces.CompleteInvocation;
 import com.helei.tradeapplication.manager.ExecutorServiceManager;
-import com.helei.tradeapplication.service.OrderService;
+import com.helei.tradeapplication.service.OrderBuildService;
 import com.helei.tradeapplication.service.TradeSignalService;
 import com.helei.tradeapplication.service.UserAccountInfoService;
 import lombok.extern.slf4j.Slf4j;
@@ -37,7 +37,7 @@ public class KafkaTradeSignalService implements TradeSignalService {
     private UserAccountInfoService userAccountInfoService;
 
     @Autowired
-    private OrderService orderService;
+    private OrderBuildService orderBuildService;
 
 
     public KafkaTradeSignalService(ExecutorServiceManager executorServiceManager) {
@@ -53,10 +53,10 @@ public class KafkaTradeSignalService implements TradeSignalService {
      * @param signal    信号
      * @return true 无论处理结果如何都忽略到改信号
      */
-    public boolean resolveTradeSignal(RunEnv runEnv, TradeType tradeType, TradeSignal signal) {
+    public CompletableFuture<Boolean> resolveTradeSignal(RunEnv runEnv, TradeType tradeType, TradeSignal signal) {
 
         try {
-            userAccountInfoService
+            return userAccountInfoService
                     // 1 查询环境下的账户
                     .queryEnvAccountInfo(runEnv, tradeType)
                     // 2 生成订单并交易
@@ -65,7 +65,7 @@ public class KafkaTradeSignalService implements TradeSignalService {
             log.error("处理信号[{}]时发生错误", signal, e);
         }
 
-        return true;
+        return null;
     }
 
 
@@ -79,7 +79,7 @@ public class KafkaTradeSignalService implements TradeSignalService {
      * @param accountInfos accountInfos
      * @return List<BaseOrder>
      */
-    private List<GroupOrder> makeOrdersAndSend2Trade(RunEnv runEnv, TradeType tradeType, TradeSignal signal, List<UserAccountInfo> accountInfos) {
+    private boolean makeOrdersAndSend2Trade(RunEnv runEnv, TradeType tradeType, TradeSignal signal, List<UserAccountInfo> accountInfos) {
 
         List<CompletableFuture<GroupOrder>> futures = new ArrayList<>();
 
@@ -103,7 +103,7 @@ public class KafkaTradeSignalService implements TradeSignalService {
                         try {
                             CountDownLatch latch = new CountDownLatch(1);
 
-                            orderService.makeOrder(newAccountInfo, signal, new CompleteInvocation<>() {
+                            orderBuildService.makeOrder(newAccountInfo, signal, new CompleteInvocation<>() {
                                 @Override
                                 public void success(GroupOrder order) {
                                     groupOrder[0] = order;
@@ -142,32 +142,34 @@ public class KafkaTradeSignalService implements TradeSignalService {
 
 
         //等待执行完成
-        List<GroupOrder> groupOrders = new ArrayList<>();
         for (CompletableFuture<GroupOrder> future : futures) {
             try {
                 GroupOrder order = future.get();
-                groupOrders.add(order);
+                log.info("订单组创建并写入db、kafka成功, {}", order);
             } catch (ExecutionException | InterruptedException e) {
                 log.error("获取订单结果处理订单结果出错", e);
-                throw new RuntimeException(e);
             }
         }
-        return groupOrders;
+
+        // 都返回true，不依赖kafka完成ack
+        return true;
     }
 
 
     /**
      * 根据账户设置过滤
      *
-     * @param signal  信号
+     * @param signal     信号
      * @param staticInfo 账户静态信息
      * @return List<UserAccountInfo>
      */
     private boolean filterAccount(RunEnv runEnv, TradeType tradeType, TradeSignal signal, UserAccountStaticInfo staticInfo) {
         return !staticInfo.isUsable() ||
-                !staticInfo.getSubscribeSymbol().contains(signal.getSymbol().toLowerCase())||
+                !staticInfo.getSubscribeSymbol().contains(signal.getSymbol().toLowerCase()) ||
                 !runEnv.equals(staticInfo.getRunEnv()) ||
                 !tradeType.equals(staticInfo.getTradeType());
     }
 }
+
+
 

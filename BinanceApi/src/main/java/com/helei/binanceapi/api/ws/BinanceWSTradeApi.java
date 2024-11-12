@@ -9,7 +9,7 @@ import com.helei.binanceapi.constants.CancelRestrictions;
 import com.helei.binanceapi.constants.command.TradeCommandType;
 import com.helei.dto.ASKey;
 import com.helei.dto.WebSocketCommandBuilder;
-import com.helei.dto.order.BaseOrder;
+import com.helei.dto.order.CEXTradeOrder;
 import lombok.extern.slf4j.Slf4j;
 
 import java.net.URISyntaxException;
@@ -34,7 +34,7 @@ public class BinanceWSTradeApi extends AbstractBinanceWSApi {
      * @param asKey 签名需要的参数
      * @return 下单的的结果CompletableFuture<JSONObject>
      */
-    public CompletableFuture<JSONObject> commitOrder(BaseOrder order, ASKey asKey) {
+    public CompletableFuture<JSONObject> commitOrder(CEXTradeOrder order, ASKey asKey) {
         String jsonString = JSON.toJSONString(order);
         JSONObject command = WebSocketCommandBuilder
                 .builder()
@@ -53,7 +53,7 @@ public class BinanceWSTradeApi extends AbstractBinanceWSApi {
      * @param asKey 签名需要的参数
      * @return 下单的的结果CompletableFuture<JSONObject>
      */
-    public CompletableFuture<JSONObject> commitTestOrder(BaseOrder order, ASKey asKey) {
+    public CompletableFuture<JSONObject> commitTestOrder(CEXTradeOrder order, ASKey asKey) {
         String jsonString = JSON.toJSONString(order);
         JSONObject command = WebSocketCommandBuilder
                 .builder()

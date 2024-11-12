@@ -13,7 +13,7 @@ import java.util.concurrent.*;
 
 
 @Slf4j
-public abstract class OrderEventProcessService implements OrderService {
+public abstract class OrderEventProcessService implements OrderBuildService {
 
 
     /**
