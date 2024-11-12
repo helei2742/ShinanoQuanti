@@ -15,7 +15,7 @@ public class App {
 
         TelegramBotsApi telegramBotsApi = applicationContext.getBean(TelegramBotsApi.class);
         try {
-            telegramBotsApi.registerBot(new ShinanoTelegramBot("heleidage666_bot", "7680003612:AAGBiX-2-DtItBTd_LRxLrCj7-lp04fNtxg"));
+            telegramBotsApi.registerBot(new ShinanoTelegramBot("heleidage666_bot", ""));
         } catch (TelegramApiException e) {
             throw new RuntimeException(e);
         }
