@@ -115,7 +115,7 @@ public class OrderServiceImpl extends OrderEventProcessService {
         //Step 1 从主单中取出环境信息，生成topic
         BaseOrder mainOrder = order.getMainOrder();
 
-        String topic = KafkaUtil.getOrderSymbolTopic(mainOrder.getRunEnv(), mainOrder.getTradeType(), mainOrder.getSymbol());
+        String topic = KafkaUtil.getOrderSymbolTopic(mainOrder.getOriRunEnv(), mainOrder.getOriTradeType(), mainOrder.getSymbol());
 
         //Step 2 获取交易所订单列表发送
         List<CEXTradeOrder> cexTradeOrders = order.getCexTradeOrders();
@@ -146,6 +146,4 @@ public class OrderServiceImpl extends OrderEventProcessService {
     }
 
 }
-
-
 

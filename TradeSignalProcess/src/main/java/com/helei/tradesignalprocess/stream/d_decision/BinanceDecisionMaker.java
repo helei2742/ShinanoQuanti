@@ -20,6 +20,8 @@ public abstract class BinanceDecisionMaker extends AbstractDecisionMaker<TradeSi
     @Override
     protected TradeSignal decisionAndBuilderOrder(String symbol, List<IndicatorSignal> windowSignal, IndicatorMap indicatorMap) {
         TradeSignal tradeSignal = makeBinanceTradeSignal(symbol, windowSignal, indicatorMap);
+        tradeSignal.setName(getName());
+        tradeSignal.setId(nextSignalId());
         tradeSignal.setSymbol(symbol);
         tradeSignal.setCexType(CEXType.BINANCE);
         tradeSignal.setRunEnv(tradeSignalConfig.getRun_env());

@@ -39,6 +39,11 @@ public class TradeSignal {
     private CEXType cexType;
 
     /**
+     * 信号名称
+     */
+    private String name;
+
+    /**
      * 交易对
      */
     private String symbol;
@@ -73,3 +78,5 @@ public class TradeSignal {
      */
     private long createKLineOpenTimestamp;
 }
+
+

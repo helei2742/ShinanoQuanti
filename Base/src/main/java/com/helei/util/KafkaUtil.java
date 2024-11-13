@@ -37,9 +37,21 @@ public class KafkaUtil {
         return String.format(TOPIC_ORDER_FORMAT, runEnv.name(), type.name(), symbol);
     }
 
+    /**
+     * 获取信号的topic
+     *
+     * @param runEnv     运行环境
+     * @param type       交易类型
+     * @param symbol     交易对
+     * @param signalName 信号名
+     * @return topic
+     */
+    public static String getTradeSingalTopic(RunEnv runEnv, TradeType type, String symbol, String signalName) {
+        return (runEnv.name() + "." + type + "." + symbol + "." + signalName).toLowerCase();
+    }
+
 
     public static String getKLineStreamName(String symbol, KLineInterval interval) {
         return symbol + "_kline_" + interval.getDescribe();
     }
 }
-

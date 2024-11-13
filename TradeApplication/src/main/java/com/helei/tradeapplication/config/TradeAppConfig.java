@@ -5,6 +5,7 @@ import com.helei.binanceapi.config.BinanceApiConfig;
 import com.helei.constants.RunEnv;
 import com.helei.constants.trade.TradeType;
 import com.helei.dto.config.RunTypeConfig;
+import com.helei.dto.config.TradeSignalConfig;
 import com.helei.dto.kafka.KafkaConfig;
 import com.helei.dto.kafka.RedisConfig;
 import com.helei.util.KafkaUtil;
@@ -34,7 +35,7 @@ public class TradeAppConfig {
 
     private KafkaConfig kafka;
 
-    private TradeAppSignalConfig signal;
+    private TradeSignalConfig signal;
 
 
     static {
@@ -66,19 +67,16 @@ public class TradeAppConfig {
         StringBuilder prefix = new StringBuilder(env.name());
         prefix.append(".").append(tradeType.name()).append(".");
 
-        List<TradeSignalSymbolConfig> scList = switch (env) {
-            case TEST_NET -> signal.test_net.getTradeSignalSymbolConfigs(tradeType);
-            case NORMAL -> signal.normal.getTradeSignalSymbolConfigs(tradeType);
-        };
+        List<TradeSignalConfig.TradeSignalSymbolConfig> scList = signal.getEnvSignalSymbolConfig(env, tradeType);
 
         if (scList == null) {
             topicResolve.accept(prefix.toString(), Collections.emptyList());
             return;
         }
 
-        for (TradeSignalSymbolConfig signalSymbolConfig : scList) {
+        for (TradeSignalConfig.TradeSignalSymbolConfig signalSymbolConfig : scList) {
             String symbol = signalSymbolConfig.getSymbol();
-            topicResolve.accept(prefix + symbol + ".", signalSymbolConfig.signal_names);
+            topicResolve.accept(prefix + symbol + ".", signalSymbolConfig.getSignal_names());
         }
     }
 
@@ -92,9 +90,9 @@ public class TradeAppConfig {
      */
     public void getTradeOrderTopics(RunEnv env, TradeType tradeType, Consumer<List<String>> topicResolve) {
 
-        List<TradeSignalSymbolConfig> scList = switch (env) {
-            case TEST_NET -> signal.test_net.getTradeSignalSymbolConfigs(tradeType);
-            case NORMAL -> signal.normal.getTradeSignalSymbolConfigs(tradeType);
+        List<TradeSignalConfig.TradeSignalSymbolConfig> scList = switch (env) {
+            case TEST_NET -> signal.getTest_net().getTradeSignalSymbolConfigs(tradeType);
+            case NORMAL -> signal.getNormal().getTradeSignalSymbolConfigs(tradeType);
         };
 
         if (scList == null) {
@@ -105,60 +103,6 @@ public class TradeAppConfig {
         topicResolve.accept(scList.stream().map(e -> KafkaUtil.getOrderSymbolTopic(env, tradeType, e.getSymbol())).toList());
     }
 
-    @Data
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class TradeAppSignalConfig {
-        /**
-         * 主网环境信号配置
-         */
-        private TradeSignalEnvConfig normal;
-
-        /**
-         * 测试环境信号配置
-         */
-        private TradeSignalEnvConfig test_net;
-    }
-
-    @Data
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class TradeSignalEnvConfig {
-
-        /**
-         * 现货类型信号配置
-         */
-        private List<TradeSignalSymbolConfig> spot;
-
-        /**
-         * u本位合约类型信号设置
-         */
-        private List<TradeSignalSymbolConfig> contract;
-
-        public List<TradeSignalSymbolConfig> getTradeSignalSymbolConfigs(TradeType tradeType) {
-            return switch (tradeType) {
-                case SPOT -> spot;
-                case CONTRACT -> contract;
-            };
-        }
-    }
-
-
-    @Data
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class TradeSignalSymbolConfig {
-
-        /**
-         * 交易对名称
-         */
-        private String symbol;
-
-        /**
-         * 信号名list
-         */
-        private List<String> signal_names;
-    }
 
 
     public static void main(String[] args) {
