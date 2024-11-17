@@ -1,15 +1,15 @@
-package com.helei.tradesignalprocess.stream.d_decision.config;
+package com.helei.tradesignalprocess.stream.d_trade_signal.config;
 
 
-        import com.helei.dto.indicator.config.BollConfig;
-        import com.helei.dto.indicator.config.PSTConfig;
-        import lombok.*;
+import com.helei.dto.indicator.config.BollConfig;
+import com.helei.dto.indicator.config.PSTConfig;
+import lombok.*;
 
 /**
  * boll决策配置
  */
 @Getter
-public class PSTBollDecisionConfig_v1 extends DecisionConfig{
+public class PSTBollDecisionConfig_v1 extends DecisionConfig {
 
     private PSTConfig pstConfig;
 

@@ -5,6 +5,7 @@ import cn.hutool.core.lang.Pair;
 import com.alibaba.fastjson.JSONObject;
 import com.helei.binanceapi.base.SubscribeResultInvocationHandler;
 import com.helei.binanceapi.config.BinanceApiConfig;
+import com.helei.binanceapi.supporter.KLineMapper;
 import com.helei.constants.CEXType;
 import com.helei.constants.RunEnv;
 import com.helei.constants.WebSocketStreamParamKey;
@@ -19,7 +20,9 @@ import com.helei.util.KafkaUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.*;
 
 
@@ -49,17 +52,18 @@ public abstract class AbstractKafkaMarketRTDataService implements MarketRealtime
     }
 
     @Override
-    public Integer startSyncRealTimeKLine() {
-        int all = 0;
-        List<CompletableFuture<Integer>> futures = new ArrayList<>();
+    public Set<String> startSyncRealTimeKLine() {
+        Set<String> all = new HashSet<>();
+        List<CompletableFuture<Set<String>>> futures = new ArrayList<>();
 
         for (KeyValue<RunEnv, TradeType> keyValue : realtimeConfig.getRun_type().getRunTypeList()) {
-            futures.add(CompletableFuture.supplyAsync(() -> startSyncRealTimeKLine(keyValue.getKey(), keyValue.getValue()), taskExecutor));
+            futures.add(CompletableFuture.supplyAsync(() -> startSyncEnvRealTimeKLine(keyValue.getKey(), keyValue.getValue()), taskExecutor));
         }
 
-        for (CompletableFuture<Integer> future : futures) {
+        for (CompletableFuture<Set<String>> future : futures) {
             try {
-                all += future.get();
+                Set<String> oneEnvKLineSet = future.get();
+                all.addAll(oneEnvKLineSet);
             } catch (InterruptedException | ExecutionException e) {
                 throw new RuntimeException(e);
             }
@@ -68,7 +72,7 @@ public abstract class AbstractKafkaMarketRTDataService implements MarketRealtime
     }
 
     @Override
-    public Integer startSyncRealTimeKLine(RunEnv runEnv, TradeType tradeType) {
+    public Set<String> startSyncEnvRealTimeKLine(RunEnv runEnv, TradeType tradeType) {
         log.info("开始同步env[{}]-tradeType[{}]的实时k线", runEnv, tradeType);
 
         RealtimeConfig.RealtimeKLineDataConfig realtimeKLineDataConfig = realtimeConfig.getEnvKLineDataConfig(runEnv, tradeType);
@@ -78,7 +82,7 @@ public abstract class AbstractKafkaMarketRTDataService implements MarketRealtime
 
         if (realtimeKLineList == null || realtimeKLineList.isEmpty()) {
             log.warn("runEnv[{}]-tradeType[{}] 没有设置要实时获取的k线", runEnv, tradeType);
-            return 0;
+            return Set.of();
         }
 
         List<Pair<String, KLineInterval>> intervals = new ArrayList<>();
@@ -89,6 +93,19 @@ public abstract class AbstractKafkaMarketRTDataService implements MarketRealtime
             });
         }
 
+        return startSyncEnvSymbolIntervalsKLine(runEnv, tradeType, intervals);
+    }
+
+
+    /**
+     * 开始同步指定环境的k线信息
+     *
+     * @param runEnv                     运行环境
+     * @param tradeType                  交易类型
+     * @param intervals                  k线symbol、频率
+     * @return 个数
+     */
+    public Set<String> startSyncEnvSymbolIntervalsKLine(RunEnv runEnv, TradeType tradeType, List<Pair<String, KLineInterval>> intervals) {
         //Step 2: 创建topic
         log.info("开始检查并创建所需topic");
         createTopic(intervals, runEnv, tradeType);
@@ -96,34 +113,47 @@ public abstract class AbstractKafkaMarketRTDataService implements MarketRealtime
 
 
         //Step 3: 分片执行
-        List<List<Pair<String, KLineInterval>>> partition = ListUtil.partition(intervals, realtimeKLineDataConfig.getClient_listen_kline_max_count());
+        List<List<Pair<String, KLineInterval>>> partition = ListUtil.partition(intervals,
+                realtimeConfig.getEnvKLineDataConfig(runEnv, tradeType).getClient_listen_kline_max_count());
 
 
         try {
-            List<CompletableFuture<Void>> futures = new ArrayList<>();
+            List<CompletableFuture<Set<String>>> futures = new ArrayList<>();
             for (List<Pair<String, KLineInterval>> list : partition) {
 
                 //Step 4: 创建task执行获取
-                CompletableFuture<Void> future = registryKLineDataLoader(
+                CompletableFuture<Set<String>> future = registryKLineDataLoader(
                         runEnv,
                         tradeType,
                         list,
                         (s, p, k) -> klineDataSyncToKafka(s, (KLineInterval) p.get(WebSocketStreamParamKey.KLINE_INTERVAL), k, runEnv, tradeType),
-                        taskExecutor);
+                        taskExecutor
+                );
 
                 futures.add(future);
             }
 
+
+            Set<String> all = new HashSet<>();
+
             CompletableFuture
                     .allOf(futures.toArray(new CompletableFuture[0]))
+                    .whenCompleteAsync((unused, throwable) -> {
+                        for (CompletableFuture<Set<String>> future : futures) {
+                            try {
+                                all.addAll(future.get());
+                            } catch (InterruptedException | ExecutionException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
+                    })
                     .get();
 
-            log.info("所有k线开始实时同步");
+            log.info("所有k线开始实时同步, [{}}", all);
+            return all;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
-        return realtimeKLineList.size();
     }
 
 
@@ -137,7 +167,7 @@ public abstract class AbstractKafkaMarketRTDataService implements MarketRealtime
      * @param executorService      执行的线程池
      * @return CompletableFuture
      */
-    protected abstract CompletableFuture<Void> registryKLineDataLoader(
+    protected abstract CompletableFuture<Set<String>> registryKLineDataLoader(
             RunEnv runEnv,
             TradeType tradeType,
             List<Pair<String, KLineInterval>> listenKLines,
@@ -154,7 +184,7 @@ public abstract class AbstractKafkaMarketRTDataService implements MarketRealtime
     public void klineDataSyncToKafka(String symbol, KLineInterval kLineInterval, JSONObject data, RunEnv runEnv, TradeType tradeType) {
         String topic = KafkaUtil.resolveKafkaTopic(cexType, KafkaUtil.getKLineStreamName(symbol, kLineInterval), runEnv, tradeType);
 
-        log.info("收到k线信息 - {}, - {} - {} - {} send to topic[{}]", symbol, data, runEnv, tradeType, topic);
+        log.info("收到k线信息 - {}, - {} - {} - {} send to topic[{}]", symbol, KLineMapper.mapJsonToKLine(data), runEnv, tradeType, topic);
         try {
             kafkaProducerService.sendMessage(
                     topic,
@@ -184,3 +214,4 @@ public abstract class AbstractKafkaMarketRTDataService implements MarketRealtime
         }
     }
 }
+

@@ -77,6 +77,9 @@ public class TradeSignal {
      * 信号创建的k线open时间
      */
     private long createKLineOpenTimestamp;
+
+
+    public String simpleName() {
+        return runEnv.name() + "-" + tradeType.name() + "-" + symbol + "-" + name;
+    }
 }
-
-

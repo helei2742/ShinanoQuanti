@@ -1,6 +1,7 @@
 package com.helei.tradesignalprocess.stream.c_indicator_signal.maker;
 
 import com.helei.constants.trade.TradeSide;
+import com.helei.dto.indicator.config.MACDConfig;
 import com.helei.dto.trade.IndicatorSignal;
 import com.helei.dto.trade.KLine;
 import com.helei.dto.indicator.MACD;
@@ -17,7 +18,7 @@ import java.io.IOException;
 @Slf4j
 public class MACDSignal_V1 extends AbstractSignalMaker {
 
-    private final String macdName;
+    private final MACDConfig macdConfig;
 
 
     /**
@@ -31,9 +32,9 @@ public class MACDSignal_V1 extends AbstractSignalMaker {
     private ValueState<Integer> underLineGoldAcrossCount;
 
 
-    public MACDSignal_V1(String macdName) {
+    public MACDSignal_V1(MACDConfig macdConfig) {
         super(true);
-        this.macdName = macdName;
+        this.macdConfig = macdConfig;
     }
 
 
@@ -51,7 +52,7 @@ public class MACDSignal_V1 extends AbstractSignalMaker {
     protected IndicatorSignal resolveHistoryKLine(KLine kLine, TimerService timerService) throws IOException {
         MACD lastMACD = this.lastMACD.value();
 
-        MACD currentMACD = (MACD) kLine.getIndicators().getIndicator(macdName);
+        MACD currentMACD = kLine.getIndicators().getIndicator(macdConfig);
 
 
         if (lastMACD != null) {
@@ -76,7 +77,7 @@ public class MACDSignal_V1 extends AbstractSignalMaker {
     @Override
     protected IndicatorSignal resolveRealTimeKLine(KLine kLine, TimerService timerService) throws IOException {
 
-        MACD currentMACD = (MACD) kLine.getIndicators().getIndicator(macdName);
+        MACD currentMACD = kLine.getIndicators().getIndicator(macdConfig);
         MACD lastMACD = this.lastMACD.value();
 
         if (lastMACD == null) {
@@ -119,7 +120,7 @@ public class MACDSignal_V1 extends AbstractSignalMaker {
     private IndicatorSignal sendSignal(KLine kLine, TradeSide tradeSide) throws IOException {
         IndicatorSignal signal = IndicatorSignal
                 .builder()
-                .name(macdName)
+                .name(macdConfig.getIndicatorName())
                 .tradeSide(tradeSide)
                 .currentPrice(kLine.getClose())
                 .build();

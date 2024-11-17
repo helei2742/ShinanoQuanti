@@ -1,4 +1,4 @@
-package com.helei.tradesignalprocess.stream.d_decision.config;
+package com.helei.tradesignalprocess.stream.d_trade_signal.config;
 
 
 import lombok.*;

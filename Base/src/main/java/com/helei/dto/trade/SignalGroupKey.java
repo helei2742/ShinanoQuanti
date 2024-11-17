@@ -15,6 +15,8 @@ public class SignalGroupKey {
 
     private KLineInterval interval;
 
+    private long openTime;
+
     public String getStreamKey() {
         return KLine.getKLineStreamKey(symbol, interval);
     }

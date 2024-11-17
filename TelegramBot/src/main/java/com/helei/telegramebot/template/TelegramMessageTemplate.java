@@ -10,15 +10,17 @@ import java.time.Instant;
 public class TelegramMessageTemplate {
     private static final String TRADE_SIGNAL_MESSAGE_TEMPLATE
             = """
-            <b>%s</b>\n
-            方向:<b>%s</b>\n
-            入场价:<b>%s</b>\n 
-            止盈:<b>%s</b>\n 
-            止损:<b>%s</b>\n
-                            
-            信号名:<b>%s</b>\n
-            K线时间:<b>%s</b>\n
+            
+            <b>%s</b>
+            方向:<b>%s</b>
+            入场价:<b>%s</b>
+            止盈:<b>%s</b>
+            止损:<b>%s</b>
+            ----------------------
+            信号名:<b>%s</b>
+            K线时间:<b>%s</b>
             信号时间:<b>%s</b>
+            
             """;
 
 
@@ -41,4 +43,3 @@ public class TelegramMessageTemplate {
         );
     }
 }
-

@@ -1,4 +1,4 @@
-package com.helei.tradesignalprocess.stream.e_trade_signal;
+package com.helei.tradesignalprocess.stream.e_sink;
 
 import com.helei.tradesignalprocess.config.TradeSignalConfig;
 import lombok.extern.slf4j.Slf4j;

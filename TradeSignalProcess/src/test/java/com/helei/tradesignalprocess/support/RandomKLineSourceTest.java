@@ -2,26 +2,24 @@ package com.helei.tradesignalprocess.support;
 
 
 import com.helei.constants.trade.KLineInterval;
-import com.helei.constants.trade.TradeSide;
 import com.helei.dto.trade.*;
 import com.helei.dto.indicator.config.MACDConfig;
 import com.helei.tradesignalprocess.config.FlinkConfig;
 import com.helei.tradesignalprocess.stream.*;
-import com.helei.tradesignalprocess.stream.a_klinesource.LocalFileKLineSource;
+import com.helei.tradesignalprocess.stream.a_klinesource.impl.LocalKLineSource;
 import com.helei.tradesignalprocess.stream.a_klinesource.impl.RandomKLineSource;
 import com.helei.tradesignalprocess.stream.b_indicator.calculater.MACDCalculator;
 import com.helei.tradesignalprocess.stream.b_indicator.calculater.PSTCalculator;
 import com.helei.tradesignalprocess.stream.c_indicator_signal.IndicatorSignalService;
 import com.helei.tradesignalprocess.stream.c_indicator_signal.IndicatorSignalStreamProcessor;
 import com.helei.tradesignalprocess.stream.c_indicator_signal.maker.PSTSignalMaker;
-import com.helei.tradesignalprocess.stream.d_decision.AbstractDecisionMaker;
 import com.helei.tradesignalprocess.stream.b_indicator.calculater.BollCalculator;
 import com.helei.dto.indicator.config.BollConfig;
 import com.helei.dto.indicator.config.PSTConfig;
 import com.helei.tradesignalprocess.stream.c_indicator_signal.maker.BollSignalMaker;
-import com.helei.tradesignalprocess.stream.d_decision.PSTBollDecisionMaker;
-import com.helei.tradesignalprocess.stream.d_decision.config.PSTBollDecisionConfig_v1;
-import com.helei.tradesignalprocess.stream.e_trade_signal.KafkaTradeSignalCommitter;
+import com.helei.tradesignalprocess.stream.d_trade_signal.impl.PSTBollDecisionMaker;
+import com.helei.tradesignalprocess.stream.d_trade_signal.config.PSTBollDecisionConfig_v1;
+import com.helei.tradesignalprocess.stream.e_sink.KafkaTradeSignalCommitter;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.junit.jupiter.api.BeforeAll;
@@ -29,10 +27,7 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.Serial;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -50,7 +45,7 @@ public class RandomKLineSourceTest {
 
     private static RandomKLineSource randomKLineSource;
 
-    private static LocalFileKLineSource localFileKLineSource;
+    private static LocalKLineSource localFileKLineSource;
 
     @BeforeAll
     public static void before() {
@@ -59,7 +54,7 @@ public class RandomKLineSourceTest {
             randomKLineSource = new RandomKLineSource(btcusdt, Set.of(KLineInterval.m_15),
                     LocalDateTime.of(2020, 10, 29, 15, 38), 2000.0, 19000.0);
 
-            localFileKLineSource = new LocalFileKLineSource(kLineFileName);
+            localFileKLineSource = new LocalKLineSource(kLineFileName);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -83,24 +78,6 @@ public class RandomKLineSourceTest {
 
         IndicatorSignalService indicatorSignalService = buildTradeSignalService(pstConfig, bollConfig);
 
-
-        AbstractDecisionMaker<TradeSignal> abstractDecisionMaker = new AbstractDecisionMaker<>("测试用决策生成器") {
-            @Serial
-            private final static long serialVersionUID = 122142132145213L;
-
-            @Override
-            protected TradeSignal decisionAndBuilderOrder(String symbol, List<IndicatorSignal> windowSignal, IndicatorMap indicatorMap) {
-//                log.info("收到信号【{}】\n{}", symbol, windowSignal);
-                return TradeSignal
-                        .builder()
-                        .symbol(symbol)
-                        .tradeSide(TradeSide.BUY)
-                        .targetPrice(BigDecimal.valueOf(windowSignal.getFirst().getTargetPrice()))
-                        .stopPrice(BigDecimal.valueOf(windowSignal.getFirst().getStopPrice()))
-                        .build();
-            }
-        };
-
         KafkaTradeSignalCommitter kafkaOriginOrderCommitter = new KafkaTradeSignalCommitter();
 
 
@@ -119,8 +96,8 @@ public class RandomKLineSourceTest {
                         IndicatorSignalStreamProcessor
                                 .builder()
                                 .setWindowLengthRationOfKLine(1.0 / 60)
-//                                .addKLineSource(randomKLineSource)
-                                .addKLineSource(localFileKLineSource)
+                                .addKLineSource(randomKLineSource)
+//                                .addKLineSource(localFileKLineSource)
                                 .addIndicator(new PSTCalculator(pstConfig))
                                 .addIndicator(new MACDCalculator(new MACDConfig(12, 26, 9)))
                                 .addIndicator(new BollCalculator(bollConfig))

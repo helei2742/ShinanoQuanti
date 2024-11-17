@@ -393,7 +393,7 @@ public abstract class AbstractWebsocketClient<P, T> {
         });
 
         if (flag) {
-            log.debug("send request [{}]", request);
+            log.info("send request [{}]", request);
             channel.writeAndFlush(new TextWebSocketFrame(JSON.toJSONString(request)));
         } else {
             throw new IllegalArgumentException("request id registered");

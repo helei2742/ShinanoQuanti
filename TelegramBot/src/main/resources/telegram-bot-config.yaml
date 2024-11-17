@@ -3,18 +3,18 @@ shinano:
     telegram_bot:
       run_type: # 运行环境配置
         configs:
-          - env: TEST_NET
+          - env: NORMAL
             trade_type:
               - CONTRACT
 
       bots: #机器人的具体设置
-        - botUsername: test1
-          token: 12345677
-        - botUsername: test2
-          token: 12345677
+        - botUsername: heleidage666_bot
+          token: 7680003612:AAGBiX-2-DtItBTd_LRxLrCj7-lp04fNtxg
+#        - botUsername: test2
+#          token: 12345677
 
       kafka:
-        bootstrap_servers: 127.0.0.1:9092 # Kafka服务器地址
+        bootstrap_servers: 192.168.1.2:9092 # Kafka服务器地址
         group_id: tg_bot_test_group
         kafka_num_partitions: 1
         kafka_replication_factor: 1
@@ -22,7 +22,7 @@ shinano:
       redis:
         # 如果需要密码，格式为 redis://:password@localhost:6379
         #        url: redis://127.0.0.1:6379
-        url: redis://127.0.0.1:6379
+        url: redis://192.168.1.2:6379
 
       signal: # 信号设置
         normal: # 运行环境
@@ -48,4 +48,8 @@ shinano:
                 - test1
                 - test2
                 - test3
-        test_net: { }
+        test_net:
+          contract: # 交易类型
+            - symbol: btcusdt # 交易对名称
+              signal_names: # 信号名list
+                - test1

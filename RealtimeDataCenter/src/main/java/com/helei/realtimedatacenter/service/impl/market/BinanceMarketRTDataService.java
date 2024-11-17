@@ -1,5 +1,6 @@
 package com.helei.realtimedatacenter.service.impl.market;
 
+import cn.hutool.core.collection.ConcurrentHashSet;
 import cn.hutool.core.lang.Pair;
 import com.helei.binanceapi.BinanceWSMarketStreamClient;
 import com.helei.binanceapi.base.AbstractBinanceWSApiClient;
@@ -18,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -30,6 +32,11 @@ import java.util.concurrent.ExecutorService;
 @Service
 public class BinanceMarketRTDataService extends AbstractKafkaMarketRTDataService {
 
+    /**
+     * 用于计数当前同步了多少种k线
+     */
+    private final Set<String> syncKLineSet = new ConcurrentHashSet<>();
+
     @Autowired
     private BinanceBaseClientManager binanceBaseClientManager;
 
@@ -40,19 +47,50 @@ public class BinanceMarketRTDataService extends AbstractKafkaMarketRTDataService
     }
 
     @Override
-    protected CompletableFuture<Void> registryKLineDataLoader(
+    protected CompletableFuture<Set<String>> registryKLineDataLoader(
             RunEnv runEnv,
             TradeType tradeType,
             List<Pair<String, KLineInterval>> listenKLines,
             SubscribeResultInvocationHandler whenReceiveKLineData,
             ExecutorService executorService
     ) throws ExecutionException, InterruptedException {
-        AbstractBinanceWSApiClient client = binanceBaseClientManager.getEnvTypedApiClient(runEnv, tradeType, BinanceWSClientType.MARKET_STREAM).get();
+
+        AbstractBinanceWSApiClient client = binanceBaseClientManager
+                .getEnvTypedApiClient(
+                        runEnv,
+                        tradeType,
+                        BinanceWSClientType.MARKET_STREAM,
+                        "klineLoadClient-" + syncKLineSet.size() / realtimeConfig.getEnvKLineDataConfig(runEnv, tradeType).getClient_listen_kline_max_count()
+                ).get();
         BinanceWSMarketStreamClient marketStreamClient = (BinanceWSMarketStreamClient) client;
 
         return new BinanceKLineRTDataSyncTask(
                 marketStreamClient,
-                listenKLines
-        ).startSync(whenReceiveKLineData, taskExecutor);
+                listenKLines,
+                this::filterKLine
+        )
+                .startSync(whenReceiveKLineData, taskExecutor)
+                .thenApplyAsync(set -> {
+                    syncKLineSet.addAll(set);
+                    return set;
+                }, executorService);
     }
+
+
+    /**
+     * 过滤注册的k线
+     *
+     * @return 是否过滤
+     */
+    private boolean filterKLine(RunEnv runEnv, TradeType tradeType, String symbol, KLineInterval kLineInterval, String key) {
+
+        if (syncKLineSet.contains(key)) {
+            return true;
+        }
+        syncKLineSet.add(key);
+
+        return false;
+    }
+
 }
+

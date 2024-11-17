@@ -140,7 +140,7 @@ public class BinanceWSMarketApi extends AbstractBinanceWSApi {
         JSONObject command = WebSocketCommandBuilder
                 .builder()
                 .setCommandType(MarketCommandType.KLINES)
-                .addParam("symbol", symbol)
+                .addParam("symbol", symbol.toLowerCase())
                 .addParam("interval", interval.getDescribe())
                 .addParam("startTime", startTimeSecond * 1000)
                 .addParam("limit", limit)

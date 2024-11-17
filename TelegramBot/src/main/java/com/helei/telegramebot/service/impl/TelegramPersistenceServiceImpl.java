@@ -10,12 +10,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RSet;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.User;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -25,11 +25,40 @@ import java.util.Set;
 public class TelegramPersistenceServiceImpl implements ITelegramPersistenceService {
 
     @Autowired
+    @Lazy
     private RedissonClient redissonClient;
 
     @Override
-    public Result saveChatUser(Long chatId, User user) {
+    public Result saveChatInBot(String botUsername, Long chatId, User user) {
+        try {
+            String key = TelegramRedisUtil.botListenChatIdSetKey(botUsername);
+            RSet<String> set = redissonClient.getSet(key);
+            set.add(chatId.toString());
+
+            log.info("bot[{}]保存用户[{}]信息成功", botUsername, chatId);
+        } catch (Exception e) {
+            String errorMsg = String.format("保存连接用户[%s]-[%s]发生错误, %s", chatId, user.getUserName(), e.getMessage());
+            log.error(errorMsg);
+            return Result.fail(errorMsg);
+        }
         return Result.ok();
+    }
+
+    @Override
+    public Result isSavedChatInBot(String botUsername, Long chatId) {
+        try {
+            String key = TelegramRedisUtil.botListenChatIdSetKey(botUsername);
+            RSet<String> set = redissonClient.getSet(key);
+            if (set.contains(chatId.toString())) {
+                return Result.ok();
+            } else {
+                return Result.fail(String.format("bot[%s]中没有chat[%s]的相关信息", botUsername, chatId));
+            }
+        } catch (Exception e) {
+            String errorMsg = String.format("bot[%s]查询chat[%s]相关信息出错[%s]", botUsername, chatId, e.getMessage());
+            log.error(errorMsg);
+            return Result.fail(errorMsg);
+        }
     }
 
     @Override
@@ -38,14 +67,14 @@ public class TelegramPersistenceServiceImpl implements ITelegramPersistenceServi
     }
 
     @Override
-    public Result saveChatListenTradeSignal(String chatId, RunEnv runEnv, TradeType tradeType, CEXType cexType, List<String> symbols) {
+    public Result saveChatListenTradeSignal(String botUsername, String chatId, RunEnv runEnv, TradeType tradeType, CEXType cexType, List<String> symbols) {
 
         List<String> errorKey = new ArrayList<>();
 
         for (String symbol : symbols) {
             String key = null;
             try {
-                key = TelegramRedisUtil.tradeSignalListenChatIdSetKey(runEnv, tradeType, cexType, symbol);
+                key = TelegramRedisUtil.tradeSignalListenChatIdSetKey(botUsername, runEnv, tradeType, cexType, symbol);
                 RSet<String> set = redissonClient.getSet(key);
                 set.add(chatId);
             } catch (Exception e) {
@@ -62,10 +91,10 @@ public class TelegramPersistenceServiceImpl implements ITelegramPersistenceServi
     }
 
     @Override
-    public Result queryTradeSignalListenedChatId(RunEnv runEnv, TradeType tradeType, CEXType cexType, String symbol) {
+    public Result queryTradeSignalListenedChatId(String botUsername, RunEnv runEnv, TradeType tradeType, CEXType cexType, String symbol) {
         String key = "";
         try {
-            key = TelegramRedisUtil.tradeSignalListenChatIdSetKey(runEnv, tradeType, cexType, symbol);
+            key = TelegramRedisUtil.tradeSignalListenChatIdSetKey(botUsername, runEnv, tradeType, cexType, symbol);
 
             Set<Object> chatIds = redissonClient.getSet(key).readAll();
 
@@ -75,4 +104,3 @@ public class TelegramPersistenceServiceImpl implements ITelegramPersistenceServi
         }
     }
 }
-

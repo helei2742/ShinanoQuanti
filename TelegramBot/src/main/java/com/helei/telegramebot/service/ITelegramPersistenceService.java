@@ -15,11 +15,23 @@ public interface ITelegramPersistenceService {
     /**
      * 保存聊天用户信息
      *
-     * @param chatId 聊天id
-     * @param user   用户
+     * @param botUsername 机器人用户名
+     * @param chatId      聊天id
+     * @param user        用户
      * @return 是否保存成功
      */
-    Result saveChatUser(Long chatId, User user);
+    Result saveChatInBot(String botUsername, Long chatId, User user);
+
+
+    /**
+     * 查询指定的chatId是否被注册过
+     * @param botUsername botUsername
+     * @param chatId chatId
+     * @return 是否被注册过
+     */
+    Result isSavedChatInBot(String botUsername, Long chatId);
+
+
 
     /**
      * 保存群组信息
@@ -32,24 +44,26 @@ public interface ITelegramPersistenceService {
     /**
      * 保存chat监听的交易信号
      *
-     * @param chatId    chatId
-     * @param runEnv    runEnv
-     * @param tradeType tradeType
-     * @param cexType   cexType
-     * @param symbols   symbols
+     * @param botUsername 机器人用户名
+     * @param chatId      chatId
+     * @param runEnv      runEnv
+     * @param tradeType   tradeType
+     * @param cexType     cexType
+     * @param symbols     symbols
      * @return 是否成功
      */
-    Result saveChatListenTradeSignal(String chatId, RunEnv runEnv, TradeType tradeType, CEXType cexType, List<String> symbols);
+    Result saveChatListenTradeSignal(String botUsername, String chatId, RunEnv runEnv, TradeType tradeType, CEXType cexType, List<String> symbols);
 
 
     /**
      * 查询监听交易对信号的tg chatId
      *
-     * @param runEnv    runEnv
-     * @param tradeType tradeType
-     * @param cexType   cexType
-     * @param symbol    symbol
+     * @param botUsername 机器人用户名
+     * @param runEnv      runEnv
+     * @param tradeType   tradeType
+     * @param cexType     cexType
+     * @param symbol      symbol
      * @return chatId list
      */
-    Result queryTradeSignalListenedChatId(RunEnv runEnv, TradeType tradeType, CEXType cexType, String symbol);
+    Result queryTradeSignalListenedChatId(String botUsername, RunEnv runEnv, TradeType tradeType, CEXType cexType, String symbol);
 }

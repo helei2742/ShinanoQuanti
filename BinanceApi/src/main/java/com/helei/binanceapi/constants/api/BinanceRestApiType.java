@@ -26,7 +26,7 @@ public enum BinanceRestApiType {
         @Override
         public void initSchema(Map<TradeType, String> tradeTypePathMap, AbstractRestApiSchema restApiSchema) {
             tradeTypePathMap.put(TradeType.SPOT, "/api/v3/klines");
-            tradeTypePathMap.put(TradeType.CONTRACT, "/api/v3/klines");
+            tradeTypePathMap.put(TradeType.CONTRACT, "/fapi/v1/klines");
 
             restApiSchema.setMethod("GET");
             restApiSchema.setQueryKey(List.of(RestApiParamKey.symbol, RestApiParamKey.interval, RestApiParamKey.startTime, RestApiParamKey.endTime, RestApiParamKey.timeZone, RestApiParamKey.limit));

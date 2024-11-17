@@ -7,9 +7,11 @@ import com.helei.constants.trade.TradeType;
 
 public class KafkaUtil {
 
-    public static final String TOPIC_KLINE_FORMAT = "topic.%s.%s.%s.%s";
+    public static final String TOPIC_KLINE_FORMAT = "market.%s.%s.%s.%s";
 
-    private static final String TOPIC_ORDER_FORMAT = "topic.%s.%s.order.%s";
+    private static final String TOPIC_ORDER_FORMAT = "order.%s.%s.order.%s";
+
+    private static final String TOPIC_SIGNAL_FORMAT = "signal.%s.%s.%s.%s";
 
     /**
      * 获取kafka里topic的名字
@@ -47,7 +49,7 @@ public class KafkaUtil {
      * @return topic
      */
     public static String getTradeSingalTopic(RunEnv runEnv, TradeType type, String symbol, String signalName) {
-        return (runEnv.name() + "." + type + "." + symbol + "." + signalName).toLowerCase();
+        return String.format(TOPIC_SIGNAL_FORMAT, runEnv.name(), type.name(), symbol, signalName).toLowerCase();
     }
 
 

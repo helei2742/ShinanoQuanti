@@ -33,7 +33,7 @@ class BinanceKLineHisAndRTSourceTest {
         BinanceKLineHisAndRTSource source = new BinanceKLineHisAndRTSource(
                 symbol,
                 Set.of(KLineInterval.m_1),
-                LocalDateTime.of(2024, 10, 27, 21, 0).toInstant(ZoneOffset.UTC).toEpochMilli()
+                LocalDateTime.of(2024, 11, 27, 21, 0).toInstant(ZoneOffset.UTC).toEpochMilli()
         );
 
         DataStream<KLine> stream = env.addSource(source);

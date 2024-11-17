@@ -1,10 +1,11 @@
-package com.helei.tradesignalprocess.stream.d_decision;
+package com.helei.tradesignalprocess.stream.d_trade_signal.impl;
 
 
 import com.helei.dto.trade.IndicatorMap;
 import com.helei.dto.trade.IndicatorSignal;
 import com.helei.dto.trade.TradeSignal;
-import com.helei.tradesignalprocess.stream.d_decision.config.PSTBollDecisionConfig_v1;
+import com.helei.tradesignalprocess.stream.d_trade_signal.BinanceDecisionMaker;
+import com.helei.tradesignalprocess.stream.d_trade_signal.config.PSTBollDecisionConfig_v1;
 import lombok.extern.slf4j.Slf4j;
 
 import java.math.BigDecimal;
@@ -27,7 +28,7 @@ public class PSTBollDecisionMaker extends BinanceDecisionMaker {
     }
 
     @Override
-    protected TradeSignal makeBinanceTradeSignal(String symbol, List<IndicatorSignal> windowSignal, IndicatorMap indicatorMap) { String pstKey = config.getPstConfig().getIndicatorName();
+    protected List<TradeSignal> makeBinanceTradeSignal(String symbol, List<IndicatorSignal> windowSignal, IndicatorMap indicatorMap) { String pstKey = config.getPstConfig().getIndicatorName();
         String bollKey = config.getBollConfig().getIndicatorName();
 
         Map<String, List<IndicatorSignal>> signalMap = windowSignal.stream().collect(Collectors.groupingBy(IndicatorSignal::getName));
@@ -43,7 +44,7 @@ public class PSTBollDecisionMaker extends BinanceDecisionMaker {
         if (bollSignals != null && !signalMap.isEmpty()) {
             IndicatorSignal newBollSignal = bollSignals.getLast();
             //TODO 仅仅测试用
-            return buildMarketOrder(newBollSignal);
+            return List.of(buildMarketOrder(newBollSignal));
         }
 //        IndicatorSignal newPstSignal = pstSignals.getLast();
 

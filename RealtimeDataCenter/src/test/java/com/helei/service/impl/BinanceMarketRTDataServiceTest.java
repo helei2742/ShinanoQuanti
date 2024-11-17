@@ -19,7 +19,7 @@ class BinanceMarketRTDataServiceTest {
 
     @Test
     void startSyncRealTimeKLine() throws InterruptedException {
-        binanceMarketRTDataService.startSyncRealTimeKLine(RunEnv.TEST_NET, TradeType.SPOT);
+        binanceMarketRTDataService.startSyncEnvRealTimeKLine(RunEnv.TEST_NET, TradeType.SPOT);
 
         TimeUnit.MINUTES.sleep(1000);
     }

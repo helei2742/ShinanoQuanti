@@ -2,7 +2,10 @@ package com.helei.telegramebot.constants;
 
 
 /**
- * tg 机器人命令+
+ * tg 机器人命令
+ * start - 启动
+ * add_listen_signal_type - 添加监听的信号类型，参数[runEnv, tradeType, cexType, symbol, signalName]
+ *
  */
 public enum TelegramBotCommand {
 
@@ -12,7 +15,7 @@ public enum TelegramBotCommand {
     START,
 
     /**
-     * 机器人加入群组后，发送此命令，将该群组id记录
+     * 添加监听的信号类型
      */
     ADD_LISTEN_SIGNAL_TYPE,
 

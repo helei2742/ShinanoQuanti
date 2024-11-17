@@ -43,7 +43,7 @@ public abstract class AbstractBinanceWSApiClientHandler extends AbstractWebSocke
 
     @Override
     protected void handleOtherMessage(JSONObject message) {
-        String streamName = message.getString("e");
+        String streamName = message.getString("stream");
 
         if (!StrUtil.isBlank(streamName)) {
             handleStreamMessage(streamName, message);

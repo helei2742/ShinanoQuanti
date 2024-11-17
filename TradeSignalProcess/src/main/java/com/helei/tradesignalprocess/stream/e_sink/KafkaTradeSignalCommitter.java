@@ -1,4 +1,4 @@
-package com.helei.tradesignalprocess.stream.e_trade_signal;
+package com.helei.tradesignalprocess.stream.e_sink;
 
 import com.helei.dto.kafka.TradeSignalTopic;
 import com.helei.tradesignalprocess.config.TradeSignalConfig;

@@ -18,7 +18,11 @@ public class KLineMapper {
         if (jsonObject == null) {
             return null;
         }
-        JSONObject kjb = jsonObject.getJSONObject("data").getJSONObject("k");
+
+        JSONObject kjb = jsonObject;
+        if (jsonObject.containsKey("data")) {
+            kjb = jsonObject.getJSONObject("data").getJSONObject("k");
+        }
 
         KLine kLine = new KLine();
         kLine.setOpenTime(kjb.getLong("t"));

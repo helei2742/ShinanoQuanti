@@ -14,11 +14,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.concurrent.*;
+import java.util.*;
+        import java.util.concurrent.*;
 
 
 /**
@@ -57,15 +54,17 @@ public class RandomMarketRTDataService extends AbstractKafkaMarketRTDataService 
     }
 
     @Override
-    protected CompletableFuture<Void> registryKLineDataLoader(
+    protected CompletableFuture<Set<String>> registryKLineDataLoader(
             RunEnv runEnv,
             TradeType tradeType,
             List<Pair<String, KLineInterval>> listenKLines,
             SubscribeResultInvocationHandler whenReceiveKLineData,
             ExecutorService executorService
     ) {
-        return CompletableFuture.runAsync(() -> {
+        return CompletableFuture.supplyAsync(() -> {
+            Set<String> set = new HashSet<>();
             String key = getKey(runEnv, tradeType);
+            set.add(key);
             for (Pair<String, KLineInterval> listenKLine : listenKLines) {
                 String symbol = listenKLine.getKey();
                 KLineInterval interval = listenKLine.getValue();
@@ -91,6 +90,7 @@ public class RandomMarketRTDataService extends AbstractKafkaMarketRTDataService 
                 });
             }
 
+            return set;
         }, executorService);
     }
 
@@ -145,4 +145,3 @@ public class RandomMarketRTDataService extends AbstractKafkaMarketRTDataService 
         return runEnv.name() + " - " + tradeType.name();
     }
 }
-

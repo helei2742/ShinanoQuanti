@@ -3,13 +3,12 @@ shinano:
     realtime:
       run_type:
         configs:
-          #          - env: NORMAL
-          #            trade_type:
-          #              - SPOT
-          #              - CONTRACT
-          - env: TEST_NET
+          - env: NORMAL
             trade_type:
               - CONTRACT
+#          - env: TEST_NET
+#            trade_type:
+#              - CONTRACT
 
       kafka:
         bootstrap_servers: 192.168.1.2:9092 # Kafka服务器地址
@@ -32,7 +31,7 @@ shinano:
         # 合约配置
         contract:
           listen_kline:
-            - BTCUSDT@1m
+            - BTCUSDT@15m
 #            - ETHUSDT@15m,1h
           client_listen_kline_max_count: 15
       # 主网配置
@@ -48,6 +47,6 @@ shinano:
         # 合约配置
         contract:
           listen_kline:
-            - BTCUSDT@1m,15m,1h,1d
-            - ETHUSDT@1m,15m,1h,1d
+            - BTCUSDT@15m
+#            - ETHUSDT@1m,15m,1h,1d
           client_listen_kline_max_count: 15

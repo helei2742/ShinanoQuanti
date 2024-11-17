@@ -92,7 +92,7 @@ public class SignalSplitResolver extends KeyedCoProcessFunction<String, KLine, I
             }
         }
 
-        SignalGroupKey signalGroupKey = new SignalGroupKey(kLine.getSymbol(), kLine.getKLineInterval());
+        SignalGroupKey signalGroupKey = new SignalGroupKey(kLine.getSymbol(), kLine.getKLineInterval(), kLine.getOpenTime());
         //发送流
         collector.collect(new Tuple2<>(signalGroupKey, needSendSignal));
 

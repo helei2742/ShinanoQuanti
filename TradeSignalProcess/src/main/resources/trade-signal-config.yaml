@@ -3,7 +3,7 @@ shinano:
     # 信号生成服务配置
     trade_signal_maker:
       # name
-      name: test
+      name: test1
       # symbol
       symbol: btcusdt
 
@@ -11,7 +11,7 @@ shinano:
         configs:
           - env: NORMAL  # 运行环境
             trade_type:  # 交易类型
-              - SPOT
+              - CONTRACT
         snow_flow: # 雪花算法配置
           datacenter_id: 0 # 数据中心id
           machine_id: 1 # 机器id

@@ -76,7 +76,7 @@ public class IndicatorSignalStreamProcessor {
                 .addSource(kLineSource)
                 .keyBy(KLine::getStreamKey);
 
-//            kLineStream.print();
+            kLineStream.print();
 
         BaseIndicatorCalculator<?>[] arr = new BaseIndicatorCalculator[indicatorCalList.size()];
         for (int i = 0; i < indicatorCalList.size(); i++) {

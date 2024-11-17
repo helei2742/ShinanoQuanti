@@ -89,19 +89,24 @@ public abstract class BaseWebSocketClientHandler<P, T> extends SimpleChannelInbo
                                 ", content=" + response.content().toString(CharsetUtil.UTF_8) + ')');
             }
         } else if (msg instanceof WebSocketFrame frame) {
-            if (frame instanceof TextWebSocketFrame textFrame) {
-                log.info("websocket client [{}] 接收到的消息：{}", ch.attr(NettyConstants.CLIENT_NAME).get(), textFrame.text().length());
+            switch (frame) {
+                case TextWebSocketFrame textFrame -> {
+                    log.debug("websocket client [{}] 接收到的消息：{}", ch.attr(NettyConstants.CLIENT_NAME).get(), textFrame.text());
 
-                whenReceiveMessage(textFrame.text());
-
-            } else if (frame instanceof PongWebSocketFrame) {
-                log.debug("WebSocket Client [{}] received pong", ch.attr(NettyConstants.CLIENT_NAME).get());
-            } else if (frame instanceof PingWebSocketFrame) {
-                log.debug("WebSocket Client [{}] received ping", ch.attr(NettyConstants.CLIENT_NAME).get());
-                websocketClient.sendPong();
-            } else if (frame instanceof CloseWebSocketFrame) {
-                log.warn("websocket client关闭");
-                ch.close();
+                    whenReceiveMessage(textFrame.text());
+                }
+                case PongWebSocketFrame pongWebSocketFrame ->
+                        log.debug("WebSocket Client [{}] received pong", ch.attr(NettyConstants.CLIENT_NAME).get());
+                case PingWebSocketFrame pingWebSocketFrame -> {
+                    log.debug("WebSocket Client [{}] received ping", ch.attr(NettyConstants.CLIENT_NAME).get());
+                    websocketClient.sendPong();
+                }
+                case CloseWebSocketFrame closeWebSocketFrame -> {
+                    log.warn("websocket client关闭");
+                    ch.close();
+                }
+                default -> {
+                }
             }
         }
     }

@@ -1,0 +1,10 @@
+shinano:
+  quantity:
+    twitter: # 推特设置
+      bearer_token: AAAAAAAAAAAAAAAAAAAAAKrxwwEAAAAA4EbTbV4XzSGg%2BVXpNlyKYVxSUzU%3Dhf13UUYuP6Zl8Ne3G3JAxPgtA20GYtKymy3tOJKTZzLGWki8i2 # token
+      url: # url相关
+        rule_url: https://api.twitter.com/2/tweets/search/stream/rules
+        stream_url: https://api.twitter.com/2/tweets/search/stream
+      filter_rule:
+        - key: from
+          value: masike

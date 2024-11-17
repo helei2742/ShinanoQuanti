@@ -191,7 +191,7 @@ public class HistoryKLineLoader {
             params.put(RestApiParamKey.symbol, upperSymbol);
             params.put(RestApiParamKey.interval, interval.getDescribe());
             params.put(RestApiParamKey.limit, limit);
-            params.put(RestApiParamKey.startTime, curTimeSecond);
+            params.put(RestApiParamKey.startTime, curTimeSecond * 1000);
 
             return binanceRestHttpApiClient.queryBinanceApi(runEnv, tradeType, BinanceRestApiType.KLINE, params);
         } else {

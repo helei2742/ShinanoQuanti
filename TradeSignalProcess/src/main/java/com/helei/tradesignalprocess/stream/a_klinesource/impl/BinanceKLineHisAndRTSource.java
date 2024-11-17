@@ -62,7 +62,7 @@ public class BinanceKLineHisAndRTSource extends KLineHisAndRTSource {
 
 
 
-    protected BinanceKLineHisAndRTSource(
+    public BinanceKLineHisAndRTSource(
             String symbol,
             Set<KLineInterval> kLineIntervals,
             long startTime
@@ -102,6 +102,7 @@ public class BinanceKLineHisAndRTSource extends KLineHisAndRTSource {
                             log.info("获取到历史k线批数据 [{}]-[{}]: {}", symbol, interval, kLines.size());
                             for (KLine kLine : kLines) {
                                 kLine.setSymbol(symbol);
+                                kLine.setKLineInterval(interval);
                                 buffer.add(kLine);
                             }
                         });
@@ -142,10 +143,12 @@ public class BinanceKLineHisAndRTSource extends KLineHisAndRTSource {
 
             KafkaConsumer<String, KLine> rtConsumer = sourceFactory
                     .loadRTKLineStream(BinanceApiConfig.cexType, tradeSignalConfig.getRun_env(), tradeType);
+
             while (isRunning) {
                 ConsumerRecords<String, KLine> records = rtConsumer.poll(Duration.ofMillis(100));
                 for (ConsumerRecord<String, KLine> record : records) {
                     KLine kline = record.value();
+                    System.out.println(kline);
                     // 只有当历史k线数据加载完毕，才会向写入buffer中加入实时数据
                     KLineInterval kLineInterval = kline.getKLineInterval();
                     if ((kLineInterval != null && historyLoadedIntervals.contains(kLineInterval))) {

@@ -16,7 +16,7 @@ public class LocalKLineSource extends KLineHisAndRTSource {
 
     private BufferedReader reader;
 
-    protected LocalKLineSource(String filePath) {
+    public LocalKLineSource(String filePath) {
         super("", Set.of(), System.currentTimeMillis());
         this.filePath = filePath;
     }
@@ -37,3 +37,4 @@ public class LocalKLineSource extends KLineHisAndRTSource {
         });
     }
 }
+

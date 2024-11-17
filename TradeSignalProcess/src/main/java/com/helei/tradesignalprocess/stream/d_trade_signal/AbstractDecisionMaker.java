@@ -1,5 +1,5 @@
 
-package com.helei.tradesignalprocess.stream.d_decision;
+package com.helei.tradesignalprocess.stream.d_trade_signal;
 
 import com.helei.dto.config.SnowFlowConfig;
 import com.helei.dto.trade.IndicatorMap;
@@ -61,19 +61,21 @@ public abstract class AbstractDecisionMaker<T> extends KeyedProcessFunction<Stri
             log.debug("[{}] - symbol[{}]时间窗口内没有信号", symbol, name);
         } else {
             log.debug("[{}] - symbol[{}]当前时间窗口，产生[{}]个信号", name, signals, signals.size());
-            T out = decisionAndBuilderOrder(symbol, signals, null);
+            List<T> out = decisionAndBuilderTradeSignal(key, signals, null);
 
             //更新历史信号
             historySignalMapState.put(key.getStreamKey(), kLineListTuple2);
 
             if (out != null) {
                 log.info("[{}] - symbol[{}]窗口内信号满足决策下单条件，下单[{}}", name, symbol, out);
-                collector.collect(out);
+                for (T t : out) {
+                    collector.collect(t);
+                }
             }
         }
     }
 
-    protected abstract T decisionAndBuilderOrder(String symbol, List<IndicatorSignal> windowSignal, IndicatorMap indicatorMap);
+    protected abstract List<T> decisionAndBuilderTradeSignal(SignalGroupKey signalGroupKey, List<IndicatorSignal> windowSignal, IndicatorMap indicatorMap);
 
 
     /**

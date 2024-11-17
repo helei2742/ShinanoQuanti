@@ -55,7 +55,7 @@ public class BinanceRestHttpApiClient {
      * 发送请求
      *
      * @param runEnv             runEnv
-     * @param tradeType  交易类型
+     * @param tradeType          交易类型
      * @param binanceRestApiType rest接口类型
      * @param allParam           所有的参数
      * @return result 的future
@@ -74,7 +74,7 @@ public class BinanceRestHttpApiClient {
      * 发送请求
      *
      * @param runEnv             runEnv
-     * @param tradeType  交易类型
+     * @param tradeType          交易类型
      * @param binanceRestApiType rest接口类型
      * @param allParam           所有的参数
      * @param asKey              用于签名
@@ -112,14 +112,14 @@ public class BinanceRestHttpApiClient {
     /**
      * 发送请求
      *
-     * @param baseUrl   baseUrl
-     * @param method    方法
-     * @param path      path
-     * @param ipWeight  ipWeight
-     * @param paramsKey query参数的Key
-     * @param bodyKey   body参数的Key
-     * @param allParam  所有参数
-     * @param asKey     ASKey
+     * @param baseUrl     baseUrl
+     * @param method      方法
+     * @param path        path
+     * @param ipWeight    ipWeight
+     * @param paramsKey   query参数的Key
+     * @param bodyKey     body参数的Key
+     * @param allParam    所有参数
+     * @param asKey       ASKey
      * @param isSignature 是否签名
      * @return future
      */
