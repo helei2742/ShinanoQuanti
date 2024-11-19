@@ -18,6 +18,7 @@
         <module>RealtimeDataCenter</module>
         <module>TradeApplication</module>
         <module>TelegramBot</module>
+        <module>SolanaRPC</module>
     </modules>
 
 
