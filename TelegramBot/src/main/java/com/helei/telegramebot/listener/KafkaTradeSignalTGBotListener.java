@@ -4,7 +4,8 @@ import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.helei.dto.trade.TradeSignal;
 import com.helei.telegramebot.bot.AbstractTelegramBot;
-import com.helei.telegramebot.constants.TelegramBotCommand;
+import com.helei.telegramebot.config.command.TelegramBotNameSpaceCommand;
+import com.helei.telegramebot.config.command.TradeSignalCommand;
 import com.helei.telegramebot.manager.ExecutorServiceManager;
 import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
@@ -45,7 +46,12 @@ public class KafkaTradeSignalTGBotListener implements MessageListener<String, St
             try {
                 TradeSignal tradeSignal = JSONObject.parseObject(value, TradeSignal.class);
 
-                telegramBot.commandMessageHandler(TelegramBotCommand.SEND_TRADE_SIGNAL, List.of(tradeSignal), null);
+                telegramBot.commandMessageHandler(
+                        TelegramBotNameSpaceCommand.NameSpace.TRADE_SIGNAL_COMMAND,
+                        TradeSignalCommand.SEND_TRADE_SIGNAL.name(),
+                        List.of(tradeSignal),
+                        null
+                );
             } catch (Exception e) {
                 log.error("处理kafka topic[{}] 消息[{}]时出错", topic, value, e);
             }

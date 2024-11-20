@@ -1,10 +1,10 @@
 package com.helei.telegramebot.config;
 
-import com.helei.dto.kafka.KafkaConfig;
 import com.helei.telegramebot.bot.AbstractTelegramBot;
 import com.helei.telegramebot.bot.impl.ShinanoTelegramBot;
 import com.helei.telegramebot.manager.ExecutorServiceManager;
 import com.helei.telegramebot.service.ITelegramPersistenceService;
+import com.helei.telegramebot.service.ITradeSignalPersistenceService;
 import com.helei.telegramebot.service.impl.KafkaConsumerService;
 import com.helei.util.NamedThreadFactory;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
@@ -39,6 +40,10 @@ public class SpringConfig {
     private ITelegramPersistenceService telegramPersistenceService;
 
     @Autowired
+    private ITradeSignalPersistenceService tradeSignalPersistenceService;
+
+    @Autowired
+    @Lazy
     private KafkaConsumerService kafkaConsumerService;
 
     @Bean
@@ -73,6 +78,8 @@ public class SpringConfig {
                         kafkaConsumerService,
                         Executors.newThreadPerTaskExecutor(new NamedThreadFactory(botUsername + "处理线程池"))
                 );
+
+                bot.setTradeSignalPersistenceService(tradeSignalPersistenceService);
 
                 list.add(bot);
 //                    telegramBotsApi.registerBot(bot);
@@ -114,3 +121,4 @@ public class SpringConfig {
         return Redisson.create(config);
     }
 }
+

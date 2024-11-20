@@ -1,9 +1,7 @@
 package com.helei.telegramebot.service.impl;
 
-import com.helei.constants.CEXType;
-import com.helei.constants.RunEnv;
-import com.helei.constants.trade.TradeType;
 import com.helei.dto.base.Result;
+import com.helei.telegramebot.bot.menu.TelegramBotMenuType;
 import com.helei.telegramebot.service.ITelegramPersistenceService;
 import com.helei.telegramebot.util.TelegramRedisUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -15,9 +13,6 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.User;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
 
 
 @Slf4j
@@ -67,40 +62,30 @@ public class TelegramPersistenceServiceImpl implements ITelegramPersistenceServi
     }
 
     @Override
-    public Result saveChatListenTradeSignal(String botUsername, String chatId, RunEnv runEnv, TradeType tradeType, CEXType cexType, List<String> symbols) {
+    public Result saveChatMenuState(String botUsername, String chatId, TelegramBotMenuType menuType) {
+        String name = menuType.getName();
+        try {
+            String key = TelegramRedisUtil.chatIdSolanaBotMenuKey(botUsername, chatId);
 
-        List<String> errorKey = new ArrayList<>();
+            redissonClient.getBucket(key).set(name);
 
-        for (String symbol : symbols) {
-            String key = null;
-            try {
-                key = TelegramRedisUtil.tradeSignalListenChatIdSetKey(botUsername, runEnv, tradeType, cexType, symbol);
-                RSet<String> set = redissonClient.getSet(key);
-                set.add(chatId);
-            } catch (Exception e) {
-                errorKey.add(key);
-                log.error("保存[{}]到[{}]出错", chatId, key);
-            }
-        }
-
-        if (errorKey.isEmpty()) {
-            return Result.ok();
-        } else {
-            return Result.fail(String.format("监听信号[%s]出错", errorKey));
+            return Result.ok(name);
+        } catch (Exception e) {
+            String errorMsg = String.format("bot[%s]保存chat[%s]菜单状态[%s]出错[%s]", botUsername, chatId, name, e.getMessage());
+            log.error(errorMsg);
+            return Result.fail(errorMsg);
         }
     }
 
     @Override
-    public Result queryTradeSignalListenedChatId(String botUsername, RunEnv runEnv, TradeType tradeType, CEXType cexType, String symbol) {
-        String key = "";
+    public Result getChatMenuState(String botUsername, String chatId) {
         try {
-            key = TelegramRedisUtil.tradeSignalListenChatIdSetKey(botUsername, runEnv, tradeType, cexType, symbol);
-
-            Set<Object> chatIds = redissonClient.getSet(key).readAll();
-
-            return Result.ok(chatIds, chatIds.size());
+            String key = TelegramRedisUtil.chatIdSolanaBotMenuKey(botUsername, chatId);
+            return Result.ok(redissonClient.getBucket(key).get());
         } catch (Exception e) {
-            return Result.fail(String.format("查询监听信号[%s]的chatId失败", key));
+            String errorMsg = String.format("bot[%s]获取chat[%s]菜单状态出错[%s]", botUsername, chatId, e.getMessage());
+            log.error(errorMsg);
+            return Result.fail(errorMsg);
         }
     }
 }

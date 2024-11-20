@@ -1,6 +1,11 @@
 package com.helei.telegramebot.bot;
 
-import com.helei.telegramebot.constants.TelegramBotCommand;
+import cn.hutool.core.util.BooleanUtil;
+import cn.hutool.core.util.StrUtil;
+import com.helei.dto.base.Result;
+import com.helei.telegramebot.config.command.TelegramBotCommand;
+import com.helei.telegramebot.config.command.TelegramBotNameSpaceCommand;
+import com.helei.telegramebot.dto.TGBotCommandContext;
 import com.helei.telegramebot.service.ITelegramPersistenceService;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -9,10 +14,7 @@ import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChat;
 import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChatAdministrators;
 import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChatMember;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.Chat;
-import org.telegram.telegrambots.meta.api.objects.Message;
-import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.api.objects.User;
+import org.telegram.telegrambots.meta.api.objects.*;
 import org.telegram.telegrambots.meta.api.objects.chatmember.ChatMember;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
@@ -26,7 +28,7 @@ import java.util.concurrent.ExecutorService;
  * TG机器人抽象类
  */
 @Slf4j
-public abstract class AbstractTelegramBot extends TelegramLongPollingBot implements BaseCommandTelegramBot, TradeSignalCommandTelegramBot {
+public abstract class AbstractTelegramBot extends TelegramLongPollingBot implements BaseCommandTelegramBot {
 
 
     /**
@@ -72,77 +74,224 @@ public abstract class AbstractTelegramBot extends TelegramLongPollingBot impleme
     public void onUpdateReceived(Update update) {
         executor.execute(() -> {
             Message message = update.getMessage();
-            try {
-                User from = message.getFrom();
-                String text = message.getText();
+            CallbackQuery callbackQuery = update.getCallbackQuery();
 
-                log.info("bot[{}] 收到消息 用户[{}] - 消息[{}]", getBotUsername(), from.getUserName(), text);
+            if (message != null) {
+                // 1，消息
 
-                // 处理命令消息
-                if (message.isCommand()) {
-                    //Step 1 解析命令、参数
-                    String[] split = text.split(" ");
+                messageHandler(message);
+            } else if (callbackQuery != null) {
+                // 2，callbackQuery
 
-                    TelegramBotCommand command = null;
-                    String[] commandAndBotName = split[0].split("@");
-                    String commandStr = commandAndBotName[0].replace("/", "").toUpperCase();
-                    String botName = commandAndBotName[1];
-
-                    //不是本机器人，不管
-                    if (!getBotUsername().equals(botName)) {
-                        return;
-                    }
-
-                    try {
-                        command = TelegramBotCommand.valueOf(commandStr);
-                    } catch (IllegalArgumentException e) {
-                        log.error("不存在命令[{}]", commandStr);
-                        sendMessageToChat(String.valueOf(message.getChatId()), "不存在命令 " + commandStr);
-                        return;
-                    }
-
-                    List<String> params = new ArrayList<>(Arrays.asList(split));
-                    params.removeFirst();
-
-                    //Step 2 过滤
-                    if (command.equals(TelegramBotCommand.START)) {//1 开始命令
-
-                        startCommandHandler(message);
-                    } else if (commandMessageFilter(command, params, message)) {//2 过滤
-
-                        log.warn("bot[{}] 过滤掉 用户[{}] - 消息[{}]", getBotUsername(), from.getUserName(), text);
-                    } else {//3 其他命令
-
-                        commandMessageHandler(command, params, message);
-                    }
-                } else {
-                    //处理普通消息
-                    normalMessageHandler(text, message);
-                }
-            } catch (Exception e) {
-                log.error("处理消息[{}]出错", message, e);
+                callbackQueryHandler(callbackQuery);
             }
         });
     }
 
     /**
+     * 处理callback（由键盘点击产生的）
+     *
+     * @param callbackQuery callbackQuery
+     */
+    private void callbackQueryHandler(CallbackQuery callbackQuery) {
+        String data = callbackQuery.getData();
+
+        Message message = callbackQuery.getMessage();
+        Long chatId = message.getChatId();
+        User from = message.getFrom();
+
+        log.info("bot[{}] 收到消息 chatId[{}]-用户[{}] - callbackQuery[{}]", getBotUsername(), chatId, from.getUserName(), data);
+
+        // 解析
+        TGBotCommandContext commandContext = resolveCommand(data);
+
+        switch (commandContext.getNamespace()) {
+            case "MENU" -> {
+                Result result = menuCommandHandler(commandContext.getCommand(), message);
+
+                if (result != null && !result.getSuccess()) {
+                    log.error("执行namespace[{}]-command[{}] 命令失败, {}",
+                            commandContext.getNamespace(), commandContext.getCommand(), result.getErrorMsg());
+                }
+            }
+            default -> {
+                log.error("chatId[{}]发出无效的命令[{}]", chatId, commandContext);
+            }
+        }
+    }
+
+    /**
+     * 处理消息
+     *
+     * @param message 消息
+     */
+    private void messageHandler(Message message) {
+
+        Result result = null;
+
+        String chatId = String.valueOf(message.getChatId());
+
+        try {
+            User from = message.getFrom();
+            String text = message.getText();
+
+            log.info("bot[{}] 收到消息 chatId[{}]-用户[{}] - 消息[{}]", getBotUsername(), chatId, from.getUserName(), text);
+
+            // 处理命令消息
+            if (message.isCommand()) {
+                //Step 1 解析命令、参数
+                TGBotCommandContext commandContext = resolveCommand(text);
+
+                String nameSpaceStr = commandContext.getNamespace();
+                String commandStr = commandContext.getCommand();
+                List<String> params = commandContext.getParams();
+
+//                    String botName = commandAndBotName.length > 1 ? commandAndBotName[1] : "";
+                //不是本机器人，不管
+//                    if (!getBotUsername().equals(botName)) {
+//                        return;
+//                    }
+
+                // 不是Namespace里的命令, 就是基础bot的命令
+                if (StrUtil.isBlank(nameSpaceStr)) {
+                    baseCommandHandler(commandStr, message);
+                    return;
+                }
+
+                // 检查namespace 是否有对应的command
+                if (!TelegramBotNameSpaceCommand.isContainCommand(nameSpaceStr, commandStr)) {
+                    String format = String.format("不存在[%s]命令[%s]", nameSpaceStr, commandStr);
+                    log.error(format);
+                    result = Result.fail(format);
+                    return;
+                }
+
+                TelegramBotNameSpaceCommand.NameSpace nameSpace = TelegramBotNameSpaceCommand.NameSpace.valueOf(nameSpaceStr);
+
+
+                //Step 2 过滤
+                if (commandMessageFilter(nameSpace, commandStr, params, message)) {//2 过滤
+                    log.warn("bot[{}] 过滤掉 用户[{}] - 消息[{}]", getBotUsername(), from.getUserName(), text);
+                } else {//3 其他命令
+                    result = commandMessageHandler(nameSpace, commandStr, params, message);
+                }
+            } else {
+                //处理普通消息
+                result = normalMessageHandler(text, message);
+            }
+        } catch (Exception e) {
+            log.error("处理消息[{}]出错", message, e);
+        } finally {
+            //Step 3 发送结果
+            if (result != null) {
+                resolveHandlerResult(chatId, result);
+            }
+        }
+    }
+
+
+    /**
+     * 解析命令
+     *
+     * @param text text
+     * @return String[]{nameSpaceStr, commandStr}
+     */
+    private TGBotCommandContext resolveCommand(String text) {
+        String nameSpaceStr = "";
+        String commandStr = "";
+
+        String[] split = text.split(" ");
+
+        String[] commandAndBotName = split[0].split("@");
+        String[] nameSpaceAndCommand = commandAndBotName[0].replace("/", "").toUpperCase().split("\\.");
+
+        if (nameSpaceAndCommand.length == 2) {
+            nameSpaceStr = nameSpaceAndCommand[0].toUpperCase();
+            commandStr = nameSpaceAndCommand[1].toUpperCase();
+        } else if (nameSpaceAndCommand.length == 1) {
+            commandStr = nameSpaceAndCommand[0].toUpperCase();
+        }
+
+        List<String> params = new ArrayList<>(Arrays.asList(split));
+        params.removeFirst();
+
+        return TGBotCommandContext
+                .builder()
+                .namespace(nameSpaceStr)
+                .command(commandStr)
+                .params(params)
+                .build();
+    }
+
+    /**
+     * 处理handler处理后的结果
+     *
+     * @param result result
+     */
+    private void resolveHandlerResult(String chatId, Result result) {
+        try {
+            if (BooleanUtil.isFalse(result.getSuccess())) {
+                sendMessageToChat(chatId, result.getErrorMsg());
+            } else if (result.getData() != null) {
+                sendMessageToChat(chatId, result.getData().toString());
+            }
+        } catch (Exception e) {
+            log.error("向chat[{}]发送结果[{}]时出现异常", chatId, result);
+        }
+    }
+
+
+    /**
+     * 处理基础命令
+     *
+     * @param commandStr 命令字符串
+     * @param message    消息
+     */
+    private void baseCommandHandler(String commandStr, Message message) {
+
+        TelegramBotCommand command = null;
+        try {
+            command = TelegramBotCommand.valueOf(commandStr);
+        } catch (Exception e) {
+            log.error("不存在基础命令[{}]", commandStr);
+            sendMessageToChat(String.valueOf(message.getChatId()), String.format("不存在基础命令[%s]", commandStr));
+            return;
+        }
+
+        switch (command) {
+            case START -> startCommandHandler(message);
+        }
+    }
+
+
+    /**
+     * 菜单命令
+     *
+     * @param commandStr commandStr
+     * @param message    message
+     */
+    public abstract Result menuCommandHandler(String commandStr, Message message);
+
+    /**
      * 过滤命令消息
      *
-     * @param command command
-     * @param params  params
-     * @param message message
+     * @param nameSpace        nameSpace
+     * @param nameSpaceCommand nameSpaceCommand
+     * @param params           params
+     * @param message          message
      */
-    public abstract boolean commandMessageFilter(TelegramBotCommand command, List<String> params, Message message);
+    public abstract boolean commandMessageFilter(TelegramBotNameSpaceCommand.NameSpace nameSpace, String nameSpaceCommand, List<String> params, Message message);
 
 
     /**
      * 命令消息处理
      *
-     * @param command 命令
-     * @param params  参数
-     * @param message 原消息内容
+     * @param nameSpace        nameSpace
+     * @param nameSpaceCommand 命令
+     * @param params           参数
+     * @param message          原消息内容
      */
-    public abstract void commandMessageHandler(TelegramBotCommand command, List<?> params, Message message);
+    public abstract Result commandMessageHandler(TelegramBotNameSpaceCommand.NameSpace nameSpace, String nameSpaceCommand, List<?> params, Message message);
 
 
     /**
@@ -151,7 +300,7 @@ public abstract class AbstractTelegramBot extends TelegramLongPollingBot impleme
      * @param messageText 消息文本
      * @param message     原消息内容
      */
-    public abstract void normalMessageHandler(String messageText, Message message);
+    public abstract Result normalMessageHandler(String messageText, Message message);
 
 
     /**
@@ -175,7 +324,7 @@ public abstract class AbstractTelegramBot extends TelegramLongPollingBot impleme
     /**
      * 给指定chat发送html消息
      *
-     * @param chatId chatId
+     * @param chatId      chatId
      * @param messageText 消息文本
      */
     public void sendHTMLMessageToChat(String chatId, String messageText) {
@@ -247,4 +396,3 @@ public abstract class AbstractTelegramBot extends TelegramLongPollingBot impleme
     }
 
 }
-

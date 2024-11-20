@@ -5,28 +5,32 @@ import com.helei.constants.RunEnv;
 import com.helei.constants.trade.TradeType;
 import com.helei.dto.base.Result;
 import com.helei.dto.trade.TradeSignal;
-import com.helei.telegramebot.bot.AbstractTelegramBot;
-import com.helei.telegramebot.constants.TelegramBotCommand;
+import com.helei.telegramebot.bot.MenuBaseTelegramBot;
+import com.helei.telegramebot.bot.TradeSignalCommandTelegramBot;
+import com.helei.telegramebot.config.command.TelegramBotNameSpaceCommand;
 import com.helei.telegramebot.service.ITelegramPersistenceService;
+import com.helei.telegramebot.service.ITradeSignalPersistenceService;
 import com.helei.telegramebot.service.impl.KafkaConsumerService;
 import com.helei.telegramebot.template.TelegramMessageTemplate;
 import com.helei.util.KafkaUtil;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.User;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 
 @Slf4j
-public class ShinanoTelegramBot extends AbstractTelegramBot {
+public class ShinanoTelegramBot extends MenuBaseTelegramBot implements TradeSignalCommandTelegramBot {
 
 
     private final KafkaConsumerService kafkaConsumerService;
+
+    @Setter
+    private ITradeSignalPersistenceService tradeSignalPersistenceService;
 
     public ShinanoTelegramBot(
             String botUsername,
@@ -39,8 +43,9 @@ public class ShinanoTelegramBot extends AbstractTelegramBot {
         this.kafkaConsumerService = kafkaConsumerService;
     }
 
+
     @Override
-    public boolean commandMessageFilter(TelegramBotCommand command, List<String> params, Message message) {
+    public boolean commandMessageFilter(TelegramBotNameSpaceCommand.NameSpace nameSpace, String nameSpaceCommand, List<String> params, Message message) {
         Result result = getTelegramPersistenceService().isSavedChatInBot(getBotUsername(), message.getChatId());
 
         if (!result.getSuccess()) {
@@ -51,19 +56,18 @@ public class ShinanoTelegramBot extends AbstractTelegramBot {
         return false;
     }
 
-
     @Override
-    public void normalMessageHandler(String messageText, Message message) {
-
+    public Result commandMessageHandler(TelegramBotNameSpaceCommand.NameSpace nameSpace, String nameSpaceCommand, List<?> params, Message message) {
+        return switch (nameSpaceCommand) {
+            case "ADD_LISTEN_SIGNAL_TYPE" -> addListenSignalTypeCommandHandler(params, message);
+            case "SEND_TRADE_SIGNAL" -> sendTradeSignalCommandHandler(params);
+            default -> Result.fail(String.format("namespace[%s]没有命令[%S]", nameSpace, nameSpaceCommand));
+        };
     }
 
     @Override
-    public void commandMessageHandler(TelegramBotCommand command, List<?> params, Message message) {
-        switch (command) {
-            case START -> startCommandHandler(message);
-            case ADD_LISTEN_SIGNAL_TYPE -> addListenSignalTypeCommandHandler(params, message);
-            case SEND_TRADE_SIGNAL -> sendTradeSignalCommandHandler(params);
-        }
+    public Result normalMessageHandler(String messageText, Message message) {
+        return null;
     }
 
     /**
@@ -93,14 +97,14 @@ public class ShinanoTelegramBot extends AbstractTelegramBot {
      * @param params 参数
      */
     @Override
-    public void sendTradeSignalCommandHandler(List<?> params) {
+    public Result sendTradeSignalCommandHandler(List<?> params) {
         //Step 1 参数解析
         TradeSignal tradeSignal = (TradeSignal) params.getFirst();
         String message = TelegramMessageTemplate.tradeSignalMessage(tradeSignal);
 
 
         //Step 2 查询监听的id
-        Result result = getTelegramPersistenceService()
+        Result result = tradeSignalPersistenceService
                 .queryTradeSignalListenedChatId(getBotUsername(), tradeSignal.getRunEnv(), tradeSignal.getTradeType(), tradeSignal.getCexType(), tradeSignal.getSymbol());
 
 
@@ -111,7 +115,7 @@ public class ShinanoTelegramBot extends AbstractTelegramBot {
 
             if (chatIds.isEmpty()) {
                 log.warn("没有监听信号[{}]的chat", tradeSignal.simpleName());
-                return;
+                return result;
             }
 
             for (Object chatId : chatIds) {
@@ -124,9 +128,11 @@ public class ShinanoTelegramBot extends AbstractTelegramBot {
                             return null;
                         }, executor);
             }
+
+            return result;
         } else {
             // 获取chatId失败
-            log.error("获取chatId失败, [{}]", result.getErrorMsg());
+            return Result.fail("获取chatId失败, " + result.getErrorMsg());
         }
     }
 
@@ -138,12 +144,11 @@ public class ShinanoTelegramBot extends AbstractTelegramBot {
      * @param message 消息
      */
     @Override
-    public void addListenSignalTypeCommandHandler(List<?> params, Message message) {
+    public Result addListenSignalTypeCommandHandler(List<?> params, Message message) {
         String chatId = String.valueOf(message.getChatId());
 
         if (params.size() <= 3) {
-            sendMessageToChat(chatId, String.format("参数错误,命令[%s]参数格式应为[runEnv, tradeType, cexType, symbols(可选)]", TelegramBotCommand.ADD_LISTEN_SIGNAL_TYPE.name()));
-            return;
+            return Result.fail(String.format("参数错误,命令[%s]参数格式应为[runEnv, tradeType, cexType, symbols(可选)]", "ADD_LISTEN_SIGNAL_TYPE"));
         }
 
         log.info("机器人[{}]-group chat id[{}] 添加监听信号[{}]", getBotUsername(), chatId, params);
@@ -158,19 +163,20 @@ public class ShinanoTelegramBot extends AbstractTelegramBot {
 
 
         //Step 2 持久化
-        Result result = getTelegramPersistenceService()
+        Result result = tradeSignalPersistenceService
                 .saveChatListenTradeSignal(getBotUsername(), chatId, runEnv, tradeType, cexType, symbol, signalName);
 
         //Step 3 注册kafka消费者
         String topic = KafkaUtil.getTradeSingalTopic(runEnv, tradeType, symbol, signalName);
-        kafkaConsumerService.startTelegramBotTradeSignalConsumer();
+        kafkaConsumerService.startTelegramBotTradeSignalConsumer(List.of(topic));
 
-
-        if (!result.getSuccess()) {
-            sendMessageToChat(chatId, result.getErrorMsg());
-        } else {
-            sendMessageToChat(chatId, String.format("添加信号[%s]-[%s]-[%s]-%s成功", runEnv.name(), tradeType.name(), cexType.name(), symbols));
+        if (result.getSuccess()) {
+            result.setData(String.format("添加信号[%s]-[%s]-[%s]-[%s]-%s成功", runEnv.name(), tradeType.name(), cexType.name(), symbol, signalName));
         }
+
+        return result;
     }
 
 }
+
+

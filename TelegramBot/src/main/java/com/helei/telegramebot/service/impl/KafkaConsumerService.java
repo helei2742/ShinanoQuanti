@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.listener.ConcurrentMessageListenerContainer;
@@ -32,6 +33,7 @@ public class KafkaConsumerService {
     private final TelegramBotConfig telegramBotConfig = TelegramBotConfig.INSTANCE;
 
     @Autowired
+    @Lazy
     private ConcurrentKafkaListenerContainerFactory<String, String> kafkaListenerContainerFactory;
 
     @Autowired

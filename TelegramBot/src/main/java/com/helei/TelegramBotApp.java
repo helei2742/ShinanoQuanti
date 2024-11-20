@@ -1,26 +1,55 @@
 package com.helei;
 
 import com.helei.telegramebot.bot.AbstractTelegramBot;
+import com.helei.telegramebot.bot.impl.SolanaAutoTradeTelegramBot;
+import com.helei.telegramebot.config.TelegramBotConfig;
 import com.helei.telegramebot.service.impl.KafkaConsumerService;
+import com.helei.telegramebot.service.impl.SolanaATBotPersistenceServiceImpl;
+import com.helei.telegramebot.service.impl.TelegramPersistenceServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.List;
+import java.util.concurrent.Executors;
 
 @Slf4j
 @SpringBootApplication
 public class TelegramBotApp {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws TelegramApiException {
         ConfigurableApplicationContext applicationContext = SpringApplication.run(TelegramBotApp.class, args);
 
 
-        startAllEnvTradeSignalConsumer(applicationContext);
+//        startAllEnvTradeSignalConsumer(applicationContext);
+//
+//        startAllTGBot(applicationContext);
+        startSolanaBot(applicationContext);
+    }
 
-        startAllTGBot(applicationContext);
+
+    private static void startSolanaBot(ConfigurableApplicationContext applicationContext) throws TelegramApiException {
+        TelegramBotConfig telegramBotConfig = TelegramBotConfig.INSTANCE;
+
+        SolanaATBotPersistenceServiceImpl bean = applicationContext.getBean(SolanaATBotPersistenceServiceImpl.class);
+        TelegramPersistenceServiceImpl telegramPersistenceService = applicationContext.getBean(TelegramPersistenceServiceImpl.class);
+        TelegramBotConfig.TelegramBotBaseConfig first = telegramBotConfig.getBots().getFirst();
+
+        SolanaAutoTradeTelegramBot bot = new SolanaAutoTradeTelegramBot(
+                first.getBotUsername(),
+                first.getToken(),
+                telegramPersistenceService,
+                Executors.newVirtualThreadPerTaskExecutor()
+        );
+
+        bot.setSolanaATBotPersistenceService(bean);
+
+        TelegramBotsApi telegramBotsApi = applicationContext.getBean(TelegramBotsApi.class);
+
+        telegramBotsApi.registerBot(bot);
     }
 
 

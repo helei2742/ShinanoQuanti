@@ -18,8 +18,8 @@ public class TelegramRedisUtil {
      * @param symbol      symbol
      * @return key
      */
-    public static String tradeSignalListenChatIdSetKey(String botUsername, RunEnv runEnv, TradeType tradeType, CEXType cexType, String symbol) {
-        return REDIS_KEY_PREFIX + botUsername + ":signal:" + cexType.name() + ":" + runEnv.name() + ":" + tradeType.name() + ":" + symbol;
+    public static String tradeSignalListenChatIdSetKey(String botUsername, RunEnv runEnv, TradeType tradeType, CEXType cexType, String symbol, String signalName) {
+        return REDIS_KEY_PREFIX + botUsername + ":signal:" + cexType.name() + ":" + runEnv.name() + ":" + tradeType.name() + ":" + symbol + ":" + signalName;
     }
 
 
@@ -31,5 +31,48 @@ public class TelegramRedisUtil {
      */
     public static String botListenChatIdSetKey(String botUsername) {
         return REDIS_KEY_PREFIX + botUsername + ":listenChatIdSet";
+    }
+
+    /**
+     * chatId solana钱包信息的前缀
+     *
+     * @param botUsername botUsername
+     * @param chatId      chatId
+     * @return key
+     */
+    public static String chatIdSolanaWalletPrefix(String botUsername, String chatId) {
+        return REDIS_KEY_PREFIX + botUsername + "solana:wallet:" + chatId + ":";
+    }
+
+    /**
+     * chatId solana钱包，追踪地址的key
+     *
+     * @param chatId chatId
+     * @return key
+     */
+    public static String chatIdSolanaWalletTraceHashKey(String botUsername, String chatId) {
+        return chatIdSolanaWalletPrefix(botUsername, chatId) + "trace";
+    }
+
+
+    /**
+     * chatId solana钱包地址
+     *
+     * @param chatId chatId
+     * @return key
+     */
+    public static String chatIdSolanaWalletInfoHashKey(String botUsername, String chatId) {
+        return chatIdSolanaWalletPrefix(botUsername, chatId) + "info";
+    }
+
+    /**
+     * 获取菜单状态
+     *
+     * @param botUsername botUsername
+     * @param chatId      chatId
+     * @return key
+     */
+    public static String chatIdSolanaBotMenuKey(String botUsername, String chatId) {
+        return chatIdSolanaWalletPrefix(botUsername, chatId) + "menu";
     }
 }
