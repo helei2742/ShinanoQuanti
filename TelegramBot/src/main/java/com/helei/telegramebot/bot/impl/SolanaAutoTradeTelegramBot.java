@@ -4,7 +4,7 @@ import com.helei.dto.base.Result;
 import com.helei.solanarpc.dto.SolanaAddress;
 import com.helei.telegramebot.bot.MenuBaseTelegramBot;
 import com.helei.telegramebot.bot.SolanaTelegramBot;
-import com.helei.telegramebot.bot.menu.SolanaBotMenu;
+import com.helei.telegramebot.bot.menu.solana.SolanaBotMenu;
 
 import com.helei.telegramebot.config.command.SolanaBotCommand;
 import com.helei.telegramebot.config.command.TelegramBotNameSpaceCommand;

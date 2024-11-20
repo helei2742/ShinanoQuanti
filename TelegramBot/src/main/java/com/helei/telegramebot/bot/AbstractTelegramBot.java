@@ -94,28 +94,20 @@ public abstract class AbstractTelegramBot extends TelegramLongPollingBot impleme
      * @param callbackQuery callbackQuery
      */
     private void callbackQueryHandler(CallbackQuery callbackQuery) {
-        String data = callbackQuery.getData();
+        String callbackQueryData = callbackQuery.getData();
 
         Message message = callbackQuery.getMessage();
         Long chatId = message.getChatId();
         User from = message.getFrom();
 
-        log.info("bot[{}] 收到消息 chatId[{}]-用户[{}] - callbackQuery[{}]", getBotUsername(), chatId, from.getUserName(), data);
+        log.info("bot[{}] 收到消息 chatId[{}]-用户[{}] - callbackQuery[{}]", getBotUsername(), chatId, from.getUserName(), callbackQueryData);
 
-        // 解析
-        TGBotCommandContext commandContext = resolveCommand(data);
+        if (callbackQueryData.startsWith("/menu.")) {
+            Result result = menuCommandHandler(callbackQueryData, message);
 
-        switch (commandContext.getNamespace()) {
-            case "MENU" -> {
-                Result result = menuCommandHandler(commandContext.getCommand(), message);
-
-                if (result != null && !result.getSuccess()) {
-                    log.error("执行namespace[{}]-command[{}] 命令失败, {}",
-                            commandContext.getNamespace(), commandContext.getCommand(), result.getErrorMsg());
-                }
-            }
-            default -> {
-                log.error("chatId[{}]发出无效的命令[{}]", chatId, commandContext);
+            if (result != null && !result.getSuccess()) {
+                log.error("执行callbackQueryData[{}] 命令失败, {}",
+                        callbackQueryData, result.getErrorMsg());
             }
         }
     }

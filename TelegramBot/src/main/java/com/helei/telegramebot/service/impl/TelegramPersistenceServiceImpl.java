@@ -1,7 +1,7 @@
 package com.helei.telegramebot.service.impl;
 
 import com.helei.dto.base.Result;
-import com.helei.telegramebot.bot.menu.TelegramBotMenuType;
+import com.helei.telegramebot.bot.menu.TGMenuNode;
 import com.helei.telegramebot.service.ITelegramPersistenceService;
 import com.helei.telegramebot.util.TelegramRedisUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -62,16 +62,16 @@ public class TelegramPersistenceServiceImpl implements ITelegramPersistenceServi
     }
 
     @Override
-    public Result saveChatMenuState(String botUsername, String chatId, TelegramBotMenuType menuType) {
-        String name = menuType.getName();
+    public Result saveChatMenuState(String botUsername, String chatId, TGMenuNode menuType) {
+        Integer id = menuType.getId();
         try {
             String key = TelegramRedisUtil.chatIdSolanaBotMenuKey(botUsername, chatId);
 
-            redissonClient.getBucket(key).set(name);
+            redissonClient.getBucket(key).set(id);
 
-            return Result.ok(name);
+            return Result.ok(id);
         } catch (Exception e) {
-            String errorMsg = String.format("bot[%s]保存chat[%s]菜单状态[%s]出错[%s]", botUsername, chatId, name, e.getMessage());
+            String errorMsg = String.format("bot[%s]保存chat[%s]菜单状态[%s]出错[%s]", botUsername, chatId, menuType, e.getMessage());
             log.error(errorMsg);
             return Result.fail(errorMsg);
         }

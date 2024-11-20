@@ -8,14 +8,14 @@ public interface TelegramBotMenu {
 
     SendMessage initChatMenu(String chatId);
 
-    TelegramBotMenuType getCurrentMenuState(String chatId);
+    TGMenuNode getCurrentMenuState(String chatId);
 
     /**
      * 获取 id 当前菜单上一级的菜单
      *
      * @return 上一级菜单
      */
-    TelegramBotMenuType getPrefer(String chatId);
+    TGMenuNode getPrefer(String chatId);
 
 
     /**

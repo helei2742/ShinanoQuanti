@@ -1,7 +1,7 @@
 package com.helei.telegramebot.service;
 
 import com.helei.dto.base.Result;
-import com.helei.telegramebot.bot.menu.TelegramBotMenuType;
+import com.helei.telegramebot.bot.menu.TGMenuNode;
 import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.User;
 
@@ -47,7 +47,7 @@ public interface ITelegramPersistenceService {
      * @param menuType    menuType
      * @return Result
      */
-    Result saveChatMenuState(String botUsername, String chatId, TelegramBotMenuType menuType);
+    Result saveChatMenuState(String botUsername, String chatId, TGMenuNode menuType);
 
 
     /**
