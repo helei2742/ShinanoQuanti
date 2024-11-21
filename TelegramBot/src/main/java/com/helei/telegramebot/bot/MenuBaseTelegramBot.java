@@ -5,6 +5,7 @@ import com.helei.telegramebot.bot.menu.TelegramBotMenu;
 import com.helei.telegramebot.config.command.TelegramBotNameSpaceCommand;
 import com.helei.telegramebot.service.ITelegramPersistenceService;
 import lombok.extern.slf4j.Slf4j;
+import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.User;
@@ -47,10 +48,10 @@ public abstract class MenuBaseTelegramBot extends AbstractTelegramBot {
 
     @Override
     public Result menuCommandHandler(String menuCommand, Message message) {
-        SendMessage sendMessage = telegramBotMenu.menuCommandHandler(menuCommand, message);
+        BotApiMethod<?> botApiMethod = telegramBotMenu.menuCommandHandler(menuCommand, message);
         try {
-            if (sendMessage != null) {
-                execute(sendMessage);
+            if (botApiMethod != null) {
+                execute(botApiMethod);
             }
             return Result.ok();
         } catch (Exception e) {
@@ -84,4 +85,3 @@ public abstract class MenuBaseTelegramBot extends AbstractTelegramBot {
         }
     }
 }
-

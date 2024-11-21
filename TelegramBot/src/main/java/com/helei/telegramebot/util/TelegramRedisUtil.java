@@ -47,7 +47,8 @@ public class TelegramRedisUtil {
     /**
      * chatId solana钱包，追踪地址的key
      *
-     * @param chatId chatId
+     * @param botUsername botUsername
+     * @param chatId      chatId
      * @return key
      */
     public static String chatIdSolanaWalletTraceHashKey(String botUsername, String chatId) {
@@ -58,11 +59,24 @@ public class TelegramRedisUtil {
     /**
      * chatId solana钱包地址
      *
-     * @param chatId chatId
+     * @param botUsername botUsername
+     * @param chatId      chatId
      * @return key
      */
     public static String chatIdSolanaWalletInfoHashKey(String botUsername, String chatId) {
         return chatIdSolanaWalletPrefix(botUsername, chatId) + "info";
+    }
+
+
+    /**
+     * chatId 默认的搜懒啊钱包地址
+     *
+     * @param botUsername botUsername
+     * @param chatId      chatId
+     * @return key
+     */
+    public static String chatIdSolanaWalletDefaultAddressKey(String botUsername, String chatId) {
+        return chatIdSolanaWalletPrefix(botUsername, chatId) + "defaultWallet";
     }
 
     /**
@@ -74,5 +88,17 @@ public class TelegramRedisUtil {
      */
     public static String chatIdSolanaBotMenuKey(String botUsername, String chatId) {
         return chatIdSolanaWalletPrefix(botUsername, chatId) + "menu";
+    }
+
+
+    /**
+     * chatId的分布式锁
+     *
+     * @param botUsername botUsername
+     * @param chatId      chatId
+     * @return key
+     */
+    public static String chatIdLockKey(String botUsername, String chatId) {
+        return chatIdSolanaWalletPrefix(botUsername, chatId) + "lock";
     }
 }

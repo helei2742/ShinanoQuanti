@@ -81,7 +81,8 @@ public class TelegramPersistenceServiceImpl implements ITelegramPersistenceServi
     public Result getChatMenuState(String botUsername, String chatId) {
         try {
             String key = TelegramRedisUtil.chatIdSolanaBotMenuKey(botUsername, chatId);
-            return Result.ok(redissonClient.getBucket(key).get());
+            Integer id = (Integer) redissonClient.getBucket(key).get();
+            return Result.ok(TGMenuNode.nodeIdMap.get(id));
         } catch (Exception e) {
             String errorMsg = String.format("bot[%s]获取chat[%s]菜单状态出错[%s]", botUsername, chatId, e.getMessage());
             log.error(errorMsg);

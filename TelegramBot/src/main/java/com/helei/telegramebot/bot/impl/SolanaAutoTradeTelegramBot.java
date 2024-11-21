@@ -29,11 +29,12 @@ public class SolanaAutoTradeTelegramBot extends MenuBaseTelegramBot implements S
     public SolanaAutoTradeTelegramBot(
             String botUsername,
             String token,
+            ISolanaATBotPersistenceService solanaATBotPersistenceService,
             ITelegramPersistenceService telegramPersistenceService,
             ExecutorService executor
     ) {
         super(botUsername, token, telegramPersistenceService, executor);
-        super.init(new SolanaBotMenu(getBotUsername(), getTelegramPersistenceService()));
+        super.init(new SolanaBotMenu(this, getTelegramPersistenceService(), solanaATBotPersistenceService));
     }
 
 
@@ -60,9 +61,9 @@ public class SolanaAutoTradeTelegramBot extends MenuBaseTelegramBot implements S
         if (params.isEmpty()) return Result.fail("参数错误");
 
         //Step 2 解析参数
-        String address = (String) params.getFirst();
+        String privateKey = (String) params.getFirst();
 
-        return solanaATBotPersistenceService.bindWalletAddress(getBotUsername(), String.valueOf(message.getChatId()), address);
+        return solanaATBotPersistenceService.bindWalletByPrivateKey(getBotUsername(), String.valueOf(message.getChatId()), privateKey);
     }
 
 
@@ -105,4 +106,3 @@ public class SolanaAutoTradeTelegramBot extends MenuBaseTelegramBot implements S
         return solanaATBotPersistenceService.deleteChatListenAddress(getBotUsername(), String.valueOf(message.getChatId()), address);
     }
 }
-

@@ -3,6 +3,7 @@ package com.helei.telegramebot.bot;
 import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.StrUtil;
 import com.helei.dto.base.Result;
+import com.helei.telegramebot.bot.menu.TGMenuNode;
 import com.helei.telegramebot.config.command.TelegramBotCommand;
 import com.helei.telegramebot.config.command.TelegramBotNameSpaceCommand;
 import com.helei.telegramebot.dto.TGBotCommandContext;
@@ -10,6 +11,7 @@ import com.helei.telegramebot.service.ITelegramPersistenceService;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChat;
 import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChatAdministrators;
 import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChatMember;
@@ -76,16 +78,47 @@ public abstract class AbstractTelegramBot extends TelegramLongPollingBot impleme
             Message message = update.getMessage();
             CallbackQuery callbackQuery = update.getCallbackQuery();
 
-            if (message != null) {
-                // 1，消息
 
+            if (message != null) {
+                // 判断当前菜单状态
+                resolveMenuCommandHandler(message, true);
+
+                // 1，消息
                 messageHandler(message);
             } else if (callbackQuery != null) {
                 // 2，callbackQuery
 
+                resolveMenuCommandHandler(callbackQuery.getMessage(), false);
+
                 callbackQueryHandler(callbackQuery);
             }
         });
+    }
+
+
+    /**
+     * 处理菜单消息
+     *
+     * @param message message
+     * @param invokeHandler invokeHandler
+     */
+    private void resolveMenuCommandHandler(Message message, boolean invokeHandler) {
+        Result chatMenuState = telegramPersistenceService.getChatMenuState(botUsername, String.valueOf(message.getChatId()));
+        if (chatMenuState != null && chatMenuState.getSuccess()) {
+            TGMenuNode menuNode = (TGMenuNode) chatMenuState.getData();
+            log.info("chatId[{}]当前菜单为[{}]", message.getChatId(), menuNode);
+
+            // 命令消息取消掉咯
+            if (invokeHandler && !message.getText().startsWith("/")) {
+                BotApiMethod<?> botApiMethod = menuNode.menuCommandHandler(List.of(message.getText()), message);
+
+                try {
+                    execute(botApiMethod);
+                } catch (TelegramApiException e) {
+                    log.error("发送菜单命令handler的结果发生错误", e);
+                }
+            }
+        }
     }
 
     /**

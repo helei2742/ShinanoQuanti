@@ -7,6 +7,7 @@ import com.helei.telegramebot.service.impl.KafkaConsumerService;
 import com.helei.telegramebot.service.impl.SolanaATBotPersistenceServiceImpl;
 import com.helei.telegramebot.service.impl.TelegramPersistenceServiceImpl;
 import lombok.extern.slf4j.Slf4j;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
@@ -19,6 +20,7 @@ import java.util.concurrent.Executors;
 
 @Slf4j
 @SpringBootApplication
+@MapperScan("com.helei.telegramebot.mapper")
 public class TelegramBotApp {
     public static void main(String[] args) throws TelegramApiException {
         ConfigurableApplicationContext applicationContext = SpringApplication.run(TelegramBotApp.class, args);
@@ -41,11 +43,11 @@ public class TelegramBotApp {
         SolanaAutoTradeTelegramBot bot = new SolanaAutoTradeTelegramBot(
                 first.getBotUsername(),
                 first.getToken(),
+                bean,
                 telegramPersistenceService,
                 Executors.newVirtualThreadPerTaskExecutor()
         );
 
-        bot.setSolanaATBotPersistenceService(bean);
 
         TelegramBotsApi telegramBotsApi = applicationContext.getBean(TelegramBotsApi.class);
 

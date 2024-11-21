@@ -1,5 +1,6 @@
 package com.helei.telegramebot.bot.menu;
 
+import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
@@ -34,7 +35,7 @@ public interface TelegramBotMenu {
      * @param message     message
      * @return SendMessage
      */
-    SendMessage menuCommandHandler(String menuCommand, Message message);
+    BotApiMethod<?> menuCommandHandler(String menuCommand, Message message);
 }
 
 
