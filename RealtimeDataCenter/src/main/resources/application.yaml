@@ -4,7 +4,7 @@ spring:
   datasource:
     url: jdbc:mysql://127.0.0.1:3306/shinano_quanti?useSSL=false&allowPublicKeyRetrieval=true&autoReconnect=true&failOverReadOnly=false&maxReconnects=10
     username: root
-    password: 962464HeLei
+    password: 
     driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
 
